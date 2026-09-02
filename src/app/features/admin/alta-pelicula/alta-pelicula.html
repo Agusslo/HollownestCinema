@@ -1,0 +1,23 @@
+<form [formGroup]="formulario" (ngSubmit)="guardar()">
+    <label>
+    Nombre
+    <input type="text" formControlName="nombre" />
+    </label>
+
+    <label>
+    Sinopsis
+    <textarea formControlName="sinopsis"></textarea>
+    </label>
+
+    <label>
+    Imagen (URL)
+    <input type="text" formControlName="imagen_url" />
+    </label>
+
+    <label>
+    Duración (minutos)
+    <input type="number" formControlName="duracion_minutos" />
+    </label>
+
+    <button type="submit">Guardar película</button>
+</form>

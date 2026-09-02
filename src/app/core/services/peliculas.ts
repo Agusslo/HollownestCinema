@@ -14,4 +14,13 @@ export class Peliculas {
     if (error) throw error;
     return data as IPelicula[];
   }
+
+  async crear(pelicula: Omit<IPelicula, 'id'>): Promise<void> { 
+    //omit es una utilidad de typescript que permite omitir una propiedad de un tipo, en este caso omitimos la propiedad id de la interfaz IPelicula
+  const { error } = await this.supabase.Supabase
+    .from('peliculas')
+    .insert(pelicula);
+
+  if (error) throw error;
+}
 }
