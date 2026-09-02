@@ -18,27 +18,21 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 
 ## 📋 Roadmap y Requerimientos
 
-### 1. Base y Arquitectura
+### Base (no ligado a un correo puntual)
 - [x] Inicialización del proyecto con Angular 22
 - [x] Conexión y configuración inicial con Supabase
 - [ ] Configuración como Progressive Web App (PWA)
 
-### 2. Clientes y Venta
-- [ ] Registro extendido de clientes y compra anónima
-- [ ] Cartelera, buscador por géneros y top 3 más vistas
-- [ ] Selección de butacas en tiempo real (inclusión de filas accesibles y VIP)
-- [ ] Carrito unificado: Entradas + Candy Bar (combos y productos)
-- [ ] Generación de PDF con entrada digital y código QR único
-
-### 3. Empleados y Validación
-- [ ] Lector / validador de códigos QR para entradas y Candy Bar
-- [ ] Opción de ingreso manual de código
-
-### 4. Panel de Administración
-- [ ] ABM de películas, funciones y productos de Candy Bar
-- [ ] Asignación automática de salas (con validación de horarios y 30 min de margen)
-- [ ] Reportes y gráficos de facturación (exportación a PDF y Excel)
-- [ ] Registro / auditoría de actividad (logs)
+### Correo 1 — Propuesta inicial
+- [x] Modelo de datos y RLS (películas, salas, funciones, perfiles, entradas)
+- [x] Arquitectura de carpetas (`core/` + `features/`)
+- [x] Servicios base (`Supabase`, `Peliculas`)
+- [ ] Cartelera: listado de películas en la home
+- [ ] ABM de películas y funciones (horario, formato, idioma)
+- [ ] Selección de butacas (sala fija de 20 filas / bloques 4-20-4) con margen de 30 min entre funciones
+- [ ] Registro de usuario + cupón 20% primera compra
+- [ ] Compra anónima
+- [ ] Generación de PDF con entrada + código QR
 
 ---
 
