@@ -1,0 +1,11 @@
+@if (cargando()) {
+  <p>Cargando cartelera...</p>
+} @else if (peliculas().length === 0) {
+  <p>Todavía no hay películas cargadas.</p>
+} @else {
+  <ul>
+    @for (pelicula of peliculas(); track pelicula.id) { <!-- dps puedo hacer icono de carga -->
+      <li>{{ pelicula.nombre }}</li>
+    }
+  </ul>
+}
