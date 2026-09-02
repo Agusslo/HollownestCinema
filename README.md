@@ -20,7 +20,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 
 ### 1. Base y Arquitectura
 - [x] Inicialización del proyecto con Angular 22
-- [ ] Conexión y configuración inicial con Supabase
+- [x] Conexión y configuración inicial con Supabase
 - [ ] Configuración como Progressive Web App (PWA)
 
 ### 2. Clientes y Venta
