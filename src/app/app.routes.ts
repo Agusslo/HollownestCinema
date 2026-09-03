@@ -10,4 +10,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/admin/alta-pelicula/alta-pelicula').then((m) => m.AltaPelicula),
   },
+  {
+  path: 'admin/funciones/nueva',
+  loadComponent: () =>
+    import('./features/admin/alta-funcion/alta-funcion').then((m) => m.AltaFuncion),
+},
 ];
