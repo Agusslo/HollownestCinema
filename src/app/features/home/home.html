@@ -4,8 +4,8 @@
   <p>Todavía no hay películas cargadas.</p>
 } @else {
   <ul>
-    @for (pelicula of peliculas(); track pelicula.id) { <!-- dps puedo hacer icono de carga -->
-      <li>{{ pelicula.nombre }}</li>
+    @for (pelicula of peliculas(); track pelicula.id) {
+      <li><a [routerLink]="['/peliculas', pelicula.id]">{{ pelicula.nombre }}</a></li>
     }
   </ul>
 }

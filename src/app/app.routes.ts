@@ -15,4 +15,9 @@ export const routes: Routes = [
   loadComponent: () =>
     import('./features/admin/alta-funcion/alta-funcion').then((m) => m.AltaFuncion),
 },
+{
+  path: 'peliculas/:id',
+  loadComponent: () =>
+    import('./features/peliculas/detalle/detalle').then((m) => m.Detalle),
+},
 ];

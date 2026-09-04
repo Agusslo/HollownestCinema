@@ -1,6 +1,6 @@
 import { Service, inject } from '@angular/core';
 import { Supabase } from './supabase';
-import IFuncion from '../interfaces/funcion';
+import IFuncion, { IFuncionConSala } from '../interfaces/funcion';
 
 const MARGEN_MINUTOS = 30;
 
@@ -58,4 +58,15 @@ private async obtenerDuracion(pelicula_id: number): Promise<number> {
 private sumarMinutos(fecha: Date, minutos: number): Date {
     return new Date(fecha.getTime() + minutos * 60000);
     }
+
+async obtenerPorPelicula(pelicula_id: number): Promise<IFuncionConSala[]> {
+    const { data, error } = await this.supabase.Supabase
+        .from('funciones')
+        .select('*, salas(nombre)')
+        .eq('pelicula_id', pelicula_id)
+        .order('fecha_hora', { ascending: true });
+
+    if (error) throw error;
+    return data as unknown as IFuncionConSala[];
+}
 }

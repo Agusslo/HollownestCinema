@@ -23,4 +23,15 @@ export class Peliculas {
 
   if (error) throw error;
 }
+
+async obtenerPorId(id: number): Promise<IPelicula> {
+  const { data, error } = await this.supabase.Supabase
+    .from('peliculas')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) throw error;
+  return data as IPelicula;
+}
 }

@@ -9,3 +9,7 @@ export default interface IFuncion {
     formato: Formato;
     idioma: Idioma;
 }
+
+export interface IFuncionConSala extends IFuncion {
+    salas: { nombre: string };
+}
