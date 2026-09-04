@@ -18,6 +18,10 @@ export class Home {
     this.cargarPeliculas();
   }
 
+  protected generarSlug(nombre: string): string { //esta función genera un slug a partir del nombre de la película, para poder usarlo en la URL
+    return this.peliculasService.generarSlug(nombre);
+  }
+
   private async cargarPeliculas() {
     this.peliculas.set(await this.peliculasService.obtenerTodas());
     this.cargando.set(false);

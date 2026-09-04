@@ -11,13 +11,12 @@ export const routes: Routes = [
       import('./features/admin/alta-pelicula/alta-pelicula').then((m) => m.AltaPelicula),
   },
   {
-  path: 'admin/funciones/nueva',
-  loadComponent: () =>
-    import('./features/admin/alta-funcion/alta-funcion').then((m) => m.AltaFuncion),
-},
-{
-  path: 'peliculas/:id',
-  loadComponent: () =>
-    import('./features/peliculas/detalle/detalle').then((m) => m.Detalle),
-},
+    path: 'admin/funciones/nueva',
+    loadComponent: () =>
+      import('./features/admin/alta-funcion/alta-funcion').then((m) => m.AltaFuncion),
+  },
+  {
+    path: 'peliculas/:nombre',
+    loadComponent: () => import('./features/peliculas/detalle/detalle').then((m) => m.Detalle),
+  },
 ];

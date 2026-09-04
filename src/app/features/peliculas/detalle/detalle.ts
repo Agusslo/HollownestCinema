@@ -13,7 +13,7 @@ import { IFuncionConSala } from '../../../core/interfaces/funcion';
   styleUrl: './detalle.css',
 })
 export class Detalle {
-  private route = inject(ActivatedRoute); // Inyectamos ActivatedRoute para obtener el parámetro de la ruta (id de la película)
+  private route = inject(ActivatedRoute);
   private peliculasService = inject(Peliculas);
   private funcionesService = inject(Funciones);
 
@@ -26,9 +26,10 @@ export class Detalle {
   }
 
   private async cargarDatos() {
-    const id = Number(this.route.snapshot.paramMap.get('id')); // Obtenemos el id de la película desde la ruta
-    this.pelicula.set(await this.peliculasService.obtenerPorId(id));
-    this.funciones.set(await this.funcionesService.obtenerPorPelicula(id));
+    const slug = this.route.snapshot.paramMap.get('nombre') ?? ''; // Obtiene el slug de la película desde la URL
+    const pelicula = await this.peliculasService.obtenerPorSlug(slug); // Obtiene la película correspondiente al slug
+    this.pelicula.set(pelicula);
+    this.funciones.set(await this.funcionesService.obtenerPorPelicula(pelicula.id));
     this.cargando.set(false);
   }
 }

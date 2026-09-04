@@ -5,7 +5,9 @@
 } @else {
   <ul>
     @for (pelicula of peliculas(); track pelicula.id) {
-      <li><a [routerLink]="['/peliculas', pelicula.id]">{{ pelicula.nombre }}</a></li>
+      <li>
+        <a [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">{{ pelicula.nombre }}</a>
+      </li>
     }
   </ul>
 }
