@@ -30,16 +30,6 @@ export class Peliculas {
     return data as IPelicula;
   }
 
-  async obtenerPorNombre(nombre: string): Promise<IPelicula> {
-    const { data, error } = await this.supabase.Supabase.from('peliculas')
-      .select('*')
-      .eq('nombre', nombre)
-      .single();
-
-    if (error) throw error;
-    return data as IPelicula;
-  }
-
   generarSlug(nombre: string): string { //esta función genera un slug a partir del nombre de la película, para poder usarlo en la URL
     return nombre
       .normalize('NFD')
