@@ -1,26 +1,40 @@
 <form [formGroup]="formulario" (ngSubmit)="guardar()">
+<label>
   <label>
     Película
+    <select formControlName="pelicula_id"> 
+    <option [ngValue]="null">Elegí una película</option>
+    @for (pelicula of peliculas(); track pelicula.id) {
     <select formControlName="pelicula_id">
       <option [ngValue]="null">Elegí una película</option>
       @for (pelicula of peliculas(); track pelicula.id) {
         <option [ngValue]="pelicula.id">{{ pelicula.nombre }}</option>
+    }
       }
     </select>
+</label>
   </label>
 
+<label>
   <label>
     Sala
     <select formControlName="sala_id">
+    <option [ngValue]="null">Elegí una sala</option>
+    @for (sala of salas(); track sala.id) {
       <option [ngValue]="null">Elegí una sala</option>
       @for (sala of salas(); track sala.id) {
         <option [ngValue]="sala.id">{{ sala.nombre }}</option>
+    }
       }
     </select>
+</label>
   </label>
 
+<label>
   <label>
     Fecha y hora
+    <input type="datetime-local" formControlName="fecha_hora" />
+</label>
     <input
       type="datetime-local"
       formControlName="fecha_hora"
@@ -29,27 +43,40 @@
     />
   </label>
 
+<label>
   <label>
     Formato
     <select formControlName="formato">
+    <option value="2d">2D</option>
+    <option value="3d">3D</option>
+    <option value="4d">4D</option>
+    <option value="5d">5D</option>
       <option value="2d">2D</option>
       <option value="3d">3D</option>
       <option value="4d">4D</option>
       <option value="5d">5D</option>
     </select>
+</label>
   </label>
 
+<label>
   <label>
     Idioma
     <select formControlName="idioma">
+    <option value="castellano">Castellano</option>
+    <option value="subtitulada">Subtitulada</option>
       <option value="castellano">Castellano</option>
       <option value="subtitulada">Subtitulada</option>
     </select>
+    </label>
   </label>
 
+@if (formulario.invalid && formulario.touched) {
   @if (formulario.invalid && formulario.touched) {
     <p style="color: red">Completá todos los campos antes de guardar.</p>
+}
   }
 
+    <button type="submit">Guardar función</button>
   <button type="submit">Guardar función</button>
 </form>

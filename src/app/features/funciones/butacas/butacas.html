@@ -1,0 +1,21 @@
+@if (cargando()) {
+<p>Cargando mapa de butacas...</p>
+} @else {
+<div class="sala">
+    @for (fila of layout(); track fila[0]) {
+    <div class="fila">
+        @for (butaca of fila; track butaca) {
+        <button
+            type="button"
+            [disabled]="estaOcupada(butaca)"
+            [class.ocupada]="estaOcupada(butaca)"
+            [class.seleccionada]="estaSeleccionada(butaca)"
+            (click)="toggleButaca(butaca)"
+        >
+            {{ butaca }}
+        </button>
+        }
+    </div>
+    }
+</div>
+}

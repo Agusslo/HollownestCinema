@@ -1,22 +1,26 @@
 @if (cargando()) {
-    <p>Cargando...</p>
+  <p>Cargando...</p>
 } @else if (pelicula(); as p) {
-    <h1>{{ p.nombre }}</h1>
-    <p>{{ p.sinopsis }}</p>
-    <p>Duración: {{ p.duracion_minutos }} min</p>
+  <h1>{{ p.nombre }}</h1>
+  <p>{{ p.sinopsis }}</p>
+  <p>Duración: {{ p.duracion_minutos }} min</p>
 
-    <h2>Funciones</h2>
-@if (funciones().length === 0) {
+  <h2>Funciones</h2>
+  @if (funciones().length === 0) {
     <p>No hay funciones cargadas para esta película.</p>
-} @else {
+  } @else {
     <ul>
-        @for (funcion of funciones(); track funcion.id) {
+      @for (funcion of funciones(); track funcion.id) {
         <li>
-            <a [routerLink]="['/funciones', funcion.id, 'butacas']"> 
-            {{ funcion.fecha_hora | date: 'short' }} — {{ funcion.salas.nombre }} — {{ funcion.formato }} — {{ funcion.idioma }} 
-            </a>
+          <a
+            [routerLink]="['/pelicula', generarSlug(p.nombre), 'butacas']"
+            [queryParams]="{ funcion: funcion.id }"
+          >
+            {{ funcion.fecha_hora | date: 'short' }} — {{ funcion.salas.nombre }} —
+            {{ funcion.formato }} — {{ funcion.idioma }}
+          </a>
         </li>
-    }
+      }
     </ul>
   }
 }

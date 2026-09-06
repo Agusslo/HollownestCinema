@@ -19,4 +19,8 @@ export const routes: Routes = [
     path: 'peliculas/:nombre',
     loadComponent: () => import('./features/peliculas/detalle/detalle').then((m) => m.Detalle),
   },
+  {
+    path: 'pelicula/:nombre/butacas',
+    loadComponent: () => import('./features/funciones/butacas/butacas').then((m) => m.Butacas),
+  },
 ];

@@ -21,6 +21,10 @@ export class Detalle {
   protected funciones = signal<IFuncionConSala[]>([]);
   protected cargando = signal(true);
 
+  protected generarSlug(nombre: string): string {
+    return this.peliculasService.generarSlug(nombre);
+  }
+
   constructor() {
     this.cargarDatos();
   }
