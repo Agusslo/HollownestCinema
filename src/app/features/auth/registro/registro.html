@@ -1,0 +1,75 @@
+<form [formGroup]="formulario" (ngSubmit)="registrar()">
+  <label>
+    Email
+    <input type="email" formControlName="email" />
+  </label>
+
+  <label>
+    Contraseña
+    <input type="password" formControlName="password" />
+  </label>
+
+  <label>
+    Nombre
+    <input type="text" formControlName="nombre" />
+  </label>
+
+  <label>
+    Apellido
+    <input type="text" formControlName="apellido" />
+  </label>
+
+  <label>
+    Fecha de nacimiento
+    <input
+      type="text"
+      formControlName="fecha_nacimiento"
+      maxlength="10"
+      inputmode="numeric"
+      placeholder="DD/MM/AAAA"
+      (input)="formatearFecha($event)"
+    />
+  </label>
+
+  <label>
+    Tipo de sangre
+    <select formControlName="tipo_sangre">
+      <option value="" disabled>Seleccioná tu tipo de sangre</option>
+      <option value="O+">O positivo (O+)</option>
+      <option value="A+">A positivo (A+)</option>
+      <option value="B+">B positivo (B+)</option>
+      <option value="O-">O negativo (O−)</option>
+      <option value="A-">A negativo (A−)</option>
+      <option value="AB+">AB positivo (AB+)</option>
+      <option value="B-">B negativo (B−)</option>
+      <option value="AB-">AB negativo (AB−)</option>
+    </select>
+  </label>
+
+  <label>
+    Color de ojos
+    <select formControlName="color_ojos">
+      <option value="" disabled>Seleccioná tu color de ojos</option>
+      <option value="marrón">Marrón</option>
+      <option value="negro">Negro</option>
+      <option value="azul">Azul</option>
+      <option value="verde">Verde</option>
+      <option value="gris">Gris</option>
+      <option value="miel">Miel</option>
+    </select>
+  </label>
+
+  <label>
+    Días de vacaciones por año
+    <input type="number" formControlName="dias_vacaciones" />
+  </label>
+
+  @if (formulario.invalid && formulario.touched) {
+    <p style="color: red">Completá todos los campos antes de registrarte.</p>
+  }
+  @if (error()) {
+    <p style="color: red">{{ error() }}</p>
+  }
+
+  <button type="submit">Registrarme</button>
+</form>

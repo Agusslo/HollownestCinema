@@ -1,0 +1,17 @@
+<form [formGroup]="formulario" (ngSubmit)="login()">
+<label>
+    Email
+    <input type="email" formControlName="email" />
+</label>
+
+<label>
+    Contraseña
+    <input type="password" formControlName="password" />
+</label>
+
+@if (error()) {
+    <p style="color: red">{{ error() }}</p>
+}
+
+<button type="submit">Ingresar</button>
+</form>

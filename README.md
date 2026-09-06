@@ -31,7 +31,8 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - [x] Detalle de película (sinopsis + listado de funciones, navegación por slug)
 - [x] ABM de funciones (horario, formato, idioma)
 - [x] Selección de butacas (sala fija de 20 filas / bloques 4-20-4) con margen de 30 min entre funciones
-- [ ] Registro de usuario + cupón 20% primera compra
+- [x] Registro y login de usuario
+- [ ] Compra con cupón 20% primera compra (registrado)
 - [ ] Compra anónima
 - [ ] Generación de PDF con entrada + código QR
 

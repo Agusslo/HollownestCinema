@@ -23,4 +23,12 @@ export const routes: Routes = [
     path: 'pelicula/:nombre/butacas',
     loadComponent: () => import('./features/funciones/butacas/butacas').then((m) => m.Butacas),
   },
+  {
+  path: 'registro',
+  loadComponent: () => import('./features/auth/registro/registro').then((m) => m.Registro),
+},
+{
+  path: 'login',
+  loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
+},
 ];
