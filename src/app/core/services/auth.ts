@@ -1,5 +1,6 @@
 import { Service, inject } from '@angular/core';
 import { Supabase } from './supabase';
+import IPerfil from '../interfaces/perfil';
 
 export interface DatosRegistro {
 email: string;
@@ -41,5 +42,19 @@ async registrar(datos: DatosRegistro): Promise<void> { // Registra un nuevo usua
 async login(email: string, password: string): Promise<void> {
     const { error } = await this.supabase.Supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
+}
+
+async usuarioActual(): Promise<IPerfil | null> {
+    const { data: { user } } = await this.supabase.Supabase.auth.getUser();// Obtiene el usuario actualmente autenticado
+    if (!user) return null;
+
+    const { data, error } = await this.supabase.Supabase
+    .from('perfiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
+    if (error) throw error;
+    return data as IPerfil;
 }
 }

@@ -18,4 +18,25 @@
     </div>
     }
 </div>
+
+<p>Butacas seleccionadas: {{ seleccionadas().size }}</p>
+@if (aplicaCupon()) {
+  <p>🎟️ Tenés 20% de descuento por ser tu primera compra registrada.</p>
+}
+<p>Total: ${{ calcularTotal() }}</p>
+
+@if (error()) {
+  <p style="color: red">{{ error() }}</p>
+}
+@if (compraExitosa()) {
+  <p style="color: green">¡Compra realizada! (todavía sin PDF, eso es el próximo paso)</p>
+}
+
+<button
+  type="button"
+  [disabled]="seleccionadas().size === 0 || comprando()"
+  (click)="confirmarCompra()"
+>
+  {{ comprando() ? 'Procesando...' : 'Confirmar compra' }}
+</button>
 }
