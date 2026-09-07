@@ -6,6 +6,7 @@ import { Funciones } from '../../../core/services/funciones';
 import { Auth } from '../../../core/services/auth';
 import IFuncion from '../../../core/interfaces/funcion';
 import IPerfil from '../../../core/interfaces/perfil';
+import { Pdf } from '../../../core/services/pdf';
 
 @Component({
   selector: 'app-butacas',
@@ -31,6 +32,7 @@ export class Butacas {
   protected error = signal<string | null>(null);
   protected compraExitosa = signal(false);
 
+  private pdfService = inject(Pdf);
   constructor() {
     this.cargarDatos();
   }
@@ -81,26 +83,41 @@ export class Butacas {
     return this.aplicaCupon() ? subtotal * 0.8 : subtotal;
   }
 
-  protected async confirmarCompra() {
-    if (this.seleccionadas().size === 0) return;
+protected async confirmarCompra() {
+  if (this.seleccionadas().size === 0) return;
 
-    this.error.set(null);
-    this.comprando.set(true);
+  this.error.set(null);
+  this.comprando.set(true);
 
-    try {
-      const usuario = this.usuario();
-      await this.entradasService.comprar(this.funcion_id, Array.from(this.seleccionadas()), usuario);
+  try {
+    const usuario = this.usuario();
+    const butacasCompradas = await this.entradasService.comprar(
+      this.funcion_id,
+      Array.from(this.seleccionadas()),
+      usuario,
+    );
 
-      this.compraExitosa.set(true);
-      this.seleccionadas.set(new Set());
+    const detalle = await this.funcionesService.obtenerDetalleCompra(this.funcion_id);
 
-      const ocupadasArray = await this.entradasService.obtenerButacasOcupadas(this.funcion_id);
-      this.ocupadas.set(new Set(ocupadasArray));
-      this.usuario.set(await this.authService.usuarioActual());
-    } catch (e) {
-      this.error.set((e as Error).message);
-    } finally {
-      this.comprando.set(false);
-    }
+    await this.pdfService.generarEntradas(
+      butacasCompradas.map((b) => ({
+        ...detalle,
+        fila: b.fila,
+        columna: b.columna,
+        codigo_qr: b.codigo_qr,
+      })),
+    );
+
+    this.compraExitosa.set(true);
+    this.seleccionadas.set(new Set());
+
+    const ocupadasArray = await this.entradasService.obtenerButacasOcupadas(this.funcion_id);
+    this.ocupadas.set(new Set(ocupadasArray));
+    this.usuario.set(await this.authService.usuarioActual());
+  } catch (e) {
+    this.error.set((e as Error).message);
+  } finally {
+    this.comprando.set(false);
   }
+}
 }

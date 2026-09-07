@@ -1,6 +1,6 @@
 import { Service, inject } from '@angular/core';
 import { Supabase } from './supabase';
-import IFuncion, { IFuncionConSala } from '../interfaces/funcion';
+import IFuncion, { IFuncionConSala, Formato, Idioma } from '../interfaces/funcion';
 
 const MARGEN_MINUTOS = 30;
 
@@ -80,5 +80,24 @@ async obtenerPorPelicula(pelicula_id: number): Promise<IFuncionConSala[]> {
     if (error) throw error;
     return data as unknown as IFuncionConSala[];
 }
+
+async obtenerDetalleCompra(id: number): Promise<{pelicula: string;sala: string;fecha_hora: string;formato: Formato;idioma: Idioma;}> {
+    const { data, error } = await this.supabase.Supabase
+        .from('funciones')
+        .select('fecha_hora, formato, idioma, peliculas(nombre), salas(nombre)')
+        .eq('id', id)
+        .single();
+
+    if (error) throw error;
+
+    return {
+        pelicula: (data as any).peliculas.nombre, //data as any porque no reconoce la relación con peliculas y salas, pero sabemos que existen
+        sala: (data as any).salas.nombre,
+        fecha_hora: data.fecha_hora,
+        formato: data.formato,
+        idioma: data.idioma,
+    };
+}
+
 }
 

@@ -3,6 +3,10 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractContro
 import { Router } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
 
+const SOLO_LETRAS_REGEX = /^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ])[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]+$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+const ENTERO_POSITIVO_REGEX = /^(0|[1-9]\d*)$/;
+
 function validarFechaNacimiento(control: AbstractControl): ValidationErrors | null {
   const valor = control.value;
   if (!valor) return null;
@@ -57,14 +61,30 @@ export class Registro {
   protected formulario = new FormGroup({
     email: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.email],
+      validators: [Validators.required, Validators.email, Validators.pattern(EMAIL_REGEX)],
     }),
     password: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(6)],
+      validators: [Validators.required, Validators.minLength(6), Validators.maxLength(100)],
     }),
-    nombre: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    apellido: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    nombre: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+        Validators.pattern(SOLO_LETRAS_REGEX),
+      ],
+    }),
+    apellido: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+        Validators.pattern(SOLO_LETRAS_REGEX),
+      ],
+    }),
     fecha_nacimiento: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, validarFechaNacimiento],
@@ -73,7 +93,12 @@ export class Registro {
     color_ojos: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
     dias_vacaciones: new FormControl(0, {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(0)],
+      validators: [
+        Validators.required,
+        Validators.min(0),
+        Validators.max(365),
+        Validators.pattern(ENTERO_POSITIVO_REGEX),
+      ],
     }),
   });
 
@@ -90,6 +115,10 @@ export class Registro {
       const [dia, mes, anio] = datos.fecha_nacimiento.split('/');
       await this.authService.registrar({
         ...datos,
+        nombre: datos.nombre.trim(),
+        apellido: datos.apellido.trim(),
+        email: datos.email.trim(),
+        dias_vacaciones: Number(datos.dias_vacaciones),
         fecha_nacimiento: `${anio}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`,
       });
       this.router.navigateByUrl('/');
