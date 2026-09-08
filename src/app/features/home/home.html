@@ -1,13 +1,30 @@
 @if (cargando()) {
-  <p>Cargando cartelera...</p>
+  <section class="cartelera-loading" aria-live="polite" aria-label="Cargando cartelera">
+    <div class="loading-posters" aria-hidden="true">
+      <span class="loading-poster"></span>
+      <span class="loading-poster"></span>
+      <span class="loading-poster"></span>
+    </div>
+    <p class="loading-title">
+      Cargando cartelera<span class="loading-dots" aria-hidden="true">...</span>
+    </p>
+  </section>
 } @else if (peliculas().length === 0) {
   <p>Todavía no hay películas cargadas.</p>
 } @else {
-  <ul>
+  <div class="cartelera">
     @for (pelicula of peliculas(); track pelicula.id) {
-      <li>
-        <a [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">{{ pelicula.nombre }}</a>
-      </li>
+      <a class="poster-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
+        <div class="poster-frame">
+          <img
+            class="poster-img"
+            [src]="pelicula.imagen_url"
+            [alt]="pelicula.nombre"
+            onerror="this.src = 'https://placehold.co/260x380?text=Sin+imagen'"
+          />
+        </div>
+        <p class="poster-nombre">{{ pelicula.nombre }}</p>
+      </a>
     }
-  </ul>
+  </div>
 }

@@ -34,7 +34,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - [x] Registro y login de usuario
 - [x] Compra con cupón 20% primera compra (registrado)
 - [x] Compra anónima
-- [ ] Generación de PDF con entrada + código QR
+- [x] Generación de PDF con entrada + código QR
 
 ---
 

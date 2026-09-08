@@ -1,42 +1,71 @@
 @if (cargando()) {
-<p>Cargando mapa de butacas...</p>
+  <p>Cargando mapa de butacas...</p>
 } @else {
-<div class="sala">
-    @for (fila of layout(); track fila[0]) {
-    <div class="fila">
-        @for (butaca of fila; track butaca) {
-        <button
-            type="button"
-            [disabled]="estaOcupada(butaca)"
-            [class.ocupada]="estaOcupada(butaca)"
-            [class.seleccionada]="estaSeleccionada(butaca)"
-            (click)="toggleButaca(butaca)"
-        >
-            {{ butaca }}
-        </button>
+  <div class="butacas-container">
+    <header class="sala-heading">
+      <p class="eyebrow">Elegí dónde sentarte</p>
+      <h1>Seleccioná tu butaca</h1>
+    </header>
+
+    <div class="seleccion-layout">
+      <section class="mapa-sala" aria-label="Mapa de butacas">
+        <div class="pantalla">PANTALLA</div>
+
+        <div class="sala">
+          @for (fila of layout(); track fila[0]) {
+            <div class="fila">
+              <span class="fila-letra">{{ fila[0].charAt(0) }}</span>
+              @for (butaca of fila; track butaca; let i = $index) {
+                @if (i === 4 || i === 24) {
+                  <span class="pasillo"></span>
+                }
+                <button
+                  type="button"
+                  class="butaca"
+                  [disabled]="estaOcupada(butaca)"
+                  [class.ocupada]="estaOcupada(butaca)"
+                  [class.seleccionada]="estaSeleccionada(butaca)"
+                  [attr.aria-label]="'Butaca ' + butaca"
+                  [title]="butaca"
+                  (click)="toggleButaca(butaca)"
+                >
+                  {{ butaca }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="referencias">
+          <span><i class="ref-box libre"></i> Libre</span>
+          <span><i class="ref-box ocupada"></i> Ocupada</span>
+          <span><i class="ref-box seleccionada"></i> Seleccionada</span>
+        </div>
+      </section>
+
+      <aside class="resumen-compra">
+        <p>Butacas seleccionadas: {{ seleccionadas().size }}</p>
+        @if (aplicaCupon()) {
+          <p class="cupon-msg">🎟️ Tenés 20% de descuento por ser tu primera compra registrada.</p>
         }
+        <p class="total">Total: ${{ calcularTotal() }}</p>
+
+        @if (error()) {
+          <p class="error-msg">{{ error() }}</p>
+        }
+        @if (compraExitosa()) {
+          <p class="exito-msg">¡Compra realizada! Se descargó tu PDF con la/s entrada/s.</p>
+        }
+
+        <button
+          type="button"
+          class="btn-comprar"
+          [disabled]="seleccionadas().size === 0 || comprando()"
+          (click)="confirmarCompra()"
+        >
+          {{ comprando() ? 'Procesando...' : 'Confirmar compra' }}
+        </button>
+      </aside>
     </div>
-    }
-</div>
-
-<p>Butacas seleccionadas: {{ seleccionadas().size }}</p>
-@if (aplicaCupon()) {
-  <p>🎟️ Tenés 20% de descuento por ser tu primera compra registrada.</p>
-}
-<p>Total: ${{ calcularTotal() }}</p>
-
-@if (error()) {
-  <p style="color: red">{{ error() }}</p>
-}
-@if (compraExitosa()) {
-  <p style="color: green">¡Compra realizada! Se descargó tu PDF con la/s entrada/s.</p>
-}
-
-<button
-  type="button"
-  [disabled]="seleccionadas().size === 0 || comprando()"
-  (click)="confirmarCompra()"
->
-  {{ comprando() ? 'Procesando...' : 'Confirmar compra' }}
-</button>
+  </div>
 }

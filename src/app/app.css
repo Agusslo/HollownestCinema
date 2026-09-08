@@ -1,0 +1,95 @@
+.hotbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 14px clamp(16px, 4vw, 56px);
+  background: linear-gradient(180deg, #292943 0%, var(--color-piedra-oscura) 100%);
+  border-bottom: 4px solid var(--color-oro);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.28);
+}
+
+.hotbar-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.slot-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-oro);
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.logo-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  background: var(--color-diamante);
+  border: 3px solid #b7f5ff;
+  box-shadow: 3px 3px 0 #236b78;
+  font-size: 1.1rem;
+}
+
+.logo-text {
+  font-size: 1.15rem;
+  text-shadow: 2px 2px 0 #6e4b00;
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  background-color: rgba(122, 122, 122, 0.75);
+  border: 3px solid var(--color-piedra-oscura);
+  color: var(--color-texto);
+  text-decoration: none;
+  font-family: 'Minecraft', monospace;
+  font-size: 0.85rem;
+}
+
+.slot:hover {
+  background-color: var(--color-cesped);
+  border-color: var(--color-oro);
+}
+
+.nav-link-primary {
+  background-color: var(--color-cesped);
+  border-color: #9acb61;
+}
+
+main {
+  min-height: calc(100vh - 75px);
+  padding: clamp(24px, 5vw, 56px) clamp(16px, 5vw, 72px);
+  background:
+    linear-gradient(rgba(26, 26, 46, 0.88), rgba(26, 26, 46, 0.96)),
+    repeating-linear-gradient(0deg, transparent 0 31px, rgba(255, 255, 255, 0.025) 32px),
+    repeating-linear-gradient(90deg, transparent 0 31px, rgba(255, 255, 255, 0.025) 32px);
+}
+
+@media (max-width: 620px) {
+  .hotbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .slot-logo {
+    justify-content: center;
+  }
+
+  .hotbar-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .slot {
+    padding: 9px 6px;
+    font-size: 0.7rem;
+  }
+}

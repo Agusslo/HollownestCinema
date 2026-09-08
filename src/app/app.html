@@ -1,1 +1,15 @@
-<router-outlet />
+<header class="hotbar">
+  <a class="slot-logo" [routerLink]="['/']">
+    <span class="logo-icon" aria-hidden="true">🎬</span>
+    <span class="logo-text">CINECRAFT</span>
+  </a>
+  <nav class="hotbar-links">
+    <a class="slot nav-link" [routerLink]="['/']">Cartelera</a>
+    <a class="slot nav-link" [routerLink]="['/login']">Ingresar</a>
+    <a class="slot nav-link nav-link-primary" [routerLink]="['/registro']">Registrarme</a>
+  </nav>
+</header>
+
+<main>
+  <router-outlet />
+</main>

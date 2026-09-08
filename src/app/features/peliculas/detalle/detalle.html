@@ -1,26 +1,51 @@
 @if (cargando()) {
   <p>Cargando...</p>
 } @else if (pelicula(); as p) {
-  <h1>{{ p.nombre }}</h1>
-  <p>{{ p.sinopsis }}</p>
-  <p>Duración: {{ p.duracion_minutos }} min</p>
+  <article class="detalle-pelicula">
+    <div class="pelicula-presentacion">
+      <div class="detalle-poster-frame">
+        <img class="detalle-poster" [src]="p.imagen_url" [alt]="'Póster de ' + p.nombre" />
+      </div>
+      <div class="pelicula-info">
+        <p class="eyebrow">Ahora en cartelera</p>
+        <h1>{{ p.nombre }}</h1>
+        <p class="sinopsis">{{ p.sinopsis }}</p>
+        <div class="pelicula-meta">
+          <span class="meta-label">Duración</span>
+          <strong>{{ p.duracion_minutos }} min</strong>
+        </div>
+      </div>
+    </div>
 
-  <h2>Funciones</h2>
-  @if (funciones().length === 0) {
-    <p>No hay funciones cargadas para esta película.</p>
-  } @else {
-    <ul>
-      @for (funcion of funciones(); track funcion.id) {
-        <li>
-          <a
-            [routerLink]="['/pelicula', generarSlug(p.nombre), 'butacas']"
-            [queryParams]="{ funcion: funcion.id }"
-          >
-            {{ funcion.fecha_hora | date: 'short' }} — {{ funcion.salas.nombre }} —
-            {{ funcion.formato }} — {{ funcion.idioma }}
-          </a>
-        </li>
+    <section class="funciones-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Elegí tu horario</p>
+          <h2>Funciones</h2>
+        </div>
+        <span class="function-count">{{ funciones().length }} disponibles</span>
+      </div>
+
+      @if (funciones().length === 0) {
+        <p class="empty-state">No hay funciones cargadas para esta película.</p>
+      } @else {
+        <div class="funciones-lista">
+          @for (funcion of funciones(); track funcion.id) {
+            <a
+              class="funcion-card"
+              [routerLink]="['/pelicula', generarSlug(p.nombre), 'butacas']"
+              [queryParams]="{ funcion: funcion.id }"
+            >
+              <span class="funcion-fecha">{{ funcion.fecha_hora | date: 'EEE d MMM' }}</span>
+              <strong class="funcion-hora">{{ funcion.fecha_hora | date: 'shortTime' }}</strong>
+              <span class="funcion-detalle"
+                >{{ funcion.salas.nombre }} · {{ funcion.formato }} · {{ funcion.idioma }}</span
+              >
+              <span class="funcion-arrow" aria-hidden="true">›</span>
+            </a>
+          }
+        </div>
       }
-    </ul>
-  }
+    </section>
+  </article>
 }
