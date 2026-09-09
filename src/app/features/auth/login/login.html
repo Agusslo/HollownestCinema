@@ -1,17 +1,49 @@
-<form [formGroup]="formulario" (ngSubmit)="login()">
-  <label>
-    Email
-    <input type="email" formControlName="email" />
-  </label>
+<div class="auth-page">
+  <div class="auth-card">
+    <img src="/img/hornet.png" alt="Hornet" class="hornet-decor" aria-hidden="true" />
 
-  <label>
-    Contraseña
-    <input type="password" formControlName="password" />
-  </label>
+    <div class="auth-header">
+      <span class="auth-icon">🪡</span>
+      <h1>Iniciar sesión</h1>
+      <p class="auth-subtitle">Ingresá a tu cuenta para comprar entradas</p>
+    </div>
 
-  @if (error()) {
-    <p style="color: red">{{ error() }}</p>
-  }
+    <form [formGroup]="formulario" (ngSubmit)="login()">
+      <label
+        [class.campo-invalido]="
+          formulario.controls.email.touched && formulario.controls.email.invalid
+        "
+      >
+        Email
+        <input type="email" formControlName="email" placeholder="ejemplo@correo.com" />
+      </label>
+      @if (formulario.controls.email.touched && formulario.controls.email.invalid) {
+        @if (formulario.controls.email.hasError('required')) {
+          <p class="error-campo">El email es requerido.</p>
+        } @else {
+          <p class="error-campo">Ingresá un email válido.</p>
+        }
+      }
 
-  <button type="submit">Ingresar</button>
-</form>
+      <label
+        [class.campo-invalido]="
+          formulario.controls.password.touched && formulario.controls.password.invalid
+        "
+      >
+        Contraseña
+        <input type="password" formControlName="password" placeholder="Tu contraseña" />
+      </label>
+      @if (formulario.controls.password.touched && formulario.controls.password.invalid) {
+        <p class="error-campo">La contraseña es requerida.</p>
+      }
+
+      @if (error()) {
+        <p class="error-msg">{{ error() }}</p>
+      }
+
+      <button type="submit">Ingresar</button>
+    </form>
+
+    <p class="auth-footer">¿No tenés cuenta? <a [routerLink]="['/registro']">Registrate</a></p>
+  </div>
+</div>

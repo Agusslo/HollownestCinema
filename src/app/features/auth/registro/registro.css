@@ -1,0 +1,96 @@
+/* ── Auth page layout ── */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 180px);
+  padding-top: 60px;
+  position: relative;
+  margin-bottom: 80px;
+}
+
+.auth-card {
+  width: min(100%, 500px);
+  position: relative;
+  background: linear-gradient(180deg, var(--hk-shell) 0%, var(--hk-deep) 100%);
+  border: 1px solid rgba(212, 212, 224, 0.1);
+  border-radius: 4px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  padding: 32px;
+}
+
+/* ── Hornet Decoration ── */
+.hornet-decor {
+  position: absolute;
+  top: -100px;
+  left: -90px;
+  height: 220px;
+  width: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5));
+  z-index: 10;
+  animation: float 4s ease-in-out infinite;
+  transform: scaleX(-1); /* Mirrored for the left side! */
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) scaleX(-1);
+  }
+  50% {
+    transform: translateY(-10px) scaleX(-1);
+  }
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-icon {
+  display: inline-block;
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.auth-header h1 {
+  margin: 0 0 8px;
+  font-size: 1.8rem;
+  color: var(--hk-soul);
+  text-shadow: 0 0 20px rgba(79, 196, 227, 0.2);
+}
+
+.auth-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--hk-ash);
+  font-style: italic;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.85rem;
+  color: var(--hk-pale);
+}
+
+.auth-footer a {
+  color: var(--hk-focus);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+  text-shadow: 0 0 8px rgba(79, 196, 227, 0.5);
+}
+
+form {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
