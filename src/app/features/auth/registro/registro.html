@@ -6,7 +6,9 @@
   @if (formulario.controls.email.touched && formulario.controls.email.invalid) {
     @if (formulario.controls.email.hasError('required')) {
       <p style="color: red">El email es requerido.</p>
-    } @else if (formulario.controls.email.hasError('email') || formulario.controls.email.hasError('pattern')) {
+    } @else if (
+      formulario.controls.email.hasError('email') || formulario.controls.email.hasError('pattern')
+    ) {
       <p style="color: red">Ingresá un formato de email válido (ej: usuario&#64;correo.com).</p>
     }
   }
@@ -67,7 +69,10 @@
     />
   </label>
 
-  @if (formulario.controls.fecha_nacimiento.touched || formulario.controls.fecha_nacimiento.value.length === 10) {
+  @if (
+    formulario.controls.fecha_nacimiento.touched ||
+    formulario.controls.fecha_nacimiento.value.length === 10
+  ) {
     @if (formulario.controls.fecha_nacimiento.hasError('mesInvalido')) {
       <p style="color: red">El mes debe ser entre 01 y 12.</p>
     } @else if (formulario.controls.fecha_nacimiento.hasError('diaInvalido')) {
@@ -76,7 +81,10 @@
       <p style="color: red">La fecha de nacimiento no puede ser futura.</p>
     } @else if (formulario.controls.fecha_nacimiento.hasError('anioInvalido')) {
       <p style="color: red">El año ingresado no es válido (mínimo 1900).</p>
-    } @else if (formulario.controls.fecha_nacimiento.hasError('formatoInvalido') && formulario.controls.fecha_nacimiento.touched) {
+    } @else if (
+      formulario.controls.fecha_nacimiento.hasError('formatoInvalido') &&
+      formulario.controls.fecha_nacimiento.touched
+    ) {
       <p style="color: red">El formato debe ser DD/MM/AAAA.</p>
     }
   }

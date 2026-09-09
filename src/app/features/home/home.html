@@ -1,17 +1,28 @@
 @if (cargando()) {
   <section class="cartelera-loading" aria-live="polite" aria-label="Cargando cartelera">
-    <div class="loading-posters" aria-hidden="true">
-      <span class="loading-poster"></span>
-      <span class="loading-poster"></span>
-      <span class="loading-poster"></span>
+    <div class="loading-soul">
+      <span class="soul-spinner"></span>
     </div>
     <p class="loading-title">
-      Cargando cartelera<span class="loading-dots" aria-hidden="true">...</span>
+      Explorando Hallownest<span class="loading-dots" aria-hidden="true">...</span>
     </p>
   </section>
 } @else if (peliculas().length === 0) {
-  <p>Todavía no hay películas cargadas.</p>
+  <section class="empty-state">
+    <img class="empty-shade" src="/img/void.png" alt="" aria-hidden="true" />
+    <p class="empty-text">No hay películas en la cartelera aún.</p>
+    <p class="empty-sub">El vacío espera ser llenado...</p>
+  </section>
 } @else {
+  <section class="hero">
+    <img class="hero-shade" src="/img/void.png" alt="" aria-hidden="true" />
+    <div class="hero-content">
+      <h1 class="hero-titulo">Cartelera</h1>
+      <p class="hero-sub">Elegí tu próxima aventura en la oscuridad</p>
+      <div class="hero-linea"></div>
+    </div>
+  </section>
+
   <div class="cartelera">
     @for (pelicula of peliculas(); track pelicula.id) {
       <a class="poster-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
@@ -20,8 +31,12 @@
             class="poster-img"
             [src]="pelicula.imagen_url"
             [alt]="pelicula.nombre"
-            onerror="this.src = 'https://placehold.co/260x380?text=Sin+imagen'"
+            onerror="
+              this.src =
+                'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
+            "
           />
+          <div class="poster-glow"></div>
         </div>
         <p class="poster-nombre">{{ pelicula.nombre }}</p>
       </a>

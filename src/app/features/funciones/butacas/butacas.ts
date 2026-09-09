@@ -45,12 +45,7 @@ export class Butacas {
     this.ocupadas.set(new Set(ocupadasArray));
 
     this.funcion.set(await this.funcionesService.obtenerPorId(this.funcion_id));
-
-    try {
-      this.usuario.set(await this.authService.usuarioActual());
-    } catch {
-      this.usuario.set(null); // Si falla auth, tratamos como anónimo
-    }
+    this.usuario.set(await this.authService.usuarioActual());
 
     this.cargando.set(false);
   }

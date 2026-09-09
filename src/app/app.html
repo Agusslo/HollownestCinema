@@ -1,12 +1,25 @@
-<header class="hotbar">
-  <a class="slot-logo" [routerLink]="['/']">
-    <span class="logo-icon" aria-hidden="true">🎬</span>
-    <span class="logo-text">CINECRAFT</span>
+<header class="nav-header">
+  <a class="logo" [routerLink]="['/']">
+    <img class="logo-icon" src="/img/The_Knight.png" alt="The Knight" />
+    <span class="logo-text">Hollownest Cinema</span>
   </a>
-  <nav class="hotbar-links">
-    <a class="slot nav-link" [routerLink]="['/']">Cartelera</a>
-    <a class="slot nav-link" [routerLink]="['/login']">Ingresar</a>
-    <a class="slot nav-link nav-link-primary" [routerLink]="['/registro']">Registrarme</a>
+
+  <nav class="nav-links">
+    <a class="nav-item" [routerLink]="['/']">Cartelera</a>
+
+    @if (!cargandoAuth()) {
+      @if (usuario(); as u) {
+        <span class="nav-item user-badge">
+          <span class="soul-orb" aria-hidden="true"></span>
+          {{ u.nombre }}
+        </span>
+        <button class="nav-item" type="button" (click)="cerrarSesion()">Salir</button>
+      } @else {
+        <span class="nav-item user-badge shade">Sombra</span>
+        <a class="nav-item" [routerLink]="['/login']">Ingresar</a>
+        <a class="nav-item nav-primary" [routerLink]="['/registro']">Registrarme</a>
+      }
+    }
   </nav>
 </header>
 

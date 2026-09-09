@@ -13,7 +13,7 @@
 
 .seleccion-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 250px;
+  grid-template-columns: minmax(0, 1fr) 260px;
   justify-content: center;
   gap: 28px;
   align-items: start;
@@ -25,38 +25,42 @@
 
 .eyebrow {
   margin: 0 0 8px;
-  color: var(--color-diamante);
-  font-size: 0.75rem;
-  letter-spacing: 2px;
+  color: var(--hk-focus);
+  font-size: 0.72rem;
+  letter-spacing: 3px;
   text-transform: uppercase;
+  font-family: 'Trajan', serif;
 }
 
 h1 {
   margin: 0;
-  color: var(--color-texto);
+  color: var(--hk-soul);
   font-size: clamp(1.25rem, 2.5vw, 1.9rem);
   text-transform: uppercase;
+  letter-spacing: 4px;
 }
 
 /* ── Pantalla ── */
 .pantalla {
-  margin: 0 auto 18px;
-  padding: 6px;
+  margin: 0 auto 20px;
+  padding: 8px;
   width: min(84%, 780px);
-  background: linear-gradient(to bottom, var(--color-diamante), transparent);
-  color: var(--color-obsidiana);
-  font-size: 0.78rem;
-  letter-spacing: 3px;
+  background: linear-gradient(to bottom, var(--hk-focus), transparent);
+  color: var(--hk-void);
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
   clip-path: polygon(5% 0, 95% 0, 100% 100%, 0 100%);
 }
 
-/* ── Sala (grid de filas) ── */
+/* ── Sala ── */
 .sala {
   display: flex;
   flex-direction: column;
   gap: 2px;
   width: fit-content;
-  margin: 0 auto 12px;
+  margin: 0 auto 16px;
 }
 
 /* ── Fila ── */
@@ -68,62 +72,68 @@ h1 {
 
 .fila-letra {
   width: 20px;
-  font-size: 0.7rem;
-  color: var(--color-diamante);
+  font-size: 0.65rem;
+  color: var(--hk-focus);
   font-weight: bold;
   text-align: center;
   flex-shrink: 0;
+  font-family: 'Trajan', serif;
 }
 
-/* ── Pasillo (espacio entre bloques) ── */
+/* ── Pasillo ── */
 .pasillo {
   display: inline-block;
   width: 10px;
   flex-shrink: 0;
 }
 
-/* ── Butaca ── */
+/* ── Butaca (libre) ── */
 .butaca {
   width: 26px;
   height: 26px;
   min-width: 0;
   padding: 0;
-  border: 2px solid var(--color-piedra-oscura);
-  background-color: var(--color-cesped);
-  color: var(--color-obsidiana);
-  font-size: 0.42rem;
+  border: 1px solid rgba(79, 196, 227, 0.2);
+  background-color: var(--hk-stone);
+  color: var(--hk-ash);
+  font-family: 'Perpetua', serif;
+  font-size: 0.38rem;
   font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
-  image-rendering: pixelated;
   flex-shrink: 0;
-  transition:
-    background-color 0.1s,
-    border-color 0.1s,
-    transform 0.1s;
+  border-radius: 2px;
+  transition: all 0.2s;
 }
 
+/* Hover */
 .butaca:hover:not(:disabled) {
-  background-color: var(--color-oro);
-  border-color: var(--color-oro);
+  background-color: var(--hk-ash);
+  border-color: var(--hk-focus);
+  color: var(--hk-soul);
   transform: scale(1.15);
   z-index: 1;
+  box-shadow: 0 0 8px rgba(79, 196, 227, 0.3);
 }
 
+/* Seleccionada — Soul azul brillante */
 .butaca.seleccionada {
-  background-color: var(--color-diamante);
-  border-color: #4ff8ff;
-  color: var(--color-obsidiana);
-  box-shadow: 0 0 6px rgba(79, 248, 255, 0.5);
+  background-color: var(--hk-focus);
+  border-color: #7dd8f0;
+  color: var(--hk-void);
+  box-shadow:
+    0 0 8px rgba(79, 196, 227, 0.5),
+    0 0 16px rgba(79, 196, 227, 0.2);
 }
 
+/* Ocupada — Oscura/void */
 .butaca.ocupada {
-  background-color: var(--color-piedra-oscura);
-  border-color: #333;
-  color: #555;
+  background-color: var(--hk-shade);
+  border-color: rgba(42, 42, 61, 0.5);
+  color: rgba(74, 74, 94, 0.4);
   cursor: not-allowed;
 }
 
@@ -131,27 +141,42 @@ h1 {
 .referencias {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 24px;
   margin-bottom: 16px;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
+  color: var(--hk-pale);
+  font-family: 'Perpetua', serif;
+  letter-spacing: 0.5px;
+}
+
+.referencias span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .ref-box {
   display: inline-block;
-  width: 12px;
-  height: 12px;
-  margin-right: 4px;
-  border: 2px solid var(--color-piedra-oscura);
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
   vertical-align: middle;
 }
+
 .ref-box.libre {
-  background-color: var(--color-cesped);
+  background-color: var(--hk-stone);
+  border: 1px solid rgba(79, 196, 227, 0.2);
 }
+
 .ref-box.ocupada {
-  background-color: var(--color-piedra-oscura);
+  background-color: var(--hk-shade);
+  border: 1px solid rgba(42, 42, 61, 0.5);
 }
+
 .ref-box.seleccionada {
-  background-color: var(--color-diamante);
+  background-color: var(--hk-focus);
+  border: 1px solid #7dd8f0;
+  box-shadow: 0 0 6px rgba(79, 196, 227, 0.4);
 }
 
 /* ── Resumen de compra ── */
@@ -159,30 +184,36 @@ h1 {
   position: sticky;
   top: 20px;
   display: block;
-  width: 250px;
-  padding: 20px;
-  background-color: var(--color-piedra-oscura);
-  border: var(--borde-pixel);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  width: 260px;
+  padding: 24px;
+  background: linear-gradient(180deg, var(--hk-shell) 0%, var(--hk-deep) 100%);
+  border: 1px solid rgba(212, 212, 224, 0.08);
+  border-radius: 4px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
 }
 
 .total {
   font-size: 1.2rem;
-  color: var(--color-oro);
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  letter-spacing: 1px;
 }
 
 .cupon-msg {
-  color: var(--color-diamante);
+  color: var(--hk-focus);
+  font-size: 0.85rem;
 }
+
 .error-msg {
-  color: #e05555;
+  color: var(--hk-grimm);
 }
+
 .exito-msg {
-  color: var(--color-cesped);
+  color: var(--hk-focus);
 }
 
 .btn-comprar {
-  margin-top: 12px;
+  margin-top: 16px;
   width: 100%;
 }
 
@@ -205,7 +236,7 @@ h1 {
   .butaca {
     width: 22px;
     height: 22px;
-    font-size: 0.38rem;
+    font-size: 0.34rem;
   }
 
   .pasillo {

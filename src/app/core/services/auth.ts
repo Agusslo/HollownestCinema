@@ -3,58 +3,64 @@ import { Supabase } from './supabase';
 import IPerfil from '../interfaces/perfil';
 
 export interface DatosRegistro {
-email: string;
-password: string;
-nombre: string;
-apellido: string;
-fecha_nacimiento: string;
-tipo_sangre: string;
-color_ojos: string;
-dias_vacaciones: number;
+  email: string;
+  password: string;
+  nombre: string;
+  apellido: string;
+  fecha_nacimiento: string;
+  tipo_sangre: string;
+  color_ojos: string;
+  dias_vacaciones: number;
 }
 
 @Service()
 export class Auth {
-private supabase = inject(Supabase);
+  private supabase = inject(Supabase);
 
-async registrar(datos: DatosRegistro): Promise<void> { // Registra un nuevo usuario y crea su perfil en la base de datos
+  async registrar(datos: DatosRegistro): Promise<void> {
+    // Registra un nuevo usuario y crea su perfil en la base de datos
     const { data, error } = await this.supabase.Supabase.auth.signUp({
-    email: datos.email,
-    password: datos.password,
+      email: datos.email,
+      password: datos.password,
     });
 
     if (error) throw error;
     if (!data.user) throw new Error('No se pudo crear el usuario.');
 
     const { error: errorPerfil } = await this.supabase.Supabase.from('perfiles').insert({
-    id: data.user.id,
-    nombre: datos.nombre,
-    apellido: datos.apellido,
-    fecha_nacimiento: datos.fecha_nacimiento,
-    tipo_sangre: datos.tipo_sangre,
-    color_ojos: datos.color_ojos,
-    dias_vacaciones: datos.dias_vacaciones,
+      id: data.user.id,
+      nombre: datos.nombre,
+      apellido: datos.apellido,
+      fecha_nacimiento: datos.fecha_nacimiento,
+      tipo_sangre: datos.tipo_sangre,
+      color_ojos: datos.color_ojos,
+      dias_vacaciones: datos.dias_vacaciones,
     });
 
     if (errorPerfil) throw errorPerfil;
-}
+  }
 
-async login(email: string, password: string): Promise<void> {
+  async login(email: string, password: string): Promise<void> {
     const { error } = await this.supabase.Supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-}
+  }
 
-async usuarioActual(): Promise<IPerfil | null> {
-    const { data: { user } } = await this.supabase.Supabase.auth.getUser();// Obtiene el usuario actualmente autenticado
+  async usuarioActual(): Promise<IPerfil | null> {
+    const {
+      data: { user },
+    } = await this.supabase.Supabase.auth.getUser(); // Obtiene el usuario actualmente autenticado
     if (!user) return null;
 
-    const { data, error } = await this.supabase.Supabase
-    .from('perfiles')
-    .select('*')
-    .eq('id', user.id)
-    .single();
+    const { data, error } = await this.supabase.Supabase.from('perfiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
 
     if (error) throw error;
     return data as IPerfil;
-}
+  }
+
+  async logout(): Promise<void> {
+    await this.supabase.Supabase.auth.signOut();
+  }
 }
