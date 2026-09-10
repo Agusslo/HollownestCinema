@@ -30,16 +30,15 @@
   filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5));
   z-index: 10;
   animation: float 4s ease-in-out infinite;
-  transform: scaleX(-1); /* Mirrored for the left side! */
 }
 
 @keyframes float {
   0%,
   100% {
-    transform: translateY(0) scaleX(-1);
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px) scaleX(-1);
+    transform: translateY(-10px);
   }
 }
 

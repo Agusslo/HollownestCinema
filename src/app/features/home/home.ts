@@ -43,19 +43,27 @@ export class Home {
     // Pedimos las dos listas en paralelo con Promise.all, en vez de una
     // después de la otra: son dos consultas independientes, no tiene
     // sentido esperar a que termine una para arrancar la otra.
-    const [masVendidas, todas] = await Promise.all([
-      this.peliculasService.obtenerMasVendidas(3),
-      this.peliculasService.obtenerTodas(),
-    ]);
+    try {
+      const [masVendidas, todas] = await Promise.all([
+        this.peliculasService.obtenerMasVendidas(3),
+        this.peliculasService.obtenerTodas(),
+      ]);
 
-    // Sacamos de "todas" las que ya aparecen en masVendidas, para no
-    // mostrar una película dos veces en la cartelera.
-    const idsTop = new Set(masVendidas.map((p) => p.id));
-    const resto = todas.filter((p) => !idsTop.has(p.id));
+      // Sacamos de "todas" las que ya aparecen en masVendidas, para no
+      // mostrar una película dos veces en la cartelera.
+      const idsTop = new Set(masVendidas.map((p) => p.id));
+      const resto = todas.filter((p) => !idsTop.has(p.id));
 
-    this.destacadas.set(masVendidas);
-    this.peliculas.set(resto);
-    this.todas.set(todas); // NUEVO
-    this.cargando.set(false);
+      this.destacadas.set(masVendidas);
+      this.peliculas.set(resto);
+      this.todas.set(todas); // NUEVO
+    } catch (error) {
+      console.error('No se pudo cargar la cartelera', error);
+      this.destacadas.set([]);
+      this.peliculas.set([]);
+      this.todas.set([]);
+    } finally {
+      this.cargando.set(false);
+    }
   }
 }

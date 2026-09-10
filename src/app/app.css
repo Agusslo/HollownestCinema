@@ -168,20 +168,16 @@ main {
   width: 60px;
   height: auto;
   opacity: 0.8;
-  animation: walk-left 25s linear infinite;
-  opacity: 0.85;
   animation: walk-right 25s linear infinite;
+  opacity: 0.85;
   filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.8));
 }
 
-@keyframes walk-left {
 @keyframes walk-right {
   0% {
-    transform: translateX(100vw);
     transform: translateX(-100px);
   }
   100% {
-    transform: translateX(-100px);
     transform: translateX(100vw);
   }
 }
