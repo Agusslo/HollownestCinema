@@ -127,7 +127,11 @@ h2 {
 }
 
 .funcion-hora {
+  position: absolute;
+  top: 50%;
+  right: 40px;
   color: var(--color-oro);
+  transform: translateY(-50%);
 }
 
 .funcion-detalle {

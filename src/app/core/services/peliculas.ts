@@ -45,4 +45,34 @@ export class Peliculas {
     if (!pelicula) throw new Error(`No se encontró la película: ${slug}`);
     return pelicula;
   }
+
+
+  async obtenerMasVendidas(cantidad: number): Promise<IPelicula[]> {
+    // Traemos cada entrada junto con la película de su función, vía doble
+    // join embebido: entradas -> funciones -> peliculas
+    const { data, error } = await this.supabase.Supabase
+      .from('entradas')
+      .select('funciones(pelicula_id)');
+
+    if (error) throw error;
+
+    // Contamos ocurrencias de cada pelicula_id
+    const conteo = new Map<number, number>();
+    for (const fila of data as unknown as { funciones: { pelicula_id: number } }[]) {
+      const id = fila.funciones.pelicula_id;
+      conteo.set(id, (conteo.get(id) ?? 0) + 1);
+    }
+
+    // Ordenamos los ids de mayor a menor cantidad de ventas
+    const idsOrdenados = [...conteo.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([id]) => id)
+      .slice(0, cantidad);
+
+    const todas = await this.obtenerTodas();
+    // Reordenamos "todas" según idsOrdenados, para respetar el ranking
+    return idsOrdenados
+      .map((id) => todas.find((p) => p.id === id))
+      .filter((p): p is IPelicula => p !== undefined);
+  }
 }

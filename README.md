@@ -41,7 +41,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 ### Correo 2 — Reseñas y mejoras a la cartelera
 - [ ] Sistema de reseñas: calificación con estrellas + comentario corto, visible antes de comprar
 - [ ] Puntuación promedio de la película
-- [ ] Home: mostrar primero las 3 películas más vendidas
+- [x] Home: mostrar primero las 3 películas más vendidas
 - [ ] Buscador en el listado de películas
 
 ### Correo 3 — Buscador por género

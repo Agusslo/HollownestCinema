@@ -7,7 +7,7 @@
       Explorando Hallownest<span class="loading-dots" aria-hidden="true">...</span>
     </p>
   </section>
-} @else if (peliculas().length === 0) {
+} @else if (peliculas().length === 0 && destacadas().length === 0) {
   <section class="empty-state">
     <img class="empty-shade" src="/img/void.png" alt="" aria-hidden="true" />
     <p class="empty-text">No hay películas en la cartelera aún.</p>
@@ -23,23 +23,56 @@
     </div>
   </section>
 
-  <div class="cartelera">
-    @for (pelicula of peliculas(); track pelicula.id) {
-      <a class="poster-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
-        <div class="poster-frame">
-          <img
-            class="poster-img"
-            [src]="pelicula.imagen_url"
-            [alt]="pelicula.nombre"
-            onerror="
-              this.src =
-                'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
-            "
-          />
-          <div class="poster-glow"></div>
-        </div>
-        <p class="poster-nombre">{{ pelicula.nombre }}</p>
-      </a>
-    }
-  </div>
+  @if (destacadas().length > 0) {
+    <h2 class="seccion-titulo">Las más vistas de Hallownest</h2>
+    <div class="destacadas-grid">
+      @for (pelicula of destacadas(); track pelicula.id; let i = $index) {
+        <a class="destacada-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
+          <div class="destacada-frame">
+            <div class="destacada-rango">
+              <span class="rango-simbolo">✦</span>
+              <span class="rango-texto">Nº {{ i + 1 }}</span>
+            </div>
+            <span class="destacada-duracion">⏱ {{ pelicula.duracion_minutos }} min</span>
+            <img
+              class="destacada-img"
+              [src]="pelicula.imagen_url"
+              [alt]="pelicula.nombre"
+              onerror="
+                this.src =
+                  'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
+              "
+            />
+            <div class="destacada-cinta">Más vista</div>
+          </div>
+          <p class="destacada-nombre">{{ pelicula.nombre }}</p>
+        </a>
+      }
+    </div>
+  }
+
+  @if (peliculas().length > 0) {
+    <h2 class="seccion-titulo">
+      {{ destacadas().length > 0 ? 'Resto de la cartelera' : 'Cartelera' }}
+    </h2>
+    <div class="cartelera">
+      @for (pelicula of peliculas(); track pelicula.id) {
+        <a class="poster-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
+          <div class="poster-frame">
+            <img
+              class="poster-img"
+              [src]="pelicula.imagen_url"
+              [alt]="pelicula.nombre"
+              onerror="
+                this.src =
+                  'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
+              "
+            />
+            <div class="poster-glow"></div>
+          </div>
+          <p class="poster-nombre">{{ pelicula.nombre }}</p>
+        </a>
+      }
+    </div>
+  }
 }

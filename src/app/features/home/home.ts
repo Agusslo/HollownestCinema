@@ -11,6 +11,7 @@ import IPelicula from '../../core/interfaces/pelicula';
 })
 export class Home {
   private peliculasService = inject(Peliculas);
+  protected destacadas = signal<IPelicula[]>([]);
   protected peliculas = signal<IPelicula[]>([]);
   protected cargando = signal(true);
 
@@ -18,12 +19,26 @@ export class Home {
     this.cargarPeliculas();
   }
 
-  protected generarSlug(nombre: string): string { //esta función genera un slug a partir del nombre de la película, para poder usarlo en la URL
+  protected generarSlug(nombre: string): string {
     return this.peliculasService.generarSlug(nombre);
   }
 
   private async cargarPeliculas() {
-    this.peliculas.set(await this.peliculasService.obtenerTodas());
+       // Pedimos las dos listas en paralelo con Promise.all, en vez de una
+    // después de la otra: son dos consultas independientes, no tiene
+    // sentido esperar a que termine una para arrancar la otra.
+    const [masVendidas, todas] = await Promise.all([
+      this.peliculasService.obtenerMasVendidas(3),
+      this.peliculasService.obtenerTodas(),
+    ]);
+
+    // Sacamos de "todas" las que ya aparecen en masVendidas, para no
+    // mostrar una película dos veces en la cartelera.
+    const idsTop = new Set(masVendidas.map((p) => p.id));
+    const resto = todas.filter((p) => !idsTop.has(p.id));
+
+    this.destacadas.set(masVendidas);
+    this.peliculas.set(resto);
     this.cargando.set(false);
   }
 }
