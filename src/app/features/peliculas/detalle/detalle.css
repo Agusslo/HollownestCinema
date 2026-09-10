@@ -103,7 +103,7 @@ h2 {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 5px 12px;
-  padding: 16px 40px 16px 18px;
+  padding: 18px 40px 18px 20px;
   color: var(--color-texto);
   text-decoration: none;
   background: rgba(61, 61, 61, 0.78);
@@ -122,7 +122,9 @@ h2 {
 
 .funcion-fecha {
   color: var(--color-diamante);
-  font-size: 0.76rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
   text-transform: capitalize;
 }
 
@@ -136,9 +138,9 @@ h2 {
 
 .funcion-detalle {
   grid-column: 1 / -1;
-  color: rgba(240, 240, 240, 0.72);
+  color: rgba(240, 240, 240, 0.84);
   font-family: sans-serif;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
 }
 
 .funcion-arrow {

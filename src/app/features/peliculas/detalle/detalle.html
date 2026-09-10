@@ -36,8 +36,12 @@
               [routerLink]="['/pelicula', generarSlug(p.nombre), 'butacas']"
               [queryParams]="{ funcion: funcion.id }"
             >
-              <span class="funcion-fecha">{{ funcion.fecha_hora | date: 'EEE d MMM' }}</span>
-              <strong class="funcion-hora">{{ funcion.fecha_hora | date: 'shortTime' }}</strong>
+              <span class="funcion-fecha">{{
+                funcion.fecha_hora | date: "EEEE d 'de' MMMM" : '' : 'es'
+              }}</span>
+              <strong class="funcion-hora">{{
+                funcion.fecha_hora | date: 'shortTime' : '' : 'es'
+              }}</strong>
               <span class="funcion-detalle"
                 >{{ funcion.salas.nombre }} · {{ funcion.formato }} · {{ funcion.idioma }}</span
               >
