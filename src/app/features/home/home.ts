@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Peliculas } from '../../core/services/peliculas';
 import IPelicula from '../../core/interfaces/pelicula';
@@ -13,7 +13,18 @@ export class Home {
   private peliculasService = inject(Peliculas);
   protected destacadas = signal<IPelicula[]>([]);
   protected peliculas = signal<IPelicula[]>([]);
+  protected todas = signal<IPelicula[]>([]); //guardamos la lista completa para poder buscar sobre ella
   protected cargando = signal(true);
+  protected busqueda = signal(''); // NUEVO
+
+  //computed() recalcula esto solo cada vez que cambian busqueda() o
+  // todas() — no hay que llamarlo a mano. Devuelve null si no hay búsqueda
+  // activa (para distinguir "no está buscando" de "buscó y no encontró nada").
+  protected resultadosBusqueda = computed<IPelicula[] | null>(() => {
+    const texto = this.busqueda().trim().toLowerCase();
+    if (!texto) return null;
+    return this.todas().filter((p) => p.nombre.toLowerCase().includes(texto));
+  });
 
   constructor() {
     this.cargarPeliculas();
@@ -23,8 +34,13 @@ export class Home {
     return this.peliculasService.generarSlug(nombre);
   }
 
+  protected buscar(valor: string): void {
+    // NUEVO
+    this.busqueda.set(valor);
+  }
+
   private async cargarPeliculas() {
-       // Pedimos las dos listas en paralelo con Promise.all, en vez de una
+    // Pedimos las dos listas en paralelo con Promise.all, en vez de una
     // después de la otra: son dos consultas independientes, no tiene
     // sentido esperar a que termine una para arrancar la otra.
     const [masVendidas, todas] = await Promise.all([
@@ -39,6 +55,7 @@ export class Home {
 
     this.destacadas.set(masVendidas);
     this.peliculas.set(resto);
+    this.todas.set(todas); // NUEVO
     this.cargando.set(false);
   }
 }

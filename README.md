@@ -42,7 +42,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - [ ] Sistema de reseñas: calificación con estrellas + comentario corto, visible antes de comprar
 - [ ] Puntuación promedio de la película
 - [x] Home: mostrar primero las 3 películas más vendidas
-- [ ] Buscador en el listado de películas
+- [x] Buscador en el listado de películas
 
 ### Correo 3 — Buscador por género
 - [ ] Buscador debe filtrar por género (una película puede tener varios géneros)

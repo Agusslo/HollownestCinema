@@ -243,9 +243,9 @@
 /* ── Destacadas (3 películas más vendidas) ── */
 .destacadas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px;
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -399,4 +399,41 @@
   .hero-shade {
     width: 70px;
   }
+
+  .destacadas-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Buscador (Correo 2) ── */
+.buscador {
+  max-width: 500px;
+  margin: 0 auto 48px;
+  padding: 0 8px;
+}
+
+.buscador-input {
+  width: 100%;
+  padding: 12px 18px;
+  background: var(--hk-shell);
+  border: 1px solid rgba(212, 212, 224, 0.15);
+  border-radius: 4px;
+  color: var(--hk-soul);
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  outline: none;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.buscador-input::placeholder {
+  color: var(--hk-ash);
+  font-style: italic;
+}
+
+.buscador-input:focus {
+  border-color: var(--hk-focus);
+  box-shadow: 0 0 16px rgba(79, 196, 227, 0.15);
 }
