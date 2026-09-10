@@ -58,7 +58,7 @@ export class Resenias {
     }),
     comentario: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(300)],
+      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(500)],
     }),
   });
 

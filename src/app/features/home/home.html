@@ -29,8 +29,11 @@
       @for (pelicula of destacadas(); track pelicula.id; let i = $index) {
         <a class="destacada-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
           <div class="destacada-frame">
-            <span class="destacada-rango">Nº{{ i + 1 }}</span>
-            <span class="destacada-duracion">{{ pelicula.duracion_minutos }} min</span>
+            <div class="destacada-rango">
+              <span class="rango-simbolo">✦</span>
+              <span class="rango-texto">Nº {{ i + 1 }}</span>
+            </div>
+            <span class="destacada-duracion">⏱ {{ pelicula.duracion_minutos }} min</span>
             <img
               class="destacada-img"
               [src]="pelicula.imagen_url"

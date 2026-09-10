@@ -345,6 +345,19 @@
     inset 0 0 8px rgba(0, 0, 0, 0.6);
 }
 
+.textarea-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.contador-caracteres {
+  font-family: 'Perpetua', serif;
+  font-size: 0.8rem;
+  color: var(--hk-ash);
+  letter-spacing: 0.5px;
+}
+
 /* ── Errores ── */
 .campo-error,
 .form-error {

@@ -103,11 +103,23 @@
             formControlName="comentario"
             placeholder="Contanos qué te pareció la película..."
             rows="3"
+            maxlength="100"
           ></textarea>
+          <div class="textarea-footer">
+            <span class="contador-caracteres"
+              >{{ formulario.controls.comentario.value.length }}/100</span
+            >
+          </div>
         </div>
 
         @if (formulario.controls.comentario.touched && formulario.controls.comentario.invalid) {
-          <p class="campo-error">Escribí un comentario de al menos 3 caracteres.</p>
+          @if (formulario.controls.comentario.hasError('required')) {
+            <p class="campo-error">Por favor escribí un comentario para publicar tu testimonio.</p>
+          } @else if (formulario.controls.comentario.hasError('minlength')) {
+            <p class="campo-error">El comentario es demasiado corto (mínimo 3 caracteres).</p>
+          } @else if (formulario.controls.comentario.hasError('maxlength')) {
+            <p class="campo-error">El comentario no puede superar los 500 caracteres.</p>
+          }
         }
 
         @if (error()) {
