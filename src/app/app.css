@@ -167,17 +167,16 @@ main {
   left: 0;
   width: 60px;
   height: auto;
-  opacity: 0.8;
-  animation: walk-right 25s linear infinite;
   opacity: 0.85;
+  animation: walk-left 25s linear infinite;
   filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.8));
 }
 
-@keyframes walk-right {
+@keyframes walk-left {
   0% {
-    transform: translateX(-100px);
+    transform: translateX(100vw) scaleX(-1);
   }
   100% {
-    transform: translateX(100vw);
+    transform: translateX(-100px) scaleX(-1);
   }
 }

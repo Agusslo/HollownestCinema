@@ -1,0 +1,123 @@
+<section class="resenias-seccion">
+  <div class="resenias-header-container">
+    <h2 class="resenias-titulo">Reseñas de Hallownest</h2>
+    <div class="resenias-divisor"></div>
+  </div>
+
+  @if (cargando()) {
+    <div class="cargando-resenias">
+      <span class="soul-spinner"></span>
+      <p class="cargando-texto">Consultando los registros del reino...</p>
+    </div>
+  } @else {
+    @if (promedio() > 0) {
+      <div class="promedio-resenias">
+        <div class="promedio-badge">
+          <span class="promedio-estrella">★</span>
+          <span class="promedio-numero">{{ promedio() }}</span>
+        </div>
+        <span class="promedio-cantidad">
+          ({{ resenias().length }} {{ resenias().length === 1 ? 'testimonio' : 'testimonios' }})
+        </span>
+      </div>
+    }
+
+    @if (resenias().length === 0) {
+      <div class="sin-resenias-caja">
+        <p class="sin-resenias">
+          El silencio reina en estos pasajes... Sé el primero en dejar tu testimonio.
+        </p>
+      </div>
+    } @else {
+      <ul class="lista-resenias">
+        @for (resenia of resenias(); track resenia.id) {
+          <li class="resenia-item">
+            <div class="resenia-header">
+              <div class="autor-info">
+                <span class="autor-soul-orb" aria-hidden="true"></span>
+                <span class="resenia-autor"
+                  >{{ resenia.perfiles.nombre }} {{ resenia.perfiles.apellido }}</span
+                >
+              </div>
+              <div class="resenia-estrellas" [attr.aria-label]="resenia.estrellas + ' estrellas'">
+                @for (s of [1, 2, 3, 4, 5]; track s) {
+                  <span class="estrella-mini" [class.dorada]="s <= resenia.estrellas">★</span>
+                }
+              </div>
+            </div>
+            <p class="resenia-comentario">{{ resenia.comentario }}</p>
+          </li>
+        }
+      </ul>
+    }
+
+    @if (!usuarioActual()) {
+      <div class="resenia-aviso-caja">
+        <p class="resenia-aviso">Necesitás iniciar sesión como viajero para inscribir tu reseña.</p>
+      </div>
+    } @else if (yaReseno()) {
+      <div class="resenia-aviso-caja exito">
+        <span class="aviso-icon">✦</span>
+        <p class="resenia-aviso">
+          Tu testimonio ya ha sido grabado en los muros del reino. ¡Gracias!
+        </p>
+      </div>
+    } @else {
+      <form class="form-resenia" [formGroup]="formulario" (ngSubmit)="enviar()">
+        <div class="form-encabezado">
+          <h3 class="form-titulo">Inscribir testimonio</h3>
+          <p class="form-subtitulo">Compartí tu veredicto con los demás exploradores</p>
+        </div>
+
+        <div class="estrellas-bloque">
+          <div
+            class="selector-estrellas"
+            role="radiogroup"
+            aria-label="Calificación en estrellas"
+            (mouseleave)="hoverEstrellas.set(0)"
+          >
+            @for (n of [1, 2, 3, 4, 5]; track n) {
+              <button
+                type="button"
+                class="estrella-boton"
+                [class.activa]="n <= (hoverEstrellas() || (formulario.value.estrellas ?? 0))"
+                [class.hover-target]="n === hoverEstrellas()"
+                (mouseenter)="hoverEstrellas.set(n)"
+                (click)="formulario.controls.estrellas.setValue(n)"
+                [attr.aria-label]="n + ' estrellas'"
+              >
+                ★
+              </button>
+            }
+          </div>
+          <span class="etiqueta-calificacion">{{ etiquetaCalificacion() }}</span>
+        </div>
+
+        @if (formulario.controls.estrellas.touched && formulario.controls.estrellas.invalid) {
+          <p class="campo-error">Por favor seleccioná al menos una estrella de calificación.</p>
+        }
+
+        <div class="textarea-wrapper">
+          <textarea
+            class="comentario-input"
+            formControlName="comentario"
+            placeholder="Contanos qué te pareció la película..."
+            rows="3"
+          ></textarea>
+        </div>
+
+        @if (formulario.controls.comentario.touched && formulario.controls.comentario.invalid) {
+          <p class="campo-error">Escribí un comentario de al menos 3 caracteres.</p>
+        }
+
+        @if (error()) {
+          <p class="form-error">{{ error() }}</p>
+        }
+
+        <button type="submit" class="boton-enviar" [disabled]="enviando()">
+          <span class="btn-texto">{{ enviando() ? 'Inscribiendo...' : 'Publicar reseña' }}</span>
+        </button>
+      </form>
+    }
+  }
+</section>

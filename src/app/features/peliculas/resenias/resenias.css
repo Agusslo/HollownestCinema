@@ -1,0 +1,404 @@
+/* ── Sección Reseñas ── */
+.resenias-seccion {
+  max-width: 760px;
+  margin: 64px auto 32px;
+  padding: 0 16px;
+}
+
+.resenias-header-container {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.resenias-titulo {
+  font-family: 'Trajan', serif;
+  font-size: 1.3rem;
+  color: var(--hk-soul);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(79, 196, 227, 0.15);
+}
+
+.resenias-divisor {
+  width: 100px;
+  height: 1px;
+  margin: 12px auto 0;
+  background: linear-gradient(90deg, transparent, var(--hk-focus), transparent);
+  opacity: 0.5;
+}
+
+/* ── Loading ── */
+.cargando-resenias {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px 0;
+}
+
+.cargando-resenias .soul-spinner {
+  width: 36px;
+  height: 36px;
+  border-width: 2px;
+}
+
+.cargando-texto {
+  font-family: 'Perpetua', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--hk-ash);
+  margin: 0;
+}
+
+/* ── Promedio de Calificaciones ── */
+.promedio-resenias {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.promedio-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  background: linear-gradient(135deg, rgba(28, 28, 46, 0.9), rgba(17, 17, 34, 0.95));
+  border: 1px solid var(--hk-geo);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.6),
+    0 0 12px rgba(232, 168, 50, 0.25);
+  clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+  color: var(--hk-geo);
+}
+
+.promedio-estrella {
+  font-size: 1.1rem;
+  filter: drop-shadow(0 0 4px var(--hk-geo));
+}
+
+.promedio-numero {
+  font-family: 'Trajan', serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.promedio-cantidad {
+  font-family: 'Perpetua', serif;
+  font-size: 0.95rem;
+  color: var(--hk-ash);
+  letter-spacing: 0.5px;
+}
+
+/* ── Lista de Reseñas ── */
+.lista-resenias {
+  list-style: none;
+  margin: 0 0 36px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resenia-item {
+  background: linear-gradient(180deg, var(--hk-shell) 0%, var(--hk-deep) 100%);
+  border: 1px solid rgba(212, 212, 224, 0.08);
+  border-radius: 4px;
+  padding: 18px 22px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.resenia-item:hover {
+  border-color: rgba(79, 196, 227, 0.2);
+  box-shadow:
+    0 8px 26px rgba(0, 0, 0, 0.5),
+    0 0 16px rgba(79, 196, 227, 0.04);
+}
+
+.resenia-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(212, 212, 224, 0.06);
+}
+
+.autor-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.autor-soul-orb {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--hk-focus);
+  box-shadow: 0 0 8px var(--hk-focus);
+}
+
+.resenia-autor {
+  font-family: 'Trajan', serif;
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  color: var(--hk-soul);
+}
+
+.resenia-estrellas {
+  display: flex;
+  gap: 2px;
+}
+
+.estrella-mini {
+  font-size: 1rem;
+  color: #2b2b3d;
+  line-height: 1;
+}
+
+.estrella-mini.dorada {
+  color: var(--hk-geo);
+  text-shadow: 0 0 6px rgba(232, 168, 50, 0.5);
+}
+
+.resenia-comentario {
+  margin: 0;
+  font-family: 'Perpetua', serif;
+  font-size: 1rem;
+  color: var(--hk-pale);
+  line-height: 1.6;
+}
+
+/* ── Avisos / Estados vacíos ── */
+.sin-resenias-caja,
+.resenia-aviso-caja {
+  padding: 24px;
+  background: rgba(17, 17, 34, 0.6);
+  border: 1px dashed rgba(212, 212, 224, 0.12);
+  border-radius: 4px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.resenia-aviso-caja.exito {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-color: rgba(79, 196, 227, 0.3);
+  background: rgba(79, 196, 227, 0.05);
+}
+
+.aviso-icon {
+  color: var(--hk-focus);
+  font-size: 1.1rem;
+  filter: drop-shadow(0 0 6px var(--hk-focus));
+}
+
+.sin-resenias,
+.resenia-aviso {
+  margin: 0;
+  font-family: 'Perpetua', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--hk-ash);
+}
+
+.resenia-aviso-caja.exito .resenia-aviso {
+  color: var(--hk-pale);
+}
+
+/* ── Formulario de Reseña ── */
+.form-resenia {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px;
+  background: linear-gradient(180deg, rgba(28, 28, 46, 0.95) 0%, rgba(17, 17, 34, 0.98) 100%);
+  border: 1px solid rgba(212, 212, 224, 0.12);
+  border-radius: 6px;
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(79, 196, 227, 0.03);
+  position: relative;
+}
+
+.form-encabezado {
+  text-align: left;
+  margin-bottom: 4px;
+}
+
+.form-titulo {
+  margin: 0;
+  font-family: 'Trajan', serif;
+  font-size: 1rem;
+  color: var(--hk-soul);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.form-subtitulo {
+  margin: 6px 0 0;
+  font-family: 'Perpetua', serif;
+  font-style: italic;
+  font-size: 0.88rem;
+  color: var(--hk-ash);
+}
+
+/* ── Selector de Estrellas interactivo ── */
+.estrellas-bloque {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 8px 12px;
+  background: rgba(10, 10, 18, 0.6);
+  border: 1px solid rgba(212, 212, 224, 0.08);
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.selector-estrellas {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.estrella-boton {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  line-height: 1;
+  color: #2b2b3d;
+  cursor: pointer;
+  padding: 2px 4px;
+  transition:
+    color 0.15s ease,
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter 0.15s ease;
+  user-select: none;
+}
+
+/* Al estar activa (seleccionada o en hover por delante) */
+.estrella-boton.activa {
+  color: var(--hk-geo);
+  text-shadow:
+    0 0 12px rgba(232, 168, 50, 0.7),
+    0 0 24px rgba(232, 168, 50, 0.35);
+  filter: drop-shadow(0 0 4px rgba(232, 168, 50, 0.6));
+}
+
+/* Efecto de pulso en la estrella exacta sobre la que está el mouse */
+.estrella-boton.hover-target {
+  transform: scale(1.28);
+}
+
+.etiqueta-calificacion {
+  font-family: 'Trajan', serif;
+  font-size: 0.78rem;
+  letter-spacing: 1.5px;
+  color: var(--hk-pale);
+  text-transform: uppercase;
+  min-width: 140px;
+  transition: color 0.2s;
+}
+
+/* ── Textarea ── */
+.textarea-wrapper {
+  position: relative;
+}
+
+.comentario-input {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 90px;
+  padding: 14px 16px;
+  background: #090912;
+  border: 1px solid rgba(212, 212, 224, 0.14);
+  border-radius: 4px;
+  color: var(--hk-soul);
+  font-family: 'Perpetua', serif;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  outline: none;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.comentario-input::placeholder {
+  color: rgba(74, 74, 94, 0.8);
+  font-style: italic;
+}
+
+.comentario-input:focus {
+  border-color: var(--hk-focus);
+  box-shadow:
+    0 0 16px rgba(79, 196, 227, 0.2),
+    inset 0 0 8px rgba(0, 0, 0, 0.6);
+}
+
+/* ── Errores ── */
+.campo-error,
+.form-error {
+  margin: 0;
+  font-family: 'Perpetua', serif;
+  font-size: 0.88rem;
+  color: var(--hk-grimm);
+  letter-spacing: 0.5px;
+}
+
+/* ── Botón Publicar ── */
+.boton-enviar {
+  align-self: flex-start;
+  padding: 10px 28px;
+  background: linear-gradient(180deg, rgba(79, 196, 227, 0.15) 0%, rgba(79, 196, 227, 0.02) 100%);
+  border: 1px solid var(--hk-focus);
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.82rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.boton-enviar:hover:not(:disabled) {
+  background: var(--hk-focus);
+  color: var(--hk-void);
+  box-shadow:
+    0 0 20px rgba(79, 196, 227, 0.5),
+    0 4px 14px rgba(0, 0, 0, 0.6);
+  transform: translateY(-1px);
+}
+
+.boton-enviar:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 620px) {
+  .form-resenia {
+    padding: 20px 16px;
+  }
+
+  .estrellas-bloque {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .estrella-boton {
+    font-size: 1.7rem;
+  }
+}

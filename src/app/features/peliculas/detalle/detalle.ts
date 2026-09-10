@@ -5,10 +5,11 @@ import { Peliculas } from '../../../core/services/peliculas';
 import { Funciones } from '../../../core/services/funciones';
 import IPelicula from '../../../core/interfaces/pelicula';
 import { IFuncionConSala } from '../../../core/interfaces/funcion';
+import { Resenias } from '../resenias/resenias';
 
 @Component({
   selector: 'app-detalle',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, Resenias],
   templateUrl: './detalle.html',
   styleUrl: './detalle.css',
 })

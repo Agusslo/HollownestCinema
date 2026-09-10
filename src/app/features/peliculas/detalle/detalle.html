@@ -31,8 +31,7 @@
       } @else {
         <div class="funciones-lista">
           @for (funcion of funciones(); track funcion.id) {
-            <a
-              class="funcion-card"
+            <a class="funcion-card"
               [routerLink]="['/pelicula', generarSlug(p.nombre), 'butacas']"
               [queryParams]="{ funcion: funcion.id }"
             >
@@ -45,11 +44,13 @@
               <span class="funcion-detalle"
                 >{{ funcion.salas.nombre }} · {{ funcion.formato }} · {{ funcion.idioma }}</span
               >
-              <span class="funcion-arrow" aria-hidden="true">›</span>
+              <span class="funcion-arrow" aria-hidden="true">&rsaquo;</span>
             </a>
           }
         </div>
       }
     </section>
+
+    <app-resenias [peliculaId]="p.id" />
   </article>
 }
