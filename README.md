@@ -21,7 +21,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 ### Base (no ligado a un correo puntual)
 - [x] Inicialización del proyecto con Angular 22
 - [x] Conexión y configuración inicial con Supabase
-- [ ] Configuración como Progressive Web App (PWA)
+- [x] Configuración como Progressive Web App (PWA)
 
 ### Correo 1 — Propuesta inicial
 - [x] Modelo de datos y RLS (películas, salas, funciones, perfiles, entradas)
@@ -40,7 +40,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 
 ### Correo 2 — Reseñas y mejoras a la cartelera
 - [x] Sistema de reseñas: calificación con estrellas + comentario corto, visible antes de comprar
-- [ ] Puntuación promedio de la película
+- [x] Puntuación promedio de la película
 - [x] Home: mostrar primero las 3 películas más vendidas
 - [x] Buscador en el listado de películas
 

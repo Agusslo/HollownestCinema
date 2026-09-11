@@ -23,56 +23,101 @@
     </div>
   </section>
 
-  @if (destacadas().length > 0) {
-    <h2 class="seccion-titulo destacadas-titulo">Las más vistas de Hallownest</h2>
-    <div class="destacadas-grid">
-      @for (pelicula of destacadas(); track pelicula.id; let i = $index) {
-        <a class="destacada-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
-          <div class="destacada-frame">
-            <div class="destacada-rango">
-              <span class="rango-simbolo">✦</span>
-              <span class="rango-texto">Nº {{ i + 1 }}</span>
-            </div>
-            <span class="destacada-duracion">⏱ {{ pelicula.duracion_minutos | duracion }}</span>
-            <img
-              class="destacada-img"
-              [src]="pelicula.imagen_url"
-              [alt]="pelicula.nombre"
-              onerror="
-                this.src =
-                  'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
-              "
-            />
-            <div class="destacada-cinta">Más vista</div>
-          </div>
-          <p class="destacada-nombre">{{ pelicula.nombre }}</p>
-        </a>
-      }
+  <div class="buscador">
+    <label class="buscador-label" for="buscar-pelicula">Explorá la cartelera</label>
+    <div class="buscador-control">
+      <span class="buscador-icono" aria-hidden="true">⌕</span>
+      <input
+        id="buscar-pelicula"
+        class="buscador-input"
+        type="search"
+        placeholder="Buscar una película..."
+        autocomplete="off"
+        [value]="busqueda()"
+        (input)="buscar($any($event.target).value)"
+      />
     </div>
-  }
+  </div>
 
-  @if (peliculas().length > 0) {
-    <h2 class="seccion-titulo">
-      {{ destacadas().length > 0 ? 'Resto de la cartelera' : 'Cartelera' }}
-    </h2>
-    <div class="cartelera">
-      @for (pelicula of peliculas(); track pelicula.id) {
-        <a class="poster-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
-          <div class="poster-frame">
-            <img
-              class="poster-img"
-              [src]="pelicula.imagen_url"
-              [alt]="pelicula.nombre"
-              onerror="
-                this.src =
-                  'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
-              "
-            />
-            <div class="poster-glow"></div>
-          </div>
-          <p class="poster-nombre">{{ pelicula.nombre }}</p>
-        </a>
-      }
-    </div>
+  @if (resultadosBusqueda(); as resultados) {
+    <h2 class="seccion-titulo resultados-titulo">Resultados de búsqueda</h2>
+    @if (resultados.length > 0) {
+      <div class="cartelera">
+        @for (pelicula of resultados; track pelicula.id) {
+          <a class="poster-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
+            <div class="poster-frame">
+              <img
+                class="poster-img"
+                [src]="pelicula.imagen_url"
+                [alt]="pelicula.nombre"
+                onerror="
+                  this.src =
+                    'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
+                "
+              />
+              <div class="poster-glow"></div>
+            </div>
+            <p class="poster-nombre">{{ pelicula.nombre }}</p>
+          </a>
+        }
+      </div>
+    } @else {
+      <div class="busqueda-vacia">
+        <p>No encontramos películas con ese nombre.</p>
+      </div>
+    }
+  } @else {
+    @if (destacadas().length > 0) {
+      <h2 class="seccion-titulo destacadas-titulo">Las más vistas de Hallownest</h2>
+      <div class="destacadas-grid">
+        @for (pelicula of destacadas(); track pelicula.id; let i = $index) {
+          <a class="destacada-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
+            <div class="destacada-frame">
+              <div class="destacada-rango">
+                <span class="rango-simbolo">✦</span>
+                <span class="rango-texto">Nº {{ i + 1 }}</span>
+              </div>
+              <span class="destacada-duracion">⏱ {{ pelicula.duracion_minutos | duracion }}</span>
+              <img
+                class="destacada-img"
+                [src]="pelicula.imagen_url"
+                [alt]="pelicula.nombre"
+                onerror="
+                  this.src =
+                    'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
+                "
+              />
+              <div class="destacada-cinta">Más vista</div>
+            </div>
+            <p class="destacada-nombre">{{ pelicula.nombre }}</p>
+          </a>
+        }
+      </div>
+    }
+
+    @if (peliculas().length > 0) {
+      <h2 class="seccion-titulo">
+        {{ destacadas().length > 0 ? 'Resto de la cartelera' : 'Cartelera' }}
+      </h2>
+      <div class="cartelera">
+        @for (pelicula of peliculas(); track pelicula.id) {
+          <a class="poster-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
+            <div class="poster-frame">
+              <img
+                class="poster-img"
+                [src]="pelicula.imagen_url"
+                [alt]="pelicula.nombre"
+                onerror="
+                  this.src =
+                    'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
+                "
+              />
+              <div class="poster-glow"></div>
+            </div>
+            <p class="poster-nombre">{{ pelicula.nombre }}</p>
+          </a>
+        }
+      </div>
+    }
   }
 }
