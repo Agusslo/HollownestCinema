@@ -1,6 +1,8 @@
 {
-  "name": "tp1-cine",
-  "short_name": "tp1-cine",
+  "name": "Hollownest Cinema",
+  "short_name": "Hollownest",
+  "theme_color": "#4fc4e3",
+  "background_color": "#0a0a12",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
