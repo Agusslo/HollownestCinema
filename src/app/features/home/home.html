@@ -24,7 +24,7 @@
   </section>
 
   @if (destacadas().length > 0) {
-    <h2 class="seccion-titulo">Las más vistas de Hallownest</h2>
+    <h2 class="seccion-titulo destacadas-titulo">Las más vistas de Hallownest</h2>
     <div class="destacadas-grid">
       @for (pelicula of destacadas(); track pelicula.id; let i = $index) {
         <a class="destacada-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">

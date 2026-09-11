@@ -240,13 +240,19 @@
   text-transform: uppercase;
 }
 
+.destacadas-titulo {
+  max-width: 844px;
+  text-align: center;
+}
+
 /* ── Destacadas (3 películas más vendidas) ── */
 .destacadas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 260px));
   gap: 32px;
-  max-width: 1200px;
+  max-width: 844px;
   margin: 0 auto;
+  justify-content: center;
 }
 
 .destacada-card {

@@ -113,6 +113,7 @@
         </div>
 
         @if (formulario.controls.comentario.touched && formulario.controls.comentario.invalid) {
+          <p class="campo-error">Escribí un comentario de al menos 3 caracteres.</p>
           @if (formulario.controls.comentario.hasError('required')) {
             <p class="campo-error">Por favor escribí un comentario para publicar tu testimonio.</p>
           } @else if (formulario.controls.comentario.hasError('minlength')) {
