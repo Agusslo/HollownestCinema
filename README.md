@@ -3,7 +3,7 @@
 Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cines.
 
 - **Repositorio:** [https://github.com/Agusslo/Agustin-Lopez-tp1-prog4-2026-c2](https://github.com/Agusslo/Agustin-Lopez-tp1-prog4-2026-c2)
-- **Deploy:** [*Hollownest Cinema*](https://hollownestcinema-cv8v2h2jm-agus-projects-e8452de0.vercel.app/)
+- **Deploy:** [*Hollownest Cinema*](hollownestcinema.vercel.app)
 
 ---
 
