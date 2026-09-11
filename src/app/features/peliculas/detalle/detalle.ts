@@ -6,10 +6,11 @@ import { Funciones } from '../../../core/services/funciones';
 import IPelicula from '../../../core/interfaces/pelicula';
 import { IFuncionConSala } from '../../../core/interfaces/funcion';
 import { Resenias } from '../resenias/resenias';
+import { DuracionPipe } from '../../../core/pipes/duracion-pipe';
 
 @Component({
   selector: 'app-detalle',
-  imports: [RouterLink, DatePipe, Resenias],
+  imports: [RouterLink, DatePipe, Resenias, DuracionPipe],
   templateUrl: './detalle.html',
   styleUrl: './detalle.css',
 })

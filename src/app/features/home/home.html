@@ -33,7 +33,7 @@
               <span class="rango-simbolo">✦</span>
               <span class="rango-texto">Nº {{ i + 1 }}</span>
             </div>
-            <span class="destacada-duracion">⏱ {{ pelicula.duracion_minutos }} min</span>
+            <span class="destacada-duracion">⏱ {{ pelicula.duracion_minutos | duracion }}</span>
             <img
               class="destacada-img"
               [src]="pelicula.imagen_url"

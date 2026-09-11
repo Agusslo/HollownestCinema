@@ -2,10 +2,11 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Peliculas } from '../../core/services/peliculas';
 import IPelicula from '../../core/interfaces/pelicula';
+import { DuracionPipe } from '../../core/pipes/duracion-pipe';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [RouterLink, DuracionPipe],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
