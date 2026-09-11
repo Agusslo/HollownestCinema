@@ -30,15 +30,18 @@ export class Peliculas {
     return data as IPelicula;
   }
 
-  generarSlug(nombre: string): string { //esta función genera un slug a partir del nombre de la película, para poder usarlo en la URL
+  generarSlug(nombre: string): string {
+    //esta función genera un slug a partir del nombre de la película, para poder usarlo en la URL
     return nombre
       .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') 
+      .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '');
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
   }
 
-  async obtenerPorSlug(slug: string): Promise<IPelicula> { //esta función obtiene una película a partir de su slug, para poder usarlo en la URL
+  async obtenerPorSlug(slug: string): Promise<IPelicula> {
+    //esta función obtiene una película a partir de su slug, para poder usarlo en la URL
     const peliculas = await this.obtenerTodas();
     const pelicula = peliculas.find((item) => this.generarSlug(item.nombre) === slug);
 
@@ -46,13 +49,11 @@ export class Peliculas {
     return pelicula;
   }
 
-
   async obtenerMasVendidas(cantidad: number): Promise<IPelicula[]> {
     // Traemos cada entrada junto con la película de su función, vía doble
     // join embebido: entradas -> funciones -> peliculas
-    const { data, error } = await this.supabase.Supabase
-      .from('entradas')
-      .select('funciones(pelicula_id)');
+    const { data, error } =
+      await this.supabase.Supabase.from('entradas').select('funciones(pelicula_id)');
 
     if (error) throw error;
 
