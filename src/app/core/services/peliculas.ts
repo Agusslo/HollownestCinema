@@ -1,23 +1,30 @@
 import { Service, inject } from '@angular/core';
 import { Supabase } from './supabase';
-import IPelicula from '../interfaces/pelicula';
+import IGenero from '../interfaces/genero';
+import IPelicula, { IPeliculaConGeneros } from '../interfaces/pelicula';
 
 @Service()
 export class Peliculas {
   private supabase = inject(Supabase);
 
-  async obtenerTodas(): Promise<IPelicula[]> {
-    const { data, error } = await this.supabase.Supabase.from('peliculas').select('*');
+  async obtenerTodas(): Promise<IPeliculaConGeneros[]> {
+    const { data, error } = await this.supabase.Supabase.from('peliculas').select(
+      '*, peliculas_generos(generos(id, nombre))',
+    );
 
     if (error) throw error;
-    return data as IPelicula[];
+    return data as unknown as IPeliculaConGeneros[];
   }
 
-  async crear(pelicula: Omit<IPelicula, 'id'>): Promise<void> {
+  async crear(pelicula: Omit<IPelicula, 'id'>): Promise<IPelicula> {
     //omit es una utilidad de typescript que permite omitir una propiedad de un tipo, en este caso omitimos la propiedad id de la interfaz IPelicula
-    const { error } = await this.supabase.Supabase.from('peliculas').insert(pelicula);
+    const { data, error } = await this.supabase.Supabase.from('peliculas')
+      .insert(pelicula)
+      .select()
+      .single();
 
     if (error) throw error;
+    return data as IPelicula;
   }
 
   async obtenerPorId(id: number): Promise<IPelicula> {
@@ -40,7 +47,7 @@ export class Peliculas {
       .replace(/^-+|-+$/g, '');
   }
 
-  async obtenerPorSlug(slug: string): Promise<IPelicula> {
+  async obtenerPorSlug(slug: string): Promise<IPeliculaConGeneros> {
     //esta función obtiene una película a partir de su slug, para poder usarlo en la URL
     const peliculas = await this.obtenerTodas();
     const pelicula = peliculas.find((item) => this.generarSlug(item.nombre) === slug);
@@ -49,11 +56,12 @@ export class Peliculas {
     return pelicula;
   }
 
-  async obtenerMasVendidas(cantidad: number): Promise<IPelicula[]> {
+  async obtenerMasVendidas(cantidad: number): Promise<IPeliculaConGeneros[]> {
     // Traemos cada entrada junto con la película de su función, vía doble
     // join embebido: entradas -> funciones -> peliculas
-    const { data, error } =
-      await this.supabase.Supabase.from('entradas').select('funciones(pelicula_id)');
+    const { data, error } = await this.supabase.Supabase.from('entradas').select(
+      'funciones(pelicula_id)',
+    );
 
     if (error) throw error;
 
@@ -74,6 +82,13 @@ export class Peliculas {
     // Reordenamos "todas" según idsOrdenados, para respetar el ranking
     return idsOrdenados
       .map((id) => todas.find((p) => p.id === id))
-      .filter((p): p is IPelicula => p !== undefined);
+      .filter((p): p is IPeliculaConGeneros => p !== undefined);
+  }
+
+  // Aplana la estructura anidada que devuelve Supabase (un array de filas de
+  // peliculas_generos, cada una con su género adentro) a un array simple de
+  // géneros, más cómodo para usar en los templates.
+  generosDe(pelicula: IPeliculaConGeneros): IGenero[] {
+    return pelicula.peliculas_generos.map((pg) => pg.generos);
   }
 }

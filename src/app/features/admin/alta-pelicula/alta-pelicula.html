@@ -1,23 +1,51 @@
-<form [formGroup]="formulario" (ngSubmit)="guardar()">
+<form class="pelicula-form" [formGroup]="formulario" (ngSubmit)="guardar()">
+  <header class="form-header">
+    <span class="form-kicker">Panel de administración</span>
+    <h1>Nueva película</h1>
+    <p>Completá los datos para sumar una historia a la cartelera.</p>
+  </header>
+
+  <div class="form-fields">
     <label>
-    Nombre
-    <input type="text" formControlName="nombre" />
+      <span>Nombre</span>
+      <input type="text" formControlName="nombre" />
     </label>
 
     <label>
-    Sinopsis
-    <textarea formControlName="sinopsis"></textarea>
+      <span>Sinopsis</span>
+      <textarea formControlName="sinopsis"></textarea>
     </label>
 
     <label>
-    Imagen (URL)
-    <input type="text" formControlName="imagen_url" />
+      <span>Imagen (URL)</span>
+      <input type="text" formControlName="imagen_url" />
     </label>
 
     <label>
-    Duración (minutos)
-    <input type="number" formControlName="duracion_minutos" />
+      <span>Duración (minutos)</span>
+      <input type="number" formControlName="duracion_minutos" />
     </label>
+  </div>
 
-    <button type="submit">Guardar película</button>
+  <fieldset class="genres-fieldset">
+    <legend>Géneros</legend>
+    <p class="fieldset-hint">Elegí uno o más géneros</p>
+    <div class="genre-options">
+      @for (genero of generosDisponibles(); track genero.id) {
+        <label class="genre-option">
+          <input
+            type="checkbox"
+            [checked]="generosSeleccionados().has(genero.id)"
+            (change)="toggleGenero(genero.id)"
+          />
+          <span>{{ genero.nombre }}</span>
+        </label>
+      }
+    </div>
+  </fieldset>
+
+  <button class="submit-button" type="submit">
+    <span>Guardar película</span>
+    <span aria-hidden="true">→</span>
+  </button>
 </form>

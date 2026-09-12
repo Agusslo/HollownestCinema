@@ -45,7 +45,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - [x] Buscador en el listado de películas
 
 ### Correo 3 — Buscador por género
-- [ ] Buscador debe filtrar por género (una película puede tener varios géneros)
+- [x] Buscador debe filtrar por género (una película puede tener varios géneros)
 
 ## 💻 Entorno de Desarrollo
 

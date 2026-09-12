@@ -3,7 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { Peliculas } from '../../../core/services/peliculas';
 import { Funciones } from '../../../core/services/funciones';
-import IPelicula from '../../../core/interfaces/pelicula';
+import { IPeliculaConGeneros } from '../../../core/interfaces/pelicula';
 import { IFuncionConSala } from '../../../core/interfaces/funcion';
 import { Resenias } from '../resenias/resenias';
 import { DuracionPipe } from '../../../core/pipes/duracion-pipe';
@@ -16,10 +16,10 @@ import { DuracionPipe } from '../../../core/pipes/duracion-pipe';
 })
 export class Detalle {
   private route = inject(ActivatedRoute);
-  private peliculasService = inject(Peliculas);
+  protected peliculasService = inject(Peliculas);
   private funcionesService = inject(Funciones);
 
-  protected pelicula = signal<IPelicula | null>(null);
+  protected pelicula = signal<IPeliculaConGeneros | null>(null);
   protected funciones = signal<IFuncionConSala[]>([]);
   protected cargando = signal(true);
 

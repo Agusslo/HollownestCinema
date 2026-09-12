@@ -1,55 +1,66 @@
-<form [formGroup]="formulario" (ngSubmit)="guardar()">
-  <label>
-    Película
-    <select formControlName="pelicula_id">
-      <option [ngValue]="null">Elegí una película</option>
-      @for (pelicula of peliculas(); track pelicula.id) {
-        <option [ngValue]="pelicula.id">{{ pelicula.nombre }}</option>
-      }
-    </select>
-  </label>
+<form class="funcion-form" [formGroup]="formulario" (ngSubmit)="guardar()">
+  <header class="form-header">
+    <span class="form-kicker">Panel de administración</span>
+    <h1>Nueva función</h1>
+    <p>Programá una proyección y prepará la sala para tu público.</p>
+  </header>
 
-  <label>
-    Sala
-    <select formControlName="sala_id">
-      <option [ngValue]="null">Elegí una sala</option>
-      @for (sala of salas(); track sala.id) {
-        <option [ngValue]="sala.id">{{ sala.nombre }}</option>
-      }
-    </select>
-  </label>
+  <div class="form-fields">
+    <label>
+      <span>Película</span>
+      <select formControlName="pelicula_id">
+        <option [ngValue]="null">Elegí una película</option>
+        @for (pelicula of peliculas(); track pelicula.id) {
+          <option [ngValue]="pelicula.id">{{ pelicula.nombre }}</option>
+        }
+      </select>
+    </label>
 
-  <label>
-    Fecha y hora
-    <input
-      type="datetime-local"
-      formControlName="fecha_hora"
-      min="2024-01-01T00:00"
-      max="2099-12-31T23:59"
-    />
-  </label>
+    <label>
+      <span>Sala</span>
+      <select formControlName="sala_id">
+        <option [ngValue]="null">Elegí una sala</option>
+        @for (sala of salas(); track sala.id) {
+          <option [ngValue]="sala.id">{{ sala.nombre }}</option>
+        }
+      </select>
+    </label>
 
-  <label>
-    Formato
-    <select formControlName="formato">
-      <option value="2d">2D</option>
-      <option value="3d">3D</option>
-      <option value="4d">4D</option>
-      <option value="5d">5D</option>
-    </select>
-  </label>
+    <label class="date-field">
+      <span>Fecha y hora</span>
+      <input
+        type="datetime-local"
+        formControlName="fecha_hora"
+        min="2024-01-01T00:00"
+        max="2099-12-31T23:59"
+      />
+    </label>
 
-  <label>
-    Idioma
-    <select formControlName="idioma">
-      <option value="castellano">Castellano</option>
-      <option value="subtitulada">Subtitulada</option>
-    </select>
-  </label>
+    <label>
+      <span>Formato</span>
+      <select formControlName="formato">
+        <option value="2d">2D</option>
+        <option value="3d">3D</option>
+        <option value="4d">4D</option>
+        <option value="5d">5D</option>
+      </select>
+    </label>
+
+    <label>
+      <span>Idioma</span>
+      <select formControlName="idioma">
+        <option value="castellano">Castellano</option>
+        <option value="subtitulada">Subtitulada</option>
+      </select>
+    </label>
+  </div>
 
   @if (formulario.invalid && formulario.touched) {
-    <p style="color: red">Completá todos los campos antes de guardar.</p>
+    <p class="form-error">Completá todos los campos antes de guardar.</p>
   }
 
-  <button type="submit">Guardar función</button>
+  <button class="submit-button" type="submit">
+    <span>Guardar función</span>
+    <span aria-hidden="true">→</span>
+  </button>
 </form>

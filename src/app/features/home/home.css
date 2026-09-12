@@ -249,8 +249,8 @@
 .poster-frame {
   position: relative;
   overflow: hidden;
-  background-color: var(--hk-deep);
-  border: 1px solid rgba(212, 212, 224, 0.06);
+  background: transparent;
+  border: 1px solid rgba(79, 196, 227, 0.16);
   border-radius: 4px;
   transition:
     border-color 0.4s,
@@ -274,6 +274,15 @@
   transition:
     filter 0.4s,
     transform 0.4s;
+}
+
+.poster-frame::after {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(232, 232, 240, 0.06);
+  border-radius: inherit;
+  content: '';
+  pointer-events: none;
 }
 
 .poster-card:hover .poster-img {
@@ -503,4 +512,30 @@
   .hero-shade {
     width: 70px;
   }
+}
+
+/* ── Selector de género (Correo 3) ── */
+.genero-select {
+  width: min(100%, 280px);
+  margin: 14px auto 0;
+  padding: 8px 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(79, 196, 227, 0.35);
+  color: var(--hk-pale);
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 0.85rem;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.genero-select:focus {
+  border-color: var(--hk-focus);
+}
+
+.genero-select option {
+  background: var(--hk-shell);
+  color: var(--hk-pale);
 }

@@ -37,6 +37,18 @@
         (input)="buscar($any($event.target).value)"
       />
     </div>
+
+    <select
+      class="genero-select"
+      aria-label="Filtrar por género"
+      [value]="generoSeleccionado() ?? ''"
+      (change)="seleccionarGenero($any($event.target).value)"
+    >
+      <option value="">Todos los géneros</option>
+      @for (genero of generosDisponibles(); track genero.id) {
+        <option [value]="genero.id">{{ genero.nombre }}</option>
+      }
+    </select>
   </div>
 
   @if (resultadosBusqueda(); as resultados) {
@@ -63,7 +75,7 @@
       </div>
     } @else {
       <div class="busqueda-vacia">
-        <p>No encontramos películas con ese nombre.</p>
+        <p>No encontramos películas con esos criterios.</p>
       </div>
     }
   } @else {

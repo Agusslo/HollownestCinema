@@ -14,6 +14,11 @@
           <span class="meta-label">Duración</span>
           <strong>{{ p.duracion_minutos | duracion }}</strong>
         </div>
+        <div class="pelicula-generos">
+          @for (genero of peliculasService.generosDe(p); track genero.id) {
+            <span class="genero-chip">{{ genero.nombre }}</span>
+          }
+        </div>
       </div>
     </div>
 

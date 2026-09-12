@@ -1,7 +1,9 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Peliculas } from '../../core/services/peliculas';
-import IPelicula from '../../core/interfaces/pelicula';
+import { Generos } from '../../core/services/generos';
+import { IPeliculaConGeneros } from '../../core/interfaces/pelicula';
+import IGenero from '../../core/interfaces/genero';
 import { DuracionPipe } from '../../core/pipes/duracion-pipe';
 
 @Component({
@@ -12,23 +14,37 @@ import { DuracionPipe } from '../../core/pipes/duracion-pipe';
 })
 export class Home {
   private peliculasService = inject(Peliculas);
-  protected destacadas = signal<IPelicula[]>([]);
-  protected peliculas = signal<IPelicula[]>([]);
-  protected todas = signal<IPelicula[]>([]); //guardamos la lista completa para poder buscar sobre ella
-  protected cargando = signal(true);
-  protected busqueda = signal(''); // NUEVO
+  private generosService = inject(Generos);
 
-  //computed() recalcula esto solo cada vez que cambian busqueda() o
-  // todas() — no hay que llamarlo a mano. Devuelve null si no hay búsqueda
-  // activa (para distinguir "no está buscando" de "buscó y no encontró nada").
-  protected resultadosBusqueda = computed<IPelicula[] | null>(() => {
+  protected destacadas = signal<IPeliculaConGeneros[]>([]);
+  protected peliculas = signal<IPeliculaConGeneros[]>([]);
+  protected todas = signal<IPeliculaConGeneros[]>([]); //guardamos la lista completa para poder buscar sobre ella
+  protected cargando = signal(true);
+  protected busqueda = signal('');
+  protected generosDisponibles = signal<IGenero[]>([]);
+  protected generoSeleccionado = signal<number | null>(null);
+
+  // computed() recalcula esto solo cada vez que cambian busqueda(),
+  // generoSeleccionado() o todas() — no hay que llamarlo a mano. Devuelve
+  // null si no hay ningún filtro activo (para distinguir "no está
+  // filtrando" de "filtró y no encontró nada").
+  protected resultadosBusqueda = computed<IPeliculaConGeneros[] | null>(() => {
     const texto = this.busqueda().trim().toLowerCase();
-    if (!texto) return null;
-    return this.todas().filter((p) => p.nombre.toLowerCase().includes(texto));
+    const genero = this.generoSeleccionado();
+
+    if (!texto && genero === null) return null;
+
+    return this.todas().filter((p) => {
+      const coincideTexto = !texto || p.nombre.toLowerCase().includes(texto);
+      const coincideGenero =
+        genero === null || this.peliculasService.generosDe(p).some((g) => g.id === genero);
+      return coincideTexto && coincideGenero;
+    });
   });
 
   constructor() {
     this.cargarPeliculas();
+    this.generosService.obtenerTodos().then((generos) => this.generosDisponibles.set(generos));
   }
 
   protected generarSlug(nombre: string): string {
@@ -36,8 +52,11 @@ export class Home {
   }
 
   protected buscar(valor: string): void {
-    // NUEVO
     this.busqueda.set(valor);
+  }
+
+  protected seleccionarGenero(valor: string): void {
+    this.generoSeleccionado.set(valor === '' ? null : Number(valor));
   }
 
   private async cargarPeliculas() {
@@ -57,7 +76,7 @@ export class Home {
 
       this.destacadas.set(masVendidas);
       this.peliculas.set(resto);
-      this.todas.set(todas); // NUEVO
+      this.todas.set(todas);
     } catch (error) {
       console.error('No se pudo cargar la cartelera', error);
       this.destacadas.set([]);
