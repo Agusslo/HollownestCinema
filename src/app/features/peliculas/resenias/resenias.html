@@ -10,6 +10,12 @@
       <p class="cargando-texto">Consultando los registros del reino...</p>
     </div>
   } @else {
+    @if (error()) {
+      <div class="resenias-error" role="alert">
+        <p>{{ error() }}</p>
+      </div>
+    }
+
     @if (promedio() > 0) {
       <div class="promedio-resenias">
         <div class="promedio-badge">

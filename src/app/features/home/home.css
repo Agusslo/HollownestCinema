@@ -257,6 +257,40 @@
     box-shadow 0.4s;
 }
 
+.poster-duracion {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  padding: 4px 10px;
+  background: rgba(10, 10, 18, 0.85);
+  border: 1px solid rgba(79, 196, 227, 0.25);
+  border-radius: 2px;
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  backdrop-filter: blur(4px);
+}
+
+:host-context(.tema-claro) .poster-duracion {
+  background: rgba(244, 246, 245, 0.9);
+  border-color: rgba(22, 141, 168, 0.35);
+}
+
+:host-context(.tema-claro) .destacada-rango,
+:host-context(.tema-claro) .destacada-duracion {
+  background: rgba(244, 246, 245, 0.94);
+  color: var(--hk-pale);
+  text-shadow: none;
+}
+
+:host-context(.tema-claro) .destacada-cinta {
+  background: linear-gradient(180deg, rgba(216, 224, 229, 0.92), rgba(244, 246, 245, 0.98));
+  color: var(--hk-geo);
+  text-shadow: none;
+}
+
 .poster-card:hover .poster-frame {
   border-color: rgba(79, 196, 227, 0.25);
   box-shadow:
@@ -401,7 +435,7 @@
   align-items: center;
   gap: 5px;
   padding: 5px 12px;
-  background: linear-gradient(135deg, rgba(17, 17, 34, 0.95), rgba(10, 10, 18, 0.95));
+  background: var(--hk-badge-bg);
   border: 1px solid var(--hk-geo);
   box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.8),
@@ -457,7 +491,7 @@
   right: 12px;
   z-index: 2;
   padding: 4px 10px;
-  background: rgba(10, 10, 18, 0.85);
+  background: var(--hk-badge-bg);
   border: 1px solid rgba(79, 196, 227, 0.25);
   border-radius: 2px;
   color: var(--hk-soul);
@@ -474,7 +508,7 @@
   right: 0;
   bottom: 0;
   padding: 7px 10px;
-  background: linear-gradient(180deg, rgba(10, 10, 18, 0.85) 0%, rgba(20, 20, 32, 0.95) 100%);
+  background: var(--hk-badge-bg);
   border-top: 1px solid rgba(232, 168, 50, 0.4);
   color: var(--hk-geo);
   font-family: 'Trajan', serif;
@@ -504,6 +538,85 @@
 
 /* ── Responsive ── */
 @media (max-width: 620px) {
+  .hero {
+    display: none;
+  }
+
+  .buscador {
+    width: 100%;
+    margin: 0 auto 28px;
+  }
+
+  .buscador-label {
+    margin-bottom: 8px;
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+  }
+
+  .buscador-control {
+    border: 1px solid rgba(79, 196, 227, 0.25);
+    border-radius: 8px;
+  }
+
+  .buscador-input {
+    padding: 11px 38px;
+    color: var(--hk-soul);
+  }
+
+  .genero-select {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 1px solid rgba(79, 196, 227, 0.25);
+    border-radius: 8px;
+    text-align: left;
+  }
+
+  .seccion-titulo,
+  .destacadas-titulo {
+    margin: 28px 0 18px;
+    padding: 0;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    text-align: left;
+  }
+
+  .cartelera,
+  .destacadas-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
+    width: 100%;
+  }
+
+  .poster-img,
+  .destacada-img {
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
+
+  .poster-card:hover,
+  .destacada-card:hover {
+    transform: none;
+  }
+
+  .poster-nombre,
+  .destacada-nombre {
+    margin-top: 9px;
+    overflow-wrap: anywhere;
+    font-family: 'Perpetua', 'Georgia', serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 0.2px;
+    line-height: 1.25;
+    text-align: left;
+  }
+
+  .destacada-rango,
+  .destacada-duracion,
+  .destacada-cinta {
+    font-size: 0.55rem;
+  }
+
   .hero {
     flex-direction: column;
     gap: 20px;

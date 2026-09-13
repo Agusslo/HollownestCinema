@@ -1,4 +1,5 @@
 .detalle-pelicula {
+  min-width: 0;
   width: min(100%, 980px);
   margin: 0 auto;
 }
@@ -68,7 +69,7 @@ h1 {
 .sinopsis {
   max-width: 58ch;
   margin: 24px 0;
-  color: rgba(240, 240, 240, 0.78);
+  color: var(--hk-muted-text);
   font-size: 1rem;
   line-height: 1.7;
 }
@@ -84,7 +85,7 @@ h1 {
 
 .meta-label,
 .function-count {
-  color: rgba(240, 240, 240, 0.62);
+  color: var(--hk-soft-text);
   font-size: 0.75rem;
   text-transform: uppercase;
 }
@@ -107,11 +108,12 @@ h2 {
 
 .funciones-lista {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: 12px;
 }
 
 .funcion-card {
+  min-width: 0;
   position: relative;
   display: grid;
   grid-template-columns: 1fr auto;
@@ -151,7 +153,7 @@ h2 {
 
 .funcion-detalle {
   grid-column: 1 / -1;
-  color: rgba(240, 240, 240, 0.84);
+  color: var(--hk-panel-text);
   font-size: 0.88rem;
 }
 
@@ -166,7 +168,7 @@ h2 {
 
 .empty-state {
   padding: 18px;
-  color: rgba(240, 240, 240, 0.72);
+  color: var(--hk-muted-text);
   background: var(--hk-shell);
   border-left: 4px solid var(--borde-hk);
 }
@@ -190,11 +192,31 @@ h2 {
   text-transform: uppercase;
 }
 
+:host-context(.tema-claro) .pelicula-presentacion {
+  border-bottom-color: rgba(41, 64, 71, 0.18);
+}
+
+:host-context(.tema-claro) .sinopsis,
+:host-context(.tema-claro) .meta-label,
+:host-context(.tema-claro) .function-count,
+:host-context(.tema-claro) .funcion-detalle,
+:host-context(.tema-claro) .empty-state {
+  color: var(--hk-pale);
+}
+
 @media (max-width: 600px) {
+  .detalle-pelicula {
+    width: 100%;
+  }
+
   .pelicula-presentacion {
-    grid-template-columns: 140px 1fr;
-    gap: 18px;
-    align-items: start;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .detalle-poster-frame {
+    width: min(100%, 220px);
+    margin: 0 auto;
   }
 
   .detalle-poster-frame {
@@ -208,6 +230,23 @@ h2 {
     margin: 14px 0;
     font-size: 0.82rem;
     line-height: 1.5;
+  }
+
+  .pelicula-info {
+    max-width: none;
+  }
+
+  .funciones-section {
+    padding-top: 32px;
+  }
+
+  .funcion-card {
+    padding: 16px 42px 16px 16px;
+  }
+
+  .funcion-fecha,
+  .funcion-detalle {
+    overflow-wrap: anywhere;
   }
 
   .section-heading {

@@ -35,8 +35,34 @@
   --hk-infection: #ff8c00;
   --hk-shade: #1a1a28;
   --hk-grimm: #c0392b;
+  --hk-muted-text: rgba(240, 240, 240, 0.78);
+  --hk-soft-text: rgba(240, 240, 240, 0.62);
+  --hk-panel-text: rgba(240, 240, 240, 0.84);
+  --hk-badge-bg: rgba(10, 10, 18, 0.88);
+  --hk-seat-text: #c0c0d0;
 
   --borde-hk: 1px solid rgba(212, 212, 224, 0.15);
+}
+
+:root.tema-claro {
+  --hk-void: #e6ebef;
+  --hk-deep: #d8e0e5;
+  --hk-shell: #f4f6f5;
+  --hk-stone: #c4ced2;
+  --hk-ash: #65747b;
+  --hk-soul: #15252b;
+  --hk-pale: #294047;
+  --hk-focus: #168da8;
+  --hk-lifeblood: #277f92;
+  --hk-geo: #a66f1c;
+  --hk-charm: #8b702c;
+  --hk-shade: #cbd5d8;
+  --hk-muted-text: #294047;
+  --hk-soft-text: #50636a;
+  --hk-panel-text: #294047;
+  --hk-badge-bg: rgba(244, 246, 245, 0.96);
+  --hk-seat-text: #36525b;
+  --borde-hk: 1px solid rgba(41, 64, 71, 0.2);
 }
 
 /* ── Reset ── */
@@ -110,6 +136,12 @@ textarea:focus {
   outline: none;
   border-color: var(--hk-focus);
   box-shadow: 0 0 12px rgba(79, 196, 227, 0.15);
+}
+
+.tema-claro input,
+.tema-claro select,
+.tema-claro textarea {
+  background-color: rgba(244, 246, 245, 0.9);
 }
 
 /* ── Botones ── */

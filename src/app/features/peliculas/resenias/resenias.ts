@@ -70,12 +70,26 @@ export class Resenias {
 
   private async cargar(peliculaId: number) {
     this.cargando.set(true);
-    const [resenias, usuario] = await Promise.all([
+    this.error.set(null);
+
+    const [resultadoResenias, resultadoUsuario] = await Promise.allSettled([
       this.reseniasService.obtenerPorPelicula(peliculaId),
       this.authService.usuarioActual(),
     ]);
-    this.resenias.set(resenias);
-    this.usuarioActual.set(usuario);
+
+    if (resultadoResenias.status === 'fulfilled') {
+      this.resenias.set(resultadoResenias.value);
+    } else {
+      this.resenias.set([]);
+      this.error.set('No se pudieron cargar las reseñas. Intentá nuevamente más tarde.');
+    }
+
+    if (resultadoUsuario.status === 'fulfilled') {
+      this.usuarioActual.set(resultadoUsuario.value);
+    } else {
+      this.usuarioActual.set(null);
+    }
+
     this.cargando.set(false);
   }
 

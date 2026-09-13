@@ -6,6 +6,16 @@
 
   <nav class="nav-links">
     <a class="nav-item" [routerLink]="['/']">Cartelera</a>
+    <button
+      class="nav-item theme-toggle"
+      type="button"
+      (click)="alternarTema()"
+      [attr.aria-label]="temaClaro() ? 'Usar fondo oscuro' : 'Usar fondo claro'"
+      [attr.aria-pressed]="temaClaro()"
+    >
+      <span aria-hidden="true">{{ temaClaro() ? '☾' : '☀' }}</span>
+      {{ temaClaro() ? 'Oscuro' : 'Claro' }}
+    </button>
 
     @if (!cargandoAuth()) {
       @if (usuario(); as u) {

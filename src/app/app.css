@@ -47,6 +47,8 @@
 
 /* ── Nav items ── */
 .nav-item {
+  min-width: 112px;
+  min-height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,6 +63,7 @@
   font-size: 0.75rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
+  white-space: nowrap;
   transition: all 0.3s;
 }
 
@@ -74,6 +77,16 @@
   background: linear-gradient(180deg, rgba(79, 196, 227, 0.15), transparent);
   border-color: var(--hk-focus);
   color: var(--hk-focus);
+}
+
+.theme-toggle {
+  justify-content: center;
+}
+
+.theme-toggle span {
+  font-family: 'Perpetua', serif;
+  font-size: 1rem;
+  line-height: 1;
 }
 
 /* ── User badge ── */
@@ -119,6 +132,7 @@
 
 /* ── Main content ── */
 main {
+  overflow-x: hidden;
   min-height: calc(100vh - 75px);
   padding: clamp(24px, 5vw, 56px) clamp(16px, 5vw, 72px);
   background:
@@ -144,6 +158,8 @@ main {
   }
 
   .nav-item {
+    min-width: 0;
+    flex: 1 1 auto;
     padding: 8px 10px;
     font-size: 0.65rem;
   }

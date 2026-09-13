@@ -16,8 +16,11 @@ export class App {
 
   protected usuario = signal<IPerfil | null>(null);
   protected cargandoAuth = signal(true);
+  protected temaClaro = signal(false);
 
   constructor() {
+    this.temaClaro.set(localStorage.getItem('tema-hk') === 'claro');
+    this.aplicarTema();
     this.cargarUsuario();
 
     // Escucha cambios de sesión (login, logout, etc.) y actualiza el header automáticamente
@@ -43,5 +46,15 @@ export class App {
   protected async cerrarSesion() {
     await this.authService.logout();
     this.usuario.set(null);
+  }
+
+  protected alternarTema() {
+    this.temaClaro.update((temaClaro) => !temaClaro);
+    localStorage.setItem('tema-hk', this.temaClaro() ? 'claro' : 'oscuro');
+    this.aplicarTema();
+  }
+
+  private aplicarTema() {
+    document.documentElement.classList.toggle('tema-claro', this.temaClaro());
   }
 }

@@ -58,6 +58,7 @@
         @for (pelicula of resultados; track pelicula.id) {
           <a class="poster-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
             <div class="poster-frame">
+              <span class="poster-duracion">⏱ {{ pelicula.duracion_minutos | duracion }}</span>
               <img
                 class="poster-img"
                 [src]="pelicula.imagen_url"
@@ -115,6 +116,7 @@
         @for (pelicula of peliculas(); track pelicula.id) {
           <a class="poster-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
             <div class="poster-frame">
+              <span class="poster-duracion">⏱ {{ pelicula.duracion_minutos | duracion }}</span>
               <img
                 class="poster-img"
                 [src]="pelicula.imagen_url"
