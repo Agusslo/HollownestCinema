@@ -16,6 +16,10 @@ export const routes: Routes = [
       import('./features/admin/alta-funcion/alta-funcion').then((m) => m.AltaFuncion),
   },
   {
+  path: 'admin/cupones',
+  loadComponent: () => import('./features/admin/cupones/cupones').then((m) => m.Cupones),
+  },
+  {
     path: 'peliculas/:nombre',
     loadComponent: () => import('./features/peliculas/detalle/detalle').then((m) => m.Detalle),
   },

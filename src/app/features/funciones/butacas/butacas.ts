@@ -4,8 +4,10 @@ import { Butacas as ButacasService } from '../../../core/services/butacas';
 import { Entradas } from '../../../core/services/entradas';
 import { Funciones } from '../../../core/services/funciones';
 import { Auth } from '../../../core/services/auth';
+import { Cupones } from '../../../core/services/cupones';
 import IFuncion from '../../../core/interfaces/funcion';
 import IPerfil from '../../../core/interfaces/perfil';
+import ICupon from '../../../core/interfaces/cupon';
 import { Pdf } from '../../../core/services/pdf';
 
 @Component({
@@ -20,6 +22,7 @@ export class Butacas {
   private entradasService = inject(Entradas);
   private funcionesService = inject(Funciones);
   private authService = inject(Auth);
+  private cuponesService = inject(Cupones);
 
   protected funcion_id = 0;
   protected layout = signal<string[][]>([]);
@@ -27,6 +30,7 @@ export class Butacas {
   protected seleccionadas = signal<Set<string>>(new Set());
   protected funcion = signal<IFuncion | null>(null);
   protected usuario = signal<IPerfil | null>(null);
+  protected cupones = signal<ICupon[]>([]);
   protected cargando = signal(true);
   protected comprando = signal(false);
   protected error = signal<string | null>(null);
@@ -46,6 +50,7 @@ export class Butacas {
 
     this.funcion.set(await this.funcionesService.obtenerPorId(this.funcion_id));
     this.usuario.set(await this.authService.usuarioActual());
+    this.cupones.set(await this.cuponesService.obtenerTodos());
 
     this.cargando.set(false);
   }
@@ -70,9 +75,11 @@ export class Butacas {
     this.seleccionadas.set(nuevas);
   }
 
-  protected aplicaCupon(): boolean {
-    const u = this.usuario();
-    return u !== null && !u.cupon_primera_compra_usado;
+  // Porcentaje de descuento que le corresponde al usuario actual (0 si
+  // no aplica ninguno) — ya resuelve la regla de "el mayor entre los que
+  // apliquen, sin acumular" adentro del servicio.
+  protected descuentoAplicado(): number {
+    return this.cuponesService.calcularDescuento(this.usuario(), this.cupones());
   }
 
   protected calcularTotal(): number {
@@ -80,7 +87,8 @@ export class Butacas {
     if (!funcionActual) return 0;
     const precio = this.entradasService.precioPorFormato(funcionActual.formato);
     const subtotal = this.seleccionadas().size * precio;
-    return this.aplicaCupon() ? subtotal * 0.8 : subtotal;
+    const descuento = this.descuentoAplicado();
+    return descuento > 0 ? subtotal * (1 - descuento / 100) : subtotal;
   }
 
   protected async confirmarCompra() {

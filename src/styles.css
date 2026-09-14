@@ -79,6 +79,15 @@ body {
   line-height: 1.6;
 }
 
+.admin-flea {
+  display: block;
+  width: 52px;
+  height: 52px;
+  margin: 0 0 6px auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(79, 196, 227, 0.25));
+}
+
 /* ── Tipografía ── */
 h1,
 h2,

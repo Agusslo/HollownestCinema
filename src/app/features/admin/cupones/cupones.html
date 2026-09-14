@@ -1,0 +1,44 @@
+@if (cargando()) {
+  <p>Cargando...</p>
+} @else {
+  <form class="cupones-form" [formGroup]="formulario" (ngSubmit)="guardar()">
+    <div class="form-header">
+      <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
+      <span class="form-kicker">Panel de administración</span>
+      <h1>Cupones de descuento</h1>
+      <p>
+        Configurá el porcentaje de cada tipo de cupón. Se aplica el mayor entre los que le
+        correspondan al usuario, nunca se suman.
+      </p>
+    </div>
+
+    <div class="form-fields">
+      <label>
+        Primera compra (%)
+        <input type="number" formControlName="primeraCompra" min="0" max="100" />
+        @if (
+          formulario.controls.primeraCompra.touched && formulario.controls.primeraCompra.invalid
+        ) {
+          <span class="campo-error">Tiene que ser un número entre 0 y 100.</span>
+        }
+      </label>
+
+      <label>
+        Mayores de 50 años (%)
+        <input type="number" formControlName="mayor50" min="0" max="100" />
+        @if (formulario.controls.mayor50.touched && formulario.controls.mayor50.invalid) {
+          <span class="campo-error">Tiene que ser un número entre 0 y 100.</span>
+        }
+      </label>
+    </div>
+
+    @if (mensaje()) {
+      <p class="mensaje">{{ mensaje() }}</p>
+    }
+
+    <button type="submit" class="submit-button" [disabled]="guardando()">
+      <span>{{ guardando() ? 'Guardando...' : 'Guardar cambios' }}</span>
+      <span aria-hidden="true">&rarr;</span>
+    </button>
+  </form>
+}

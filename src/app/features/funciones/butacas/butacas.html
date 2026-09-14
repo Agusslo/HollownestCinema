@@ -46,8 +46,8 @@
 
       <aside class="resumen-compra">
         <p>Butacas seleccionadas: {{ seleccionadas().size }}</p>
-        @if (aplicaCupon()) {
-          <p class="cupon-msg">🎟️ Tenés 20% de descuento por ser tu primera compra registrada.</p>
+        @if (descuentoAplicado() > 0) {
+        <p class="cupon-msg">🎟️ Tenés {{ descuentoAplicado() }}% de descuento aplicado.</p>
         }
         <p class="total">Total: ${{ calcularTotal() }}</p>
 
