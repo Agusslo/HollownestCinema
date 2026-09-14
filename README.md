@@ -48,8 +48,8 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - [x] Buscador debe filtrar por género (una película puede tener varios géneros)
 
 ### Correo 4 — Cupones configurables y Candy bar
-- [ ] Cupón de primera compra: el admin puede configurar el porcentaje de descuento
-- [ ] Cupones exclusivos para usuarios mayores de 50 años
+- [x] Cupón de primera compra: el admin puede configurar el porcentaje de descuento
+- [x] Cupones exclusivos para usuarios mayores de 50 años
 - [ ] Candy bar: ABM de productos (nombre, precio, imagen)
 - [ ] Categorías para los productos del candy bar
 - [ ] Compra de productos del candy bar junto con la entrada
