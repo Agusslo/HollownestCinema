@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Peliculas } from '../../core/services/peliculas';
 import { Generos } from '../../core/services/generos';
@@ -12,7 +12,7 @@ import { DuracionPipe } from '../../core/pipes/duracion-pipe';
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home {
+export class Home implements OnInit, OnDestroy {
   private peliculasService = inject(Peliculas);
   private generosService = inject(Generos);
 
@@ -23,6 +23,17 @@ export class Home {
   protected busqueda = signal('');
   protected generosDisponibles = signal<IGenero[]>([]);
   protected generoSeleccionado = signal<number | null>(null);
+  protected shermaSonando = signal(false);
+  private shermaAudio?: HTMLAudioElement;
+
+  // ── Carrusel Hero ──
+  protected slideActual = signal(0);
+  protected totalSlides = 3;
+  private timerInterval?: any;
+
+  protected peliculaBanner = computed(() => {
+    return this.destacadas()[0] ?? this.todas()[0] ?? null;
+  });
 
   // computed() recalcula esto solo cada vez que cambian busqueda(),
   // generoSeleccionado() o todas() — no hay que llamarlo a mano. Devuelve
@@ -47,6 +58,53 @@ export class Home {
     this.generosService.obtenerTodos().then((generos) => this.generosDisponibles.set(generos));
   }
 
+  ngOnInit() {
+    this.iniciarAutoplay();
+  }
+
+  ngOnDestroy() {
+    this.detenerAutoplay();
+  }
+
+  protected siguienteSlide(): void {
+    this.slideActual.update((curr) => (curr + 1) % this.totalSlides);
+    this.reiniciarAutoplay();
+  }
+
+  protected anteriorSlide(): void {
+    this.slideActual.update((curr) => (curr - 1 + this.totalSlides) % this.totalSlides);
+    this.reiniciarAutoplay();
+  }
+
+  protected irASlide(index: number): void {
+    this.slideActual.set(index);
+    this.reiniciarAutoplay();
+  }
+
+  private iniciarAutoplay(): void {
+    this.timerInterval = setInterval(() => {
+      this.slideActual.update((curr) => (curr + 1) % this.totalSlides);
+    }, 6000);
+  }
+
+  private detenerAutoplay(): void {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+  }
+
+  private reiniciarAutoplay(): void {
+    this.detenerAutoplay();
+    this.iniciarAutoplay();
+  }
+
+  protected scrollHaciaCartelera(): void {
+    const el = document.getElementById('seccion-cartelera');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   protected generarSlug(nombre: string): string {
     return this.peliculasService.generarSlug(nombre);
   }
@@ -57,6 +115,23 @@ export class Home {
 
   protected seleccionarGenero(valor: string): void {
     this.generoSeleccionado.set(valor === '' ? null : Number(valor));
+  }
+
+  protected alternarSherma(): void {
+    if (!this.shermaAudio) {
+      this.shermaAudio = new Audio('/music/shermasong.mp3');
+      this.shermaAudio.volume = 0.28;
+      this.shermaAudio.addEventListener('ended', () => this.shermaSonando.set(false));
+    }
+
+    if (this.shermaAudio.paused) {
+      this.shermaAudio.currentTime = 0;
+      void this.shermaAudio.play();
+      this.shermaSonando.set(true);
+    } else {
+      this.shermaAudio.pause();
+      this.shermaSonando.set(false);
+    }
   }
 
   private async cargarPeliculas() {

@@ -14,16 +14,187 @@
     <p class="empty-sub">El vacío espera ser llenado...</p>
   </section>
 } @else {
-  <section class="hero">
-    <img class="hero-shade" src="/img/void.png" alt="" aria-hidden="true" />
-    <div class="hero-content">
-      <h1 class="hero-titulo">Cartelera</h1>
-      <p class="hero-sub">Elegí tu próxima aventura en la oscuridad</p>
-      <div class="hero-linea"></div>
+  <section class="hero-carousel" aria-label="Promociones de Hollownest Cinema">
+    <div class="carousel-container">
+      <!-- SLIDE 1: FIESTA DEL CINE DE HALLOWNEST (Estilo Imagen 1 / Imagen 3) -->
+      <div class="carousel-slide slide-fiesta" [class.slide-activo]="slideActual() === 0">
+        <div class="slide-contenido fiesta-layout">
+          <div class="fiesta-info">
+            <span class="pill-badge">LLEGÓ LA</span>
+            <h1 class="fiesta-titulo">
+              FIESTA<span class="sparkle">✦</span><br />
+              DEL CINE
+            </h1>
+            <div class="fiesta-fecha-badge">
+              <span>DEL 15 AL 22 DE SEPTIEMBRE</span>
+            </div>
+            <button type="button" class="btn-hero-blanco" (click)="scrollHaciaCartelera()">
+              QUIERO MIS ENTRADAS
+            </button>
+          </div>
+
+          <div class="fiesta-visual">
+            <p class="fiesta-subtitulo">¡LA CELEBRACIÓN SE VIVE EN SALA!</p>
+
+            <div class="posters-abanico">
+              <div class="poster-abanico item-1">
+                @if (destacadas()[0]; as p) {
+                  <img [src]="p.imagen_url" [alt]="p.nombre" class="img-abanico" />
+                } @else {
+                  <img src="/img/void.png" alt="Película" class="img-abanico" />
+                }
+              </div>
+              <div class="poster-abanico item-2">
+                @if (destacadas()[1]; as p) {
+                  <img [src]="p.imagen_url" [alt]="p.nombre" class="img-abanico" />
+                } @else {
+                  <img src="/img/void.png" alt="Película" class="img-abanico" />
+                }
+              </div>
+              <div class="poster-abanico item-3">
+                @if (destacadas()[2]; as p) {
+                  <img [src]="p.imagen_url" [alt]="p.nombre" class="img-abanico" />
+                } @else {
+                  <img src="/img/void.png" alt="Película" class="img-abanico" />
+                }
+              </div>
+            </div>
+
+            <div class="tickets-promo">
+              <div class="ticket-stub ticket-2d">
+                <span class="ticket-precio">$5.000</span>
+                <span class="ticket-formatos">FORMATOS 2D - 3D</span>
+                <span class="ticket-sala">SALA CRISTAL · COMFORT</span>
+              </div>
+              <div class="ticket-stub ticket-4d">
+                <span class="ticket-precio">$10.000</span>
+                <span class="ticket-formatos">FORMATOS 4D</span>
+                <span class="ticket-sala">GRIMM XD · PREMIUM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: PELÍCULA DESTACADA / BANNER CINEMATOGRÁFICO (Estilo Imagen 4) -->
+      @if (peliculaBanner(); as p) {
+        <div class="carousel-slide slide-pelicula" [class.slide-activo]="slideActual() === 1">
+          <div
+            class="slide-fondo-overlay"
+            [style.background-image]="'url(' + p.imagen_url + ')'"
+          ></div>
+          <div class="slide-contenido pelicula-layout">
+            <div class="pelicula-hero-info">
+              <div class="badge-reino">
+                <span class="badge-icon">👑</span>
+                <span>MÁS VISTA DE HALLOWNEST</span>
+              </div>
+              <h2 class="pelicula-hero-titulo">{{ p.nombre }}</h2>
+              <p class="pelicula-hero-pregunta">¿HÉROE O SOMBRA DEL REINO?</p>
+              <p class="pelicula-hero-sinopsis">{{ p.sinopsis }}</p>
+              <div class="pelicula-hero-meta">
+                <span class="tag-meta">DURACIÓN: {{ p.duracion_minutos }} MIN</span>
+                <span class="tag-meta">SALA 1 · ALMA DOLIENTE</span>
+              </div>
+              <a class="btn-hero-blanco" [routerLink]="['/peliculas', generarSlug(p.nombre)]">
+                COMPRAR ENTRADAS
+              </a>
+            </div>
+            <div class="pelicula-hero-poster">
+              <img [src]="p.imagen_url" [alt]="p.nombre" class="poster-destacado-img" />
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="carousel-slide slide-pelicula" [class.slide-activo]="slideActual() === 1">
+          <div class="slide-contenido pelicula-layout">
+            <div class="pelicula-hero-info">
+              <div class="badge-reino">
+                <span class="badge-icon">👑</span>
+                <span>ESTRENO EN SALA CRISTAL</span>
+              </div>
+              <h2 class="pelicula-hero-titulo">SPIDER-MAN: UN NUEVO DÍA</h2>
+              <p class="pelicula-hero-pregunta">¿HÉROE O SOMBRA DE LA NOCHE?</p>
+              <p class="pelicula-hero-sinopsis">
+                Una aventura legendaria en los confines más oscuros del multiverso.
+              </p>
+              <button type="button" class="btn-hero-blanco" (click)="scrollHaciaCartelera()">
+                COMPRAR ENTRADAS
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- SLIDE 3: BANQUETE DE HALLOWNEST / CANDY BAR -->
+      <div class="carousel-slide slide-candy" [class.slide-activo]="slideActual() === 2">
+        <div class="slide-contenido candy-layout">
+          <div class="candy-hero-info">
+            <span class="pill-badge candy-badge">🍬 CANDY BAR REAL</span>
+            <h2 class="candy-hero-titulo">
+              BANQUETE<br />
+              DEL REINO
+            </h2>
+            <div class="fiesta-fecha-badge candy-tag">
+              <span>¡LLEVATE TU VASO COLECCIONABLE!</span>
+            </div>
+            <p class="candy-hero-desc">
+              Balde gigante de pochoclos bañados en Néctar de Sangreviva + Poción del Vacío helada.
+              ¡Mostrá tu entrada y accedé al <strong>20% OFF</strong>!
+            </p>
+            <button
+              type="button"
+              class="btn-hero-blanco btn-candy"
+              (click)="scrollHaciaCartelera()"
+            >
+              DISFRUTAR EN SALA
+            </button>
+          </div>
+
+          <div class="candy-hero-visual">
+            <img src="/img/PureVessel.png" alt="Pure Vessel" class="img-pure-vessel" />
+            <div class="ticket-stub ticket-candy">
+              <span class="ticket-precio">20% OFF</span>
+              <span class="ticket-formatos">COMBO CABALLERITO</span>
+              <span class="ticket-sala">POCHOCLOS + BEBIDA + VASO</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Indicadores inferiores (líneas / bars) -->
+    <div class="carousel-indicadores">
+      @for (n of [0, 1, 2]; track n) {
+        <button
+          type="button"
+          class="indicador-barra"
+          [class.indicador-activo]="slideActual() === n"
+          (click)="irASlide(n)"
+          [attr.aria-label]="'Ir a promoción ' + (n + 1)"
+        ></button>
+      }
+    </div>
+
+    <!-- Controles Flechas (laterales con chevrones CSS) -->
+    <div class="carousel-nav-flechas">
+      <button
+        type="button"
+        class="btn-nav-flecha"
+        (click)="anteriorSlide()"
+        aria-label="Promoción anterior"
+      ></button>
+      <button
+        type="button"
+        class="btn-nav-flecha"
+        (click)="siguienteSlide()"
+        aria-label="Promoción siguiente"
+      ></button>
     </div>
   </section>
 
-  <div class="buscador">
+  <div class="buscador" id="seccion-cartelera">
+    <img class="void-ghost" src="/img/void.png" alt="" aria-hidden="true" />
     <label class="buscador-label" for="buscar-pelicula">Explorá la cartelera</label>
     <div class="buscador-control">
       <span class="buscador-icono" aria-hidden="true">⌕</span>
@@ -134,4 +305,15 @@
       </div>
     }
   }
+}
+
+@if (!cargando()) {
+  <button
+    type="button"
+    class="sherma-secret"
+    (click)="alternarSherma()"
+    [attr.aria-label]="shermaSonando() ? 'Pausar Shermasong' : 'Reproducir Shermasong'"
+  >
+    <img src="/img/sherma.gif" alt="Sherma" />
+  </button>
 }

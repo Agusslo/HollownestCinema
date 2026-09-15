@@ -83,63 +83,666 @@
   margin: 0;
 }
 
-/* ── Hero section ── */
-.hero {
+/* ── Carrusel Hero Promocional ── */
+.hero-carousel {
+  position: relative;
+  max-width: 1200px;
+  margin: 16px auto 44px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 212, 224, 0.14);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.7),
+    0 0 24px rgba(79, 196, 227, 0.08);
+  background: var(--hk-void);
+}
+
+.carousel-container {
+  position: relative;
+  height: 380px;
+  width: 100%;
+}
+
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  align-items: stretch;
+  transition:
+    opacity 0.6s ease-in-out,
+    visibility 0.6s ease-in-out;
+}
+
+.carousel-slide.slide-activo {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+
+.slide-contenido {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* ── SLIDE 1: Fiesta del Cine ── */
+.slide-fiesta {
+  background:
+    radial-gradient(ellipse at 85% 50%, rgba(225, 29, 72, 0.45) 0%, transparent 65%),
+    radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.15) 0%, transparent 40%),
+    linear-gradient(135deg, #22070e 0%, #170714 50%, #0a0a14 100%);
+}
+
+.fiesta-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: clamp(24px, 4vw, 40px) clamp(24px, 5vw, 56px);
+  gap: 32px;
+}
+
+.fiesta-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.pill-badge {
+  display: inline-block;
+  background: #ffffff;
+  color: #be123c;
+  font-family: 'Trajan', serif;
+  font-weight: bold;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.fiesta-titulo {
+  margin: 0;
+  font-family: 'Trajan', 'Arial Black', sans-serif;
+  font-size: clamp(2rem, 4.4vw, 3.4rem);
+  line-height: 0.95;
+  color: #ffffff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 24px rgba(244, 63, 94, 0.6),
+    0 4px 10px rgba(0, 0, 0, 0.8);
+}
+
+.sparkle {
+  color: #facc15;
+  margin-left: 4px;
+  filter: drop-shadow(0 0 8px #facc15);
+}
+
+.fiesta-fecha-badge {
+  display: inline-block;
+  background: #bef264;
+  color: #0a0a14;
+  font-family: 'Arial Black', 'Trajan', sans-serif;
+  font-weight: 900;
+  font-size: clamp(0.75rem, 1.4vw, 0.95rem);
+  letter-spacing: 1px;
+  padding: 5px 14px;
+  transform: rotate(-2.5deg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.btn-hero-blanco {
+  background: #ffffff;
+  color: #b91c1c;
+  font-family: 'Arial Black', 'Trajan', sans-serif;
+  font-weight: 900;
+  font-size: 0.9rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-hero-blanco:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.4);
+}
+
+.fiesta-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.fiesta-subtitulo {
+  margin: 0;
+  color: #ffffff;
+  font-family: 'Trajan', serif;
+  font-size: clamp(0.85rem, 1.6vw, 1.15rem);
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.posters-abanico {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 40px;
-  margin-bottom: 48px;
-  padding: 20px 0;
+  height: 180px;
   position: relative;
+  margin: 4px 0;
 }
 
-.hero-shade {
-  width: 100px;
-  height: auto;
-  opacity: 0.25;
-  filter: drop-shadow(0 0 24px rgba(232, 232, 240, 0.15));
-  animation: shade-float 5s ease-in-out infinite;
-  flex-shrink: 0;
+.poster-abanico {
+  position: relative;
+  width: 105px;
+  height: 155px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s;
 }
 
-@keyframes shade-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+.poster-abanico.item-1 {
+  transform: rotate(-10deg) translateX(15px);
+  z-index: 1;
+  background: #0a0a14;
 }
 
-.hero-content {
-  text-align: center;
+.poster-abanico.item-2 {
+  width: 120px;
+  height: 175px;
+  transform: scale(1.05);
+  z-index: 3;
+  border-color: rgba(250, 204, 21, 0.6);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.9),
+    0 0 15px rgba(250, 204, 21, 0.2);
 }
 
-.hero-titulo {
-  margin: 0;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
+.poster-abanico.item-3 {
+  transform: rotate(10deg) translateX(-15px);
+  z-index: 2;
+  background: #0a0a14;
+}
+
+.img-abanico {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.knight-glow {
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(79, 196, 227, 0.6));
+}
+
+.tickets-promo {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  z-index: 4;
+}
+
+.ticket-stub {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 138px;
+  padding: 10px 15px 9px;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(28, 35, 52, 0.96), rgba(10, 15, 29, 0.98));
+  border: 1px solid rgba(79, 196, 227, 0.42);
+  border-radius: 5px;
   color: var(--hk-soul);
-  letter-spacing: 8px;
-  text-transform: uppercase;
-  text-shadow: 0 0 40px rgba(79, 196, 227, 0.12);
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.55),
+    0 0 14px rgba(79, 196, 227, 0.08);
 }
 
-.hero-sub {
-  margin: 10px 0 0;
-  font-size: 0.95rem;
+.ticket-stub::before,
+.ticket-stub::after {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: #22070e;
+  border: 1px solid rgba(79, 196, 227, 0.42);
+  border-radius: 50%;
+  content: '';
+  transform: translateY(-50%);
+}
+
+.ticket-stub::before {
+  left: -5px;
+}
+
+.ticket-stub::after {
+  right: -5px;
+}
+
+.ticket-precio {
+  font-family: 'Arial Black', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--hk-geo);
+  text-shadow: 0 0 10px rgba(232, 168, 50, 0.22);
+}
+
+.ticket-formatos {
+  font-family: 'Trajan', serif;
+  font-size: 0.65rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  color: var(--hk-pale);
+}
+
+.ticket-sala {
+  font-size: 0.55rem;
   color: var(--hk-ash);
-  font-style: italic;
+  text-transform: uppercase;
+}
+
+/* ── SLIDE 2: Película Destacada / Banner ── */
+.slide-pelicula {
+  background: linear-gradient(
+    90deg,
+    #090912 0%,
+    rgba(9, 9, 18, 0.85) 45%,
+    rgba(9, 9, 18, 0.5) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-fondo-overlay {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 25%;
+  filter: blur(14px) brightness(0.35);
+  transform: scale(1.08);
+  z-index: 0;
+}
+
+.pelicula-layout {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: clamp(24px, 4vw, 40px) clamp(24px, 5vw, 56px);
+  gap: 32px;
+}
+
+.pelicula-hero-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.badge-reino {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.pelicula-hero-titulo {
+  margin: 0 0 6px;
+  font-family: 'Trajan', serif;
+  font-size: clamp(1.8rem, 3.6vw, 2.7rem);
+  color: var(--hk-soul);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 0 24px rgba(79, 196, 227, 0.3);
+}
+
+.pelicula-hero-pregunta {
+  margin: 0 0 10px;
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+  letter-spacing: 2px;
+}
+
+.pelicula-hero-sinopsis {
+  margin: 0 0 16px;
+  color: var(--hk-pale);
+  font-family: 'Perpetua', serif;
+  font-size: 1rem;
+  max-width: 520px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pelicula-hero-meta {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tag-meta {
+  background: rgba(10, 10, 18, 0.7);
+  border: 1px solid rgba(79, 196, 227, 0.25);
+  padding: 4px 10px;
+  border-radius: 3px;
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.68rem;
   letter-spacing: 1px;
 }
 
-.hero-linea {
-  width: 140px;
-  height: 1px;
-  margin: 24px auto 0;
-  background: linear-gradient(90deg, transparent, var(--hk-focus), transparent);
-  opacity: 0.4;
+.poster-destacado-img {
+  width: 175px;
+  height: 255px;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(79, 196, 227, 0.2);
+  border: 1px solid rgba(232, 168, 50, 0.3);
+}
+
+/* ── SLIDE 3: Candy Bar ── */
+.slide-candy {
+  background:
+    radial-gradient(ellipse at 80% 50%, rgba(79, 196, 227, 0.28) 0%, transparent 65%),
+    linear-gradient(135deg, #091522 0%, #0e1e30 50%, #090c14 100%);
+}
+
+.candy-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: clamp(24px, 4vw, 40px) clamp(24px, 5vw, 56px);
+  gap: 32px;
+}
+
+.candy-hero-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.candy-badge {
+  background: var(--hk-focus);
+  color: var(--hk-void);
+}
+
+.candy-hero-titulo {
+  margin: 10px 0 6px;
+  font-family: 'Trajan', serif;
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  line-height: 0.98;
+  color: var(--hk-soul);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-shadow: 0 0 30px rgba(79, 196, 227, 0.4);
+}
+
+.candy-tag {
+  background: var(--hk-geo);
+  color: var(--hk-void);
+  transform: rotate(-1.5deg);
+  margin: 8px 0 12px;
+  display: inline-block;
+}
+
+.candy-hero-desc {
+  color: var(--hk-pale);
+  font-family: 'Perpetua', serif;
+  font-size: 1.05rem;
+  max-width: 500px;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+.btn-candy {
+  background: var(--hk-focus);
+  color: var(--hk-void);
+}
+
+.btn-candy:hover {
+  background: #ffffff;
+  color: var(--hk-void);
+  box-shadow: 0 0 24px rgba(79, 196, 227, 0.6);
+}
+
+.candy-hero-visual {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.img-pure-vessel {
+  height: 230px;
+  width: auto;
+  filter: drop-shadow(0 0 20px rgba(79, 196, 227, 0.3));
+  object-fit: contain;
+}
+
+.ticket-candy {
+  min-width: 154px;
+  background: linear-gradient(145deg, rgba(24, 58, 76, 0.98), rgba(8, 28, 43, 0.98));
+  border-color: rgba(125, 227, 247, 0.58);
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.5),
+    0 0 18px rgba(79, 196, 227, 0.16);
+}
+
+.ticket-candy::before,
+.ticket-candy::after {
+  background: #102b3b;
+  border-color: rgba(125, 227, 247, 0.58);
+}
+
+/* ── Controles Carrusel ── */
+.carousel-indicadores {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.indicador-barra {
+  height: 4px;
+  width: 28px;
+  background: rgba(255, 255, 255, 0.25);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.indicador-barra.indicador-activo {
+  width: 48px;
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.carousel-nav-flechas {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.btn-nav-flecha {
+  width: 44px;
+  height: 34px;
+  padding: 0;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+  font-size: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.22);
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.btn-nav-flecha::before {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.9);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.9);
+}
+
+.btn-nav-flecha:first-child::before {
+  transform: rotate(-135deg);
+  margin-left: 2px;
+}
+
+.btn-nav-flecha:last-child::before {
+  transform: rotate(45deg);
+  margin-right: 2px;
+}
+
+.btn-nav-flecha:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.3);
+}
+
+.btn-nav-flecha:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 3px;
+}
+
+/* ── Responsive Carrusel ── */
+@media (max-width: 860px) {
+  .carousel-container {
+    height: 340px;
+  }
+
+  .fiesta-layout,
+  .pelicula-layout,
+  .candy-layout {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    padding: 24px 16px 48px;
+  }
+
+  .fiesta-info,
+  .pelicula-hero-info,
+  .candy-hero-info {
+    align-items: center;
+  }
+
+  .pelicula-hero-poster,
+  .img-pure-vessel {
+    display: none;
+  }
+
+  .fiesta-visual {
+    display: none;
+  }
+
+  .fiesta-titulo {
+    font-size: 2rem;
+  }
+
+  .btn-nav-flecha {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-carousel {
+    margin: 8px 8px 32px;
+    border-radius: 10px;
+  }
+
+  .carousel-container {
+    height: 300px;
+  }
+
+  .fiesta-layout,
+  .pelicula-layout,
+  .candy-layout {
+    padding: 20px 14px 44px;
+    gap: 12px;
+  }
+
+  .fiesta-titulo {
+    font-size: 1.6rem;
+  }
+
+  .pelicula-hero-titulo {
+    font-size: 1.4rem;
+  }
+
+  .candy-hero-titulo {
+    font-size: 1.4rem;
+  }
+
+  .btn-hero-blanco {
+    font-size: 0.7rem;
+    padding: 10px 20px;
+  }
+
+  .pill-badge {
+    font-size: 0.65rem;
+    padding: 3px 10px;
+  }
+
+  .ticket-stub {
+    display: none;
+  }
+
+  .btn-nav-flecha {
+    width: 30px;
+    height: 30px;
+  }
+
+  .indicador-barra {
+    width: 20px;
+    height: 3px;
+  }
+
+  .indicador-barra.indicador-activo {
+    width: 36px;
+  }
 }
 
 /* ── Buscador ── */
@@ -147,6 +750,31 @@
   width: min(100%, 620px);
   margin: 0 auto 52px;
   text-align: center;
+}
+
+.void-ghost {
+  display: block;
+  width: 46px;
+  height: 46px;
+  margin: -8px auto 0;
+  object-fit: contain;
+  opacity: 0.32;
+  filter: drop-shadow(0 0 12px rgba(79, 196, 227, 0.2));
+  pointer-events: none;
+  animation: void-breathe 5s ease-in-out infinite;
+}
+
+@keyframes void-breathe {
+  0%,
+  100% {
+    opacity: 0.24;
+    transform: translateY(2px) scale(0.96);
+  }
+
+  50% {
+    opacity: 0.42;
+    transform: translateY(-2px) scale(1.02);
+  }
 }
 
 .buscador-label {
@@ -536,6 +1164,31 @@
   text-shadow: 0 0 12px rgba(232, 168, 50, 0.3);
 }
 
+.sherma-secret {
+  display: block;
+  width: 84px;
+  height: 84px;
+  margin: 48px auto 16px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: default;
+  opacity: 0.92;
+}
+
+.sherma-secret:focus-visible {
+  outline: 1px dotted var(--hk-focus);
+  outline-offset: 4px;
+}
+
+.sherma-secret img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: auto;
+}
+
 /* ── Responsive ── */
 @media (max-width: 620px) {
   .hero {
@@ -651,4 +1304,48 @@
 .genero-select option {
   background: var(--hk-shell);
   color: var(--hk-pale);
+}
+
+/* ── Variantes del carrusel en tema claro ── */
+:host-context(.tema-claro) .slide-pelicula {
+  background: linear-gradient(135deg, #dce8eb 0%, #f4f6f5 58%, #c7d9de 100%);
+}
+
+:host-context(.tema-claro) .slide-fondo-overlay {
+  opacity: 0.18;
+  filter: blur(14px) brightness(1.1) saturate(0.7);
+}
+
+:host-context(.tema-claro) .pelicula-hero-titulo,
+:host-context(.tema-claro) .pelicula-hero-sinopsis,
+:host-context(.tema-claro) .candy-hero-titulo,
+:host-context(.tema-claro) .candy-hero-desc {
+  text-shadow: none;
+}
+
+:host-context(.tema-claro) .tag-meta {
+  background: rgba(244, 246, 245, 0.76);
+  border-color: rgba(22, 141, 168, 0.35);
+}
+
+:host-context(.tema-claro) .slide-candy {
+  background:
+    radial-gradient(ellipse at 80% 50%, rgba(22, 141, 168, 0.18) 0%, transparent 65%),
+    linear-gradient(135deg, #d9e9ed 0%, #f4f6f5 52%, #c6dce1 100%);
+}
+
+:host-context(.tema-claro) .candy-badge {
+  color: #f4f6f5;
+}
+
+:host-context(.tema-claro) .ticket-candy {
+  background: linear-gradient(145deg, rgba(244, 246, 245, 0.98), rgba(218, 232, 235, 0.98));
+  border-color: rgba(22, 141, 168, 0.5);
+  box-shadow: 0 8px 22px rgba(41, 64, 71, 0.2);
+}
+
+:host-context(.tema-claro) .ticket-candy::before,
+:host-context(.tema-claro) .ticket-candy::after {
+  background: #d9e9ed;
+  border-color: rgba(22, 141, 168, 0.5);
 }

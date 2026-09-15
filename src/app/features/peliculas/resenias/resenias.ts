@@ -58,7 +58,7 @@ export class Resenias {
     }),
     comentario: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(500)],
+      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(300)],
     }),
   });
 
@@ -70,26 +70,12 @@ export class Resenias {
 
   private async cargar(peliculaId: number) {
     this.cargando.set(true);
-    this.error.set(null);
-
-    const [resultadoResenias, resultadoUsuario] = await Promise.allSettled([
+    const [resenias, usuario] = await Promise.all([
       this.reseniasService.obtenerPorPelicula(peliculaId),
       this.authService.usuarioActual(),
     ]);
-
-    if (resultadoResenias.status === 'fulfilled') {
-      this.resenias.set(resultadoResenias.value);
-    } else {
-      this.resenias.set([]);
-      this.error.set('No se pudieron cargar las reseñas. Intentá nuevamente más tarde.');
-    }
-
-    if (resultadoUsuario.status === 'fulfilled') {
-      this.usuarioActual.set(resultadoUsuario.value);
-    } else {
-      this.usuarioActual.set(null);
-    }
-
+    this.resenias.set(resenias);
+    this.usuarioActual.set(usuario);
     this.cargando.set(false);
   }
 

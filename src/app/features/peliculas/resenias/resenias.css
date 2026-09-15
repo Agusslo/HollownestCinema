@@ -1,6 +1,5 @@
 /* ── Sección Reseñas ── */
 .resenias-seccion {
-  min-width: 0;
   max-width: 760px;
   margin: 64px auto 32px;
   padding: 0 16px;
@@ -211,32 +210,6 @@
   color: var(--hk-ash);
 }
 
-.resenias-error {
-  margin-bottom: 24px;
-  padding: 14px 16px;
-  border-left: 3px solid var(--hk-grimm);
-  background: rgba(192, 57, 43, 0.1);
-  color: #ffaaa5;
-}
-
-.resenias-error p {
-  margin: 0;
-}
-
-:host-context(.tema-claro) .promedio-badge,
-:host-context(.tema-claro) .resenia-item,
-:host-context(.tema-claro) .form-resenia {
-  background: linear-gradient(180deg, rgba(244, 246, 245, 0.98), rgba(216, 224, 229, 0.92));
-  border-color: rgba(41, 64, 71, 0.18);
-  box-shadow: 0 8px 24px rgba(41, 64, 71, 0.12);
-}
-
-:host-context(.tema-claro) .sin-resenias-caja,
-:host-context(.tema-claro) .resenia-aviso-caja {
-  background: rgba(216, 224, 229, 0.5);
-  border-color: rgba(41, 64, 71, 0.2);
-}
-
 .resenia-aviso-caja.exito .resenia-aviso {
   color: var(--hk-pale);
 }
@@ -372,19 +345,6 @@
     inset 0 0 8px rgba(0, 0, 0, 0.6);
 }
 
-.textarea-footer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 4px;
-}
-
-.contador-caracteres {
-  font-family: 'Perpetua', serif;
-  font-size: 0.8rem;
-  color: var(--hk-ash);
-  letter-spacing: 0.5px;
-}
-
 /* ── Errores ── */
 .campo-error,
 .form-error {
@@ -429,26 +389,6 @@
 
 /* ── Responsive ── */
 @media (max-width: 620px) {
-  .resenias-seccion {
-    margin-top: 44px;
-    padding: 0;
-  }
-
-  .resenias-titulo {
-    font-size: 1.05rem;
-    letter-spacing: 2px;
-  }
-
-  .resenia-item {
-    padding: 16px;
-  }
-
-  .resenia-header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
-  }
-
   .form-resenia {
     padding: 20px 16px;
   }
