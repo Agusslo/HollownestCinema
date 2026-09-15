@@ -1,0 +1,52 @@
+<form class="candy-form" [formGroup]="formulario" (ngSubmit)="guardar()">
+<div class="form-header">
+    <span class="form-kicker">Panel de administración</span>
+    <h1>Nuevo producto de candy bar</h1>
+    <p>Cargá un producto nuevo para que aparezca en la compra de candy junto a la entrada.</p>
+</div>
+
+<div class="form-fields">
+    <label>
+    Nombre
+    <input type="text" formControlName="nombre" placeholder="Ej: Pochoclo grande" />
+    @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
+        <span class="campo-error">El nombre es obligatorio.</span>
+    }
+    </label>
+
+    <label>
+    Precio
+    <input type="number" formControlName="precio" min="0" />
+    @if (formulario.controls.precio.touched && formulario.controls.precio.invalid) {
+        <span class="campo-error">Tiene que ser un número mayor o igual a 0.</span>
+    }
+    </label>
+
+    <label>
+    Categoría
+    <select formControlName="categoria_id">
+        <option [value]="null" disabled>Elegí una categoría</option>
+        @for (categoria of categorias(); track categoria.id) {
+        <option [value]="categoria.id">{{ categoria.nombre }}</option>
+        }
+    </select>
+    @if (formulario.controls.categoria_id.touched && formulario.controls.categoria_id.invalid) {
+        <span class="campo-error">Elegí una categoría.</span>
+    }
+    </label>
+
+    <label>
+    Imagen (URL, opcional)
+    <input type="text" formControlName="imagen_url" placeholder="https://..." />
+    </label>
+</div>
+
+@if (mensaje()) {
+    <p class="mensaje">{{ mensaje() }}</p>
+}
+
+<button type="submit" class="submit-button" [disabled]="guardando()">
+    <span>{{ guardando() ? 'Guardando...' : 'Agregar producto' }}</span>
+    <span aria-hidden="true">&rarr;</span>
+</button>
+</form>

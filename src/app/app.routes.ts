@@ -20,6 +20,10 @@ export const routes: Routes = [
   loadComponent: () => import('./features/admin/cupones/cupones').then((m) => m.Cupones),
   },
   {
+  path: 'admin/candy/nuevo',
+  loadComponent: () => import('./features/admin/alta-candy/alta-candy').then((m) => m.AltaCandy),
+},
+  {
     path: 'peliculas/:nombre',
     loadComponent: () => import('./features/peliculas/detalle/detalle').then((m) => m.Detalle),
   },
