@@ -140,10 +140,27 @@ export class Butacas {
       );
   }
 
+  protected butacasSeleccionadasTexto(): string {
+    if (this.seleccionadas().size === 0) return '';
+    return Array.from(this.seleccionadas())
+      .sort((a, b) => {
+        const filaA = a.charAt(0);
+        const filaB = b.charAt(0);
+        if (filaA !== filaB) return filaA.localeCompare(filaB);
+        const numA = parseInt(a.slice(1), 10);
+        const numB = parseInt(b.slice(1), 10);
+        return numA - numB;
+      })
+      .map((b) => `${b.charAt(0)} ${b.slice(1)}`)
+      .join(' · ');
+  }
+
   protected candySubtotal(): number {
-    return this.itemsCandyEnCarrito().reduce(
-      (acumulado, item) => acumulado + item.producto.precio * item.cantidad,
-      0,
+    return Math.round(
+      this.itemsCandyEnCarrito().reduce(
+        (acumulado, item) => acumulado + item.producto.precio * item.cantidad,
+        0,
+      ),
     );
   }
 
@@ -160,10 +177,12 @@ export class Butacas {
     const precio = this.entradasService.precioPorFormato(funcionActual.formato);
     const subtotal = this.seleccionadas().size * precio + this.candySubtotal();
     const descuento = this.descuentoAplicado();
-    return descuento > 0 ? subtotal * (1 - descuento / 100) : subtotal;
+    const total = descuento > 0 ? subtotal * (1 - descuento / 100) : subtotal;
+    return Math.round(total);
   }
 
-  protected async confirmarCompra() {
+
+    protected async confirmarCompra() {
     if (this.seleccionadas().size === 0) return;
 
     this.error.set(null);
@@ -175,6 +194,14 @@ export class Butacas {
       const candyItems = Array.from(this.carritoCandy().entries()).map(
         ([producto_id, cantidad]) => ({ producto_id, cantidad }),
       );
+
+      // Guardamos el detalle del candy en un formato simple (nombre + cantidad)
+      // ANTES de vaciar el carrito más abajo, porque después de la compra
+      // exitosa lo reseteamos a vacío.
+      const candyParaPdf = this.itemsCandyEnCarrito().map((item) => ({
+        nombre: item.producto.nombre,
+        cantidad: item.cantidad,
+      }));
 
       const { entradas: butacasCompradas, orden } = await this.entradasService.comprar(
         this.funcion_id,
@@ -192,6 +219,7 @@ export class Butacas {
           columna: b.columna,
           codigo_qr: b.codigo_qr,
         })),
+        candyParaPdf.length > 0 ? { codigo_qr: orden.codigo_qr, items: candyParaPdf } : undefined, //si hay candy arma el QR de la orden, sino no lo pasa y no genera la página extra del PDF
       );
 
       this.compraExitosa.set(true);

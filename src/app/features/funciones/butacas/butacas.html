@@ -45,30 +45,85 @@
       </section>
 
       <aside class="resumen-compra">
-        <p>Butacas seleccionadas: {{ seleccionadas().size }}</p>
+        <div class="resumen-butacas-seccion">
+          <div class="resumen-butacas-header">
+            <span class="resumen-butacas-titulo">Butacas</span>
+            @if (seleccionadas().size > 0) {
+              <span class="resumen-butacas-cantidad">({{ seleccionadas().size }})</span>
+            }
+          </div>
+          @if (seleccionadas().size > 0) {
+            <div class="resumen-butacas-card">
+              <div class="butaca-icono-box" aria-hidden="true">
+                <svg
+                  class="icono-butaca-svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M4.5 13.5l3.5-7c.3-.6 1-.9 1.6-.6.6.3.9 1 .6 1.6l-3.5 7c-.3.6-1 .9-1.6.6-.6-.3-.9-1-.6-1.6z"
+                  />
+                  <path
+                    d="M10 7.5c0-.8.7-1.5 1.5-1.5h7c.8 0 1.5.7 1.5 1.5v4c0 .8-.7 1.5-1.5 1.5h-7c-.8 0-1.5-.7-1.5-1.5v-4z"
+                    opacity="0.9"
+                  />
+                  <path
+                    d="M9 14.5c0-.8.7-1.5 1.5-1.5h8c.8 0 1.5.7 1.5 1.5v2c0 .8-.7 1.5-1.5 1.5h-8c-.8 0-1.5-.7-1.5-1.5v-2z"
+                  />
+                </svg>
+              </div>
+              <span class="butacas-codigos">{{ butacasSeleccionadasTexto() }}</span>
+            </div>
+          } @else {
+            <div class="resumen-butacas-vacio">
+              <span class="vacio-icono" aria-hidden="true">☝️</span>
+              <span>Tocá las butacas en el mapa para elegirlas</span>
+            </div>
+          }
+        </div>
 
         @if (itemsCandyEnCarrito().length > 0) {
           <div class="candy-resumen">
-            <p class="candy-resumen-titulo">Candy bar</p>
+            <p class="candy-resumen-titulo">Candy Bar</p>
             @for (item of itemsCandyEnCarrito(); track item.producto.id) {
               <div class="candy-resumen-item">
                 <span>{{ item.cantidad }}&times; {{ item.producto.nombre }}</span>
-                <span>${{ item.producto.precio * item.cantidad }}</span>
+                <span class="candy-item-precio">${{ item.producto.precio * item.cantidad }}</span>
               </div>
             }
           </div>
         }
 
         @if (descuentoAplicado() > 0) {
-          <p class="cupon-msg">🎟️ Tenés {{ descuentoAplicado() }}% de descuento aplicado.</p>
+          <div class="cupon-pill">
+            <span class="cupon-icono" aria-hidden="true">🎟️</span>
+            <span class="cupon-texto"
+              >Tenés <strong>{{ descuentoAplicado() }}% OFF</strong> aplicado</span
+            >
+          </div>
         }
-        <p class="total">Total: ${{ calcularTotal() }}</p>
+
+        <div class="total-bloque">
+          <span class="total-label">TOTAL</span>
+          <span class="total-monto">${{ calcularTotal() }}</span>
+        </div>
 
         @if (error()) {
-          <p class="error-msg">{{ error() }}</p>
+          <div class="error-box" role="alert">
+            <span class="alerta-icono" aria-hidden="true">⚠️</span>
+            <span>{{ error() }}</span>
+          </div>
         }
         @if (compraExitosa()) {
-          <p class="exito-msg">¡Compra realizada! Se descargó tu PDF con la/s entrada/s.</p>
+          <div class="exito-box" role="status">
+            <span class="alerta-icono" aria-hidden="true">✨</span>
+            <div class="exito-texto">
+              <strong>¡Compra realizada!</strong>
+              <span>Se descargó tu PDF con la/s entrada/s.</span>
+            </div>
+          </div>
         }
 
         <button
@@ -125,11 +180,7 @@
                 </button>
               } @else {
                 <div class="candy-stepper">
-                  <button
-                    type="button"
-                    (click)="quitarCandy(producto.id)"
-                    aria-label="Quitar uno"
-                  >
+                  <button type="button" (click)="quitarCandy(producto.id)" aria-label="Quitar uno">
                     &minus;
                   </button>
                   <span>{{ cantidadEnCarrito(producto.id) }}</span>

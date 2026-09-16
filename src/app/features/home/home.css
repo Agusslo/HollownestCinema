@@ -556,30 +556,50 @@
   bottom: 14px;
   right: 18px;
   display: flex;
-  gap: 4px;
+  gap: 6px;
   z-index: 10;
 }
 
 .btn-nav-flecha {
   width: 36px;
-  height: 32px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.18);
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s;
-  line-height: 1;
-  padding: 0;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.btn-nav-flecha::before {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid rgba(255, 255, 255, 0.85);
+  border-right: 2px solid rgba(255, 255, 255, 0.85);
+}
+
+.btn-nav-flecha:first-child::before {
+  transform: rotate(-135deg);
+  margin-left: 2px;
+}
+
+.btn-nav-flecha:last-child::before {
+  transform: rotate(45deg);
+  margin-right: 2px;
 }
 
 .btn-nav-flecha:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* ── Responsive Carrusel ── */
