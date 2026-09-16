@@ -50,10 +50,17 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 ### Correo 4 — Cupones configurables y Candy bar
 - [x] Cupón de primera compra: el admin puede configurar el porcentaje de descuento
 - [x] Cupones exclusivos para usuarios mayores de 50 años
-- [ ] Candy bar: ABM de productos (nombre, precio, imagen)
-- [ ] Categorías para los productos del candy bar
-- [ ] Compra de productos del candy bar junto con la entrada
-- [ ] Retiro de candy bar con el mismo QR de la entrada
+- [x] Candy bar: ABM de productos (nombre, precio, imagen)
+- [x] Categorías para los productos del candy bar
+- [x] Compra de productos del candy bar junto con la entrada
+- [x] Retiro de candy bar con el mismo QR de la entrada
+
+### Correo 5 — Roles de administración y asignación automática de salas
+- [ ] Rol admin: acceso para controlar salas, funciones, distribución de butacas y productos de candy bar
+- [ ] Rol empleado: puede escanear QR para validar entradas (cine) y candy bar
+- [ ] Ingreso manual del código (si el lector no funciona ese día), como alternativa a escanear
+- [ ] Invalidación de QR: al validar una entrada, o al entregar el candy de una orden, ese QR deja de servir
+- [ ] Asignación automática de sala al crear una función: el sistema elige la sala sin que dos funciones coincidan en sala + horario
 
 ## 💻 Entorno de Desarrollo
 
