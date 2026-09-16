@@ -4,10 +4,11 @@ import { Resenias as ReseniasService } from '../../../core/services/resenias';
 import { Auth } from '../../../core/services/auth';
 import { IReseniaConAutor } from '../../../core/interfaces/resenia';
 import IPerfil from '../../../core/interfaces/perfil';
+import { BlobatarComponent } from '../../../shared/components/blobatar/blobatar';
 
 @Component({
   selector: 'app-resenias',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, BlobatarComponent],
   templateUrl: './resenias.html',
   styleUrl: './resenias.css',
 })

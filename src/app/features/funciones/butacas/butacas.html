@@ -57,8 +57,8 @@
               <div class="butaca-icono-box" aria-hidden="true">
                 <svg
                   class="icono-butaca-svg"
-                  width="18"
-                  height="18"
+                  width="22"
+                  height="22"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
@@ -79,7 +79,7 @@
           } @else {
             <div class="resumen-butacas-vacio">
               <span class="vacio-icono" aria-hidden="true">☝️</span>
-              <span>Tocá las butacas en el mapa para elegirlas</span>
+              <span class="vacio-texto">Tocá las butacas en el mapa para elegirlas</span>
             </div>
           }
         </div>
@@ -89,7 +89,7 @@
             <p class="candy-resumen-titulo">Candy Bar</p>
             @for (item of itemsCandyEnCarrito(); track item.producto.id) {
               <div class="candy-resumen-item">
-                <span>{{ item.cantidad }}&times; {{ item.producto.nombre }}</span>
+                <span class="candy-item-nombre">{{ item.cantidad }}&times; {{ item.producto.nombre }}</span>
                 <span class="candy-item-precio">${{ item.producto.precio * item.cantidad }}</span>
               </div>
             }
@@ -99,9 +99,7 @@
         @if (descuentoAplicado() > 0) {
           <div class="cupon-pill">
             <span class="cupon-icono" aria-hidden="true">🎟️</span>
-            <span class="cupon-texto"
-              >Tenés <strong>{{ descuentoAplicado() }}% OFF</strong> aplicado</span
-            >
+            <span class="cupon-texto">Tenés <strong>{{ descuentoAplicado() }}% de descuento</strong> aplicado</span>
           </div>
         }
 
@@ -113,14 +111,14 @@
         @if (error()) {
           <div class="error-box" role="alert">
             <span class="alerta-icono" aria-hidden="true">⚠️</span>
-            <span>{{ error() }}</span>
+            <span class="alerta-texto">{{ error() }}</span>
           </div>
         }
         @if (compraExitosa()) {
           <div class="exito-box" role="status">
             <span class="alerta-icono" aria-hidden="true">✨</span>
             <div class="exito-texto">
-              <strong>¡Compra realizada!</strong>
+              <strong>¡Compra realizada con éxito!</strong>
               <span>Se descargó tu PDF con la/s entrada/s.</span>
             </div>
           </div>

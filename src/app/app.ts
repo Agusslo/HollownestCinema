@@ -3,10 +3,11 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 import { Auth } from './core/services/auth';
 import IPerfil from './core/interfaces/perfil';
 import { Supabase } from './core/services/supabase';
+import { BlobatarComponent } from './shared/components/blobatar/blobatar';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, RouterLink, BlobatarComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

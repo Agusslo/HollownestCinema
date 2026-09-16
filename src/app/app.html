@@ -19,13 +19,21 @@
 
     @if (!cargandoAuth()) {
       @if (usuario(); as u) {
-        <span class="nav-item user-badge">
-          <span class="soul-orb" aria-hidden="true"></span>
-          {{ u.nombre }}
-        </span>
-        <button class="nav-item" type="button" (click)="cerrarSesion()">Salir</button>
+        <div class="nav-item user-badge">
+          <app-blobatar [name]="u.nombre" [size]="32" animate="hover" class="user-blobatar" />
+          <span class="user-nombre">{{ u.nombre }}</span>
+        </div>
+        <button class="nav-item btn-salir" type="button" (click)="cerrarSesion()">Salir</button>
       } @else {
-        <span class="nav-item user-badge shade">Sombra</span>
+        <div class="nav-item user-badge shade">
+          <app-blobatar
+            name="Sombra"
+            [size]="32"
+            animate="hover"
+            class="user-blobatar shade-blobatar"
+          />
+          <span class="user-nombre">Sombra</span>
+        </div>
         <a class="nav-item" [routerLink]="['/login']">Ingresar</a>
         <a class="nav-item nav-primary" [routerLink]="['/registro']">Registrarme</a>
       }

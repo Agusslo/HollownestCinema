@@ -133,15 +133,25 @@
 .autor-info {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
-.autor-soul-orb {
-  width: 7px;
-  height: 7px;
+.autor-blobatar {
   border-radius: 50%;
-  background: var(--hk-focus);
-  box-shadow: 0 0 8px var(--hk-focus);
+  padding: 1px;
+  background: rgba(79, 196, 227, 0.15);
+  border: 1px solid rgba(79, 196, 227, 0.35);
+  box-shadow: 0 0 8px rgba(79, 196, 227, 0.2);
+  transition: all 0.25s ease;
+  display: inline-flex;
+  transition: transform 0.25s ease;
+}
+
+.resenia-item:hover .autor-blobatar {
+  border-color: var(--hk-focus);
+  box-shadow: 0 0 12px rgba(79, 196, 227, 0.45);
+  transform: scale(1.08);
+  transform: scale(1.12);
 }
 
 .resenia-autor {

@@ -13,7 +13,7 @@
 
 .seleccion-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 290px;
+  grid-template-columns: minmax(0, 1fr) 260px;
   justify-content: center;
   gap: 28px;
   align-items: start;
@@ -189,21 +189,21 @@ h1 {
   flex-direction: column;
   gap: 16px;
   width: 100%;
-  max-width: 320px;
-  padding: 22px 20px;
-  background: linear-gradient(180deg, rgba(22, 22, 36, 0.96) 0%, rgba(13, 13, 22, 0.98) 100%);
-  border: 1px solid rgba(79, 196, 227, 0.25);
+  max-width: 330px;
+  padding: 24px 22px;
+  background: linear-gradient(180deg, rgba(22, 22, 38, 0.98) 0%, rgba(12, 12, 22, 0.99) 100%);
+  border: 1px solid rgba(79, 196, 227, 0.3);
   border-radius: 12px;
   box-shadow:
-    0 12px 36px rgba(0, 0, 0, 0.6),
-    0 0 24px rgba(79, 196, 227, 0.08);
+    0 12px 36px rgba(0, 0, 0, 0.7),
+    0 0 24px rgba(79, 196, 227, 0.1);
   backdrop-filter: blur(10px);
   box-sizing: border-box;
 }
 
 .resumen-butacas-seccion {
   padding-bottom: 14px;
-  border-bottom: 1px solid rgba(212, 212, 224, 0.12);
+  border-bottom: 1px solid rgba(212, 212, 224, 0.15);
   text-align: left;
 }
 
@@ -211,13 +211,13 @@ h1 {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .resumen-butacas-titulo {
   color: var(--hk-soul);
   font-family: 'Trajan', serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   letter-spacing: 2px;
   text-transform: uppercase;
   font-weight: bold;
@@ -227,31 +227,31 @@ h1 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(79, 196, 227, 0.18);
+  background: rgba(79, 196, 227, 0.2);
   color: var(--hk-focus);
-  border: 1px solid rgba(79, 196, 227, 0.35);
+  border: 1px solid rgba(79, 196, 227, 0.4);
   border-radius: 12px;
-  padding: 2px 8px;
-  font-size: 0.78rem;
+  padding: 3px 10px;
+  font-size: 0.88rem;
   font-weight: bold;
 }
 
 .resumen-butacas-card {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: rgba(10, 10, 18, 0.65);
-  border: 1px solid rgba(79, 196, 227, 0.35);
+  gap: 14px;
+  background: rgba(10, 10, 18, 0.75);
+  border: 1px solid rgba(79, 196, 227, 0.4);
   border-radius: 8px;
-  padding: 10px 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  padding: 12px 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 .butaca-icono-box {
-  width: 36px;
-  height: 36px;
-  background: rgba(79, 196, 227, 0.15);
-  border: 1px solid rgba(79, 196, 227, 0.3);
+  width: 40px;
+  height: 40px;
+  background: rgba(79, 196, 227, 0.18);
+  border: 1px solid rgba(79, 196, 227, 0.35);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -266,7 +266,7 @@ h1 {
 
 .butacas-codigos {
   color: #ffffff;
-  font-size: 0.98rem;
+  font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: 1.5px;
   word-break: break-word;
@@ -277,33 +277,38 @@ h1 {
 .resumen-butacas-vacio {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px dashed rgba(79, 196, 227, 0.3);
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(79, 196, 227, 0.4);
   border-radius: 8px;
-  color: #d0dde0;
-  font-size: 0.84rem;
-  line-height: 1.35;
+  color: #e2e8f0;
+  font-size: 0.92rem;
+  line-height: 1.4;
 }
 
 .vacio-icono {
-  font-size: 1rem;
+  font-size: 1.15rem;
   flex-shrink: 0;
+}
+
+.vacio-texto {
+  color: #d1d5db;
+  font-weight: 500;
 }
 
 /* ── Resumen Candy Bar ── */
 .candy-resumen {
-  padding: 10px 0;
-  border-top: 1px solid rgba(212, 212, 224, 0.12);
-  border-bottom: 1px solid rgba(212, 212, 224, 0.12);
+  padding: 12px 0;
+  border-top: 1px solid rgba(212, 212, 224, 0.15);
+  border-bottom: 1px solid rgba(212, 212, 224, 0.15);
   text-align: left;
 }
 
 .candy-resumen-titulo {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   color: var(--hk-focus);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   letter-spacing: 2px;
   text-transform: uppercase;
   font-family: 'Trajan', serif;
@@ -314,38 +319,44 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 4px 0;
-  color: #e4e4ee;
-  font-size: 0.88rem;
+  margin: 6px 0;
+  color: #f1f5f9;
+  font-size: 0.95rem;
+}
+
+.candy-item-nombre {
+  color: #f8fafc;
 }
 
 .candy-item-precio {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--hk-geo);
+  font-size: 1rem;
 }
 
 /* ── Cupón Pill ── */
 .cupon-pill {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(225, 29, 72, 0.16);
-  border: 1px solid rgba(225, 29, 72, 0.4);
+  gap: 10px;
+  background: rgba(225, 29, 72, 0.18);
+  border: 1px solid rgba(225, 29, 72, 0.45);
   border-radius: 8px;
-  padding: 8px 12px;
-  color: #ffd6df;
-  font-size: 0.84rem;
-  line-height: 1.3;
+  padding: 10px 14px;
+  color: #ffdce3;
+  font-size: 0.92rem;
+  line-height: 1.35;
   text-align: left;
 }
 
 .cupon-icono {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   flex-shrink: 0;
 }
 
 .cupon-texto strong {
   color: #ffffff;
+  font-weight: 700;
 }
 
 /* ── Bloque Total ── */
@@ -355,28 +366,29 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  background: rgba(10, 10, 18, 0.65);
-  border: 1px solid rgba(232, 168, 50, 0.35);
+  background: rgba(10, 10, 18, 0.7);
+  border: 1px solid rgba(232, 168, 50, 0.4);
   border-radius: 8px;
-  padding: 14px;
-  box-shadow: inset 0 0 16px rgba(232, 168, 50, 0.08);
+  padding: 14px 16px;
+  box-shadow: inset 0 0 18px rgba(232, 168, 50, 0.1);
 }
 
 .total-label {
   font-family: 'Trajan', serif;
-  font-size: 0.82rem;
-  color: #b5a68e;
+  font-size: 0.9rem;
+  color: #cbd5e1;
   letter-spacing: 3px;
   text-transform: uppercase;
+  font-weight: bold;
 }
 
 .total-monto {
   font-family: 'Trajan', serif;
-  font-size: 1.7rem;
+  font-size: 1.85rem;
   font-weight: bold;
   color: var(--hk-geo);
   letter-spacing: 1px;
-  text-shadow: 0 0 14px rgba(232, 168, 50, 0.4);
+  text-shadow: 0 0 16px rgba(232, 168, 50, 0.45);
 }
 
 /* ── Alertas (Error / Éxito) ── */
@@ -384,81 +396,81 @@ h1 {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(225, 29, 72, 0.18);
+  background: rgba(225, 29, 72, 0.2);
   border: 1px solid var(--hk-grimm);
   border-radius: 8px;
-  padding: 10px 12px;
-  color: #ffc4ce;
-  font-size: 0.85rem;
-  line-height: 1.35;
+  padding: 12px 14px;
+  color: #ffd2d9;
+  font-size: 0.92rem;
+  line-height: 1.4;
   text-align: left;
 }
 
 .exito-box {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  background: rgba(79, 196, 227, 0.14);
+  gap: 12px;
+  background: rgba(79, 196, 227, 0.16);
   border: 1px solid var(--hk-focus);
   border-radius: 8px;
-  padding: 12px;
-  color: #d8f6fd;
-  font-size: 0.86rem;
-  line-height: 1.35;
+  padding: 14px;
+  color: #e0f7fc;
+  font-size: 0.92rem;
+  line-height: 1.4;
   text-align: left;
-  box-shadow: 0 0 16px rgba(79, 196, 227, 0.18);
+  box-shadow: 0 0 20px rgba(79, 196, 227, 0.2);
 }
 
 .exito-texto {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .exito-texto strong {
   color: #ffffff;
-  font-size: 0.92rem;
+  font-size: 0.98rem;
   font-family: 'Trajan', serif;
   letter-spacing: 1px;
 }
 
 .alerta-icono {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   flex-shrink: 0;
 }
 
 /* ── Botón Comprar ── */
 .btn-comprar {
   width: 100%;
-  padding: 14px 20px;
+  padding: 16px 20px;
   border-radius: 8px;
   font-family: 'Trajan', serif;
-  font-size: 0.92rem;
+  font-size: 1rem;
   font-weight: bold;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.25s ease;
   background: linear-gradient(135deg, #18687d 0%, #15859e 50%, #29b8de 100%);
   color: #ffffff;
-  border: 1px solid rgba(79, 196, 227, 0.6);
+  border: 1px solid rgba(79, 196, 227, 0.7);
   box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.5),
-    0 0 18px rgba(79, 196, 227, 0.3);
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(79, 196, 227, 0.35);
 }
 
 .btn-comprar:hover:not(:disabled) {
   background: linear-gradient(135deg, #1d7b94 0%, #1a9cba 50%, #47caee 100%);
   transform: translateY(-2px);
   box-shadow:
-    0 6px 20px rgba(0, 0, 0, 0.6),
-    0 0 24px rgba(79, 196, 227, 0.5);
+    0 6px 22px rgba(0, 0, 0, 0.6),
+    0 0 28px rgba(79, 196, 227, 0.55);
 }
 
 .btn-comprar:disabled {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow: none;
   cursor: not-allowed;
   transform: none;
@@ -466,8 +478,8 @@ h1 {
 
 :host-context(.tema-claro) .resumen-compra {
   background: #ffffff;
-  border-color: rgba(41, 64, 71, 0.2);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-color: rgba(41, 64, 71, 0.22);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
 }
 
 :host-context(.tema-claro) .butaca.ocupada {
@@ -480,43 +492,47 @@ h1 {
 }
 
 :host-context(.tema-claro) .resumen-butacas-card {
-  background: rgba(230, 235, 238, 0.7);
-  border-color: rgba(41, 64, 71, 0.2);
+  background: rgba(230, 235, 238, 0.8);
+  border-color: rgba(41, 64, 71, 0.25);
 }
 
 :host-context(.tema-claro) .butaca-icono-box {
-  background: rgba(41, 64, 71, 0.1);
-  border-color: rgba(41, 64, 71, 0.15);
+  background: rgba(41, 64, 71, 0.12);
+  border-color: rgba(41, 64, 71, 0.2);
   color: #294047;
 }
 
 :host-context(.tema-claro) .butacas-codigos {
-  color: #294047;
+  color: #1e293b;
 }
 
 :host-context(.tema-claro) .resumen-butacas-vacio {
-  background: rgba(41, 64, 71, 0.05);
-  border-color: rgba(41, 64, 71, 0.25);
-  color: #294047;
+  background: rgba(41, 64, 71, 0.06);
+  border-color: rgba(41, 64, 71, 0.3);
+  color: #1e293b;
+}
+
+:host-context(.tema-claro) .vacio-texto {
+  color: #1e293b;
 }
 
 :host-context(.tema-claro) .total-bloque {
-  background: #f4f6f5;
-  border-color: rgba(166, 111, 28, 0.3);
+  background: #f1f5f9;
+  border-color: rgba(166, 111, 28, 0.35);
 }
 
 :host-context(.tema-claro) .total-label {
-  color: #50636a;
+  color: #475569;
 }
 
 :host-context(.tema-claro) .btn-comprar:disabled {
-  background: rgba(41, 64, 71, 0.08);
-  color: rgba(41, 64, 71, 0.45);
-  border-color: rgba(41, 64, 71, 0.18);
+  background: rgba(41, 64, 71, 0.1);
+  color: rgba(41, 64, 71, 0.55);
+  border-color: rgba(41, 64, 71, 0.25);
 }
 
 :host-context(.tema-claro) .candy-resumen-item {
-  color: #15252b;
+  color: #0f172a;
 }
 
 /* ── Candy bar (Correo 4) ── */
@@ -721,30 +737,6 @@ h1 {
   padding: 32px 0;
 }
 
-/* ── Resumen de candy en el carrito lateral ── */
-.candy-resumen {
-  margin: 10px 0;
-  padding: 10px 0;
-  border-top: 1px solid rgba(212, 212, 224, 0.12);
-  border-bottom: 1px solid rgba(212, 212, 224, 0.12);
-}
-
-.candy-resumen-titulo {
-  margin: 0 0 6px;
-  color: var(--hk-soft-text);
-  font-size: 0.75rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.candy-resumen-item {
-  display: flex;
-  justify-content: space-between;
-  margin: 3px 0;
-  color: var(--hk-seat-text);
-  font-size: 0.82rem;
-}
-
 /* ── Responsive Butacas + Candy ── */
 @media (max-width: 900px) {
   .sala-heading {
@@ -753,12 +745,14 @@ h1 {
 
   .seleccion-layout {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 
   .resumen-compra {
     position: static;
-    width: min(100%, 360px);
-    margin: 12px auto 0;
+    width: 100%;
+    max-width: 480px;
+    margin: 20px auto 0;
   }
 
   .butaca {
@@ -797,7 +791,49 @@ h1 {
 
 @media (max-width: 480px) {
   .butacas-container {
-    padding: 0 6px;
+    padding: 0 4px;
+  }
+
+  .resumen-compra {
+    max-width: 100%;
+    margin: 16px 0 0;
+    padding: 18px 14px;
+    gap: 14px;
+  }
+
+  .resumen-butacas-titulo {
+    font-size: 1rem;
+  }
+
+  .resumen-butacas-card {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .butaca-icono-box {
+    width: 36px;
+    height: 36px;
+  }
+
+  .butacas-codigos {
+    font-size: 0.95rem;
+  }
+
+  .total-bloque {
+    padding: 12px;
+  }
+
+  .total-label {
+    font-size: 0.82rem;
+  }
+
+  .total-monto {
+    font-size: 1.6rem;
+  }
+
+  .btn-comprar {
+    padding: 14px 16px;
+    font-size: 0.92rem;
   }
 
   .butaca {
