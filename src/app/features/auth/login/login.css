@@ -92,3 +92,60 @@ form {
   border: none;
   box-shadow: none;
 }
+
+.campo-password {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.campo-password input {
+  width: 100%;
+  padding-right: 42px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eye-icon {
+  position: relative;
+  display: inline-block;
+  width: 15px;
+  height: 9px;
+  border: 2px solid rgba(212, 212, 224, 0.85);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-sizing: border-box;
+}
+
+.eye-icon::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(212, 212, 224, 0.9);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 4px rgba(79, 196, 227, 0.35);
+}
+
+.toggle-password:hover .eye-icon {
+  border-color: var(--hk-soul);
+}
+
+.toggle-password:hover .eye-icon::before {
+  background: var(--hk-soul);
+  box-shadow: 0 0 6px rgba(79, 196, 227, 0.55);
+}

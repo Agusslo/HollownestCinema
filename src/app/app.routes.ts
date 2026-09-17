@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { rolGuard } from './core/guards/rol-guard';
 
 export const routes: Routes = [
   {
@@ -7,20 +8,24 @@ export const routes: Routes = [
   },
   {
     path: 'admin/peliculas/nueva',
+    canActivate: [rolGuard(['admin'])],
     loadComponent: () =>
       import('./features/admin/alta-pelicula/alta-pelicula').then((m) => m.AltaPelicula),
   },
   {
     path: 'admin/funciones/nueva',
+    canActivate: [rolGuard(['admin'])],
     loadComponent: () =>
       import('./features/admin/alta-funcion/alta-funcion').then((m) => m.AltaFuncion),
   },
   {
   path: 'admin/cupones',
+  canActivate: [rolGuard(['admin'])],
   loadComponent: () => import('./features/admin/cupones/cupones').then((m) => m.Cupones),
   },
   {
   path: 'admin/candy/nuevo',
+  canActivate: [rolGuard(['admin'])],
   loadComponent: () => import('./features/admin/alta-candy/alta-candy').then((m) => m.AltaCandy),
 },
   {

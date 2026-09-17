@@ -1,3 +1,5 @@
+export type Rol = 'cliente' | 'empleado' | 'admin';
+
 export default interface IPerfil {
     id: string;
     nombre: string;
@@ -7,4 +9,5 @@ export default interface IPerfil {
     color_ojos: string;
     dias_vacaciones: number;
     cupon_primera_compra_usado: boolean;
+    rol: Rol;
 }

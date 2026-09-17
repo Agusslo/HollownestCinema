@@ -14,6 +14,7 @@ export class Login {
   private router = inject(Router);
 
   protected error = signal<string | null>(null);
+  protected mostrarPassword = signal(false);
 
   protected formulario = new FormGroup({
     email: new FormControl('', {
@@ -22,6 +23,10 @@ export class Login {
     }),
     password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
+
+  protected togglePassword(): void {
+    this.mostrarPassword.update((valor) => !valor);
+  }
 
   protected async login() {
     this.error.set(null);

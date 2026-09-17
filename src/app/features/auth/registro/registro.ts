@@ -64,6 +64,7 @@ export class Registro {
   private router = inject(Router);
 
   protected error = signal<string | null>(null);
+  protected mostrarPassword = signal(false);
 
   protected formulario = new FormGroup({
     email: new FormControl('', {
@@ -108,6 +109,10 @@ export class Registro {
       ],
     }),
   });
+
+  protected togglePassword(): void {
+    this.mostrarPassword.update((valor) => !valor);
+  }
 
   protected async registrar() {
     this.error.set(null);

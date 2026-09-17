@@ -31,7 +31,21 @@
         "
       >
         Contraseña
-        <input type="password" formControlName="password" placeholder="Tu contraseña" />
+        <div class="campo-password">
+          <input
+            [type]="mostrarPassword() ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Tu contraseña"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePassword()"
+            [attr.aria-label]="mostrarPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <span class="eye-icon" aria-hidden="true"></span>
+          </button>
+        </div>
       </label>
       @if (formulario.controls.password.touched && formulario.controls.password.invalid) {
         <p class="error-campo">La contraseña es requerida.</p>
