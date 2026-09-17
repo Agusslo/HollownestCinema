@@ -18,49 +18,77 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 
 ## 📋 Roadmap y Requerimientos
 
-### Base (no ligado a un correo puntual)
+> Organizado por área funcional, no por correo — cuando la consigna cambió de
+> opinión sobre algo a lo largo del intercambio, se lista acá directamente el
+> estado final pedido (ej.: el layout de butacas empezó siendo 20 filas
+> parejas, después se le sacaron dos filas para accesibilidad, y al final
+> también se le agregaron filas VIP — abajo figura como un solo requisito
+> combinado, no como tres pasos separados).
+
+### Base
 - [x] Inicialización del proyecto con Angular 22
 - [x] Conexión y configuración inicial con Supabase
-- [x] Configuración como Progressive Web App (PWA)
+- [x] Configuración como Progressive Web App (PWA), funcionando offline (el shell de la app; los datos de Supabase requieren conexión, es lo esperable)
+- [x] Identidad visual propia y producida ("Hollownest Cinema"), con modo claro/oscuro
 
-### Correo 1 — Propuesta inicial
-- [x] Modelo de datos y RLS (películas, salas, funciones, perfiles, entradas)
-- [x] Arquitectura de carpetas (`core/` + `features/`)
-- [x] Servicios base (`Supabase`, `Peliculas`)
-- [x] Cartelera: listado de películas en la home
-- [x] Detalle de película (sinopsis + listado de funciones, navegación por slug)
-- [x] ABM de funciones (horario, formato, idioma)
-- [x] Selección de butacas (sala fija de 20 filas / bloques 4-20-4) con margen de 30 min entre funciones
-- [x] Registro y login de usuario
-- [x] Compra con cupón 20% primera compra (registrado)
-- [x] Compra anónima
-- [x] Generación de PDF con entrada + código QR
+### Catálogo de películas
+- [x] Cartelera (home) con listado de películas
+- [x] Detalle de película (sinopsis, navegación por slug en la URL)
+- [x] Buscador de texto + filtro por género (una película puede tener varios géneros)
+- [x] Top 3 películas más vendidas destacadas primero en la home
+- [x] Reseñas: calificación con estrellas + comentario corto, visibles antes de sacar entradas, con promedio
 
----
+### Funciones y salas
+- [x] ABM de funciones: película, horario, formato (2D/3D/4D/5D), idioma
+- [x] Margen obligatorio de 30 min entre funciones de una misma sala
+- [x] Asignación automática de sala al crear una función (nunca dos funciones se pisan en sala + horario)
+- [x] Selector de fecha/hora con input nativo, sin el calendario de scroll infinito que se pidió evitar 
+- [ ] **Layout final de butacas** (combina las tres vueltas que dio la consigna): sala de 20 filas, bloques 4/20/4, **pero** las filas J y K dejan de ser butacas comunes y pasan a ser una fila de butacas accesibles (2/10/2) resaltada visualmente distinto, **y además** las últimas 3 filas (R, S, T) son butacas VIP con precio más alto y marca visual propia, con aviso claro antes de pagar. Hoy el layout sigue siendo el original de correo 1 (20 filas parejas, sin accesibles ni VIP)
+- [ ] Selección de butacas en tiempo real: ver en el momento qué butacas está ocupando otro usuario mientras elegís las tuyas. Hoy se consultan una vez al entrar a la pantalla y se refrescan recién después de tu propia compra — falta la suscripción en vivo (Supabase Realtime)
+- [ ] Restricción de edad por película (13 o 18 años según la película, o sin restricción): bloquear la compra a menores de esa edad, y aclarar en la entrada que debe ir acompañado de un adulto
 
-### Correo 2 — Reseñas y mejoras a la cartelera
-- [x] Sistema de reseñas: calificación con estrellas + comentario corto, visible antes de comprar
-- [x] Puntuación promedio de la película
-- [x] Home: mostrar primero las 3 películas más vendidas
-- [x] Buscador en el listado de películas
+### Compra y entradas
+- [x] Selección de butacas + compra, registrado o anónimo
+- [x] PDF con los datos de la entrada + código QR
+- [x] Cupón de descuento en la primera compra, con porcentaje configurable por el admin (ya no fijo en 20%)
+- [x] Cupón exclusivo para usuarios mayores de 50 años, también configurable
+- [x] Si un usuario califica para dos cupones a la vez, se aplica el mayor — nunca se suman
+- [ ] Cancelación de una compra hasta 2 hs antes de la función: no se devuelve dinero, se acredita como crédito en la cuenta del usuario, usable junto con otros medios de pago en compras futuras
 
-### Correo 3 — Buscador por género
-- [x] Buscador debe filtrar por género (una película puede tener varios géneros)
+### Candy bar
+- [x] ABM de productos (nombre, precio, imagen, categoría)
+- [x] Compra de candy junto con la entrada, en el mismo flujo de selección de butacas
+- [x] Retiro de todo el pedido con el QR de la orden (distinto del QR de cada entrada individual)
+- [ ] Combos especiales configurables por el admin (ej. entrada + pochoclos + bebida a precio fijo), destacados en la pantalla de compra
 
-### Correo 4 — Cupones configurables y Candy bar
-- [x] Cupón de primera compra: el admin puede configurar el porcentaje de descuento
-- [x] Cupones exclusivos para usuarios mayores de 50 años
-- [x] Candy bar: ABM de productos (nombre, precio, imagen)
-- [x] Categorías para los productos del candy bar
-- [x] Compra de productos del candy bar junto con la entrada
-- [x] Retiro de candy bar con el mismo QR de la entrada
+### Roles y validación en puerta
+- [x] Rol admin: acceso a ABM de salas, funciones, distribución de butacas y candy bar (rutas protegidas con guard)
+- [x] Rol empleado: acceso a la pantalla de validación de entradas y candy (rutas protegidas con guard)
+- [x] Escaneo de QR por cámara para validar entradas (cine) y candy bar
+- [x] Ingreso manual del código como alternativa al escaneo, por si el lector falla
+- [x] Invalidación: una vez que una entrada se valida o se entrega su candy, ese código deja de servir
+- [ ] Log de actividad del admin: quién creó qué función, quién modificó un precio, quién validó un QR — todo con fecha y hora
 
-### Correo 5 — Roles de administración y asignación automática de salas
-- [ ] Rol admin: acceso para controlar salas, funciones, distribución de butacas y productos de candy bar
-- [ ] Rol empleado: puede escanear QR para validar entradas (cine) y candy bar
-- [x] Ingreso manual del código (si el lector no funciona ese día), como alternativa a escanear
-- [x] Invalidación de QR: al validar una entrada, o al entregar el candy de una orden, ese QR deja de servir
-- [x] Asignación automática de sala al crear una función: el sistema elige la sala sin que dos funciones coincidan en sala + horario
+### Fidelización
+- [ ] Acumulación de puntos por compra (1 punto por cada peso gastado)
+- [ ] Canje de puntos por entradas gratis o productos de candy bar, con el costo en puntos de cada recompensa configurable por el admin
+- [ ] Historial de puntos acumulados y canjes, visible en el perfil del usuario
+- [ ] Los puntos no se transfieren entre usuarios
+
+### Próximamente y preventa
+- [ ] Sección "Próximamente" con películas que se estrenan en las próximas semanas
+- [ ] Alerta/notificación al usuario cuando se habilite la venta de entradas de una película que estaba en "Próximamente"
+- [ ] Preventa: entradas disponibles 7 días antes del estreno a un precio especial, configurable película por película, que vuelve solo al precio normal pasada la fecha de estreno
+
+### Perfil del usuario
+- [x] Registro con mail, nombre, apellido, fecha de nacimiento, tipo de sangre, color de ojos y días de vacaciones por año
+- [ ] Sección "Mis películas": historial visual (pósters, fechas, calificación propia) de todo lo que el usuario vio
+
+### Reportes de administración
+- [ ] Reporte de facturación diaria (monto facturado y cantidad de entradas vendidas por día)
+- [ ] Gráfico de películas más vistas por semana y por mes
+- [ ] Producto de candy bar más vendido
+- [ ] Exportación de los reportes a PDF y a Excel
 
 ## 💻 Entorno de Desarrollo
 
