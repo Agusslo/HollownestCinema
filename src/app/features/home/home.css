@@ -524,82 +524,51 @@
 }
 
 /* ── Controles Carrusel ── */
-.carousel-indicadores {
-  position: absolute;
-  bottom: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  z-index: 10;
-}
-
-.indicador-barra {
-  height: 4px;
-  width: 28px;
-  background: rgba(255, 255, 255, 0.25);
-  border: none;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 0;
-}
-
-.indicador-barra.indicador-activo {
-  width: 48px;
-  background: #ffffff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-}
-
 .carousel-nav-flechas {
   position: absolute;
-  bottom: 14px;
-  right: 18px;
+  bottom: 16px;
+  right: 20px;
   display: flex;
-  gap: 6px;
+  gap: 10px;
   z-index: 10;
 }
 
 .btn-nav-flecha {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #fff;
-  font-size: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  color: rgba(255, 255, 255, 0.95);
   transition:
-    background 0.2s,
-    border-color 0.2s;
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .btn-nav-flecha::before {
-  content: '';
+  content: '‹';
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
   display: block;
-  width: 8px;
-  height: 8px;
-  border-top: 2px solid rgba(255, 255, 255, 0.85);
-  border-right: 2px solid rgba(255, 255, 255, 0.85);
-}
-
-.btn-nav-flecha:first-child::before {
-  transform: rotate(-135deg);
-  margin-left: 2px;
+  transform: translateY(-1px);
 }
 
 .btn-nav-flecha:last-child::before {
-  transform: rotate(45deg);
-  margin-right: 2px;
+  content: '›';
 }
 
 .btn-nav-flecha:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.04);
 }
 
 /* ── Responsive Carrusel ── */

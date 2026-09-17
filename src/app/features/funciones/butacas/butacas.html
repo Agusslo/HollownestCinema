@@ -89,7 +89,9 @@
             <p class="candy-resumen-titulo">Candy Bar</p>
             @for (item of itemsCandyEnCarrito(); track item.producto.id) {
               <div class="candy-resumen-item">
-                <span class="candy-item-nombre">{{ item.cantidad }}&times; {{ item.producto.nombre }}</span>
+                <span class="candy-item-nombre"
+                  >{{ item.cantidad }}&times; {{ item.producto.nombre }}</span
+                >
                 <span class="candy-item-precio">${{ item.producto.precio * item.cantidad }}</span>
               </div>
             }
@@ -99,7 +101,9 @@
         @if (descuentoAplicado() > 0) {
           <div class="cupon-pill">
             <span class="cupon-icono" aria-hidden="true">🎟️</span>
-            <span class="cupon-texto">Tenés <strong>{{ descuentoAplicado() }}% de descuento</strong> aplicado</span>
+            <span class="cupon-texto"
+              >Tenés <strong>{{ descuentoAplicado() }}% de descuento</strong> aplicado</span
+            >
           </div>
         }
 

@@ -163,19 +163,6 @@
       </div>
     </div>
 
-    <!-- Indicadores inferiores (líneas / bars) -->
-    <div class="carousel-indicadores">
-      @for (n of [0, 1, 2]; track n) {
-        <button
-          type="button"
-          class="indicador-barra"
-          [class.indicador-activo]="slideActual() === n"
-          (click)="irASlide(n)"
-          [attr.aria-label]="'Ir a promoción ' + (n + 1)"
-        ></button>
-      }
-    </div>
-
     <!-- Controles Flechas (laterales con chevrones CSS) -->
     <div class="carousel-nav-flechas">
       <button

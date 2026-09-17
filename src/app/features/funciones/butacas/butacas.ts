@@ -135,8 +135,7 @@ export class Butacas {
         return producto ? { producto, cantidad } : null;
       })
       .filter(
-        (item): item is { producto: ICandyProductoConCategoria; cantidad: number } =>
-          item !== null,
+        (item): item is { producto: ICandyProductoConCategoria; cantidad: number } => item !== null,
       );
   }
 
@@ -181,8 +180,7 @@ export class Butacas {
     return Math.round(total);
   }
 
-
-    protected async confirmarCompra() {
+  protected async confirmarCompra() {
     if (this.seleccionadas().size === 0) return;
 
     this.error.set(null);
