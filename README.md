@@ -58,8 +58,8 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 ### Correo 5 — Roles de administración y asignación automática de salas
 - [ ] Rol admin: acceso para controlar salas, funciones, distribución de butacas y productos de candy bar
 - [ ] Rol empleado: puede escanear QR para validar entradas (cine) y candy bar
-- [ ] Ingreso manual del código (si el lector no funciona ese día), como alternativa a escanear
-- [ ] Invalidación de QR: al validar una entrada, o al entregar el candy de una orden, ese QR deja de servir
+- [x] Ingreso manual del código (si el lector no funciona ese día), como alternativa a escanear
+- [x] Invalidación de QR: al validar una entrada, o al entregar el candy de una orden, ese QR deja de servir
 - [ ] Asignación automática de sala al crear una función: el sistema elige la sala sin que dos funciones coincidan en sala + horario
 
 ## 💻 Entorno de Desarrollo

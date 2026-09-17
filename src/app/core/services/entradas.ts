@@ -5,6 +5,7 @@ import { Candy } from './candy';
 import { Formato } from '../interfaces/funcion';
 import IPerfil from '../interfaces/perfil';
 import IOrden from '../interfaces/orden';
+import { IEntradaValidacion } from '../interfaces/entrada';
 
 const PRECIOS_POR_FORMATO: Record<Formato, number> = {
   '2d': 18800,
@@ -77,5 +78,37 @@ export class Entradas {
     }
 
     return { orden, entradas: data };
+  }
+
+  // Busca una entrada por su código de QR (o el que se escribió a mano) y
+  // trae los datos de la función para que el empleado pueda verificar
+  // antes de confirmar. No modifica nada.
+  async buscarPorCodigo(codigo_qr: string): Promise<IEntradaValidacion | null> {
+    const { data, error } = await this.supabase.Supabase.from('entradas')
+      .select(
+        `id, fila, columna, validada_en,
+         funciones ( fecha_hora, formato, idioma,
+           peliculas ( nombre ),
+           salas ( nombre ) )`,
+      )
+      .eq('codigo_qr', codigo_qr)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data as unknown as IEntradaValidacion | null;
+  }
+
+  // Marca la entrada como validada. Devuelve false si ya estaba validada
+  // (el .is('validada_en', null) hace que el update no afecte ninguna fila
+  // en ese caso, en vez de tener que consultar y actualizar por separado).
+  async validar(id: number): Promise<boolean> {
+    const { data, error } = await this.supabase.Supabase.from('entradas')
+      .update({ validada_en: new Date().toISOString() })
+      .eq('id', id)
+      .is('validada_en', null)
+      .select('id');
+
+    if (error) throw error;
+    return (data?.length ?? 0) > 0;
   }
 }

@@ -1,0 +1,149 @@
+.validar-pantalla {
+  max-width: 520px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+}
+
+.validar-pantalla h1 {
+  font-family: 'Trajan Pro', serif;
+  color: var(--hk-pale);
+  margin-bottom: 1.25rem;
+}
+
+.selector-modo {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.selector-modo button {
+  flex: 1;
+  padding: 0.6rem;
+  background: var(--hk-shell);
+  border: var(--borde-hk);
+  color: var(--hk-soft-text);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.selector-modo button.activo {
+  border-color: var(--hk-focus);
+  color: var(--hk-focus);
+  box-shadow: 0 0 8px rgba(79, 196, 227, 0.35);
+}
+
+.form-codigo label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--hk-soft-text);
+}
+
+.fila-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.fila-input input {
+  flex: 1;
+  padding: 0.6rem;
+  background: var(--hk-void);
+  border: var(--borde-hk);
+  color: var(--hk-soul);
+  border-radius: 4px;
+}
+
+.fila-input input:focus {
+  outline: none;
+  border-color: var(--hk-focus);
+  box-shadow: 0 0 6px rgba(79, 196, 227, 0.4);
+}
+
+.fila-input button {
+  padding: 0.6rem 1.1rem;
+  background: var(--hk-focus);
+  color: var(--hk-void);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.fila-input button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.ayuda-error {
+  color: var(--hk-grimm);
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+
+.aviso {
+  margin-top: 1rem;
+  padding: 0.7rem 1rem;
+  border-radius: 4px;
+}
+
+.aviso-error {
+  background: rgba(192, 57, 43, 0.15);
+  border: 1px solid var(--hk-grimm);
+  color: var(--hk-pale);
+}
+
+.aviso-ok {
+  background: rgba(79, 196, 227, 0.12);
+  border: 1px solid var(--hk-focus);
+  color: var(--hk-pale);
+}
+
+.tarjeta-resultado {
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+  background: var(--hk-shell);
+  border: var(--borde-hk);
+  border-radius: 6px;
+}
+
+.tarjeta-resultado h2 {
+  color: var(--hk-pale);
+  margin-bottom: 0.8rem;
+}
+
+.tarjeta-resultado dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.3rem 0.8rem;
+  color: var(--hk-soft-text);
+}
+
+.tarjeta-resultado dt {
+  color: var(--hk-muted-text);
+}
+
+.lista-candy {
+  list-style: none;
+  padding: 0;
+  color: var(--hk-soft-text);
+}
+
+.lista-candy li {
+  padding: 0.2rem 0;
+}
+
+.btn-confirmar {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.7rem;
+  background: var(--hk-geo);
+  color: var(--hk-void);
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-confirmar:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

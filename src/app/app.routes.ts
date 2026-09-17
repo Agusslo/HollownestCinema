@@ -29,6 +29,11 @@ export const routes: Routes = [
   loadComponent: () => import('./features/admin/alta-candy/alta-candy').then((m) => m.AltaCandy),
 },
   {
+    path: 'empleado/validar',
+    canActivate: [rolGuard(['empleado', 'admin'])],
+    loadComponent: () => import('./features/empleado/validar/validar').then((m) => m.Validar),
+  },
+  {
     path: 'peliculas/:nombre',
     loadComponent: () => import('./features/peliculas/detalle/detalle').then((m) => m.Detalle),
   },
