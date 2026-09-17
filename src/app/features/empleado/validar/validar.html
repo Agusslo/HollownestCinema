@@ -1,111 +1,115 @@
-    <section class="validar-pantalla">
+<section class="validar-pantalla">
+  <header class="validar-header">
+    <img class="empleado-grub" src="/img/grub.gif" alt="" aria-hidden="true" />
+    <span class="validar-kicker">Panel de empleados</span>
     <h1>Validar en puerta</h1>
+  </header>
 
-    <div class="selector-modo" role="tablist">
-        <button
-        type="button"
-        role="tab"
-        [attr.aria-selected]="modo() === 'entrada'"
-        [class.activo]="modo() === 'entrada'"
-        (click)="elegirModo('entrada')"
-        >
-        Entrada (cine)
-        </button>
-        <button
-        type="button"
-        role="tab"
-        [attr.aria-selected]="modo() === 'candy'"
-        [class.activo]="modo() === 'candy'"
-        (click)="elegirModo('candy')"
-        >
-        Candy bar
-        </button>
+  <div class="selector-modo" role="tablist">
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="modo() === 'entrada'"
+      [class.activo]="modo() === 'entrada'"
+      (click)="elegirModo('entrada')"
+    >
+      Entrada (cine)
+    </button>
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="modo() === 'candy'"
+      [class.activo]="modo() === 'candy'"
+      (click)="elegirModo('candy')"
+    >
+      Candy bar
+    </button>
+  </div>
+
+  <div class="form-codigo">
+    <label for="codigo">Código {{ modo() === 'entrada' ? 'de la entrada' : 'de la orden' }}</label>
+    <div class="fila-input">
+      <input
+        id="codigo"
+        type="text"
+        placeholder="Pegalo o escribilo a mano"
+        [formControl]="codigoControl"
+        autocomplete="off"
+        (keydown.enter)="buscar()"
+      />
+      <button type="button" [disabled]="buscando()" (click)="buscar()">
+        {{ buscando() ? 'Buscando…' : 'Buscar' }}
+      </button>
     </div>
+    @if (codigoControl.touched && codigoControl.invalid) {
+      <p class="ayuda-error">Ingresá un código.</p>
+    }
+  </div>
 
-    <div class="form-codigo">
-        <label for="codigo">Código {{ modo() === 'entrada' ? 'de la entrada' : 'de la orden' }}</label>
-        <div class="fila-input">
-        <input
-            id="codigo"
-            type="text"
-            placeholder="Pegalo o escribilo a mano"
-            [formControl]="codigoControl"
-            autocomplete="off"
-            (keydown.enter)="buscar()"
-        />
-        <button type="button" [disabled]="buscando()" (click)="buscar()">
-            {{ buscando() ? 'Buscando…' : 'Buscar' }}
+  @if (error()) {
+    <p class="aviso aviso-error">{{ error() }}</p>
+  }
+
+  @if (mensaje()) {
+    <p class="aviso aviso-ok">{{ mensaje() }}</p>
+  }
+
+  @if (modo() === 'entrada' && entradaEncontrada(); as entrada) {
+    <div class="tarjeta-resultado">
+      <h2>{{ entrada.funciones.peliculas.nombre }}</h2>
+      <dl>
+        <dt>Sala</dt>
+        <dd>{{ entrada.funciones.salas.nombre }}</dd>
+        <dt>Función</dt>
+        <dd>
+          {{ entrada.funciones.fecha_hora | date: "EEEE d 'de' MMMM, HH:mm" : '' : 'es' }}
+        </dd>
+        <dt>Formato</dt>
+        <dd>{{ entrada.funciones.formato }} — {{ entrada.funciones.idioma }}</dd>
+        <dt>Butaca</dt>
+        <dd>{{ entrada.fila }}{{ entrada.columna }}</dd>
+      </dl>
+
+      @if (entrada.validada_en) {
+        <p class="aviso aviso-error">
+          Ya fue validada el {{ entrada.validada_en | date: 'short' : '' : 'es' }}.
+        </p>
+      } @else {
+        <button
+          type="button"
+          class="btn-confirmar"
+          [disabled]="confirmando()"
+          (click)="confirmarEntrada()"
+        >
+          {{ confirmando() ? 'Validando…' : 'Validar entrada' }}
         </button>
-        </div>
-        @if (codigoControl.touched && codigoControl.invalid) {
-        <p class="ayuda-error">Ingresá un código.</p>
-        }
+      }
     </div>
+  }
 
-    @if (error()) {
-        <p class="aviso aviso-error">{{ error() }}</p>
-    }
-
-    @if (mensaje()) {
-        <p class="aviso aviso-ok">{{ mensaje() }}</p>
-    }
-
-    @if (modo() === 'entrada' && entradaEncontrada(); as entrada) {
-        <div class="tarjeta-resultado">
-        <h2>{{ entrada.funciones.peliculas.nombre }}</h2>
-        <dl>
-            <dt>Sala</dt>
-            <dd>{{ entrada.funciones.salas.nombre }}</dd>
-            <dt>Función</dt>
-            <dd>
-            {{ entrada.funciones.fecha_hora | date: "EEEE d 'de' MMMM, HH:mm" : '' : 'es' }}
-            </dd>
-            <dt>Formato</dt>
-            <dd>{{ entrada.funciones.formato }} — {{ entrada.funciones.idioma }}</dd>
-            <dt>Butaca</dt>
-            <dd>{{ entrada.fila }}{{ entrada.columna }}</dd>
-        </dl>
-
-        @if (entrada.validada_en) {
-            <p class="aviso aviso-error">
-            Ya fue validada el {{ entrada.validada_en | date: 'short' : '' : 'es' }}.
-            </p>
-        } @else {
-            <button
-            type="button"
-            class="btn-confirmar"
-            [disabled]="confirmando()"
-            (click)="confirmarEntrada()"
-            >
-            {{ confirmando() ? 'Validando…' : 'Validar entrada' }}
-            </button>
+  @if (modo() === 'candy' && ordenEncontrada(); as orden) {
+    <div class="tarjeta-resultado">
+      <h2>Orden #{{ orden.id }}</h2>
+      <ul class="lista-candy">
+        @for (item of orden.orden_candy_items; track item) {
+          <li>{{ item.cantidad }}x {{ item.candy_productos.nombre }}</li>
         }
-        </div>
-    }
+      </ul>
 
-    @if (modo() === 'candy' && ordenEncontrada(); as orden) {
-        <div class="tarjeta-resultado">
-        <h2>Orden #{{ orden.id }}</h2>
-        <ul class="lista-candy">
-            @for (item of orden.orden_candy_items; track item) {
-            <li>{{ item.cantidad }}x {{ item.candy_productos.nombre }}</li>
-            }
-        </ul>
-
-        @if (orden.candy_entregado_en) {
-            <p class="aviso aviso-error">
-            Ya fue entregado el {{ orden.candy_entregado_en | date: 'short' : '' : 'es' }}.
-            </p>
-        } @else {
-            <button
-            type="button"
-            class="btn-confirmar"
-            [disabled]="confirmando()"
-            (click)="confirmarCandy()"
-            >
-            {{ confirmando() ? 'Entregando…' : 'Marcar como entregado' }}
-            </button>
-        }
-        </div>
-    }
-    </section>
+      @if (orden.candy_entregado_en) {
+        <p class="aviso aviso-error">
+          Ya fue entregado el {{ orden.candy_entregado_en | date: 'short' : '' : 'es' }}.
+        </p>
+      } @else {
+        <button
+          type="button"
+          class="btn-confirmar"
+          [disabled]="confirmando()"
+          (click)="confirmarCandy()"
+        >
+          {{ confirmando() ? 'Entregando…' : 'Marcar como entregado' }}
+        </button>
+      }
+    </div>
+  }
+</section>

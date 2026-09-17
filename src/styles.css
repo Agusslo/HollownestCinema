@@ -1,4 +1,4 @@
-@import "blobatar/motion.css";
+@import 'blobatar/motion.css';
 
 /* ── Fuentes ── */
 @font-face {
@@ -81,7 +81,8 @@ body {
   line-height: 1.6;
 }
 
-.admin-flea {
+.admin-flea,
+.empleado-grub {
   display: block;
   width: 52px;
   height: 52px;
