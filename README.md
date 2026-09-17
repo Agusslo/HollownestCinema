@@ -12,7 +12,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - **Frontend:** Angular 22 (Standalone Components, Signals)
 - **Backend / DB:** Supabase (Auth, PostgreSQL, Realtime)
 - **PWA:** `@angular/pwa`
-- **Estilos:** CSS / SCSS personalizado
+- **Estilos:** CSS
 
 ---
 
