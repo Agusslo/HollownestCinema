@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Butacas as ButacasService } from '../../../core/services/butacas';
+import { Butacas as ButacasService, IFilaSala, tipoDeButaca } from '../../../core/services/butacas';
 import { Entradas } from '../../../core/services/entradas';
 import { Funciones } from '../../../core/services/funciones';
 import { Auth } from '../../../core/services/auth';
@@ -29,7 +29,7 @@ export class Butacas {
   private candyService = inject(Candy);
 
   protected funcion_id = 0;
-  protected layout = signal<string[][]>([]);
+  protected layout = signal<IFilaSala[]>([]);
   protected ocupadas = signal<Set<string>>(new Set());
   protected seleccionadas = signal<Set<string>>(new Set());
   protected funcion = signal<IFuncion | null>(null);
@@ -82,6 +82,13 @@ export class Butacas {
 
   protected estaSeleccionada(butaca: string): boolean {
     return this.seleccionadas().has(butaca);
+  }
+
+  // Para el aviso del resumen de compra — la consigna pide que quede
+  // claro ANTES de pagar que se está comprando una butaca VIP.
+  protected cantidadVip(): number {
+    return Array.from(this.seleccionadas()).filter((codigo) => tipoDeButaca(codigo) === 'vip')
+      .length;
   }
 
   protected toggleButaca(butaca: string): void {
@@ -173,8 +180,17 @@ export class Butacas {
   protected calcularTotal(): number {
     const funcionActual = this.funcion();
     if (!funcionActual) return 0;
-    const precio = this.entradasService.precioPorFormato(funcionActual.formato);
-    const subtotal = this.seleccionadas().size * precio + this.candySubtotal();
+
+    // Antes era "precio del formato × cantidad de butacas"; ahora cada
+    // butaca puede tener un precio distinto si es VIP, así que sumamos
+    // butaca por butaca en vez de multiplicar por un precio único.
+    const subtotalEntradas = Array.from(this.seleccionadas()).reduce(
+      (acumulado, codigo) =>
+        acumulado + this.entradasService.precioPorButaca(funcionActual.formato, codigo),
+      0,
+    );
+
+    const subtotal = subtotalEntradas + this.candySubtotal();
     const descuento = this.descuentoAplicado();
     const total = descuento > 0 ? subtotal * (1 - descuento / 100) : subtotal;
     return Math.round(total);

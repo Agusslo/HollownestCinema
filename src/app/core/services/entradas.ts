@@ -6,6 +6,7 @@ import { Formato } from '../interfaces/funcion';
 import IPerfil from '../interfaces/perfil';
 import IOrden from '../interfaces/orden';
 import { IEntradaValidacion } from '../interfaces/entrada';
+import { tipoDeButaca } from './butacas';
 
 const PRECIOS_POR_FORMATO: Record<Formato, number> = {
   '2d': 18800,
@@ -13,6 +14,11 @@ const PRECIOS_POR_FORMATO: Record<Formato, number> = {
   '4d': 28600,
   '5d': 33000,
 };
+
+// Recargo de las butacas VIP (últimas 3 filas de cada sala) sobre el
+// precio base del formato. 30% es un valor elegido por nosotros — la
+// consigna sólo pide que sean "más caras", no da un número.
+const RECARGO_VIP = 1.3;
 
 @Service()
 export class Entradas {
@@ -29,8 +35,11 @@ export class Entradas {
     return data.map((e) => `${e.fila}${e.columna}`);
   }
 
-  precioPorFormato(formato: Formato): number {
-    return PRECIOS_POR_FORMATO[formato];
+  // Precio de una butaca puntual: el precio base del formato, más el
+  // recargo si esa butaca es VIP (filas R, S, T).
+  precioPorButaca(formato: Formato, codigo: string): number {
+    const base = PRECIOS_POR_FORMATO[formato];
+    return tipoDeButaca(codigo) === 'vip' ? Math.round(base * RECARGO_VIP) : base;
   }
 
   async comprar(

@@ -12,24 +12,26 @@
         <div class="pantalla">PANTALLA</div>
 
         <div class="sala">
-          @for (fila of layout(); track fila[0]) {
-            <div class="fila">
-              <span class="fila-letra">{{ fila[0].charAt(0) }}</span>
-              @for (butaca of fila; track butaca; let i = $index) {
-                @if (i === 4 || i === 24) {
+          @for (fila of layout(); track fila.letra) {
+            <div class="fila" [class.fila-accesible]="fila.tipo === 'accesible'" [class.fila-vip]="fila.tipo === 'vip'">
+              <span class="fila-letra">{{ fila.letra }}</span>
+              @for (butaca of fila.butacas; track butaca.codigo; let i = $index) {
+                @if (i === fila.bloques[0] || i === fila.bloques[0] + fila.bloques[1]) {
                   <span class="pasillo"></span>
                 }
                 <button
                   type="button"
                   class="butaca"
-                  [disabled]="estaOcupada(butaca)"
-                  [class.ocupada]="estaOcupada(butaca)"
-                  [class.seleccionada]="estaSeleccionada(butaca)"
-                  [attr.aria-label]="'Butaca ' + butaca"
-                  [title]="butaca"
-                  (click)="toggleButaca(butaca)"
+                  [class.accesible]="fila.tipo === 'accesible'"
+                  [class.vip]="fila.tipo === 'vip'"
+                  [disabled]="estaOcupada(butaca.codigo)"
+                  [class.ocupada]="estaOcupada(butaca.codigo)"
+                  [class.seleccionada]="estaSeleccionada(butaca.codigo)"
+                  [attr.aria-label]="'Butaca ' + butaca.codigo + (fila.tipo !== 'normal' ? ' (' + fila.tipo + ')' : '')"
+                  [title]="butaca.codigo"
+                  (click)="toggleButaca(butaca.codigo)"
                 >
-                  {{ butaca }}
+                  {{ butaca.codigo }}
                 </button>
               }
               <span class="fila-letra" aria-hidden="true"></span>
@@ -41,6 +43,8 @@
           <span><i class="ref-box libre"></i> Libre</span>
           <span><i class="ref-box ocupada"></i> Ocupada</span>
           <span><i class="ref-box seleccionada"></i> Seleccionada</span>
+          <span><i class="ref-box accesible"></i> Accesible</span>
+          <span><i class="ref-box vip"></i> VIP</span>
         </div>
       </section>
 
@@ -76,6 +80,12 @@
               </div>
               <span class="butacas-codigos">{{ butacasSeleccionadasTexto() }}</span>
             </div>
+            @if (cantidadVip() > 0) {
+              <p class="aviso-vip">
+                ⭐ Incluye {{ cantidadVip() }} butaca{{ cantidadVip() > 1 ? 's' : '' }} VIP
+                (+30% sobre el precio normal)
+              </p>
+            }
           } @else {
             <div class="resumen-butacas-vacio">
               <span class="vacio-icono" aria-hidden="true">☝️</span>

@@ -69,6 +69,7 @@ h1 {
 .fila {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 3px;
 }
 
@@ -137,6 +138,62 @@ h1 {
   border-color: rgba(42, 42, 61, 0.5);
   color: var(--hk-soft-text);
   cursor: not-allowed;
+}
+
+/* Accesible — filas J y K, celeste suave con ícono de silla de ruedas */
+.butaca.accesible {
+  background-color: rgba(79, 196, 227, 0.15);
+  border-color: var(--hk-focus);
+  color: var(--hk-focus);
+}
+
+.butaca.accesible.ocupada {
+  background-color: var(--hk-shade);
+  border-color: rgba(79, 196, 227, 0.25);
+  color: var(--hk-soft-text);
+}
+
+.butaca.accesible.seleccionada {
+  background-color: var(--hk-focus);
+  color: var(--hk-void);
+}
+
+/* VIP — últimas 3 filas, dorado como el resto de los acentos "geo" del tema */
+.butaca.vip {
+  background-color: rgba(232, 168, 50, 0.15);
+  border-color: var(--hk-geo);
+  color: var(--hk-geo);
+}
+
+.butaca.vip.ocupada {
+  background-color: var(--hk-shade);
+  border-color: rgba(232, 168, 50, 0.25);
+  color: var(--hk-soft-text);
+}
+
+.butaca.vip.seleccionada {
+  background-color: var(--hk-geo);
+  color: var(--hk-void);
+}
+
+.ref-box.accesible {
+  background-color: rgba(79, 196, 227, 0.15);
+  border: 1px solid var(--hk-focus);
+}
+
+.ref-box.vip {
+  background-color: rgba(232, 168, 50, 0.15);
+  border: 1px solid var(--hk-geo);
+}
+
+.aviso-vip {
+  margin-top: 8px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  color: var(--hk-geo);
+  background: rgba(232, 168, 50, 0.1);
+  border-left: 2px solid var(--hk-geo);
+  border-radius: 3px;
 }
 
 /* ── Referencias ── */
