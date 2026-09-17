@@ -17,16 +17,6 @@
       </select>
     </label>
 
-    <label>
-      <span>Sala</span>
-      <select formControlName="sala_id">
-        <option [ngValue]="null">Elegí una sala</option>
-        @for (sala of salas(); track sala.id) {
-          <option [ngValue]="sala.id">{{ sala.nombre }}</option>
-        }
-      </select>
-    </label>
-
     <label class="date-field">
       <span>Fecha y hora</span>
       <input
@@ -58,6 +48,14 @@
 
   @if (formulario.invalid && formulario.touched) {
     <p class="form-error">Completá todos los campos antes de guardar.</p>
+  }
+
+  @if (error()) {
+    <p class="form-error">{{ error() }}</p>
+  }
+
+  @if (mensaje()) {
+    <p class="form-mensaje">{{ mensaje() }}</p>
   }
 
   <button class="submit-button" type="submit">

@@ -1,6 +1,7 @@
 import { Service, inject } from '@angular/core';
 import { Supabase } from './supabase';
 import IFuncion, { IFuncionConSala, Formato, Idioma } from '../interfaces/funcion';
+import ISala from '../interfaces/sala';
 
 const MARGEN_MINUTOS = 30;
 
@@ -8,40 +9,52 @@ const MARGEN_MINUTOS = 30;
 export class Funciones {
     private supabase = inject(Supabase);
 
-async crear(funcion: Omit<IFuncion, 'id'>): Promise<void> {
-    await this.validarDisponibilidad(funcion);
+// Ya no recibe sala_id: la elige sola, probando las salas en orden y
+// devolviendo la primera que esté libre en ese horario (con el margen).
+async crear(funcion: Omit<IFuncion, 'id' | 'sala_id'>): Promise<{ sala_id: number; sala_nombre: string }> {
+    const duracion = await this.obtenerDuracion(funcion.pelicula_id);
+    const inicioNueva = new Date(funcion.fecha_hora);
+    const finNueva = this.sumarMinutos(inicioNueva, duracion + MARGEN_MINUTOS);
 
-    const { error } = await this.supabase.Supabase.from('funciones').insert(funcion);
-    if (error) throw error;
+    const { data: salas, error: errorSalas } = await this.supabase.Supabase.from('salas').select('*');
+    if (errorSalas) throw errorSalas;
+
+    for (const sala of salas as ISala[]) {
+        if (await this.estaLibre(sala.id, inicioNueva, finNueva)) {
+            const { error } = await this.supabase.Supabase.from('funciones')
+                .insert({ ...funcion, sala_id: sala.id });
+            if (error) throw error;
+            return { sala_id: sala.id, sala_nombre: sala.nombre };
+        }
+    }
+
+    throw new Error(
+        'No hay ninguna sala disponible en ese horario (contando el margen de 30 min). Probá con otro horario.',
+    );
 }
 
-private async validarDisponibilidad(funcion: Omit<IFuncion, 'id'>): Promise<void> {
-    // Validar que no haya otra función en la misma sala que se superponga con la nueva función
-    const duracionNueva = await this.obtenerDuracion(funcion.pelicula_id);
-    const inicioNueva = new Date(funcion.fecha_hora);
-    const finNueva = this.sumarMinutos(inicioNueva, duracionNueva + MARGEN_MINUTOS);
-
+// Devuelve true si esa sala puntual no tiene ninguna función que se
+// superponga con el rango [inicioNueva, finNueva). Mismo cálculo de
+// superposición que antes, pero ahora reutilizable sala por sala.
+private async estaLibre(sala_id: number, inicioNueva: Date, finNueva: Date): Promise<boolean> {
     const { data, error } = await this.supabase.Supabase.from('funciones')
         .select('fecha_hora, peliculas(duracion_minutos)')
-        .eq('sala_id', funcion.sala_id);
+        .eq('sala_id', sala_id);
 
     if (error) throw error;
 
-
-    for (const existente of data as any[])  {
+    for (const existente of data as any[]) {
         const inicioExistente = new Date(existente.fecha_hora);
         const finExistente = this.sumarMinutos(
-        inicioExistente,
-        existente.peliculas.duracion_minutos + MARGEN_MINUTOS,
+            inicioExistente,
+            existente.peliculas.duracion_minutos + MARGEN_MINUTOS,
         );
 
-      const seSuperponen = inicioNueva < finExistente && inicioExistente < finNueva; // Verifica si los intervalos de tiempo se superponen
-        if (seSuperponen) {
-        throw new Error(
-            'Ya hay una función en esa sala que choca con este horario (o con el margen de 30 min).',
-        );
+        const seSuperponen = inicioNueva < finExistente && inicioExistente < finNueva;
+        if (seSuperponen) return false;
     }
-    }
+
+    return true;
 }
 
 private async obtenerDuracion(pelicula_id: number): Promise<number> {
@@ -100,4 +113,3 @@ async obtenerDetalleCompra(id: number): Promise<{pelicula: string;sala: string;f
 }
 
 }
-
