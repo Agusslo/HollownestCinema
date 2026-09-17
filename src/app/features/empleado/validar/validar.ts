@@ -1,6 +1,7 @@
-    import { Component, inject, signal } from '@angular/core';
+    import { Component, inject, signal, OnDestroy } from '@angular/core';
     import { DatePipe } from '@angular/common';
     import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+    import { Html5Qrcode } from 'html5-qrcode';
     import { Entradas } from '../../../core/services/entradas';
     import { Ordenes } from '../../../core/services/ordenes';
     import { IEntradaValidacion } from '../../../core/interfaces/entrada';
@@ -14,9 +15,14 @@
     templateUrl: './validar.html',
     styleUrl: './validar.css',
     })
-    export class Validar {
+    export class Validar implements OnDestroy {
     private entradasService = inject(Entradas);
     private ordenesService = inject(Ordenes);
+
+    // Instancia del lector de cámara. No es un signal porque no se muestra
+    // en la plantilla — sólo lo usamos para arrancarlo/pararlo.
+    private lector: Html5Qrcode | null = null;
+    protected camaraActiva = signal(false);
 
     protected modo = signal<Modo>('entrada');
     protected codigoControl = new FormControl('', {
@@ -122,5 +128,53 @@
         } finally {
         this.confirmando.set(false);
         }
+    }
+
+    protected async activarCamara() {
+        this.error.set(null);
+        this.camaraActiva.set(true);
+
+        // El <div id="lector-qr"> recién aparece en el DOM cuando Angular
+        // procesa el cambio del signal de arriba. Esperamos un tick para que
+        // ya esté pintado antes de pedirle a Html5Qrcode que lo use.
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        this.lector = new Html5Qrcode('lector-qr');
+        try {
+        await this.lector.start(
+            { facingMode: 'environment' }, // cámara trasera si el dispositivo tiene varias
+            { fps: 10, qrbox: 250 },
+            (codigoDecodificado) => this.onScanExitoso(codigoDecodificado),
+            () => {}, // se llama en cada frame sin QR detectado — no es un error, se ignora
+        );
+        } catch (e) {
+        this.error.set('No se pudo acceder a la cámara: ' + (e as Error).message);
+        this.camaraActiva.set(false);
+        }
+    }
+
+    protected async detenerCamara() {
+        if (this.lector) {
+        try {
+            await this.lector.stop();
+            this.lector.clear();
+        } catch {
+            // si ya estaba parada (por ejemplo, tras un error de start), no hay nada que limpiar
+        }
+        this.lector = null;
+        }
+        this.camaraActiva.set(false);
+    }
+
+    private async onScanExitoso(codigo: string) {
+        await this.detenerCamara();
+        this.codigoControl.setValue(codigo);
+        this.buscar();
+    }
+
+    // Si el empleado se va de la pantalla con la cámara prendida, la apagamos
+    // igual — si no, el navegador se queda usando la cámara de fondo.
+    async ngOnDestroy() {
+        await this.detenerCamara();
     }
     }

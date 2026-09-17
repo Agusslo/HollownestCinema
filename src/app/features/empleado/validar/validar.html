@@ -1,9 +1,5 @@
 <section class="validar-pantalla">
-  <header class="validar-header">
-    <img class="empleado-grub" src="/img/grub.gif" alt="" aria-hidden="true" />
-    <span class="validar-kicker">Panel de empleados</span>
-    <h1>Validar en puerta</h1>
-  </header>
+  <h1>Validar en puerta</h1>
 
   <div class="selector-modo" role="tablist">
     <button
@@ -43,6 +39,21 @@
     </div>
     @if (codigoControl.touched && codigoControl.invalid) {
       <p class="ayuda-error">Ingresá un código.</p>
+    }
+  </div>
+
+  <div class="separador-o">o</div>
+
+  <div class="camara-seccion">
+    @if (!camaraActiva()) {
+      <button type="button" class="btn-camara" (click)="activarCamara()">
+        Escanear con la cámara
+      </button>
+    } @else {
+      <div id="lector-qr" class="lector-qr"></div>
+      <button type="button" class="btn-camara btn-cancelar" (click)="detenerCamara()">
+        Cancelar escaneo
+      </button>
     }
   </div>
 

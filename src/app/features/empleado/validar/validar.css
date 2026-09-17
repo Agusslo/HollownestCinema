@@ -4,25 +4,10 @@
   padding: 1.5rem;
 }
 
-.validar-header {
-  margin-bottom: 1.5rem;
-}
-
-.validar-kicker {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--hk-focus);
-  font-family: 'Trajan', serif;
-  font-size: 0.72rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.validar-header h1 {
-  font-family: 'Trajan Pro', 'Trajan', serif;
+.validar-pantalla h1 {
+  font-family: 'Trajan Pro', serif;
   color: var(--hk-pale);
-  margin: 0;
-  letter-spacing: 2px;
+  margin-bottom: 1.25rem;
 }
 
 .selector-modo {
@@ -92,6 +77,51 @@
   color: var(--hk-grimm);
   font-size: 0.85rem;
   margin-top: 0.3rem;
+}
+
+.separador-o {
+  text-align: center;
+  color: var(--hk-muted-text);
+  margin: 1.1rem 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.camara-seccion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.btn-camara {
+  width: 100%;
+  padding: 0.65rem;
+  background: transparent;
+  border: 1px dashed var(--hk-ash);
+  color: var(--hk-soft-text);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-camara:hover {
+  border-color: var(--hk-focus);
+  color: var(--hk-focus);
+}
+
+.btn-cancelar {
+  border-style: solid;
+  border-color: var(--hk-grimm);
+  color: var(--hk-pale);
+}
+
+.lector-qr {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: var(--borde-hk);
 }
 
 .aviso {
