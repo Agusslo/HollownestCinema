@@ -102,12 +102,19 @@
             class="comentario-input"
             formControlName="comentario"
             placeholder="Contanos qué te pareció la película..."
+            maxlength="100"
             rows="3"
           ></textarea>
+          <span
+            class="contador-caracteres"
+            [class.limite]="formulario.controls.comentario.value.length >= 100"
+          >
+            {{ formulario.controls.comentario.value.length }} / 100
+          </span>
         </div>
 
         @if (formulario.controls.comentario.touched && formulario.controls.comentario.invalid) {
-          <p class="campo-error">Escribí un comentario de al menos 3 caracteres.</p>
+          <p class="campo-error">Escribí un comentario de entre 3 y 100 caracteres.</p>
         }
 
         @if (error()) {

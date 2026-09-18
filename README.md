@@ -36,7 +36,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - [x] Detalle de película (sinopsis, navegación por slug en la URL)
 - [x] Buscador de texto + filtro por género (una película puede tener varios géneros)
 - [x] Top 3 películas más vendidas destacadas primero en la home
-- [x] Reseñas: calificación con estrellas + comentario corto, visibles antes de sacar entradas, con promedio
+- [x] hs: calificación con estrellas + comentario corto, visibles antes de sacar entradas, con promedio
 
 ### Funciones y salas
 - [x] ABM de funciones: película, horario, formato (2D/3D/4D/5D), idioma

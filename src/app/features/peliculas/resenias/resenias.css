@@ -355,6 +355,20 @@
     inset 0 0 8px rgba(0, 0, 0, 0.6);
 }
 
+.contador-caracteres {
+  display: block;
+  text-align: right;
+  font-family: 'Perpetua', serif;
+  font-size: 0.85rem;
+  color: var(--hk-ash);
+  margin-top: 5px;
+}
+
+.contador-caracteres.limite {
+  color: var(--hk-infection);
+  font-weight: bold;
+}
+
 /* ── Errores ── */
 .campo-error,
 .form-error {
