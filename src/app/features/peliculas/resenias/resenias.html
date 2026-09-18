@@ -5,10 +5,7 @@
   </div>
 
   @if (cargando()) {
-    <div class="cargando-resenias">
-      <span class="soul-spinner"></span>
-      <p class="cargando-texto">Consultando los registros del reino...</p>
-    </div>
+    <app-loading mensaje="Consultando los registros del reino" />
   } @else {
     @if (promedio() > 0) {
       <div class="promedio-resenias">
@@ -35,7 +32,12 @@
             <div class="resenia-header">
               <div class="autor-info">
                 <span class="autor-soul-orb" aria-hidden="true"></span>
-                <app-blobatar [name]="resenia.perfiles.nombre" [size]="28" animate="hover" class="autor-blobatar" />
+                <app-blobatar
+                  [name]="resenia.perfiles.nombre"
+                  [size]="28"
+                  animate="hover"
+                  class="autor-blobatar"
+                />
                 <span class="resenia-autor"
                   >{{ resenia.perfiles.nombre }} {{ resenia.perfiles.apellido }}</span
                 >

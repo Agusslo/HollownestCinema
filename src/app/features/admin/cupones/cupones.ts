@@ -2,10 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Cupones as CuponesService } from '../../../core/services/cupones';
 import ICupon from '../../../core/interfaces/cupon';
+import { LoadingComponent } from '../../../shared/components/loading/loading';
 
 @Component({
   selector: 'app-cupones',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LoadingComponent],
   templateUrl: './cupones.html',
   styleUrl: './cupones.css',
 })

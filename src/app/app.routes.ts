@@ -19,15 +19,15 @@ export const routes: Routes = [
       import('./features/admin/alta-funcion/alta-funcion').then((m) => m.AltaFuncion),
   },
   {
-  path: 'admin/cupones',
-  canActivate: [rolGuard(['admin'])],
-  loadComponent: () => import('./features/admin/cupones/cupones').then((m) => m.Cupones),
+    path: 'admin/cupones',
+    canActivate: [rolGuard(['admin'])],
+    loadComponent: () => import('./features/admin/cupones/cupones').then((m) => m.Cupones),
   },
   {
-  path: 'admin/candy/nuevo',
-  canActivate: [rolGuard(['admin'])],
-  loadComponent: () => import('./features/admin/alta-candy/alta-candy').then((m) => m.AltaCandy),
-},
+    path: 'admin/candy/nuevo',
+    canActivate: [rolGuard(['admin'])],
+    loadComponent: () => import('./features/admin/alta-candy/alta-candy').then((m) => m.AltaCandy),
+  },
   {
     path: 'empleado/validar',
     canActivate: [rolGuard(['empleado', 'admin'])],
@@ -38,15 +38,23 @@ export const routes: Routes = [
     loadComponent: () => import('./features/peliculas/detalle/detalle').then((m) => m.Detalle),
   },
   {
+    path: 'pelicula/:nombre/butacas/:funcion',
+    loadComponent: () => import('./features/funciones/butacas/butacas').then((m) => m.Butacas),
+  },
+  {
     path: 'pelicula/:nombre/butacas',
     loadComponent: () => import('./features/funciones/butacas/butacas').then((m) => m.Butacas),
   },
   {
-  path: 'registro',
-  loadComponent: () => import('./features/auth/registro/registro').then((m) => m.Registro),
-},
-{
-  path: 'login',
-  loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
-},
+    path: 'peliculas/:nombre/butacas/:funcion',
+    loadComponent: () => import('./features/funciones/butacas/butacas').then((m) => m.Butacas),
+  },
+  {
+    path: 'registro',
+    loadComponent: () => import('./features/auth/registro/registro').then((m) => m.Registro),
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
+  },
 ];

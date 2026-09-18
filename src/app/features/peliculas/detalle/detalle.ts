@@ -7,10 +7,11 @@ import { IPeliculaConGeneros } from '../../../core/interfaces/pelicula';
 import { IFuncionConSala } from '../../../core/interfaces/funcion';
 import { Resenias } from '../resenias/resenias';
 import { DuracionPipe } from '../../../core/pipes/duracion-pipe';
+import { LoadingComponent } from '../../../shared/components/loading/loading';
 
 @Component({
   selector: 'app-detalle',
-  imports: [RouterLink, DatePipe, Resenias, DuracionPipe],
+  imports: [RouterLink, DatePipe, Resenias, DuracionPipe, LoadingComponent],
   templateUrl: './detalle.html',
   styleUrl: './detalle.css',
 })
@@ -25,6 +26,10 @@ export class Detalle {
 
   protected generarSlug(nombre: string): string {
     return this.peliculasService.generarSlug(nombre);
+  }
+
+  protected generarSlugFuncion(funcion: IFuncionConSala): string {
+    return this.funcionesService.generarSlug(funcion);
   }
 
   constructor() {

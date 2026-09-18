@@ -1,5 +1,5 @@
 @if (cargando()) {
-  <p>Cargando...</p>
+  <app-loading mensaje="Consultando archivos del reino" />
 } @else if (pelicula(); as p) {
   <article class="detalle-pelicula">
     <div class="pelicula-presentacion">
@@ -36,9 +36,14 @@
       } @else {
         <div class="funciones-lista">
           @for (funcion of funciones(); track funcion.id) {
-            <a class="funcion-card"
-              [routerLink]="['/pelicula', generarSlug(p.nombre), 'butacas']"
-              [queryParams]="{ funcion: funcion.id }"
+            <a
+              class="funcion-card"
+              [routerLink]="[
+                '/pelicula',
+                generarSlug(p.nombre),
+                'butacas',
+                generarSlugFuncion(funcion),
+              ]"
             >
               <span class="funcion-fecha">{{
                 funcion.fecha_hora | date: "EEEE d 'de' MMMM" : '' : 'es'

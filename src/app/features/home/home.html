@@ -1,12 +1,5 @@
 @if (cargando()) {
-  <section class="cartelera-loading" aria-live="polite" aria-label="Cargando cartelera">
-    <div class="loading-soul">
-      <span class="soul-spinner"></span>
-    </div>
-    <p class="loading-title">
-      Explorando Hallownest<span class="loading-dots" aria-hidden="true">...</span>
-    </p>
-  </section>
+  <app-loading mensaje="Explorando Hallownest" />
 } @else if (peliculas().length === 0 && destacadas().length === 0) {
   <section class="empty-state">
     <img class="empty-shade" src="/img/void.png" alt="" aria-hidden="true" />

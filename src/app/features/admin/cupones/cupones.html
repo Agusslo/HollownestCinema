@@ -1,5 +1,5 @@
 @if (cargando()) {
-  <p>Cargando...</p>
+  <app-loading mensaje="Cargando cupones" />
 } @else {
   <form class="cupones-form" [formGroup]="formulario" (ngSubmit)="guardar()">
     <div class="form-header">

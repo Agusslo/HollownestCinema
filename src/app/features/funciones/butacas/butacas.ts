@@ -1,7 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { RealtimeChannel } from '@supabase/supabase-js';
+import { Supabase } from '../../../core/services/supabase';
 import { Butacas as ButacasService, IFilaSala, tipoDeButaca } from '../../../core/services/butacas';
 import { Entradas } from '../../../core/services/entradas';
+import { Peliculas } from '../../../core/services/peliculas';
 import { Funciones } from '../../../core/services/funciones';
 import { Auth } from '../../../core/services/auth';
 import { Cupones } from '../../../core/services/cupones';
@@ -12,21 +15,32 @@ import ICupon from '../../../core/interfaces/cupon';
 import ICandyCategoria from '../../../core/interfaces/candy-categoria';
 import { ICandyProductoConCategoria } from '../../../core/interfaces/candy-producto';
 import { Pdf } from '../../../core/services/pdf';
+import { LoadingComponent } from '../../../shared/components/loading/loading';
 
 @Component({
   selector: 'app-butacas',
-  imports: [],
+  imports: [LoadingComponent],
   templateUrl: './butacas.html',
   styleUrl: './butacas.css',
 })
-export class Butacas {
+export class Butacas implements OnDestroy {
   private route = inject(ActivatedRoute);
+  private supabaseService = inject(Supabase);
   private butacasService = inject(ButacasService);
   private entradasService = inject(Entradas);
   private funcionesService = inject(Funciones);
+  private peliculasService = inject(Peliculas);
   private authService = inject(Auth);
   private cuponesService = inject(Cupones);
   private candyService = inject(Candy);
+
+  // Canal de Supabase Realtime — se abre en cargarDatos() y se cierra en
+  // ngOnDestroy() para no dejar la conexión abierta al salir de la pantalla.
+  private canal: RealtimeChannel | null = null;
+  // Butacas que este mismo tab está comprando en este momento — el canal
+  // también nos avisa de nuestro propio insert, y sin este chequeo lo
+  // tratábamos como si otro usuario nos hubiera ganado de mano.
+  private codigosEnCompraPropia = new Set<string>();
 
   protected funcion_id = 0;
   protected layout = signal<IFilaSala[]>([]);
@@ -53,13 +67,51 @@ export class Butacas {
   }
 
   private async cargarDatos() {
-    this.funcion_id = Number(this.route.snapshot.queryParamMap.get('funcion'));
+    const paramFuncion =
+      this.route.snapshot.paramMap.get('funcion') ||
+      this.route.snapshot.paramMap.get('id') ||
+      this.route.snapshot.queryParamMap.get('funcion') ||
+      '';
+    const slugPelicula = this.route.snapshot.paramMap.get('nombre') || '';
+
+    let funcionEncontrada: IFuncion | null = null;
+
+    if (slugPelicula) {
+      try {
+        const pelicula = await this.peliculasService.obtenerPorSlug(slugPelicula);
+        const funciones = await this.funcionesService.obtenerPorPelicula(pelicula.id);
+        funcionEncontrada =
+          funciones.find(
+            (f) =>
+              this.funcionesService.generarSlug(f) === paramFuncion ||
+              String(f.id) === paramFuncion,
+          ) ?? null;
+      } catch {}
+    }
+
+    if (!funcionEncontrada && paramFuncion) {
+      const idNumerico = parseInt(paramFuncion, 10);
+      if (!isNaN(idNumerico) && idNumerico > 0) {
+        try {
+          funcionEncontrada = await this.funcionesService.obtenerPorId(idNumerico);
+        } catch {}
+      }
+    }
+
+    if (!funcionEncontrada) {
+      this.error.set('No se encontró la función seleccionada.');
+      this.cargando.set(false);
+      return;
+    }
+
+    this.funcion_id = funcionEncontrada.id;
+    this.funcion.set(funcionEncontrada);
     this.layout.set(this.butacasService.generarLayoutSala());
 
     const ocupadasArray = await this.entradasService.obtenerButacasOcupadas(this.funcion_id);
     this.ocupadas.set(new Set(ocupadasArray));
+    this.suscribirCambiosButacas();
 
-    this.funcion.set(await this.funcionesService.obtenerPorId(this.funcion_id));
     this.usuario.set(await this.authService.usuarioActual());
     this.cupones.set(await this.cuponesService.obtenerTodos());
 
@@ -74,6 +126,48 @@ export class Butacas {
     }
 
     this.cargando.set(false);
+  }
+
+  // Escucha en vivo cuando se inserta una entrada nueva para ESTA función
+  // (de cualquier usuario, no sólo el propio) y agrega esa butaca a
+  // "ocupadas" al toque, sin que haga falta recargar la pantalla.
+  private suscribirCambiosButacas(): void {
+    this.canal = this.supabaseService.Supabase.channel(`butacas-funcion-${this.funcion_id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'entradas',
+          filter: `funcion_id=eq.${this.funcion_id}`,
+        },
+        (payload) => {
+          const nueva = payload.new as { fila: string; columna: number };
+          const codigo = `${nueva.fila}${nueva.columna}`;
+
+          const actualizadas = new Set(this.ocupadas());
+          actualizadas.add(codigo);
+          this.ocupadas.set(actualizadas);
+
+          // Es nuestra propia compra en curso — no es "otro usuario nos
+          // ganó de mano", así que no tocamos la selección ni avisamos.
+          if (this.codigosEnCompraPropia.has(codigo)) return;
+
+          // Si justo la tenía elegida yo (pero todavía sin pagar), se la
+          // saco de la selección: otro usuario la compró primero.
+          if (this.seleccionadas().has(codigo)) {
+            const propias = new Set(this.seleccionadas());
+            propias.delete(codigo);
+            this.seleccionadas.set(propias);
+            this.error.set(`La butaca ${codigo} se acaba de ocupar. La sacamos de tu selección.`);
+          }
+        },
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.canal?.unsubscribe();
   }
 
   protected estaOcupada(butaca: string): boolean {
@@ -201,6 +295,10 @@ export class Butacas {
 
     this.error.set(null);
     this.comprando.set(true);
+    // Guardamos qué butacas somos NOSOTROS quienes las estamos comprando,
+    // para que el handler de Realtime (más abajo) no confunda nuestro
+    // propio insert con el de otro usuario.
+    this.codigosEnCompraPropia = new Set(this.seleccionadas());
 
     try {
       const usuario = this.usuario();
@@ -247,6 +345,7 @@ export class Butacas {
       this.error.set((e as Error).message);
     } finally {
       this.comprando.set(false);
+      this.codigosEnCompraPropia.clear();
     }
   }
 }

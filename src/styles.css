@@ -203,11 +203,76 @@ form {
   font-size: 0.85rem;
 }
 
+/* ── Spinner Global (Hollow Knight Soul Spinner) ── */
+.soul-spinner {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border: 2px solid rgba(79, 196, 227, 0.12);
+  border-top-color: var(--hk-focus);
+  border-radius: 50%;
+  animation: soul-spin 1.2s linear infinite;
+  box-shadow: 0 0 20px rgba(79, 196, 227, 0.25);
+  margin: 0 auto;
+}
+
+@keyframes soul-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pantalla-loading,
 .estado-carga {
-  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+  padding: 32px 24px;
   text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pantalla-loading.pantalla-completa {
+  min-height: calc(100vh - 120px);
+}
+
+.loading-soul {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-title {
+  margin: 0;
   color: var(--hk-pale);
+  font-family: 'Trajan', serif;
   font-size: 0.95rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.loading-dots {
+  display: inline-block;
+  width: 24px;
+  text-align: left;
+  color: var(--hk-focus);
+}
+
+.tema-claro .soul-spinner {
+  border-color: rgba(22, 141, 168, 0.15);
+  border-top-color: var(--hk-focus);
+  box-shadow: 0 0 16px rgba(22, 141, 168, 0.2);
+}
+
+.tema-claro .loading-title {
+  color: #294047;
 }
 
 /* ── Validación de campos ── */

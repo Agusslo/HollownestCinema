@@ -5,10 +5,11 @@ import { Auth } from '../../../core/services/auth';
 import { IReseniaConAutor } from '../../../core/interfaces/resenia';
 import IPerfil from '../../../core/interfaces/perfil';
 import { BlobatarComponent } from '../../../shared/components/blobatar/blobatar';
+import { LoadingComponent } from '../../../shared/components/loading/loading';
 
 @Component({
   selector: 'app-resenias',
-  imports: [ReactiveFormsModule, BlobatarComponent],
+  imports: [ReactiveFormsModule, BlobatarComponent, LoadingComponent],
   templateUrl: './resenias.html',
   styleUrl: './resenias.css',
 })

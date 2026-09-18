@@ -5,10 +5,11 @@ import { Generos } from '../../core/services/generos';
 import { IPeliculaConGeneros } from '../../core/interfaces/pelicula';
 import IGenero from '../../core/interfaces/genero';
 import { DuracionPipe } from '../../core/pipes/duracion-pipe';
+import { LoadingComponent } from '../../shared/components/loading/loading';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, DuracionPipe],
+  imports: [RouterLink, DuracionPipe, LoadingComponent],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
