@@ -1,28 +1,69 @@
 /* ── Contenedor general ── */
 .butacas-container {
-  width: min(100%, 1100px);
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 24px auto 0;
+  padding: 16px 12px 32px;
   text-align: center;
-  overflow-x: hidden;
+  overflow-x: visible;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  box-sizing: border-box;
 }
 
 .sala-heading {
   margin-bottom: 14px;
-  text-align: left;
+  text-align: center;
+  width: 100%;
 }
 
 .seleccion-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 260px;
   justify-content: center;
+  align-items: center;
+  justify-items: center;
   gap: 28px;
-  align-items: start;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .mapa-sala {
   min-width: 0;
   overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(79, 196, 227, 0.8) rgba(15, 23, 42, 0.25);
   padding-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.mapa-sala::-webkit-scrollbar {
+  height: 8px;
+}
+
+.mapa-sala::-webkit-scrollbar-thumb {
+  background: rgba(79, 196, 227, 0.8);
+  border-radius: 999px;
+}
+
+.mapa-sala::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.25);
+  border-radius: 999px;
 }
 
 .eyebrow {
@@ -32,6 +73,7 @@
   letter-spacing: 3px;
   text-transform: uppercase;
   font-family: 'Trajan', serif;
+  text-align: center;
 }
 
 h1 {
@@ -40,6 +82,7 @@ h1 {
   font-size: clamp(1.25rem, 2.5vw, 1.9rem);
   text-transform: uppercase;
   letter-spacing: 4px;
+  text-align: center;
 }
 
 /* ── Pantalla ── */
@@ -61,7 +104,8 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  width: fit-content;
+  width: max-content;
+  min-width: 100%;
   margin: 0 auto 16px;
 }
 
@@ -864,18 +908,51 @@ h1 {
 
 /* ── Responsive Butacas + Candy ── */
 @media (max-width: 900px) {
+  .butacas-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 12px 0 0;
+    padding: 16px 0 24px;
+    min-height: auto;
+    align-items: flex-start;
+  }
+
   .sala-heading {
     text-align: center;
+    padding: 0 12px;
   }
 
   .seleccion-layout {
+    width: 100%;
     grid-template-columns: 1fr;
     gap: 20px;
+    align-items: center;
+    justify-items: stretch;
+  }
+
+  .mapa-sala {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 0 -10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    padding: 0 0 8px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .sala {
+    width: max-content;
+    min-width: 100%;
+    margin: 0 0 16px;
   }
 
   .resumen-compra {
     position: static;
-    width: 100%;
+    width: calc(100% - 24px);
     max-width: 480px;
     margin: 20px auto 0;
   }
