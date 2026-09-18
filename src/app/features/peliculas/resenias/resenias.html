@@ -31,16 +31,13 @@
           <li class="resenia-item">
             <div class="resenia-header">
               <div class="autor-info">
-                <span class="autor-soul-orb" aria-hidden="true"></span>
                 <app-blobatar
-                  [name]="resenia.perfiles.nombre"
+                  [name]="obtenerNombreBlobatar(resenia)"
                   [size]="28"
                   animate="hover"
                   class="autor-blobatar"
                 />
-                <span class="resenia-autor"
-                  >{{ resenia.perfiles.nombre }} {{ resenia.perfiles.apellido }}</span
-                >
+                <span class="resenia-autor">{{ obtenerNombreAutor(resenia) }}</span>
               </div>
               <div class="resenia-estrellas" [attr.aria-label]="resenia.estrellas + ' estrellas'">
                 @for (s of [1, 2, 3, 4, 5]; track s) {

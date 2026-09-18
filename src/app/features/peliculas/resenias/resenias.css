@@ -167,14 +167,14 @@
 }
 
 .estrella-mini {
-  font-size: 1rem;
-  color: #2b2b3d;
+  font-size: 1.1rem;
+  color: rgba(212, 212, 224, 0.25);
   line-height: 1;
 }
 
 .estrella-mini.dorada {
   color: var(--hk-geo);
-  text-shadow: 0 0 6px rgba(232, 168, 50, 0.5);
+  text-shadow: 0 0 6px rgba(232, 168, 50, 0.6);
 }
 
 .resenia-comentario {
@@ -283,11 +283,11 @@
 .estrella-boton {
   background: none;
   border: none;
-  font-size: 2rem;
+  font-size: 2.2rem;
   line-height: 1;
-  color: #2b2b3d;
+  color: rgba(212, 212, 224, 0.32);
   cursor: pointer;
-  padding: 2px 4px;
+  padding: 2px 5px;
   transition:
     color 0.15s ease,
     transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -344,7 +344,7 @@
 }
 
 .comentario-input::placeholder {
-  color: rgba(74, 74, 94, 0.8);
+  color: rgba(212, 212, 224, 0.45);
   font-style: italic;
 }
 
@@ -367,14 +367,19 @@
 
 /* ── Botón Publicar ── */
 .boton-enviar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   align-self: flex-start;
+  min-height: 44px;
+  min-width: 180px;
   padding: 10px 28px;
-  background: linear-gradient(180deg, rgba(79, 196, 227, 0.15) 0%, rgba(79, 196, 227, 0.02) 100%);
+  background: linear-gradient(180deg, rgba(79, 196, 227, 0.18) 0%, rgba(79, 196, 227, 0.04) 100%);
   border: 1px solid var(--hk-focus);
   clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   letter-spacing: 2px;
   text-transform: uppercase;
   cursor: pointer;

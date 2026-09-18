@@ -33,6 +33,23 @@ export class Resenias {
     this.resenias().some((r) => r.usuario_id === this.usuarioActual()?.id),
   );
 
+  protected obtenerNombreAutor(resenia: IReseniaConAutor): string {
+    if (this.usuarioActual() && this.usuarioActual()?.id === resenia.usuario_id) {
+      return `${this.usuarioActual()!.nombre} ${this.usuarioActual()!.apellido || ''}`.trim();
+    }
+    if (resenia.perfiles?.nombre) {
+      return `${resenia.perfiles.nombre} ${resenia.perfiles.apellido || ''}`.trim();
+    }
+    return 'Viajero de Hallownest';
+  }
+
+  protected obtenerNombreBlobatar(resenia: IReseniaConAutor): string {
+    if (this.usuarioActual() && this.usuarioActual()?.id === resenia.usuario_id) {
+      return this.usuarioActual()!.nombre;
+    }
+    return resenia.perfiles?.nombre || 'Sombra';
+  }
+
   protected hoverEstrellas = signal(0);
 
   protected etiquetaCalificacion = computed(() => {
