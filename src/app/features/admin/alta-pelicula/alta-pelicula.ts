@@ -25,6 +25,9 @@ export class AltaPelicula {
       nonNullable: true,
       validators: [Validators.required, Validators.min(1)],
     }),
+    // El <select> del HTML maneja strings ('', '13', '18'); se convierte
+    // a number | null recién al guardar, más abajo.
+    restriccion_edad: new FormControl('', { nonNullable: true }),
   });
 
   constructor() {
@@ -61,7 +64,11 @@ export class AltaPelicula {
       return;
     }
 
-    const pelicula = await this.peliculasService.crear(this.formulario.getRawValue());
+    const valores = this.formulario.getRawValue();
+    const pelicula = await this.peliculasService.crear({
+      ...valores,
+      restriccion_edad: valores.restriccion_edad ? Number(valores.restriccion_edad) : null,
+    });
     await this.generosService.asignarAPelicula(pelicula.id, [...this.generosSeleccionados()]);
 
     this.formulario.reset();

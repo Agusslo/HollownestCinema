@@ -192,6 +192,19 @@ h2 {
   text-transform: uppercase;
 }
 
+.badge-restriccion {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 10px;
+  vertical-align: middle;
+  background: rgba(192, 57, 43, 0.15);
+  border: 1px solid var(--hk-grimm);
+  border-radius: 4px;
+  color: #ff9e9e;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
 :host-context(.tema-claro) .pelicula-presentacion {
   border-bottom-color: rgba(41, 64, 71, 0.18);
 }

@@ -4,6 +4,7 @@ export default interface IPelicula {
   sinopsis: string;
   imagen_url: string;
   duracion_minutos: number;
+  restriccion_edad: number | null; // 13, 18, o null si no tiene restricción
 }
 // Extiende IPelicula con los géneros asignados, vía el join embebido de la
 // tabla intermedia peliculas_generos -> generos (mismo patrón que

@@ -26,6 +26,15 @@
       <span>Duración (minutos)</span>
       <input type="number" formControlName="duracion_minutos" />
     </label>
+
+    <label>
+      <span>Restricción de edad</span>
+      <select formControlName="restriccion_edad">
+        <option value="">Sin restricción</option>
+        <option value="13">+13</option>
+        <option value="18">+18</option>
+      </select>
+    </label>
   </div>
 
   <fieldset class="genres-fieldset">

@@ -8,7 +8,12 @@
       </div>
       <div class="pelicula-info">
         <p class="eyebrow">Ahora en cartelera</p>
-        <h1>{{ p.nombre }}</h1>
+        <h1>
+          {{ p.nombre }}
+          @if (p.restriccion_edad) {
+            <span class="badge-restriccion">+{{ p.restriccion_edad }}</span>
+          }
+        </h1>
         <p class="sinopsis">{{ p.sinopsis }}</p>
         <div class="pelicula-meta">
           <span class="meta-label">Duración</span>
