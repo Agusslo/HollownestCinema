@@ -10,6 +10,7 @@ import { Auth } from '../../../core/services/auth';
 import { Cupones } from '../../../core/services/cupones';
 import { Candy } from '../../../core/services/candy';
 import IFuncion from '../../../core/interfaces/funcion';
+import IPelicula from '../../../core/interfaces/pelicula';
 import IPerfil from '../../../core/interfaces/perfil';
 import ICupon from '../../../core/interfaces/cupon';
 import ICandyCategoria from '../../../core/interfaces/candy-categoria';
@@ -47,6 +48,7 @@ export class Butacas implements OnDestroy {
   protected ocupadas = signal<Set<string>>(new Set());
   protected seleccionadas = signal<Set<string>>(new Set());
   protected funcion = signal<IFuncion | null>(null);
+  protected peliculaActual = signal<IPelicula | null>(null);
   protected usuario = signal<IPerfil | null>(null);
   protected cupones = signal<ICupon[]>([]);
   protected cargando = signal(true);
@@ -106,6 +108,7 @@ export class Butacas implements OnDestroy {
 
     this.funcion_id = funcionEncontrada.id;
     this.funcion.set(funcionEncontrada);
+    this.peliculaActual.set(await this.peliculasService.obtenerPorId(funcionEncontrada.pelicula_id));
     this.layout.set(this.butacasService.generarLayoutSala());
 
     const ocupadasArray = await this.entradasService.obtenerButacasOcupadas(this.funcion_id);
@@ -290,10 +293,45 @@ export class Butacas implements OnDestroy {
     return Math.round(total);
   }
 
+  // Misma cuenta que ya usa Cupones para "mayores de 50" — la duplico acá
+  // en vez de importarla de otro componente porque es una cuentita chica
+  // y no vale la pena acoplar dos pantallas por esto.
+  private calcularEdad(fechaNacimiento: string): number {
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const noLlegoElCumple =
+      hoy.getMonth() < nacimiento.getMonth() ||
+      (hoy.getMonth() === nacimiento.getMonth() && hoy.getDate() < nacimiento.getDate());
+    if (noLlegoElCumple) edad--;
+    return edad;
+  }
+
   protected async confirmarCompra() {
     if (this.seleccionadas().size === 0) return;
 
     this.error.set(null);
+
+    // Restricción de edad de la película: se chequea ACÁ, antes de mandar
+    // nada al servidor, porque hace falta saber la fecha de nacimiento del
+    // usuario — y eso sólo lo tenemos si está logueado.
+    const restriccion = this.peliculaActual()?.restriccion_edad;
+    if (restriccion) {
+      const usuarioActual = this.usuario();
+      if (!usuarioActual) {
+        this.error.set(
+          `Esta película es apta para mayores de ${restriccion} años. Necesitás iniciar sesión para comprar, así podemos verificar tu edad.`,
+        );
+        return;
+      }
+      if (this.calcularEdad(usuarioActual.fecha_nacimiento) < restriccion) {
+        this.error.set(
+          `Esta película es apta para mayores de ${restriccion} años. No podés comprar entradas para esta función.`,
+        );
+        return;
+      }
+    }
+
     this.comprando.set(true);
     // Guardamos qué butacas somos NOSOTROS quienes las estamos comprando,
     // para que el handler de Realtime (más abajo) no confunda nuestro

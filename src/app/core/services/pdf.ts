@@ -11,6 +11,7 @@ export interface DatosEntradaPdf {
     fila: string;
     columna: number;
     codigo_qr: string;
+    restriccion_edad: number | null;
 }
 
 export interface DatosCandyPdf {
@@ -38,7 +39,21 @@ export class Pdf {
         doc.text(`Formato: ${entrada.formato.toUpperCase()} — Idioma: ${entrada.idioma}`, 20, 51);
         doc.text(`Butaca: ${entrada.fila}${entrada.columna}`, 20, 59);
 
-        doc.addImage(qrDataUrl, 'PNG', 20, 70, 60, 60);
+        // Si la película tiene restricción de edad, la consigna pide que
+        // TODA entrada de esa función lo aclare, sin importar la edad de
+        // quien compró — puede ser un adulto comprando para un menor.
+        if (entrada.restriccion_edad) {
+            doc.setFontSize(10);
+            doc.setTextColor(180, 30, 30);
+            doc.text(
+                `Apta para mayores de ${entrada.restriccion_edad} años. Debe asistir acompañado de un adulto.`,
+                20,
+                67,
+            );
+            doc.setTextColor(0, 0, 0);
+        }
+
+        doc.addImage(qrDataUrl, 'PNG', 20, 78, 60, 60);
         }
 
         // Página extra sólo si la compra incluyó candy bar — el QR acá es el

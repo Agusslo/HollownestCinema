@@ -104,9 +104,10 @@ export class Funciones {
     fecha_hora: string;
     formato: Formato;
     idioma: Idioma;
+    restriccion_edad: number | null;
   }> {
     const { data, error } = await this.supabase.Supabase.from('funciones')
-      .select('fecha_hora, formato, idioma, peliculas(nombre), salas(nombre)')
+      .select('fecha_hora, formato, idioma, peliculas(nombre, restriccion_edad), salas(nombre)')
       .eq('id', id)
       .single();
 
@@ -118,6 +119,7 @@ export class Funciones {
       fecha_hora: data.fecha_hora,
       formato: data.formato,
       idioma: data.idioma,
+      restriccion_edad: (data as any).peliculas.restriccion_edad,
     };
   }
 

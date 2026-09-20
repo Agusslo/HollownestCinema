@@ -124,6 +124,9 @@ label {
 input,
 select,
 textarea {
+  display: block;
+  width: 100%;
+  max-width: 100%;
   font-family: 'Perpetua', 'Georgia', serif;
   background-color: rgba(26, 26, 40, 0.8);
   color: var(--hk-soul);

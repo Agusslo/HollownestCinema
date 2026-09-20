@@ -230,6 +230,18 @@ h1 {
   border: 1px solid var(--hk-geo);
 }
 
+.aviso-restriccion {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ff9e9e;
+  background: rgba(192, 57, 43, 0.12);
+  border: 1px solid var(--hk-grimm);
+  border-radius: 4px;
+}
+
 .aviso-vip {
   margin-top: 8px;
   padding: 6px 10px;

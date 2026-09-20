@@ -5,6 +5,11 @@
     <header class="sala-heading">
       <p class="eyebrow">Elegí dónde sentarte</p>
       <h1>Seleccioná tu butaca</h1>
+      @if (peliculaActual()?.restriccion_edad; as restriccion) {
+        <p class="aviso-restriccion">
+          🔞 Esta función es apta para mayores de {{ restriccion }} años.
+        </p>
+      }
     </header>
 
     <div class="seleccion-layout">
