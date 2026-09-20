@@ -6,10 +6,11 @@ import { IPeliculaConGeneros } from '../../core/interfaces/pelicula';
 import IGenero from '../../core/interfaces/genero';
 import { DuracionPipe } from '../../core/pipes/duracion-pipe';
 import { LoadingComponent } from '../../shared/components/loading/loading';
+import { GlowHover } from '../../shared/directives/glow-hover';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, DuracionPipe, LoadingComponent],
+  imports: [RouterLink, DuracionPipe, LoadingComponent, GlowHover],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

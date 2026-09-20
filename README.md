@@ -16,14 +16,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 
 ---
 
-## 📋 Roadmap y Requerimientos
-
-> Organizado por área funcional, no por correo — cuando la consigna cambió de
-> opinión sobre algo a lo largo del intercambio, se lista acá directamente el
-> estado final pedido (ej.: el layout de butacas empezó siendo 20 filas
-> parejas, después se le sacaron dos filas para accesibilidad, y al final
-> también se le agregaron filas VIP — abajo figura como un solo requisito
-> combinado, no como tres pasos separados).
+## 📋 Roadmap
 
 ### Base
 - [x] Inicialización del proyecto con Angular 22

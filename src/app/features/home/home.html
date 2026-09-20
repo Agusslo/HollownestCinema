@@ -265,7 +265,7 @@
       </h2>
       <div class="cartelera">
         @for (pelicula of peliculas(); track pelicula.id) {
-          <a class="poster-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
+          <a class="poster-card" appGlowHover [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
             <div class="poster-frame">
               <span class="poster-duracion">⏱ {{ pelicula.duracion_minutos | duracion }}</span>
               <img
