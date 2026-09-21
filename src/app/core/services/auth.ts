@@ -82,7 +82,7 @@ export class Auth {
         nombre,
         apellido,
         fecha_nacimiento: '2000-01-01',
-        tipo_sangre: 'Desconocido',
+        tipo_sangre: 'O+',
         color_ojos: 'Negro',
         dias_vacaciones: 15,
         rol: 'cliente' as const,
