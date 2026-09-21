@@ -73,6 +73,10 @@
   image-rendering: auto;
 }
 
+router-outlet {
+  display: none !important;
+}
+
 body {
   margin: 0;
   font-family: 'Perpetua', 'Georgia', serif;
@@ -127,22 +131,57 @@ textarea {
   display: block;
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
   font-family: 'Perpetua', 'Georgia', serif;
   background-color: rgba(26, 26, 40, 0.8);
   color: var(--hk-soul);
   border: 1px solid var(--hk-ash);
   border-radius: 2px;
-  padding: 10px 12px;
-  font-size: 1rem;
+  padding: 12px 14px;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  color-scheme: dark;
   transition:
     border-color 0.3s,
     box-shadow 0.3s;
+}
+
+input,
+select {
+  height: 48px;
+  min-height: 48px;
+}
+
+textarea {
+  min-height: 100px;
 }
 
 input::placeholder,
 textarea::placeholder {
   color: var(--hk-ash);
   opacity: 1;
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+/* Chrome / Safari / Edge Autofill fix: evitar saltos de tamaño y respetar la estética */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px rgba(26, 26, 40, 0.95) inset !important;
+  -webkit-text-fill-color: var(--hk-soul) !important;
+  box-shadow: 0 0 0 1000px rgba(26, 26, 40, 0.95) inset !important;
+  caret-color: var(--hk-soul);
+  font-family: 'Perpetua', 'Georgia', serif !important;
+  font-size: 1.05rem !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  box-sizing: border-box !important;
 }
 
 input:focus,
@@ -157,6 +196,17 @@ textarea:focus {
 .tema-claro select,
 .tema-claro textarea {
   background-color: rgba(244, 246, 245, 0.9);
+  color-scheme: light;
+}
+
+.tema-claro input:-webkit-autofill,
+.tema-claro input:-webkit-autofill:hover,
+.tema-claro input:-webkit-autofill:focus,
+.tema-claro input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px rgba(244, 246, 245, 0.95) inset !important;
+  -webkit-text-fill-color: #15252b !important;
+  box-shadow: 0 0 0 1000px rgba(244, 246, 245, 0.95) inset !important;
+  caret-color: #15252b;
 }
 
 /* ── Botones ── */

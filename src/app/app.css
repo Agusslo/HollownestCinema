@@ -199,6 +199,14 @@ main {
   box-sizing: border-box;
 }
 
+router-outlet {
+  display: none !important;
+}
+
+main > *:not(router-outlet) {
+  width: 100%;
+}
+
 /* ── Responsive ── */
 @media (max-width: 620px) {
   .nav-header {
