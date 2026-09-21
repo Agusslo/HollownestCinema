@@ -174,17 +174,25 @@
   transition: transform 0.2s ease;
 }
 
-.estrella-mini-svg.llena {
+.estrella-mini-svg.llena .star-base {
   fill: var(--hk-geo);
+  stroke: var(--hk-geo);
   filter: drop-shadow(0 0 4px rgba(232, 168, 50, 0.7));
 }
 
-.estrella-mini-svg.media {
-  fill: url(#star-half-grad);
-  filter: drop-shadow(0 0 3px rgba(232, 168, 50, 0.5));
+.estrella-mini-svg.media .star-base {
+  fill: rgba(212, 212, 224, 0.15);
+  stroke: rgba(212, 212, 224, 0.25);
+  stroke-width: 0.8px;
 }
 
-.estrella-mini-svg.vacia {
+.estrella-mini-svg.media .star-half-fill {
+  fill: var(--hk-geo);
+  stroke: var(--hk-geo);
+  filter: drop-shadow(0 0 4px rgba(232, 168, 50, 0.7));
+}
+
+.estrella-mini-svg.vacia .star-base {
   fill: rgba(212, 212, 224, 0.15);
   stroke: rgba(212, 212, 224, 0.25);
   stroke-width: 0.8px;
@@ -353,7 +361,7 @@
   transition: all 0.2s ease;
 }
 
-.estrella-svg.llena {
+.estrella-svg.llena .star-base {
   fill: var(--hk-geo);
   stroke: #ffda73;
   stroke-width: 0.6px;
@@ -361,14 +369,21 @@
     drop-shadow(0 0 16px rgba(232, 168, 50, 0.35));
 }
 
-.estrella-svg.media {
-  fill: url(#star-half-grad);
-  stroke: #ffda73;
-  stroke-width: 0.6px;
-  filter: drop-shadow(0 0 6px rgba(232, 168, 50, 0.6));
+.estrella-svg.media .star-base {
+  fill: rgba(212, 212, 224, 0.12);
+  stroke: rgba(212, 212, 224, 0.28);
+  stroke-width: 0.8px;
 }
 
-.estrella-svg.vacia {
+.estrella-svg.media .star-half-fill {
+  fill: var(--hk-geo);
+  stroke: #ffda73;
+  stroke-width: 0.6px;
+  filter: drop-shadow(0 0 8px rgba(232, 168, 50, 0.8))
+    drop-shadow(0 0 14px rgba(232, 168, 50, 0.35));
+}
+
+.estrella-svg.vacia .star-base {
   fill: rgba(212, 212, 224, 0.12);
   stroke: rgba(212, 212, 224, 0.28);
   stroke-width: 0.8px;

@@ -50,6 +50,7 @@
                       aria-hidden="true"
                     >
                       <path
+                        class="star-base"
                         d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
                       />
                     </svg>
@@ -62,7 +63,12 @@
                       aria-hidden="true"
                     >
                       <path
+                        class="star-base"
                         d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                      />
+                      <path
+                        class="star-half-fill"
+                        d="M12 2v15.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
                       />
                     </svg>
                   } @else {
@@ -74,6 +80,7 @@
                       aria-hidden="true"
                     >
                       <path
+                        class="star-base"
                         d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
                       />
                     </svg>
@@ -99,16 +106,6 @@
         </p>
       </div>
     } @else {
-      <!-- Definición de gradiente para mitad de estrella -->
-      <svg width="0" height="0" class="svg-star-defs" aria-hidden="true">
-        <defs>
-          <linearGradient id="star-half-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="50%" stop-color="#e8a832" />
-            <stop offset="50%" stop-color="rgba(212, 212, 224, 0.16)" />
-          </linearGradient>
-        </defs>
-      </svg>
-
       <form class="form-resenia" [formGroup]="formulario" (ngSubmit)="enviar()">
         <div class="form-encabezado">
           <h3 class="form-titulo">Inscribir testimonio</h3>
@@ -152,8 +149,15 @@
                   aria-hidden="true"
                 >
                   <path
+                    class="star-base"
                     d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
                   />
+                  @if (n - 0.5 === valorActualEstrellas()) {
+                    <path
+                      class="star-half-fill"
+                      d="M12 2v15.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    />
+                  }
                 </svg>
               </div>
             }
