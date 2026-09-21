@@ -41,7 +41,43 @@
               </div>
               <div class="resenia-estrellas" [attr.aria-label]="resenia.estrellas + ' estrellas'">
                 @for (s of [1, 2, 3, 4, 5]; track s) {
-                  <span class="estrella-mini" [class.dorada]="s <= resenia.estrellas">★</span>
+                  @if (s <= resenia.estrellas) {
+                    <svg
+                      class="estrella-mini-svg llena"
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                      />
+                    </svg>
+                  } @else if (s - 0.5 === resenia.estrellas) {
+                    <svg
+                      class="estrella-mini-svg media"
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                      />
+                    </svg>
+                  } @else {
+                    <svg
+                      class="estrella-mini-svg vacia"
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                      />
+                    </svg>
+                  }
                 }
               </div>
             </div>
@@ -63,6 +99,16 @@
         </p>
       </div>
     } @else {
+      <!-- Definición de gradiente para mitad de estrella -->
+      <svg width="0" height="0" class="svg-star-defs" aria-hidden="true">
+        <defs>
+          <linearGradient id="star-half-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="50%" stop-color="#e8a832" />
+            <stop offset="50%" stop-color="rgba(212, 212, 224, 0.16)" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <form class="form-resenia" [formGroup]="formulario" (ngSubmit)="enviar()">
         <div class="form-encabezado">
           <h3 class="form-titulo">Inscribir testimonio</h3>
@@ -77,24 +123,52 @@
             (mouseleave)="hoverEstrellas.set(0)"
           >
             @for (n of [1, 2, 3, 4, 5]; track n) {
-              <button
-                type="button"
-                class="estrella-boton"
-                [class.activa]="n <= (hoverEstrellas() || (formulario.value.estrellas ?? 0))"
-                [class.hover-target]="n === hoverEstrellas()"
-                (mouseenter)="hoverEstrellas.set(n)"
-                (click)="formulario.controls.estrellas.setValue(n)"
-                [attr.aria-label]="n + ' estrellas'"
-              >
-                ★
-              </button>
+              <div class="estrella-contenedor" [class.hover-target]="esHoverTarget(n)">
+                <!-- Zona izquierda para media estrella (n - 0.5) -->
+                <button
+                  type="button"
+                  class="media-zona zona-izq"
+                  (mouseenter)="hoverEstrellas.set(n - 0.5)"
+                  (click)="formulario.controls.estrellas.setValue(n - 0.5)"
+                  [attr.aria-label]="n - 0.5 + ' estrellas'"
+                ></button>
+
+                <!-- Zona derecha para estrella completa (n) -->
+                <button
+                  type="button"
+                  class="media-zona zona-der"
+                  (mouseenter)="hoverEstrellas.set(n)"
+                  (click)="formulario.controls.estrellas.setValue(n)"
+                  [attr.aria-label]="n + ' estrellas'"
+                ></button>
+
+                <!-- Icono SVG de estrella -->
+                <svg
+                  class="estrella-svg"
+                  [class.llena]="n <= valorActualEstrellas()"
+                  [class.media]="n - 0.5 === valorActualEstrellas()"
+                  [class.vacia]="n - 0.5 > valorActualEstrellas()"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+              </div>
             }
           </div>
-          <span class="etiqueta-calificacion">{{ etiquetaCalificacion() }}</span>
+
+          <div class="calificacion-info">
+            @if (valorActualEstrellas() > 0) {
+              <span class="calificacion-numero">{{ valorActualEstrellas() }}</span>
+            }
+            <span class="etiqueta-calificacion">{{ etiquetaCalificacion() }}</span>
+          </div>
         </div>
 
         @if (formulario.controls.estrellas.touched && formulario.controls.estrellas.invalid) {
-          <p class="campo-error">Por favor seleccioná al menos una estrella de calificación.</p>
+          <p class="campo-error">Por favor seleccioná al menos media estrella de calificación.</p>
         }
 
         <div class="textarea-wrapper">

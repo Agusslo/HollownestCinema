@@ -52,17 +52,35 @@ export class Resenias {
 
   protected hoverEstrellas = signal(0);
 
+  protected valorActualEstrellas = computed(() => {
+    return this.hoverEstrellas() || (this.formulario.value.estrellas ?? 0);
+  });
+
+  protected esHoverTarget(n: number): boolean {
+    return this.hoverEstrellas() > 0 && Math.ceil(this.hoverEstrellas()) === n;
+  }
+
   protected etiquetaCalificacion = computed(() => {
-    const estrellas = this.hoverEstrellas() || (this.formulario.value.estrellas ?? 0);
+    const estrellas = this.valorActualEstrellas();
     switch (estrellas) {
+      case 0.5:
+        return 'Pésima';
       case 1:
         return 'Frágil';
+      case 1.5:
+        return 'Incierta';
       case 2:
         return 'Pasable';
+      case 2.5:
+        return 'Aceptable';
       case 3:
         return 'Honorable';
+      case 3.5:
+        return 'Notable';
       case 4:
         return 'Sublime';
+      case 4.5:
+        return 'Magnífica';
       case 5:
         return 'Obra Maestra';
       default:
@@ -73,7 +91,7 @@ export class Resenias {
   protected formulario = new FormGroup({
     estrellas: new FormControl(0, {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(1), Validators.max(5)],
+      validators: [Validators.required, Validators.min(0.5), Validators.max(5)],
     }),
     comentario: new FormControl('', {
       nonNullable: true,

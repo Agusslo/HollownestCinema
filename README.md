@@ -38,7 +38,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - [x] Selector de fecha/hora con input nativo, sin el calendario de scroll infinito que se pidió evitar 
 - [x] **Layout final de butacas** (combina las tres vueltas que dio la consigna): sala de 20 filas, bloques 4/20/4, **pero** las filas J y K dejan de ser butacas comunes y pasan a ser una fila de butacas accesibles (2/10/2) resaltada visualmente distinto, **y además** las últimas 3 filas (R, S, T) son butacas VIP con precio más alto y marca visual propia, con aviso claro antes de pagar. Hoy el layout sigue siendo el original de correo 1 (20 filas parejas, sin accesibles ni VIP)
 - [x] Selección de butacas en tiempo real: ver en el momento qué butacas está ocupando otro usuario mientras elegís las tuyas. Hoy se consultan una vez al entrar a la pantalla y se refrescan recién después de tu propia compra — falta la suscripción en vivo (Supabase Realtime)
-- [ ] Restricción de edad por película (13 o 18 años según la película, o sin restricción): bloquear la compra a menores de esa edad, y aclarar en la entrada que debe ir acompañado de un adulto
+- [x] Restricción de edad por película (13 o 18 años según la película, o sin restricción): bloquear la compra a menores de esa edad, y aclarar en la entrada que debe ir acompañado de un adulto
 
 ### Compra y entradas
 - [x] Selección de butacas + compra, registrado o anónimo
