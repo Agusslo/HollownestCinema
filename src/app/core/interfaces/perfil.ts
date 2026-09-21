@@ -10,4 +10,5 @@ export default interface IPerfil {
     dias_vacaciones: number;
     cupon_primera_compra_usado: boolean;
     rol: Rol;
+    perfil_completo: boolean;
 }

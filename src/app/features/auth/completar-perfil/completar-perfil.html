@@ -1,0 +1,131 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="auth-icon">📋</span>
+      <h1>Completá tu perfil</h1>
+      <p class="auth-subtitle">
+        Entraste con Google, así que nos faltan algunos datos que no comparte con nosotros. Los
+        necesitamos para cosas como validar la edad mínima de algunas películas.
+      </p>
+    </div>
+
+    <form [formGroup]="formulario" (ngSubmit)="guardar()">
+      <label
+        [class.campo-invalido]="
+          formulario.controls.fecha_nacimiento.touched &&
+          formulario.controls.fecha_nacimiento.invalid
+        "
+      >
+        Fecha de nacimiento
+        <input
+          type="text"
+          formControlName="fecha_nacimiento"
+          maxlength="10"
+          inputmode="numeric"
+          placeholder="DD/MM/AAAA"
+          (input)="formatearFecha($event)"
+        />
+      </label>
+      @if (
+        formulario.controls.fecha_nacimiento.touched ||
+        formulario.controls.fecha_nacimiento.value.length === 10
+      ) {
+        @if (formulario.controls.fecha_nacimiento.hasError('mesInvalido')) {
+          <p class="error-campo">El mes debe ser entre 01 y 12.</p>
+        } @else if (formulario.controls.fecha_nacimiento.hasError('diaInvalido')) {
+          <p class="error-campo">El día ingresado no es válido para el mes seleccionado.</p>
+        } @else if (formulario.controls.fecha_nacimiento.hasError('fechaFutura')) {
+          <p class="error-campo">La fecha de nacimiento no puede ser futura.</p>
+        } @else if (formulario.controls.fecha_nacimiento.hasError('anioInvalido')) {
+          <p class="error-campo">El año ingresado no es válido (mínimo 1900).</p>
+        } @else if (
+          formulario.controls.fecha_nacimiento.hasError('formatoInvalido') &&
+          formulario.controls.fecha_nacimiento.touched
+        ) {
+          <p class="error-campo">El formato debe ser DD/MM/AAAA.</p>
+        }
+      }
+
+      <label
+        [class.campo-invalido]="
+          formulario.controls.tipo_sangre.touched && formulario.controls.tipo_sangre.invalid
+        "
+      >
+        Tipo de sangre
+        <select
+          formControlName="tipo_sangre"
+          [class.select-placeholder]="!formulario.controls.tipo_sangre.value"
+        >
+          <option value="">Seleccioná tu tipo de sangre</option>
+          <option value="O+">O positivo (O+)</option>
+          <option value="A+">A positivo (A+)</option>
+          <option value="B+">B positivo (B+)</option>
+          <option value="O-">O negativo (O−)</option>
+          <option value="A-">A negativo (A−)</option>
+          <option value="AB+">AB positivo (AB+)</option>
+          <option value="B-">B negativo (B−)</option>
+          <option value="AB-">AB negativo (AB−)</option>
+        </select>
+      </label>
+      @if (formulario.controls.tipo_sangre.touched && formulario.controls.tipo_sangre.invalid) {
+        <p class="error-campo">Seleccioná tu tipo de sangre.</p>
+      }
+
+      <label
+        [class.campo-invalido]="
+          formulario.controls.color_ojos.touched && formulario.controls.color_ojos.invalid
+        "
+      >
+        Color de ojos
+        <select
+          formControlName="color_ojos"
+          [class.select-placeholder]="!formulario.controls.color_ojos.value"
+        >
+          <option value="">Seleccioná tu color de ojos</option>
+          <option value="marrón">Marrón</option>
+          <option value="negro">Negro</option>
+          <option value="azul">Azul</option>
+          <option value="verde">Verde</option>
+          <option value="gris">Gris</option>
+          <option value="miel">Miel</option>
+        </select>
+      </label>
+      @if (formulario.controls.color_ojos.touched && formulario.controls.color_ojos.invalid) {
+        <p class="error-campo">Seleccioná tu color de ojos.</p>
+      }
+
+      <label
+        [class.campo-invalido]="
+          formulario.controls.dias_vacaciones.touched && formulario.controls.dias_vacaciones.invalid
+        "
+      >
+        Días de vacaciones por año
+        <input type="number" formControlName="dias_vacaciones" min="0" max="365" />
+      </label>
+      @if (
+        formulario.controls.dias_vacaciones.touched && formulario.controls.dias_vacaciones.invalid
+      ) {
+        @if (formulario.controls.dias_vacaciones.hasError('required')) {
+          <p class="error-campo">Los días de vacaciones son requeridos.</p>
+        } @else if (formulario.controls.dias_vacaciones.hasError('min')) {
+          <p class="error-campo">Los días de vacaciones no pueden ser negativos.</p>
+        } @else if (formulario.controls.dias_vacaciones.hasError('max')) {
+          <p class="error-campo">Los días de vacaciones no pueden superar los 365.</p>
+        } @else if (formulario.controls.dias_vacaciones.hasError('pattern')) {
+          <p class="error-campo">Debe ser un número entero.</p>
+        }
+      }
+
+      @if (formulario.invalid && formulario.touched) {
+        <p class="error-msg">Completá todos los campos correctamente.</p>
+      }
+      @if (error()) {
+        <p class="error-msg">{{ error() }}</p>
+      }
+
+      <button type="submit" [disabled]="guardando()">
+        {{ guardando() ? 'Guardando...' : 'Guardar y continuar' }}
+      </button>
+    </form>
+  </div>
+</div>
