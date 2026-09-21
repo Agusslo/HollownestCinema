@@ -237,6 +237,80 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* ── Botón Google & Divisor Auth ── */
+.divisor-auth {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 18px 0;
+  color: var(--hk-ash);
+  font-size: 0.85rem;
+}
+
+.divisor-auth::before,
+.divisor-auth::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid rgba(212, 212, 224, 0.15);
+}
+
+.divisor-auth span {
+  padding: 0 12px;
+  font-style: italic;
+}
+
+.btn-google {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  height: 48px !important;
+  background: rgba(26, 26, 40, 0.85) !important;
+  border: 1px solid var(--hk-ash) !important;
+  border-radius: 3px !important;
+  color: var(--hk-soul) !important;
+  font-family: 'Perpetua', 'Georgia', serif !important;
+  font-size: 1.05rem !important;
+  text-transform: none !important;
+  letter-spacing: 0.5px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-sizing: border-box !important;
+}
+
+.btn-google:hover {
+  background: rgba(36, 36, 54, 0.95) !important;
+  border-color: var(--hk-focus) !important;
+  box-shadow: 0 0 16px rgba(79, 196, 227, 0.25) !important;
+  transform: translateY(-1px);
+}
+
+.google-icon {
+  flex-shrink: 0;
+}
+
+.tema-claro .divisor-auth {
+  color: #65747b;
+}
+
+.tema-claro .divisor-auth::before,
+.tema-claro .divisor-auth::after {
+  border-bottom-color: rgba(41, 64, 71, 0.2);
+}
+
+.tema-claro .btn-google {
+  background: #ffffff !important;
+  border-color: rgba(41, 64, 71, 0.3) !important;
+  color: #15252b !important;
+}
+
+.tema-claro .btn-google:hover {
+  background: #f0f4f6 !important;
+  border-color: var(--hk-focus) !important;
+  box-shadow: 0 0 16px rgba(22, 141, 168, 0.2) !important;
+}
+
 /* ── Forms ── */
 form {
   display: flex;

@@ -139,6 +139,15 @@ export class Registro {
     }
   }
 
+  protected async loginConGoogle() {
+    this.error.set(null);
+    try {
+      await this.authService.loginConGoogle();
+    } catch (e) {
+      this.error.set((e as Error).message);
+    }
+  }
+
   protected formatearFecha(event: Event): void {
     const input = event.target as HTMLInputElement;
     let valor = input.value;

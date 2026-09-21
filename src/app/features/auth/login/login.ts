@@ -45,4 +45,13 @@ export class Login {
       this.error.set((e as Error).message);
     }
   }
+
+  protected async loginConGoogle() {
+    this.error.set(null);
+    try {
+      await this.authService.loginConGoogle();
+    } catch (e) {
+      this.error.set((e as Error).message);
+    }
+  }
 }

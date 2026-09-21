@@ -45,6 +45,16 @@ export class Auth {
     if (error) throw error;
   }
 
+  async loginConGoogle(): Promise<void> {
+    const { error } = await this.supabase.Supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/`,
+      },
+    });
+    if (error) throw error;
+  }
+
   async usuarioActual(): Promise<IPerfil | null> {
     const {
       data: { user },
@@ -54,9 +64,42 @@ export class Auth {
     const { data, error } = await this.supabase.Supabase.from('perfiles')
       .select('*')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
+
+    if (!data) {
+      // Si el usuario ingresó mediante Google y aún no tiene registro en perfiles
+      const meta = user.user_metadata || {};
+      const nombreCompleto =
+        meta['full_name'] || meta['name'] || user.email?.split('@')[0] || 'Aventurero';
+      const partes = String(nombreCompleto).trim().split(' ');
+      const nombre = meta['given_name'] || partes[0] || 'Aventurero';
+      const apellido = meta['family_name'] || partes.slice(1).join(' ') || 'Hollow';
+
+      const nuevoPerfil = {
+        id: user.id,
+        nombre,
+        apellido,
+        fecha_nacimiento: '2000-01-01',
+        tipo_sangre: 'Desconocido',
+        color_ojos: 'Negro',
+        dias_vacaciones: 15,
+        rol: 'cliente' as const,
+        cupon_primera_compra_usado: false,
+      };
+
+      const { data: creado, error: errorCrear } = await this.supabase.Supabase.from('perfiles')
+        .insert(nuevoPerfil)
+        .select()
+        .single();
+
+      if (!errorCrear && creado) {
+        return creado as IPerfil;
+      }
+      return nuevoPerfil as IPerfil;
+    }
+
     return data as IPerfil;
   }
 
