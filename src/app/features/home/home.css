@@ -149,6 +149,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
+  max-width: min(100%, 440px);
 }
 
 .pill-badge {
@@ -167,33 +168,41 @@
 .fiesta-titulo {
   margin: 0;
   font-family: 'Trajan', 'Arial Black', sans-serif;
-  font-size: clamp(2rem, 4.4vw, 3.4rem);
-  line-height: 0.95;
+  font-size: clamp(2.4rem, 5vw, 5rem);
+  line-height: 0.82;
   color: #ffffff;
-  letter-spacing: 2px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   text-shadow:
     0 0 24px rgba(244, 63, 94, 0.6),
     0 4px 10px rgba(0, 0, 0, 0.8);
+  white-space: normal;
+  max-width: 100%;
 }
 
 .sparkle {
+  display: inline-block;
   color: #facc15;
-  margin-left: 4px;
+  margin-left: 0.1em;
+  transform: translateY(-0.08em);
   filter: drop-shadow(0 0 8px #facc15);
 }
 
 .fiesta-fecha-badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: #bef264;
   color: #0a0a14;
   font-family: 'Arial Black', 'Trajan', sans-serif;
   font-weight: 900;
-  font-size: clamp(0.75rem, 1.4vw, 0.95rem);
-  letter-spacing: 1px;
-  padding: 5px 14px;
+  font-size: clamp(0.72rem, 1.3vw, 0.95rem);
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  padding: 8px 18px;
   transform: rotate(-2.5deg);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  text-align: center;
 }
 
 .btn-hero-blanco {
@@ -202,7 +211,7 @@
   font-family: 'Arial Black', 'Trajan', sans-serif;
   font-weight: 900;
   font-size: 0.9rem;
-  letter-spacing: 1.5px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   border: none;
   border-radius: 8px;
@@ -211,7 +220,10 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
 }
 
 .btn-hero-blanco:hover {

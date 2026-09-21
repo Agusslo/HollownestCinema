@@ -25,6 +25,9 @@ export class Home implements OnInit, OnDestroy {
   protected busqueda = signal('');
   protected generosDisponibles = signal<IGenero[]>([]);
   protected generoSeleccionado = signal<number | null>(null);
+  protected mostrarHero = computed(() => {
+    return !this.busqueda().trim() && this.generoSeleccionado() === null;
+  });
   protected shermaSonando = signal(false);
   private shermaAudio?: HTMLAudioElement;
 
