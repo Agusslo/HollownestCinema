@@ -36,6 +36,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/admin/alta-combo/alta-combo').then((m) => m.AltaCombo),
   },
   {
+    path: 'admin/log-actividad',
+    canActivate: [perfilCompletoGuard, rolGuard(['admin'])],
+    loadComponent: () =>
+      import('./features/admin/log-actividad/log-actividad').then((m) => m.LogActividad),
+  },
+  {
     path: 'empleado/validar',
     canActivate: [perfilCompletoGuard, rolGuard(['empleado', 'admin'])],
     loadComponent: () => import('./features/empleado/validar/validar').then((m) => m.Validar),

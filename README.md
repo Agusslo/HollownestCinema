@@ -60,7 +60,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - [x] Escaneo de QR por cámara para validar entradas (cine) y candy bar
 - [x] Ingreso manual del código como alternativa al escaneo, por si el lector falla
 - [x] Invalidación: una vez que una entrada se valida o se entrega su candy, ese código deja de servir
-- [ ] Log de actividad del admin: quién creó qué función, quién modificó un precio, quién validó un QR — todo con fecha y hora
+- [x] Log de actividad del admin: quién creó qué función, quién modificó un precio, quién validó un QR — todo con fecha y hora
 
 ### Fidelización
 - [ ] Acumulación de puntos por compra (1 punto por cada peso gastado)

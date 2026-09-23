@@ -10,6 +10,10 @@ import { BlobatarComponent } from './shared/components/blobatar/blobatar';
   imports: [RouterOutlet, RouterLink, BlobatarComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
+  host: {
+    '(document:click)': 'cerrarMenuSiClickAfuera($event)',
+    '(document:keydown.escape)': 'menuAdminAbierto.set(false)',
+  },
 })
 export class App {
   private authService = inject(Auth);
@@ -18,6 +22,7 @@ export class App {
   protected usuario = signal<IPerfil | null>(null);
   protected cargandoAuth = signal(true);
   protected temaClaro = signal(false);
+  protected menuAdminAbierto = signal(false);
 
   constructor() {
     this.temaClaro.set(localStorage.getItem('tema-hk') === 'claro');
@@ -32,6 +37,14 @@ export class App {
         this.usuario.set(null);
       }
     });
+  }
+
+  // Cierra el menú del Panel cuando se hace click en cualquier lugar que
+  // no sea el propio menú (otro link del header, la página, etc.).
+  protected cerrarMenuSiClickAfuera(evento: MouseEvent): void {
+    if (!this.menuAdminAbierto()) return;
+    const dentroDelMenu = (evento.target as HTMLElement).closest('.admin-menu');
+    if (!dentroDelMenu) this.menuAdminAbierto.set(false);
   }
 
   private async cargarUsuario() {

@@ -24,6 +24,47 @@
           <span class="user-nombre">{{ u.nombre }}</span>
         </div>
         <a class="nav-item" [routerLink]="['/mis-compras']">Mis compras</a>
+
+        @if (u.rol === 'admin' || u.rol === 'empleado') {
+          <div class="admin-menu">
+            <button
+              type="button"
+              class="nav-item admin-menu-btn"
+              (click)="menuAdminAbierto.set(!menuAdminAbierto())"
+            >
+              Panel <span aria-hidden="true">{{ menuAdminAbierto() ? '▴' : '▾' }}</span>
+            </button>
+            @if (menuAdminAbierto()) {
+              <div class="admin-menu-panel">
+                @if (u.rol === 'admin') {
+                  <a [routerLink]="['/admin/peliculas/nueva']" (click)="menuAdminAbierto.set(false)"
+                    >Nueva película</a
+                  >
+                  <a [routerLink]="['/admin/funciones/nueva']" (click)="menuAdminAbierto.set(false)"
+                    >Nueva función</a
+                  >
+                  <a [routerLink]="['/admin/cupones']" (click)="menuAdminAbierto.set(false)"
+                    >Cupones</a
+                  >
+                  <a [routerLink]="['/admin/candy/nuevo']" (click)="menuAdminAbierto.set(false)"
+                    >Candy bar</a
+                  >
+                  <a [routerLink]="['/admin/combos/nuevo']" (click)="menuAdminAbierto.set(false)"
+                    >Combos</a
+                  >
+                  <a [routerLink]="['/admin/log-actividad']" (click)="menuAdminAbierto.set(false)"
+                    >Log de actividad</a
+                  >
+                  <hr />
+                }
+                <a [routerLink]="['/empleado/validar']" (click)="menuAdminAbierto.set(false)"
+                  >Validar QR</a
+                >
+              </div>
+            }
+          </div>
+        }
+
         <button class="nav-item btn-salir" type="button" (click)="cerrarSesion()">Salir</button>
       } @else {
         <div class="nav-item user-badge shade">

@@ -269,3 +269,46 @@ main > *:not(router-outlet) {
     transform: translateX(-100px) scaleX(-1);
   }
 }
+
+/* ── Menú desplegable de admin/empleado ── */
+.admin-menu {
+  position: relative;
+}
+
+.admin-menu-btn {
+  cursor: pointer;
+}
+
+.admin-menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  min-width: 190px;
+  padding: 8px;
+  background: linear-gradient(180deg, var(--hk-shell) 0%, var(--hk-deep) 100%);
+  border: 1px solid rgba(79, 196, 227, 0.25);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.admin-menu-panel a {
+  padding: 9px 12px;
+  border-radius: 6px;
+  color: var(--hk-pale);
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+
+.admin-menu-panel a:hover {
+  background: rgba(79, 196, 227, 0.12);
+  color: #ffffff;
+}
+
+.admin-menu-panel hr {
+  margin: 6px 4px;
+  border: none;
+  border-top: 1px solid rgba(212, 212, 224, 0.15);
+}

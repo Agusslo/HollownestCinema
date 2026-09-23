@@ -1,0 +1,85 @@
+.log-pantalla {
+  max-width: 820px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.log-header {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.form-kicker {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--hk-focus);
+  font-family: 'Trajan', 'Times New Roman', serif;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.log-header h1 {
+  margin: 0;
+  color: var(--hk-soul);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+}
+
+.log-header p {
+  margin: 6px 0 0;
+  color: var(--hk-ash);
+  font-size: 0.88rem;
+}
+
+.log-vacio {
+  color: var(--hk-soft-text);
+}
+
+.log-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(15, 15, 30, 0.5);
+  border: 1px solid rgba(212, 212, 224, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.log-tabla th {
+  text-align: left;
+  padding: 10px 14px;
+  background: rgba(79, 196, 227, 0.08);
+  color: var(--hk-focus);
+  font-family: 'Trajan', 'Times New Roman', serif;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.log-tabla td {
+  padding: 10px 14px;
+  border-top: 1px solid rgba(212, 212, 224, 0.08);
+  color: var(--hk-pale);
+  font-size: 0.88rem;
+}
+
+.log-tabla tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.log-fecha {
+  white-space: nowrap;
+  color: var(--hk-muted-text);
+  font-size: 0.8rem;
+}
+
+.log-usuario-borrado {
+  color: var(--hk-grimm);
+  font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .log-tabla {
+    display: block;
+    overflow-x: auto;
+  }
+}

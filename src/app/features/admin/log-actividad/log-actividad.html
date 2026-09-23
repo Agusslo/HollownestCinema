@@ -1,0 +1,39 @@
+    <section class="log-pantalla">
+    <div class="log-header">
+        <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
+        <span class="form-kicker">Panel de administración</span>
+        <h1>Log de actividad</h1>
+        <p>Quién hizo qué, con fecha y hora.</p>
+    </div>
+
+    @if (cargando()) {
+        <p>Cargando...</p>
+    } @else if (entradas().length === 0) {
+        <p class="log-vacio">Todavía no hay actividad registrada.</p>
+    } @else {
+        <table class="log-tabla">
+        <thead>
+            <tr>
+            <th>Quién</th>
+            <th>Qué hizo</th>
+            <th>Cuándo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (entrada of entradas(); track entrada.id) {
+            <tr>
+                <td>
+                @if (entrada.perfiles) {
+                    {{ entrada.perfiles.nombre }} {{ entrada.perfiles.apellido }}
+                } @else {
+                    <span class="log-usuario-borrado">Usuario eliminado</span>
+                }
+                </td>
+                <td>{{ entrada.accion }}</td>
+                <td class="log-fecha">{{ entrada.creado_en | date: 'short' : '' : 'es' }}</td>
+            </tr>
+            }
+        </tbody>
+        </table>
+    }
+    </section>
