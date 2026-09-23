@@ -193,3 +193,42 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* ── Modo claro ──
+   Los fondos de arriba están fijos en oscuro; en modo claro los pasamos a
+   la paleta clara para que el texto (que ya usa var(--hk-*)) se lea. */
+:host-context(.tema-claro) .pelicula-form {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(22, 141, 168, 0.1), transparent 34%),
+    linear-gradient(145deg, #ffffff, var(--hk-shell));
+  border-color: rgba(22, 141, 168, 0.3);
+  box-shadow: 0 16px 40px rgba(41, 64, 71, 0.16);
+}
+
+:host-context(.tema-claro) .form-fields input,
+:host-context(.tema-claro) .form-fields textarea,
+:host-context(.tema-claro) .form-fields select {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.25);
+  color: var(--hk-soul);
+}
+
+:host-context(.tema-claro) .submit-button {
+  background: linear-gradient(100deg, rgba(22, 141, 168, 0.18), #ffffff);
+  color: var(--hk-soul);
+}
+
+:host-context(.tema-claro) .genres-fieldset {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(41, 64, 71, 0.2);
+}
+
+:host-context(.tema-claro) .genre-option {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.18);
+}
+
+:host-context(.tema-claro) .genre-option:hover {
+  background: rgba(22, 141, 168, 0.08);
+  border-color: var(--hk-focus);
+}

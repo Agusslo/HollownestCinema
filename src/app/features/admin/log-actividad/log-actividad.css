@@ -83,3 +83,18 @@
     overflow-x: auto;
   }
 }
+/* ── Modo claro ──
+   Los fondos de arriba están fijos en oscuro; en modo claro los pasamos a
+   la paleta clara para que el texto (que ya usa var(--hk-*)) se lea. */
+:host-context(.tema-claro) .log-tabla {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.2);
+}
+
+:host-context(.tema-claro) .log-tabla td {
+  border-top-color: rgba(41, 64, 71, 0.1);
+}
+
+:host-context(.tema-claro) .log-tabla tr:hover td {
+  background: rgba(22, 141, 168, 0.05);
+}
