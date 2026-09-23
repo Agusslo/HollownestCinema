@@ -52,7 +52,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - [x] ABM de productos (nombre, precio, imagen, categoría)
 - [x] Compra de candy junto con la entrada, en el mismo flujo de selección de butacas
 - [x] Retiro de todo el pedido con el QR de la orden (distinto del QR de cada entrada individual)
-- [ ] Combos especiales configurables por el admin (ej. entrada + pochoclos + bebida a precio fijo), destacados en la pantalla de compra
+- [x] Combos especiales configurables por el admin (ej. entrada + pochoclos + bebida a precio fijo), destacados en la pantalla de compra
 
 ### Roles y validación en puerta
 - [x] Rol admin: acceso a ABM de salas, funciones, distribución de butacas y candy bar (rutas protegidas con guard)

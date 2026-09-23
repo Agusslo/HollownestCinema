@@ -118,6 +118,15 @@
           </div>
         }
 
+        @if (comboSeleccionado(); as combo) {
+          <div class="combo-aplicado-pill">
+            <span aria-hidden="true">🍿</span>
+            <span
+              >Combo <strong>{{ combo.nombre }}</strong> aplicado (${{ combo.precio }})</span
+            >
+          </div>
+        }
+
         @if (descuentoAplicado() > 0) {
           <div class="cupon-pill">
             <span class="cupon-icono" aria-hidden="true">🎟️</span>
@@ -130,7 +139,11 @@
         @if (usuario(); as u) {
           @if (u.credito > 0) {
             <label class="toggle-credito">
-              <input type="checkbox" [checked]="usarCredito()" (change)="usarCredito.set(!usarCredito())" />
+              <input
+                type="checkbox"
+                [checked]="usarCredito()"
+                (change)="usarCredito.set(!usarCredito())"
+              />
               Usar mi crédito disponible (${{ u.credito }})
             </label>
           }
@@ -185,6 +198,35 @@
           <p class="eyebrow">¿Querés sumar algo para picar?</p>
           <h2>Candy bar</h2>
         </div>
+
+        @if (combosDisponibles().length > 0) {
+          <div class="combos-destacados">
+            <p class="combos-titulo">✨ Combos especiales</p>
+            <div class="combos-grid">
+              @for (combo of combosDisponibles(); track combo.id) {
+                <button
+                  type="button"
+                  class="combo-card"
+                  [class.elegido]="comboSeleccionado()?.id === combo.id"
+                  [disabled]="seleccionadas().size === 0"
+                  (click)="elegirCombo(combo)"
+                >
+                  <span class="combo-nombre">{{ combo.nombre }}</span>
+                  <span class="combo-precio">${{ combo.precio }}</span>
+                  <span class="combo-incluye">
+                    Incluye 1 entrada
+                    @for (item of combo.combo_items; track item.producto_id) {
+                      + {{ item.cantidad }}&times; {{ item.candy_productos.nombre }}
+                    }
+                  </span>
+                </button>
+              }
+            </div>
+            @if (seleccionadas().size === 0) {
+              <p class="combos-ayuda">Elegí una butaca en el mapa para poder aplicar un combo.</p>
+            }
+          </div>
+        }
 
         <div class="candy-tabs" role="tablist">
           @for (categoria of candyCategorias(); track categoria.id) {

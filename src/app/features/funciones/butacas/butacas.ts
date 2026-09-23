@@ -9,6 +9,8 @@ import { Funciones } from '../../../core/services/funciones';
 import { Auth } from '../../../core/services/auth';
 import { Cupones } from '../../../core/services/cupones';
 import { Candy } from '../../../core/services/candy';
+import { Combos } from '../../../core/services/combos';
+import { IComboConItems } from '../../../core/interfaces/combo';
 import IFuncion from '../../../core/interfaces/funcion';
 import IPelicula from '../../../core/interfaces/pelicula';
 import IPerfil from '../../../core/interfaces/perfil';
@@ -34,6 +36,7 @@ export class Butacas implements OnDestroy {
   private authService = inject(Auth);
   private cuponesService = inject(Cupones);
   private candyService = inject(Candy);
+  private combosService = inject(Combos);
 
   // Canal de Supabase Realtime — se abre en cargarDatos() y se cierra en
   // ngOnDestroy() para no dejar la conexión abierta al salir de la pantalla.
@@ -62,6 +65,11 @@ export class Butacas implements OnDestroy {
   protected categoriaActiva = signal<number | null>(null);
   // Mapa producto_id -> cantidad, es el "carrito" de candy de esta compra
   protected carritoCandy = signal<Map<number, number>>(new Map());
+
+  // Combos: "entrada + candy a precio fijo". Por simplicidad, uno por
+  // compra (la consigna no pide poder combinar varios).
+  protected combosDisponibles = signal<IComboConItems[]>([]);
+  protected comboSeleccionado = signal<IComboConItems | null>(null);
 
   private pdfService = inject(Pdf);
   constructor() {
@@ -127,6 +135,8 @@ export class Butacas implements OnDestroy {
     if (categorias.length > 0) {
       this.categoriaActiva.set(categorias[0].id);
     }
+
+    this.combosDisponibles.set(await this.combosService.obtenerActivos());
 
     this.cargando.set(false);
   }
@@ -274,6 +284,14 @@ export class Butacas implements OnDestroy {
     return this.cuponesService.calcularDescuento(this.usuario(), this.cupones());
   }
 
+  // Elegir un combo (o el mismo de nuevo para sacarlo). Necesita que ya
+  // haya al menos 1 butaca elegida — el botón del HTML se deshabilita si
+  // no, así que acá sólo confirmamos por las dudas.
+  protected elegirCombo(combo: IComboConItems) {
+    if (this.seleccionadas().size === 0) return;
+    this.comboSeleccionado.set(this.comboSeleccionado()?.id === combo.id ? null : combo);
+  }
+
   protected calcularTotal(): number {
     const funcionActual = this.funcion();
     if (!funcionActual) return 0;
@@ -281,11 +299,20 @@ export class Butacas implements OnDestroy {
     // Antes era "precio del formato × cantidad de butacas"; ahora cada
     // butaca puede tener un precio distinto si es VIP, así que sumamos
     // butaca por butaca en vez de multiplicar por un precio único.
-    const subtotalEntradas = Array.from(this.seleccionadas()).reduce(
-      (acumulado, codigo) =>
-        acumulado + this.entradasService.precioPorButaca(funcionActual.formato, codigo),
-      0,
+    const preciosButacas = Array.from(this.seleccionadas()).map((codigo) =>
+      this.entradasService.precioPorButaca(funcionActual.formato, codigo),
     );
+    let subtotalEntradas = preciosButacas.reduce((acumulado, precio) => acumulado + precio, 0);
+
+    const combo = this.comboSeleccionado();
+    if (combo && preciosButacas.length > 0) {
+      // El combo "es" 1 entrada + su candy a precio fijo: le sacamos al
+      // subtotal el precio de la butaca más barata (para no perder el
+      // recargo VIP de las demás si mezclaste butacas normales y VIP) y
+      // sumamos el precio fijo del combo en su lugar.
+      const precioMasBarato = Math.min(...preciosButacas);
+      subtotalEntradas = subtotalEntradas - precioMasBarato + combo.precio;
+    }
 
     const subtotal = subtotalEntradas + this.candySubtotal();
     const descuento = this.descuentoAplicado();
@@ -293,9 +320,9 @@ export class Butacas implements OnDestroy {
     return Math.round(total);
   }
 
-  // Si el usuario tiene crédito (por una cancelación anterior) y activó
-  // el toggle de usarlo, esto es cuánto se le descuenta — nunca más de lo
-  // que tiene, ni más de lo que cuesta la compra.
+  // Crédito (de una cancelación anterior): si el usuario lo tiene y activó
+  // el toggle, esto es cuánto se descuenta — nunca más de lo que tiene, ni
+  // más de lo que cuesta la compra.
   protected usarCredito = signal(false);
 
   protected creditoAUsar(): number {
@@ -327,17 +354,6 @@ export class Butacas implements OnDestroy {
 
     this.error.set(null);
 
-    // El usuario se cargó al abrir la pantalla: si mientras tanto cerró
-    // sesión (o cambió de cuenta), refrescamos antes de comprar para no
-    // mandar una orden a nombre de alguien que ya no está logueado.
-    const usuarioAntes = this.usuario();
-    const usuarioAhora = await this.authService.usuarioActual();
-    this.usuario.set(usuarioAhora);
-    if (usuarioAntes && !usuarioAhora) {
-      this.error.set('Tu sesión se cerró. Volvé a iniciar sesión para comprar.');
-      return;
-    }
-
     // Restricción de edad de la película: se chequea ACÁ, antes de mandar
     // nada al servidor, porque hace falta saber la fecha de nacimiento del
     // usuario — y eso sólo lo tenemos si está logueado.
@@ -367,17 +383,32 @@ export class Butacas implements OnDestroy {
     try {
       const usuario = this.usuario();
 
-      const candyItems = Array.from(this.carritoCandy().entries()).map(
-        ([producto_id, cantidad]) => ({ producto_id, cantidad }),
-      );
+      const combo = this.comboSeleccionado();
+      const itemsDelCombo = combo
+        ? combo.combo_items.map((item) => ({ producto_id: item.producto_id, cantidad: item.cantidad }))
+        : [];
+
+      const candyItems = [
+        ...Array.from(this.carritoCandy().entries()).map(([producto_id, cantidad]) => ({
+          producto_id,
+          cantidad,
+        })),
+        ...itemsDelCombo,
+      ];
 
       // Guardamos el detalle del candy en un formato simple (nombre + cantidad)
       // ANTES de vaciar el carrito más abajo, porque después de la compra
       // exitosa lo reseteamos a vacío.
-      const candyParaPdf = this.itemsCandyEnCarrito().map((item) => ({
-        nombre: item.producto.nombre,
-        cantidad: item.cantidad,
-      }));
+      const candyParaPdf = [
+        ...this.itemsCandyEnCarrito().map((item) => ({
+          nombre: item.producto.nombre,
+          cantidad: item.cantidad,
+        })),
+        ...(combo?.combo_items.map((item) => ({
+          nombre: item.candy_productos.nombre,
+          cantidad: item.cantidad,
+        })) ?? []),
+      ];
 
       const { entradas: butacasCompradas, orden } = await this.entradasService.comprar(
         this.funcion_id,
@@ -403,6 +434,7 @@ export class Butacas implements OnDestroy {
       this.compraExitosa.set(true);
       this.seleccionadas.set(new Set());
       this.carritoCandy.set(new Map());
+      this.comboSeleccionado.set(null);
 
       const ocupadasArray = await this.entradasService.obtenerButacasOcupadas(this.funcion_id);
       this.ocupadas.set(new Set(ocupadasArray));

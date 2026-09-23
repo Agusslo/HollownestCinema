@@ -242,29 +242,6 @@ h1 {
   border-radius: 4px;
 }
 
-.toggle-credito {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 10px 0;
-  font-size: 0.85rem;
-  color: var(--hk-pale);
-  cursor: pointer;
-}
-
-.toggle-credito input {
-  width: auto;
-  accent-color: var(--hk-focus);
-}
-
-.credito-aplicado {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
-  color: var(--hk-focus);
-  margin: 4px 0;
-}
-
 .aviso-vip {
   margin-top: 8px;
   padding: 6px 10px;
@@ -1149,4 +1126,123 @@ h1 {
     padding: 7px 14px;
     font-size: 0.78rem;
   }
+}
+/* ── Combo aplicado (resumen de compra) ── */
+.combo-aplicado-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(232, 168, 50, 0.14);
+  border: 1px solid rgba(232, 168, 50, 0.4);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  color: var(--hk-pale);
+  font-size: 0.9rem;
+}
+
+.combo-aplicado-pill strong {
+  color: var(--hk-geo);
+}
+
+/* ── Crédito disponible (resumen de compra) ── */
+.toggle-credito {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  font-size: 0.85rem;
+  color: var(--hk-pale);
+  cursor: pointer;
+}
+
+.toggle-credito input {
+  width: auto;
+  accent-color: var(--hk-focus);
+}
+
+.credito-aplicado {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--hk-focus);
+  margin: 4px 0;
+}
+
+/* ── Combos destacados (candy bar) ── */
+.combos-destacados {
+  margin-bottom: 22px;
+  padding: 14px 16px;
+  background: rgba(232, 168, 50, 0.06);
+  border: 1px dashed rgba(232, 168, 50, 0.35);
+  border-radius: 8px;
+}
+
+.combos-titulo {
+  margin: 0 0 10px;
+  color: var(--hk-geo);
+  font-family: 'Trajan', 'Times New Roman', serif;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.combos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.combo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  text-align: left;
+  color: var(--hk-pale);
+  background: rgba(10, 10, 18, 0.5);
+  border: 1px solid rgba(232, 168, 50, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.combo-card:hover:not(:disabled) {
+  border-color: var(--hk-geo);
+  background: rgba(232, 168, 50, 0.1);
+}
+
+.combo-card.elegido {
+  background: rgba(232, 168, 50, 0.18);
+  border-color: var(--hk-geo);
+  box-shadow: 0 0 10px rgba(232, 168, 50, 0.2);
+}
+
+.combo-card:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.combo-nombre {
+  font-weight: 600;
+  color: var(--hk-soul);
+}
+
+.combo-precio {
+  color: var(--hk-geo);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.combo-incluye {
+  color: var(--hk-soft-text);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.combos-ayuda {
+  margin: 8px 0 0;
+  color: var(--hk-muted-text);
+  font-size: 0.78rem;
+  font-style: italic;
 }
