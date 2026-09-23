@@ -46,7 +46,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - [x] Cupón de descuento en la primera compra, con porcentaje configurable por el admin (ya no fijo en 20%)
 - [x] Cupón exclusivo para usuarios mayores de 50 años, también configurable
 - [x] Si un usuario califica para dos cupones a la vez, se aplica el mayor — nunca se suman
-- [ ] Cancelación de una compra hasta 2 hs antes de la función: no se devuelve dinero, se acredita como crédito en la cuenta del usuario, usable junto con otros medios de pago en compras futuras
+- [x] Cancelación de una compra hasta 2 hs antes de la función: no se devuelve dinero, se acredita como crédito en la cuenta del usuario, usable junto con otros medios de pago en compras futuras
 
 ### Candy bar
 - [x] ABM de productos (nombre, precio, imagen, categoría)
