@@ -1,11 +1,14 @@
-    import { Component, inject, signal, OnDestroy } from '@angular/core';
+import { Component, inject, signal, OnDestroy } from '@angular/core';
     import { DatePipe } from '@angular/common';
     import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
     import { Html5Qrcode } from 'html5-qrcode';
     import { Entradas } from '../../../core/services/entradas';
     import { Ordenes } from '../../../core/services/ordenes';
+    import { Auth } from '../../../core/services/auth';
+    import { Logs } from '../../../core/services/logs';
     import { IEntradaValidacion } from '../../../core/interfaces/entrada';
     import { IOrdenConCandy } from '../../../core/interfaces/orden';
+    import IPerfil from '../../../core/interfaces/perfil';
 
     type Modo = 'entrada' | 'candy';
 
@@ -18,6 +21,15 @@
     export class Validar implements OnDestroy {
     private entradasService = inject(Entradas);
     private ordenesService = inject(Ordenes);
+    private authService = inject(Auth);
+    private logsService = inject(Logs);
+
+    // Quién es el empleado/admin validando — se usa sólo para el log.
+    private usuario: IPerfil | null = null;
+
+    constructor() {
+        this.authService.usuarioActual().then((u) => (this.usuario = u));
+    }
 
     // Instancia del lector de cámara. No es un signal porque no se muestra
     // en la plantilla — sólo lo usamos para arrancarlo/pararlo.
@@ -100,6 +112,16 @@
             ? 'Entrada validada. Puede pasar a la sala.'
             : 'Esta entrada ya había sido validada antes — no puede volver a usarse.',
         );
+
+        // Sólo logueamos si REALMENTE se validó ahora — si ya estaba usada
+        // de antes, no hubo ninguna acción nueva que registrar.
+        if (validada && this.usuario) {
+            await this.logsService.registrar(
+            this.usuario.id,
+            `Validó la entrada ${entrada.fila}${entrada.columna} de "${entrada.funciones.peliculas.nombre}"`,
+            );
+        }
+
         this.entradaEncontrada.set(null);
         this.codigoControl.reset('');
         } catch (e) {
@@ -121,6 +143,14 @@
             ? 'Candy entregado.'
             : 'El candy de esta orden ya había sido entregado antes.',
         );
+
+        if (entregado && this.usuario) {
+            await this.logsService.registrar(
+            this.usuario.id,
+            `Entregó el candy de la orden #${orden.id}`,
+            );
+        }
+
         this.ordenEncontrada.set(null);
         this.codigoControl.reset('');
         } catch (e) {
