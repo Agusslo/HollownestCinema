@@ -1,7 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Cupones as CuponesService } from '../../../core/services/cupones';
+import { Auth } from '../../../core/services/auth';
+import { Logs } from '../../../core/services/logs';
 import ICupon from '../../../core/interfaces/cupon';
+import IPerfil from '../../../core/interfaces/perfil';
 import { LoadingComponent } from '../../../shared/components/loading/loading';
 
 @Component({
@@ -12,6 +15,14 @@ import { LoadingComponent } from '../../../shared/components/loading/loading';
 })
 export class Cupones {
   private cuponesService = inject(CuponesService);
+  private authService = inject(Auth);
+  private logsService = inject(Logs);
+
+  private usuario: IPerfil | null = null;
+  // Los valores con los que arrancó el formulario, para poder comparar en
+  // guardar() y loguear SÓLO el/los porcentaje/s que realmente cambió —
+  // no tiene sentido loguear "modificó un precio" si no lo tocó.
+  private valoresOriginales = { primeraCompra: 0, mayor50: 0 };
 
   protected cargando = signal(true);
   protected guardando = signal(false);
@@ -35,6 +46,7 @@ export class Cupones {
   private async cargarCupones() {
     const cupones = await this.cuponesService.obtenerTodos();
     this.aplicarAlFormulario(cupones);
+    this.usuario = await this.authService.usuarioActual();
     this.cargando.set(false);
   }
 
@@ -42,10 +54,12 @@ export class Cupones {
     const primeraCompra = cupones.find((c) => c.tipo === 'primera_compra');
     const mayor50 = cupones.find((c) => c.tipo === 'mayor_50');
 
-    this.formulario.patchValue({
+    this.valoresOriginales = {
       primeraCompra: primeraCompra?.porcentaje ?? 0,
       mayor50: mayor50?.porcentaje ?? 0,
-    });
+    };
+
+    this.formulario.patchValue(this.valoresOriginales);
   }
 
   protected async guardar() {
@@ -68,6 +82,22 @@ export class Cupones {
         this.cuponesService.actualizarPorcentaje('mayor_50', mayor50),
       ]);
 
+      if (this.usuario) {
+        const cambios: string[] = [];
+        if (primeraCompra !== this.valoresOriginales.primeraCompra) {
+          cambios.push(
+            `cupón de primera compra: ${this.valoresOriginales.primeraCompra}% → ${primeraCompra}%`,
+          );
+        }
+        if (mayor50 !== this.valoresOriginales.mayor50) {
+          cambios.push(`cupón de mayores de 50: ${this.valoresOriginales.mayor50}% → ${mayor50}%`);
+        }
+        for (const cambio of cambios) {
+          await this.logsService.registrar(this.usuario.id, `Modificó el ${cambio}`);
+        }
+      }
+
+      this.valoresOriginales = { primeraCompra, mayor50 };
       this.mensaje.set('Porcentajes actualizados correctamente.');
     } catch (e) {
       this.mensaje.set((e as Error).message);
