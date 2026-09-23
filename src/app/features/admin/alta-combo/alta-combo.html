@@ -1,0 +1,50 @@
+    <form class="candy-form" [formGroup]="formulario" (ngSubmit)="guardar()">
+    <div class="form-header">
+        <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
+        <span class="form-kicker">Panel de administración</span>
+        <h1>Nuevo combo</h1>
+        <p>Armá un combo (entrada + candy) a precio fijo. Va a aparecer destacado en la compra.</p>
+    </div>
+
+    <div class="form-fields">
+        <label>
+        Nombre
+        <input type="text" formControlName="nombre" placeholder="Ej: Combo Pareja" />
+        @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
+            <span class="campo-error">El nombre es obligatorio.</span>
+        }
+        </label>
+
+        <label>
+        Precio fijo del combo
+        <input type="number" formControlName="precio" min="1" />
+        @if (formulario.controls.precio.touched && formulario.controls.precio.invalid) {
+            <span class="campo-error">Tiene que ser un número mayor a 0.</span>
+        }
+        </label>
+    </div>
+
+    <div class="productos-combo">
+        <span class="form-kicker">Candy que incluye (además de 1 entrada)</span>
+
+        @for (producto of productos(); track producto.id) {
+        <div class="producto-fila">
+            <span class="producto-nombre">{{ producto.nombre }}</span>
+            <div class="stepper">
+            <button type="button" (click)="cambiarCantidad(producto.id, -1)">−</button>
+            <span>{{ cantidadDe(producto.id) }}</span>
+            <button type="button" (click)="cambiarCantidad(producto.id, 1)">+</button>
+            </div>
+        </div>
+        }
+    </div>
+
+    @if (mensaje()) {
+        <p class="mensaje">{{ mensaje() }}</p>
+    }
+
+    <button type="submit" class="submit-button" [disabled]="guardando()">
+        <span>{{ guardando() ? 'Guardando...' : 'Crear combo' }}</span>
+        <span aria-hidden="true">&rarr;</span>
+    </button>
+    </form>
