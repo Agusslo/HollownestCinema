@@ -1,0 +1,168 @@
+.mis-compras {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+}
+
+.mis-compras h1 {
+  font-family: 'Trajan Pro', serif;
+  color: var(--hk-pale);
+  margin-bottom: 0.5rem;
+}
+
+.credito-disponible {
+  color: var(--hk-focus);
+  margin-bottom: 1.5rem;
+}
+
+.aviso {
+  padding: 0.7rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.aviso-ok {
+  background: rgba(79, 196, 227, 0.12);
+  border: 1px solid var(--hk-focus);
+  color: var(--hk-pale);
+}
+
+.aviso-error {
+  background: rgba(192, 57, 43, 0.12);
+  border: 1px solid var(--hk-grimm);
+  color: var(--hk-pale);
+}
+
+.sin-compras {
+  color: var(--hk-soft-text);
+}
+
+.lista-compras {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tarjeta-compra {
+  background: var(--hk-shell);
+  border: var(--borde-hk);
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+}
+
+.tarjeta-compra.cancelada {
+  opacity: 0.55;
+}
+
+.tarjeta-compra header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--hk-muted-text);
+  margin-bottom: 0.6rem;
+}
+
+.lista-entradas,
+.lista-candy-compra {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.6rem;
+  color: var(--hk-soft-text);
+  font-size: 0.9rem;
+}
+
+.lista-entradas li,
+.lista-candy-compra li {
+  padding: 0.15rem 0;
+}
+
+.tarjeta-compra footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: var(--borde-hk);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.orden-total {
+  font-weight: 600;
+  color: var(--hk-geo);
+}
+
+.estado-cancelada {
+  color: var(--hk-grimm);
+  font-size: 0.85rem;
+}
+
+.no-cancelable {
+  color: var(--hk-muted-text);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.btn-cancelar {
+  padding: 0.4rem 0.9rem;
+  background: transparent;
+  border: 1px solid var(--hk-grimm);
+  color: #ff9e9e;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirmar-cancelacion {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--hk-pale);
+}
+
+.btn-confirmar-si {
+  padding: 0.3rem 0.7rem;
+  background: var(--hk-grimm);
+  color: var(--hk-void);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-confirmar-no {
+  padding: 0.3rem 0.7rem;
+  background: transparent;
+  border: 1px solid var(--hk-ash);
+  color: var(--hk-soft-text);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .mis-compras {
+    max-width: 900px;
+    padding: 2rem;
+  }
+
+  .mis-compras h1 {
+    font-size: 2.2rem;
+  }
+
+  .credito-disponible {
+    font-size: 1.1rem;
+  }
+
+  .tarjeta-compra {
+    padding: 1.4rem 1.8rem;
+  }
+
+  .lista-entradas,
+  .lista-candy-compra {
+    font-size: 1rem;
+  }
+
+  .orden-total {
+    font-size: 1.1rem;
+  }
+}

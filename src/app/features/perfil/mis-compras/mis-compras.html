@@ -1,0 +1,91 @@
+    <section class="mis-compras">
+    <h1>Mis compras</h1>
+
+    @if (usuario(); as u) {
+        <p class="credito-disponible">Crédito disponible: <strong>${{ u.credito }}</strong></p>
+    }
+
+    @if (mensaje()) {
+        <p class="aviso aviso-ok">{{ mensaje() }}</p>
+    }
+    @if (error()) {
+        <p class="aviso aviso-error">{{ error() }}</p>
+    }
+
+    @if (cargando()) {
+        <p>Cargando...</p>
+    } @else if (compras().length === 0) {
+        <p class="sin-compras">Todavía no hiciste ninguna compra.</p>
+    } @else {
+        <div class="lista-compras">
+        @for (orden of compras(); track orden.id) {
+            <article class="tarjeta-compra" [class.cancelada]="orden.cancelada_en">
+            <header>
+                <span class="orden-id">Orden #{{ orden.id }}</span>
+                <span class="orden-fecha">{{ orden.creado_en | date: 'short' : '' : 'es' }}</span>
+            </header>
+
+            <ul class="lista-entradas">
+                @for (entrada of orden.entradas; track entrada.id) {
+                <li>
+                    {{ entrada.funciones.peliculas.nombre }} — {{ entrada.funciones.salas.nombre }} —
+                    {{ entrada.fila }}{{ entrada.columna }} —
+                    {{ entrada.funciones.fecha_hora | date: 'short' : '' : 'es' }}
+                </li>
+                }
+            </ul>
+
+            @if (orden.orden_candy_items.length > 0) {
+                <ul class="lista-candy-compra">
+                @for (item of orden.orden_candy_items; track item) {
+                    <li>{{ item.cantidad }}x {{ item.candy_productos.nombre }}</li>
+                }
+                </ul>
+            }
+
+            <footer>
+                <span class="orden-total">Total: ${{ orden.total }}</span>
+
+                @if (orden.cancelada_en) {
+                <span class="estado-cancelada">Cancelada</span>
+                } @else if (puedeCancelarse(orden)) {
+                @if (confirmando() === orden.id) {
+                    <span class="confirmar-cancelacion">
+                    ¿Seguro? Se te acreditarán ${{ montoACreditar(orden) }}.
+                    <button
+                        type="button"
+                        class="btn-confirmar-si"
+                        [disabled]="cancelando()"
+                        (click)="confirmarCancelacion(orden)"
+                    >
+                        Sí, cancelar
+                    </button>
+                    <button
+                        type="button"
+                        class="btn-confirmar-no"
+                        [disabled]="cancelando()"
+                        (click)="cancelarConfirmacion()"
+                    >
+                        No
+                    </button>
+                    </span>
+                } @else {
+                    <button type="button" class="btn-cancelar" (click)="pedirConfirmacion(orden.id)">
+                    Cancelar compra
+                    </button>
+                }
+                } @else {
+                <span class="no-cancelable">
+                    @if (tieneEntradaValidada(orden)) {
+                    Ya se usó una entrada
+                    } @else {
+                    Fuera de plazo para cancelar
+                    }
+                </span>
+                }
+            </footer>
+            </article>
+        }
+        </div>
+    }
+    </section>

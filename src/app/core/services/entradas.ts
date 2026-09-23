@@ -47,6 +47,8 @@ export class Entradas {
     butacas: string[],
     usuario: IPerfil | null,
     candyItems: { producto_id: number; cantidad: number }[] = [],
+    total: number = 0,
+    creditoAUsar: number = 0,
   ): Promise<{
     orden: IOrden;
     entradas: { fila: string; columna: number; codigo_qr: string }[];
@@ -55,8 +57,10 @@ export class Entradas {
 
     // 1. Creamos la orden primero — es el contenedor que agrupa esta
     // compra completa (entradas + candy). Su codigo_qr es el que sirve
-    // para retirar el candy bar, separado del QR de cada butaca.
-    const orden = await this.ordenesService.crear(usuario?.id ?? null);
+    // para retirar el candy bar, separado del QR de cada butaca. Guarda
+    // el total real pagado y cuánto de eso fue con crédito, para poder
+    // calcular bien cuánto devolver si el día de mañana se cancela.
+    const orden = await this.ordenesService.crear(usuario?.id ?? null, total, creditoAUsar);
 
     const nuevasEntradas = butacas.map((butaca) => ({
       funcion_id,
@@ -84,6 +88,16 @@ export class Entradas {
         .eq('id', usuario!.id);
 
       if (errorPerfil) throw errorPerfil;
+    }
+
+    // 3. Si usó crédito, se lo descontamos del perfil ahora que la compra
+    // ya se confirmó.
+    if (creditoAUsar > 0 && usuario) {
+      const { error: errorCredito } = await this.supabase.Supabase.from('perfiles')
+        .update({ credito: usuario.credito - creditoAUsar })
+        .eq('id', usuario.id);
+
+      if (errorCredito) throw errorCredito;
     }
 
     return { orden, entradas: data };

@@ -68,4 +68,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/auth/completar-perfil/completar-perfil').then((m) => m.CompletarPerfil),
   },
+  {
+    path: 'mis-compras',
+    canActivate: [perfilCompletoGuard],
+    loadComponent: () =>
+      import('./features/perfil/mis-compras/mis-compras').then((m) => m.MisCompras),
+  },
 ];

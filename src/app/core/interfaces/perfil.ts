@@ -11,4 +11,5 @@ export default interface IPerfil {
     cupon_primera_compra_usado: boolean;
     rol: Rol;
     perfil_completo: boolean;
+    credito: number;
 }

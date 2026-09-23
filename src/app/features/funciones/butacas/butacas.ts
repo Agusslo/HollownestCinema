@@ -293,6 +293,21 @@ export class Butacas implements OnDestroy {
     return Math.round(total);
   }
 
+  // Si el usuario tiene crédito (por una cancelación anterior) y activó
+  // el toggle de usarlo, esto es cuánto se le descuenta — nunca más de lo
+  // que tiene, ni más de lo que cuesta la compra.
+  protected usarCredito = signal(false);
+
+  protected creditoAUsar(): number {
+    if (!this.usarCredito()) return 0;
+    const disponible = this.usuario()?.credito ?? 0;
+    return Math.min(disponible, this.calcularTotal());
+  }
+
+  protected montoAPagar(): number {
+    return this.calcularTotal() - this.creditoAUsar();
+  }
+
   // Misma cuenta que ya usa Cupones para "mayores de 50" — la duplico acá
   // en vez de importarla de otro componente porque es una cuentita chica
   // y no vale la pena acoplar dos pantallas por esto.
@@ -311,6 +326,17 @@ export class Butacas implements OnDestroy {
     if (this.seleccionadas().size === 0) return;
 
     this.error.set(null);
+
+    // El usuario se cargó al abrir la pantalla: si mientras tanto cerró
+    // sesión (o cambió de cuenta), refrescamos antes de comprar para no
+    // mandar una orden a nombre de alguien que ya no está logueado.
+    const usuarioAntes = this.usuario();
+    const usuarioAhora = await this.authService.usuarioActual();
+    this.usuario.set(usuarioAhora);
+    if (usuarioAntes && !usuarioAhora) {
+      this.error.set('Tu sesión se cerró. Volvé a iniciar sesión para comprar.');
+      return;
+    }
 
     // Restricción de edad de la película: se chequea ACÁ, antes de mandar
     // nada al servidor, porque hace falta saber la fecha de nacimiento del
@@ -358,6 +384,8 @@ export class Butacas implements OnDestroy {
         Array.from(this.seleccionadas()),
         usuario,
         candyItems,
+        this.calcularTotal(),
+        this.creditoAUsar(),
       );
 
       const detalle = await this.funcionesService.obtenerDetalleCompra(this.funcion_id);

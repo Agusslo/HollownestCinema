@@ -127,10 +127,30 @@
           </div>
         }
 
+        @if (usuario(); as u) {
+          @if (u.credito > 0) {
+            <label class="toggle-credito">
+              <input type="checkbox" [checked]="usarCredito()" (change)="usarCredito.set(!usarCredito())" />
+              Usar mi crédito disponible (${{ u.credito }})
+            </label>
+          }
+        }
+
         <div class="total-bloque">
           <span class="total-label">TOTAL</span>
           <span class="total-monto">${{ calcularTotal() }}</span>
         </div>
+
+        @if (creditoAUsar() > 0) {
+          <div class="credito-aplicado">
+            <span>Crédito aplicado</span>
+            <span>−${{ creditoAUsar() }}</span>
+          </div>
+          <div class="total-bloque">
+            <span class="total-label">A PAGAR</span>
+            <span class="total-monto">${{ montoAPagar() }}</span>
+          </div>
+        }
 
         @if (error()) {
           <div class="error-box" role="alert">
