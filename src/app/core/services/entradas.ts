@@ -26,10 +26,15 @@ export class Entradas {
   private ordenesService = inject(Ordenes);
   private candyService = inject(Candy);
 
+  // Trae las butacas ocupadas de esta función — pero si la orden a la que
+  // pertenece una entrada está cancelada, esa butaca NO cuenta como
+  // ocupada. Si no filtráramos esto, cancelar una compra nunca liberaría
+  // el asiento para que otro lo compre.
   async obtenerButacasOcupadas(funcion_id: number): Promise<string[]> {
     const { data, error } = await this.supabase.Supabase.from('entradas')
-      .select('fila, columna')
-      .eq('funcion_id', funcion_id);
+      .select('fila, columna, ordenes!inner(cancelada_en)')
+      .eq('funcion_id', funcion_id)
+      .is('ordenes.cancelada_en', null);
 
     if (error) throw error;
     return data.map((e) => `${e.fila}${e.columna}`);

@@ -23,6 +23,7 @@
           <app-blobatar [name]="u.nombre" [size]="32" animate="hover" class="user-blobatar" />
           <span class="user-nombre">{{ u.nombre }}</span>
         </div>
+        <a class="nav-item" [routerLink]="['/mis-compras']">Mis compras</a>
         <button class="nav-item btn-salir" type="button" (click)="cerrarSesion()">Salir</button>
       } @else {
         <div class="nav-item user-badge shade">

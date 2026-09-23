@@ -242,6 +242,29 @@ h1 {
   border-radius: 4px;
 }
 
+.toggle-credito {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  font-size: 0.85rem;
+  color: var(--hk-pale);
+  cursor: pointer;
+}
+
+.toggle-credito input {
+  width: auto;
+  accent-color: var(--hk-focus);
+}
+
+.credito-aplicado {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--hk-focus);
+  margin: 4px 0;
+}
+
 .aviso-vip {
   margin-top: 8px;
   padding: 6px 10px;
