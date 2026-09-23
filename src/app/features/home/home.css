@@ -1254,3 +1254,26 @@
   background: var(--hk-shell);
   color: var(--hk-pale);
 }
+
+/* El carrusel tiene fondos siempre oscuros (posters, imagen borrosa, azul
+   profundo), así que en modo claro le devolvemos la paleta oscura sólo a
+   él — si no, los textos que usan var(--hk-*) quedan oscuros sobre oscuro. */
+:host-context(.tema-claro) .hero-carousel {
+  --hk-void: #0a0a12;
+  --hk-deep: #111122;
+  --hk-shell: #1c1c2e;
+  --hk-stone: #2a2a3d;
+  --hk-ash: #4a4a5e;
+  --hk-soul: #e8e8f0;
+  --hk-pale: #d4d4e0;
+  --hk-focus: #4fc4e3;
+  --hk-lifeblood: #2196c4;
+  --hk-geo: #e8a832;
+  --hk-charm: #c4a04e;
+  --hk-shade: #1a1a28;
+  --hk-muted-text: rgba(240, 240, 240, 0.78);
+  --hk-soft-text: rgba(240, 240, 240, 0.62);
+  --hk-panel-text: rgba(240, 240, 240, 0.84);
+  --hk-badge-bg: rgba(10, 10, 18, 0.88);
+  --borde-hk: 1px solid rgba(212, 212, 224, 0.15);
+}
