@@ -2,7 +2,10 @@ import { Component, inject, signal } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Peliculas } from '../../../core/services/peliculas';
 import { Funciones } from '../../../core/services/funciones';
+import { Auth } from '../../../core/services/auth';
+import { Logs } from '../../../core/services/logs';
 import IPelicula from '../../../core/interfaces/pelicula';
+import IPerfil from '../../../core/interfaces/perfil';
 import { Formato, Idioma } from '../../../core/interfaces/funcion';
 
 @Component({
@@ -14,6 +17,12 @@ import { Formato, Idioma } from '../../../core/interfaces/funcion';
 export class AltaFuncion {
   private peliculasService = inject(Peliculas);
   private funcionesService = inject(Funciones);
+  private authService = inject(Auth);
+  private logsService = inject(Logs);
+
+  // El guard de la ruta ya garantiza que quien esté acá es admin — esto
+  // sólo lo necesitamos para saber DE QUIÉN es la acción, para el log.
+  private usuario: IPerfil | null = null;
 
   protected peliculas = signal<IPelicula[]>([]);
   protected error = signal<string | null>(null);
@@ -32,6 +41,7 @@ export class AltaFuncion {
 
   private async cargarOpciones() {
     this.peliculas.set(await this.peliculasService.obtenerTodas()); //trae todas las peliculas y las setea en el signal de peliculas
+    this.usuario = await this.authService.usuarioActual();
   }
 
   protected async guardar() {
@@ -54,6 +64,15 @@ export class AltaFuncion {
           idioma: valores.idioma,
         });
         this.mensaje.set(`Función creada en ${sala_nombre}.`);
+
+        if (this.usuario) {
+          const pelicula = this.peliculas().find((p) => p.id === valores.pelicula_id);
+          await this.logsService.registrar(
+            this.usuario.id,
+            `Creó una función de "${pelicula?.nombre ?? 'película'}" en ${sala_nombre}`,
+          );
+        }
+
         this.formulario.reset({ formato: '2d', idioma: 'castellano' });
       } catch (e) {
         this.error.set((e as Error).message);
