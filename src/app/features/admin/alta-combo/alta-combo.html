@@ -28,7 +28,7 @@
         <span class="form-kicker">Candy que incluye (además de 1 entrada)</span>
 
         @for (producto of productos(); track producto.id) {
-        <div class="producto-fila">
+        <div class="producto-fila" [class.incluido]="cantidadDe(producto.id) > 0">
             <span class="producto-nombre">{{ producto.nombre }}</span>
             <div class="stepper">
             <button type="button" (click)="cambiarCantidad(producto.id, -1)">−</button>

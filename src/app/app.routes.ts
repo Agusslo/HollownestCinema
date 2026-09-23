@@ -31,6 +31,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/admin/alta-candy/alta-candy').then((m) => m.AltaCandy),
   },
   {
+    path: 'admin/combos/nuevo',
+    canActivate: [perfilCompletoGuard, rolGuard(['admin'])],
+    loadComponent: () => import('./features/admin/alta-combo/alta-combo').then((m) => m.AltaCombo),
+  },
+  {
     path: 'empleado/validar',
     canActivate: [perfilCompletoGuard, rolGuard(['empleado', 'admin'])],
     loadComponent: () => import('./features/empleado/validar/validar').then((m) => m.Validar),
@@ -68,7 +73,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/auth/completar-perfil/completar-perfil').then((m) => m.CompletarPerfil),
   },
-  {
+    {
     path: 'mis-compras',
     canActivate: [perfilCompletoGuard],
     loadComponent: () =>
