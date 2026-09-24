@@ -86,17 +86,32 @@ h1 {
 }
 
 /* ── Pantalla ── */
-.pantalla {
-  margin: 0 auto 20px;
-  padding: 8px;
+.pantalla-wrap {
+  margin: 0 auto 30px;
   width: min(84%, 780px);
-  background: linear-gradient(to bottom, var(--hk-focus), transparent);
+  text-align: center;
+}
+
+.pantalla {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+  padding: 4px 16px;
+  border-radius: 50px;
+  /* Oscuro: pantalla clara con texto oscuro. En modo claro se invierte
+     sola, porque --hk-soul / --hk-void intercambian sus valores. */
+  background: var(--hk-pale);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.pantalla-texto {
   color: var(--hk-void);
   font-family: 'Trajan', serif;
-  font-size: 0.72rem;
-  letter-spacing: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  clip-path: polygon(5% 0, 95% 0, 100% 100%, 0 100%);
 }
 
 /* ── Sala ── */
@@ -107,6 +122,9 @@ h1 {
   width: max-content;
   min-width: 100%;
   margin: 0 auto 16px;
+  /* Aire para el aro de las butacas seleccionadas en los bordes, que si
+     no lo recortaba el overflow de .mapa-sala. */
+  padding: 6px 6px 0;
 }
 
 /* ── Fila ── */
@@ -143,37 +161,84 @@ h1 {
   border: 1px solid rgba(79, 196, 227, 0.2);
   background-color: var(--hk-stone);
   color: var(--hk-seat-text);
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.55rem;
-  font-weight: bold;
+  /* A este tamaño (8-9px) una tipografía decorativa se vuelve ilegible —
+     acá priorizamos que se lea bien por sobre la identidad visual. */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 0.64rem;
+  font-weight: 700;
+  -webkit-font-smoothing: antialiased;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
   flex-shrink: 0;
-  border-radius: 3px;
+  border-radius: 7px;
+  outline: none;
   transition: all 0.2s;
 }
 
-/* Hover */
-.butaca:hover:not(:disabled) {
-  background-color: var(--hk-ash);
-  border-color: var(--hk-focus);
-  color: var(--hk-soul);
-  transform: scale(1.15);
-  z-index: 1;
-  box-shadow: 0 0 8px rgba(79, 196, 227, 0.3);
+/* El estilo global de button[type='button'] pinta un degradé
+   (background-image) que tapaba el background-color de cada estado — por
+   eso la butaca seleccionada se veía oscura en vez de celeste. */
+.butaca,
+.butaca:hover {
+  background-image: none;
 }
 
-/* Seleccionada — Soul azul brillante */
-.butaca.seleccionada {
-  background-color: var(--hk-focus);
-  border-color: #7dd8f0;
-  color: var(--hk-void);
+/* Reemplaza el aro de foco por defecto del navegador (que quedaba pegado
+   después de cada click y se confundía con una butaca "seleccionada
+   vacía") por uno propio, sólo visible cuando de verdad se navega con
+   teclado — no al hacer click con el mouse. */
+.butaca:focus-visible {
+  outline: 2px solid var(--hk-focus);
+  outline-offset: 2px;
+}
+
+.butaca-icono-ocupado {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  padding: 2px;
+  border-radius: 50%;
+  /* Fondo oscuro fijo (no una variable) — el ícono es claro, así que sin
+     esto se pierde contra un fondo también claro en el tema claro. */
+  background: rgba(10, 10, 18, 0.55);
+}
+
+/* Ícono de silla de ruedas (fila accesible, libre) */
+.butaca-icono {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+/* Hover — sólo marca el borde, sin relleno ni brillo, para que no se
+   confunda con una butaca seleccionada. */
+.butaca:hover:not(:disabled) {
+  border-color: var(--hk-focus);
+  color: var(--hk-soul);
+  transform: scale(1.08);
+  z-index: 1;
+}
+
+/* Seleccionada — va al FINAL de todas las reglas de estado (ocupada,
+   accesible, vip) a propósito: si por algún motivo una butaca tuviera
+   dos clases de estado a la vez, seleccionada tiene que ganar siempre.
+   El !important en background/color es un refuerzo extra para
+   garantizar visibilidad — ya tuvimos este mismo bug antes por un
+   empate de especificidad silencioso. */
+.butaca.seleccionada,
+.butaca.accesible.seleccionada,
+.butaca.vip.seleccionada {
+  position: relative;
+  background-color: var(--hk-focus) !important;
+  color: #04141a !important;
+  border: 2px solid #ffffff;
+  transform: scale(1.12);
+  z-index: 2;
   box-shadow:
-    0 0 8px rgba(79, 196, 227, 0.5),
-    0 0 16px rgba(79, 196, 227, 0.2);
+    0 0 0 2px var(--hk-focus),
+    0 0 16px rgba(79, 196, 227, 0.7);
 }
 
 /* Ocupada — Oscura/void */
@@ -197,10 +262,8 @@ h1 {
   color: var(--hk-soft-text);
 }
 
-.butaca.accesible.seleccionada {
-  background-color: var(--hk-focus);
-  color: var(--hk-void);
-}
+/* accesible.seleccionada: el color/fondo ya los define el bloque
+   unificado de "Seleccionada" más arriba (con !important) */
 
 /* VIP — últimas 3 filas, dorado como el resto de los acentos "geo" del tema */
 .butaca.vip {
@@ -215,10 +278,7 @@ h1 {
   color: var(--hk-soft-text);
 }
 
-.butaca.vip.seleccionada {
-  background-color: var(--hk-geo);
-  color: var(--hk-void);
-}
+/* vip.seleccionada: mismo caso, ya lo cubre el bloque unificado de arriba */
 
 .ref-box.accesible {
   background-color: rgba(79, 196, 227, 0.15);
@@ -290,8 +350,8 @@ h1 {
 
 .ref-box.seleccionada {
   background-color: var(--hk-focus);
-  border: 1px solid #7dd8f0;
-  box-shadow: 0 0 6px rgba(79, 196, 227, 0.4);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px var(--hk-focus);
 }
 
 /* ── Resumen de compra ── */
@@ -658,6 +718,47 @@ h1 {
   font-weight: 700;
 }
 
+:host-context(.tema-claro) .butaca.seleccionada,
+:host-context(.tema-claro) .butaca.accesible.seleccionada,
+:host-context(.tema-claro) .butaca.vip.seleccionada {
+  /* En claro, relleno oscuro con texto blanco: contrasta fuerte contra
+     las butacas libres, que son grises claras. */
+  background-color: #0e6f86 !important;
+  color: #ffffff !important;
+  border-color: #ffffff;
+  box-shadow:
+    0 0 0 2px #0e6f86,
+    0 4px 12px rgba(14, 111, 134, 0.45);
+}
+
+:host-context(.tema-claro) .ref-box.seleccionada {
+  background-color: #0e6f86;
+  box-shadow: 0 0 0 1px #0e6f86;
+}
+
+/* Estos 5 tenían un fondo oscuro FIJO (no una variable de tema), así que
+   en claro quedaban oscuros sobre un fondo que ya es claro. */
+:host-context(.tema-claro) .combo-card {
+  background: rgba(230, 235, 238, 0.85);
+}
+
+:host-context(.tema-claro) .candy-card {
+  background: linear-gradient(180deg, var(--hk-shell) 0%, rgba(210, 218, 222, 0.9) 100%);
+}
+
+:host-context(.tema-claro) .resumen-butacas-vacio {
+  background: rgba(230, 235, 238, 0.75);
+  border-color: rgba(41, 64, 71, 0.2);
+}
+
+:host-context(.tema-claro) .total-bloque {
+  background: rgba(230, 235, 238, 0.7);
+}
+
+:host-context(.tema-claro) .candy-stepper {
+  background: rgba(230, 235, 238, 0.85);
+}
+
 :host-context(.tema-claro) .resumen-butacas-card {
   background: rgba(230, 235, 238, 0.8);
   border-color: rgba(41, 64, 71, 0.25);
@@ -975,6 +1076,10 @@ h1 {
     font-size: 0.42rem;
   }
 
+  .butaca-icono {
+    font-size: 0.7rem;
+  }
+
   .fila {
     gap: 2px;
   }
@@ -1086,8 +1191,12 @@ h1 {
   }
 
   .pantalla {
-    font-size: 0.6rem;
-    letter-spacing: 2px;
+    min-height: 22px;
+  }
+
+  .pantalla-texto {
+    font-size: 0.65rem;
+    letter-spacing: 1px;
   }
 
   .referencias {
@@ -1245,4 +1354,28 @@ h1 {
   color: var(--hk-muted-text);
   font-size: 0.78rem;
   font-style: italic;
+}
+/* ── Aviso fijo de candy bar (arriba del resumen, que es sticky) ── */
+.aviso-candy-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 4px;
+  background: rgba(232, 168, 50, 0.1);
+  border: 1px dashed rgba(232, 168, 50, 0.4);
+  border-radius: 8px;
+  color: var(--hk-geo);
+  text-decoration: none;
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.aviso-candy-bar:hover {
+  background: rgba(232, 168, 50, 0.18);
+  border-color: var(--hk-geo);
 }

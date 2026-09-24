@@ -14,7 +14,16 @@
 
     <div class="seleccion-layout">
       <section class="mapa-sala" aria-label="Mapa de butacas">
-        <div class="pantalla">PANTALLA</div>
+        <div class="pantalla-wrap">
+          <div class="pantalla">
+            <span class="pantalla-texto"
+              >Pantalla
+              @if (funcion()?.salas?.nombre; as sala) {
+                | {{ sala }}
+              }</span
+            >
+          </div>
+        </div>
 
         <div class="sala">
           @for (fila of layout(); track fila.letra) {
@@ -36,7 +45,13 @@
                   [title]="butaca.codigo"
                   (click)="toggleButaca(butaca.codigo)"
                 >
-                  {{ butaca.codigo }}
+                  @if (estaOcupada(butaca.codigo)) {
+                    <img class="butaca-icono-ocupado" src="/img/knight_face.png" alt="" aria-hidden="true" />
+                  } @else if (fila.tipo === 'accesible') {
+                    <span class="butaca-icono" aria-hidden="true">♿</span>
+                  } @else {
+                    {{ butaca.codigo }}
+                  }
                 </button>
               }
               <span class="fila-letra" aria-hidden="true"></span>
@@ -54,6 +69,12 @@
       </section>
 
       <aside class="resumen-compra">
+        <button type="button" class="aviso-candy-bar" (click)="irACandyBar()">
+          <span aria-hidden="true">🍿</span>
+          ¿Querés sumar candy bar? Elegilo acá abajo
+          <span aria-hidden="true">↓</span>
+        </button>
+
         <div class="resumen-butacas-seccion">
           <div class="resumen-butacas-header">
             <span class="resumen-butacas-titulo">Butacas</span>
@@ -193,7 +214,7 @@
     </div>
 
     @if (candyCategorias().length > 0) {
-      <section class="candy-bar" aria-label="Candy bar">
+      <section class="candy-bar" id="candy-bar" aria-label="Candy bar">
         <div class="candy-heading">
           <p class="eyebrow">¿Querés sumar algo para picar?</p>
           <h2>Candy bar</h2>

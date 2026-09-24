@@ -11,7 +11,7 @@ import { Cupones } from '../../../core/services/cupones';
 import { Candy } from '../../../core/services/candy';
 import { Combos } from '../../../core/services/combos';
 import { IComboConItems } from '../../../core/interfaces/combo';
-import IFuncion from '../../../core/interfaces/funcion';
+import { IFuncionConSala } from '../../../core/interfaces/funcion';
 import IPelicula from '../../../core/interfaces/pelicula';
 import IPerfil from '../../../core/interfaces/perfil';
 import ICupon from '../../../core/interfaces/cupon';
@@ -51,7 +51,7 @@ export class Butacas implements OnDestroy {
   protected layout = signal<IFilaSala[]>([]);
   protected ocupadas = signal<Set<string>>(new Set());
   protected seleccionadas = signal<Set<string>>(new Set());
-  protected funcion = signal<IFuncion | null>(null);
+  protected funcion = signal<IFuncionConSala | null>(null);
   protected peliculaActual = signal<IPelicula | null>(null);
   protected usuario = signal<IPerfil | null>(null);
   protected cupones = signal<ICupon[]>([]);
@@ -85,7 +85,7 @@ export class Butacas implements OnDestroy {
       '';
     const slugPelicula = this.route.snapshot.paramMap.get('nombre') || '';
 
-    let funcionEncontrada: IFuncion | null = null;
+    let funcionEncontrada: IFuncionConSala | null = null;
 
     if (slugPelicula) {
       try {
@@ -197,6 +197,14 @@ export class Butacas implements OnDestroy {
   protected cantidadVip(): number {
     return Array.from(this.seleccionadas()).filter((codigo) => tipoDeButaca(codigo) === 'vip')
       .length;
+  }
+
+  // Scroll manual, sin pasar por el Router — un <a href="#candy-bar">
+  // terminaba disparando la navegación de Angular (por el
+  // anchorScrolling del router) y nos mandaba a la cartelera en vez de
+  // simplemente bajar la página.
+  protected irACandyBar(): void {
+    document.getElementById('candy-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   protected toggleButaca(butaca: string): void {

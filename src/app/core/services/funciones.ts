@@ -76,14 +76,14 @@ export class Funciones {
     return new Date(fecha.getTime() + minutos * 60000);
   }
 
-  async obtenerPorId(id: number): Promise<IFuncion> {
+  async obtenerPorId(id: number): Promise<IFuncionConSala> {
     const { data, error } = await this.supabase.Supabase.from('funciones')
-      .select('*')
+      .select('*, salas(nombre)')
       .eq('id', id)
       .single();
 
     if (error) throw error;
-    return data as IFuncion;
+    return data as unknown as IFuncionConSala;
   }
 
   // Sólo funciones que todavía no pasaron — las viejas quedan intactas en
