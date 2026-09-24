@@ -87,22 +87,36 @@ export class Entradas {
       await this.candyService.agregarItems(orden.id, candyItems);
     }
 
-    if (aplicaCupon) {
-      const { error: errorPerfil } = await this.supabase.Supabase.from('perfiles')
-        .update({ cupon_primera_compra_usado: true })
-        .eq('id', usuario!.id);
+    // 3. Actualizaciones al perfil del comprador — todas juntas en un
+    // solo update en vez de 3 llamadas separadas (cupón usado, crédito
+    // descontado, puntos ganados).
+    if (usuario) {
+      const cambiosPerfil: Partial<
+        Pick<IPerfil, 'cupon_primera_compra_usado' | 'credito' | 'puntos'>
+      > = {};
 
-      if (errorPerfil) throw errorPerfil;
-    }
+      if (aplicaCupon) {
+        cambiosPerfil.cupon_primera_compra_usado = true;
+      }
+      if (creditoAUsar > 0) {
+        cambiosPerfil.credito = usuario.credito - creditoAUsar;
+      }
 
-    // 3. Si usó crédito, se lo descontamos del perfil ahora que la compra
-    // ya se confirmó.
-    if (creditoAUsar > 0 && usuario) {
-      const { error: errorCredito } = await this.supabase.Supabase.from('perfiles')
-        .update({ credito: usuario.credito - creditoAUsar })
-        .eq('id', usuario.id);
+      // Fidelización: 1 punto por cada peso REALMENTE pagado. No sumamos
+      // puntos sobre la parte cubierta con crédito — ahí no salió plata
+      // de verdad de ningún lado.
+      const montoPagado = total - creditoAUsar;
+      if (montoPagado > 0) {
+        cambiosPerfil.puntos = usuario.puntos + Math.floor(montoPagado);
+      }
 
-      if (errorCredito) throw errorCredito;
+      if (Object.keys(cambiosPerfil).length > 0) {
+        const { error: errorPerfil } = await this.supabase.Supabase.from('perfiles')
+          .update(cambiosPerfil)
+          .eq('id', usuario.id);
+
+        if (errorPerfil) throw errorPerfil;
+      }
     }
 
     return { orden, entradas: data };

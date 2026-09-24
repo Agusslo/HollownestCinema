@@ -12,4 +12,5 @@ export default interface IPerfil {
     rol: Rol;
     perfil_completo: boolean;
     credito: number;
+    puntos: number;
 }
