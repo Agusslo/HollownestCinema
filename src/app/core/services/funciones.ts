@@ -86,10 +86,14 @@ export class Funciones {
     return data as IFuncion;
   }
 
+  // Sólo funciones que todavía no pasaron — las viejas quedan intactas en
+  // la base (van a hacer falta para reportes más adelante), simplemente
+  // no se muestran como opción para comprar.
   async obtenerPorPelicula(pelicula_id: number): Promise<IFuncionConSala[]> {
     const { data, error } = await this.supabase.Supabase.from('funciones')
       .select('*, salas(nombre)')
       .eq('pelicula_id', pelicula_id)
+      .gte('fecha_hora', new Date().toISOString())
       .order('fecha_hora', { ascending: true });
 
     if (error) throw error;

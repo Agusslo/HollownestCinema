@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Supabase } from '../../../core/services/supabase';
 import { Butacas as ButacasService, IFilaSala, tipoDeButaca } from '../../../core/services/butacas';
@@ -28,6 +28,7 @@ import { LoadingComponent } from '../../../shared/components/loading/loading';
 })
 export class Butacas implements OnDestroy {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private supabaseService = inject(Supabase);
   private butacasService = inject(ButacasService);
   private entradasService = inject(Entradas);
@@ -439,6 +440,15 @@ export class Butacas implements OnDestroy {
       const ocupadasArray = await this.entradasService.obtenerButacasOcupadas(this.funcion_id);
       this.ocupadas.set(new Set(ocupadasArray));
       this.usuario.set(await this.authService.usuarioActual());
+
+      // El profe pidió que después de comprar te lleve a ver lo que
+      // compraste — dejamos ver el cartel de éxito un instante y recién
+      // ahí navegamos, así no desaparece la pantalla de golpe. Sólo tiene
+      // sentido si está logueado (una compra anónima no tiene "Mis
+      // compras" a donde ir).
+      if (usuario) {
+        setTimeout(() => this.router.navigateByUrl('/mis-compras'), 1800);
+      }
     } catch (e) {
       this.error.set((e as Error).message);
     } finally {
