@@ -5,7 +5,7 @@
 }
 
 .mis-compras h1 {
-  font-family: 'Trajan Pro', serif;
+  font-family: 'Trajan', serif;
   color: var(--hk-pale);
   margin-bottom: 0.5rem;
 }
@@ -62,18 +62,28 @@
   margin-bottom: 0.6rem;
 }
 
-.lista-entradas,
-.lista-candy-compra {
-  list-style: none;
-  padding: 0;
+.funcion-info {
   margin: 0 0 0.6rem;
-  color: var(--hk-soft-text);
-  font-size: 0.9rem;
 }
 
-.lista-entradas li,
-.lista-candy-compra li {
-  padding: 0.15rem 0;
+.funcion-pelicula {
+  margin: 0 0 0.2rem;
+  font-family: 'Trajan', serif;
+  font-size: 1.05rem;
+  color: var(--hk-pale);
+}
+
+.funcion-meta,
+.funcion-butacas {
+  margin: 0.15rem 0 0;
+  color: var(--hk-soft-text);
+  font-size: 0.85rem;
+}
+
+.candy-resumen {
+  margin: 0 0 0.6rem;
+  color: var(--hk-soft-text);
+  font-size: 0.85rem;
 }
 
 .tarjeta-compra footer {
@@ -157,9 +167,14 @@
     padding: 1.4rem 1.8rem;
   }
 
-  .lista-entradas,
-  .lista-candy-compra {
-    font-size: 1rem;
+  .funcion-pelicula {
+    font-size: 1.2rem;
+  }
+
+  .funcion-meta,
+  .funcion-butacas,
+  .candy-resumen {
+    font-size: 0.95rem;
   }
 
   .orden-total {

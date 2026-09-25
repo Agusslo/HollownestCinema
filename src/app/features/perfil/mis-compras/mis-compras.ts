@@ -66,6 +66,20 @@ export class MisCompras {
     return orden.total - orden.credito_usado;
   }
 
+  // Todas las entradas de una orden pertenecen siempre a la misma función
+  // (Entradas.comprar() recibe un solo funcion_id) — por eso alcanza con
+  // mostrar la película/sala/horario una sola vez y sólo listar las
+  // butacas, en vez de repetir toda esa info por cada asiento comprado.
+  protected butacasTexto(orden: IOrdenConDetalle): string {
+    return orden.entradas.map((e) => `${e.fila}${e.columna}`).join(', ');
+  }
+
+  protected candyTexto(orden: IOrdenConDetalle): string {
+    return orden.orden_candy_items
+      .map((item) => `${item.cantidad}x ${item.candy_productos.nombre}`)
+      .join(' · ');
+  }
+
   // Para distinguirle al usuario POR QUÉ no puede cancelar (ya usó una
   // entrada vs. simplemente se pasó el plazo de las 2hs).
   protected tieneEntradaValidada(orden: IOrdenConDetalle): boolean {

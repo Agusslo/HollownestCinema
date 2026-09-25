@@ -1,4 +1,4 @@
-    <section class="mis-compras">
+<section class="mis-compras">
     <h1>Mis compras</h1>
 
     @if (usuario(); as u) {
@@ -25,22 +25,24 @@
                 <span class="orden-fecha">{{ orden.creado_en | date: 'short' : '' : 'es' }}</span>
             </header>
 
-            <ul class="lista-entradas">
-                @for (entrada of orden.entradas; track entrada.id) {
-                <li>
-                    {{ entrada.funciones.peliculas.nombre }} — {{ entrada.funciones.salas.nombre }} —
-                    {{ entrada.fila }}{{ entrada.columna }} —
-                    {{ entrada.funciones.fecha_hora | date: 'short' : '' : 'es' }}
-                </li>
-                }
-            </ul>
+            @if (orden.entradas.length > 0) {
+                <div class="funcion-info">
+                <p class="funcion-pelicula">{{ orden.entradas[0].funciones.peliculas.nombre }}</p>
+                <p class="funcion-meta">
+                    {{ orden.entradas[0].funciones.salas.nombre }} ·
+                    {{ orden.entradas[0].funciones.formato }} · {{ orden.entradas[0].funciones.idioma }} ·
+                    {{ orden.entradas[0].funciones.fecha_hora | date: 'short' : '' : 'es' }}
+                </p>
+                <p class="funcion-butacas">
+                    {{ orden.entradas.length }}
+                    {{ orden.entradas.length === 1 ? 'entrada' : 'entradas' }} · Butacas
+                    {{ butacasTexto(orden) }}
+                </p>
+                </div>
+            }
 
             @if (orden.orden_candy_items.length > 0) {
-                <ul class="lista-candy-compra">
-                @for (item of orden.orden_candy_items; track item) {
-                    <li>{{ item.cantidad }}x {{ item.candy_productos.nombre }}</li>
-                }
-                </ul>
+                <p class="candy-resumen">🍬 {{ candyTexto(orden) }}</p>
             }
 
             <footer>

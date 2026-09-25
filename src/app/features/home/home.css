@@ -194,7 +194,7 @@
   justify-content: center;
   background: #bef264;
   color: #0a0a14;
-  font-family: 'Arial Black', 'Trajan', sans-serif;
+  font-family: 'Trajan', serif;
   font-weight: 900;
   font-size: clamp(0.72rem, 1.3vw, 0.95rem);
   letter-spacing: 0.08em;
@@ -208,7 +208,7 @@
 .btn-hero-blanco {
   background: #ffffff;
   color: #b91c1c;
-  font-family: 'Arial Black', 'Trajan', sans-serif;
+  font-family: 'Trajan', serif;
   font-weight: 900;
   font-size: 0.9rem;
   letter-spacing: 0.12em;
@@ -323,7 +323,7 @@
 }
 
 .ticket-precio {
-  font-family: 'Arial Black', sans-serif;
+  font-family: 'Trajan', serif;
   font-size: 1.2rem;
   font-weight: 900;
   color: #09090b;
