@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnDestroy } from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Supabase } from '../../../core/services/supabase';
@@ -73,6 +73,7 @@ export class Butacas implements OnDestroy {
   protected comboSeleccionado = signal<IComboConItems | null>(null);
 
   private pdfService = inject(Pdf);
+  private mapaSala = viewChild<ElementRef<HTMLElement>>('mapaSala');
   constructor() {
     this.cargarDatos();
   }
@@ -140,6 +141,16 @@ export class Butacas implements OnDestroy {
     this.combosDisponibles.set(await this.combosService.obtenerActivos());
 
     this.cargando.set(false);
+    // En pantallas angostas la sala no entra entera: arrancamos con el
+    // scroll en el medio, así se ve el centro y queda claro que se puede
+    // mover para los dos lados.
+    setTimeout(() => this.centrarMapa());
+  }
+
+  private centrarMapa(): void {
+    const mapa = this.mapaSala()?.nativeElement;
+    if (!mapa) return;
+    mapa.scrollLeft = (mapa.scrollWidth - mapa.clientWidth) / 2;
   }
 
   // Escucha en vivo cuando se inserta una entrada nueva para ESTA función

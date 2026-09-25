@@ -2,6 +2,7 @@
   max-width: 720px;
   margin: 2rem auto;
   padding: 1.5rem;
+  box-sizing: border-box;
 }
 
 .mis-compras h1 {
@@ -56,6 +57,8 @@
 
 .tarjeta-compra header {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
   justify-content: space-between;
   font-size: 0.85rem;
   color: var(--hk-muted-text);
@@ -68,6 +71,7 @@
 
 .funcion-pelicula {
   margin: 0 0 0.2rem;
+  overflow-wrap: anywhere;
   font-family: 'Trajan', serif;
   font-size: 1.05rem;
   color: var(--hk-pale);
@@ -113,6 +117,44 @@
   font-style: italic;
 }
 
+/* Pisamos lo del estilo global de button[type='button'] (mayúsculas,
+   letter-spacing y un degradé en :hover que tapaba estos colores). */
+.btn-cancelar,
+.btn-confirmar-si,
+.btn-confirmar-no {
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 0.9rem;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.btn-cancelar:hover {
+  background: rgba(192, 57, 43, 0.15);
+  border-color: var(--hk-grimm);
+  box-shadow: none;
+}
+
+.btn-confirmar-si:hover:not(:disabled) {
+  background: #d9483a;
+  box-shadow: none;
+}
+
+.btn-confirmar-no:hover:not(:disabled) {
+  background: rgba(212, 212, 224, 0.08);
+  border-color: var(--hk-pale);
+  color: var(--hk-pale);
+  box-shadow: none;
+}
+
+.btn-confirmar-si:disabled,
+.btn-confirmar-no:disabled {
+  opacity: 0.6;
+}
+
 .btn-cancelar {
   padding: 0.4rem 0.9rem;
   background: transparent;
@@ -124,6 +166,7 @@
 
 .confirmar-cancelacion {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.82rem;
@@ -133,7 +176,7 @@
 .btn-confirmar-si {
   padding: 0.3rem 0.7rem;
   background: var(--hk-grimm);
-  color: var(--hk-void);
+  color: #ffffff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -180,4 +223,84 @@
   .orden-total {
     font-size: 1.1rem;
   }
+}
+/* ── Celulares ── */
+@media (max-width: 480px) {
+  .mis-compras {
+    margin: 1rem auto;
+    padding: 1rem 0.75rem;
+  }
+
+  .mis-compras h1 {
+    font-size: 1.5rem;
+  }
+
+  .tarjeta-compra {
+    padding: 0.9rem;
+  }
+
+  /* Total arriba y la acción (cancelar / estado) debajo, a todo el ancho */
+  .tarjeta-compra footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-cancelar {
+    width: 100%;
+    padding: 0.6rem;
+  }
+
+  .confirmar-cancelacion {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .confirmar-texto {
+    grid-column: 1 / -1;
+    text-align: center;
+  }
+
+  .btn-confirmar-si,
+  .btn-confirmar-no {
+    padding: 0.55rem;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .tarjeta-compra {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.18);
+  box-shadow: 0 6px 18px rgba(41, 64, 71, 0.1);
+}
+
+:host-context(.tema-claro) .tarjeta-compra.cancelada {
+  opacity: 0.7;
+  background: var(--hk-shell);
+}
+
+:host-context(.tema-claro) .btn-cancelar {
+  color: #a8281b;
+  border-color: #c0392b;
+}
+
+:host-context(.tema-claro) .btn-cancelar:hover {
+  background: rgba(192, 57, 43, 0.08);
+}
+
+:host-context(.tema-claro) .estado-cancelada {
+  color: #a8281b;
+  font-weight: 600;
+}
+
+:host-context(.tema-claro) .btn-confirmar-no:hover:not(:disabled) {
+  background: rgba(41, 64, 71, 0.06);
+}
+
+:host-context(.tema-claro) .aviso-ok {
+  background: rgba(22, 141, 168, 0.1);
+}
+
+:host-context(.tema-claro) .aviso-error {
+  background: rgba(192, 57, 43, 0.08);
+  color: #7a1d13;
 }

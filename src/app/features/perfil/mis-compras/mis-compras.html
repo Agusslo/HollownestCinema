@@ -53,7 +53,7 @@
                 } @else if (puedeCancelarse(orden)) {
                 @if (confirmando() === orden.id) {
                     <span class="confirmar-cancelacion">
-                    ¿Seguro? Se te acreditarán ${{ montoACreditar(orden) }}.
+                    <span class="confirmar-texto">¿Seguro? Se te acreditarán ${{ montoACreditar(orden) }}.</span>
                     <button
                         type="button"
                         class="btn-confirmar-si"

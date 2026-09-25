@@ -45,7 +45,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  /* "safe": si la sala es más ancha que la pantalla, en vez de desbordar
+     para los dos lados (y dejar la izquierda fuera del alcance del
+     scroll) se alinea al inicio y se puede scrollear entera. */
+  align-items: safe center;
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
@@ -315,8 +318,9 @@ h1 {
 /* ── Referencias ── */
 .referencias {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 24px;
+  gap: 8px 24px;
   margin-bottom: 16px;
   font-size: 0.72rem;
   color: var(--hk-pale);
@@ -819,6 +823,9 @@ h1 {
 
 /* ── Candy bar (Correo 4) ── */
 .candy-bar {
+  width: 100%;
+  max-width: 1100px;
+  box-sizing: border-box;
   margin-top: 56px;
   padding-top: 40px;
   border-top: 1px solid rgba(79, 196, 227, 0.12);
@@ -1046,7 +1053,7 @@ h1 {
   .mapa-sala {
     width: 100%;
     max-width: 100%;
-    margin: 0 0 0 -10px;
+    margin: 0;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
@@ -1054,13 +1061,25 @@ h1 {
     padding: 0 0 8px;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: safe center;
   }
 
   .sala {
     width: max-content;
     min-width: 100%;
-    margin: 0 0 16px;
+    margin: 0 auto 16px;
+    padding: 6px 12px 0;
+  }
+
+  /* La pantalla y las referencias quedan fijas al ancho visible (no se
+     van con el scroll de la sala). */
+  .pantalla-wrap,
+  .referencias {
+    position: sticky;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 12px;
   }
 
   .resumen-compra {
@@ -1200,8 +1219,8 @@ h1 {
   }
 
   .referencias {
-    gap: 14px;
-    font-size: 0.65rem;
+    gap: 6px 14px;
+    font-size: 0.7rem;
   }
 
   .ref-box {
@@ -1211,7 +1230,7 @@ h1 {
 
   .candy-bar {
     margin-top: 36px;
-    padding-top: 28px;
+    padding: 28px 12px 0;
   }
 
   .candy-grid {
@@ -1298,7 +1317,7 @@ h1 {
 
 .combos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
   gap: 10px;
 }
 
