@@ -63,10 +63,10 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - [x] Log de actividad del admin: quién creó qué función, quién modificó un precio, quién validó un QR — todo con fecha y hora
 
 ### Fidelización
-- [ ] Acumulación de puntos por compra (1 punto por cada peso gastado)
-- [ ] Canje de puntos por entradas gratis o productos de candy bar, con el costo en puntos de cada recompensa configurable por el admin
+- [x] Acumulación de puntos por compra (1 punto por cada peso gastado)
+- [x] Canje de puntos por entradas gratis o productos de candy bar, con el costo en puntos de cada recompensa configurable por el admin
 - [ ] Historial de puntos acumulados y canjes, visible en el perfil del usuario
-- [ ] Los puntos no se transfieren entre usuarios
+- [x] Los puntos no se transfieren entre usuarios
 
 ### Próximamente y preventa
 - [ ] Sección "Próximamente" con películas que se estrenan en las próximas semanas
