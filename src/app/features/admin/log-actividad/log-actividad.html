@@ -1,39 +1,52 @@
-    <section class="log-pantalla">
-    <div class="log-header">
-        <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
-        <span class="form-kicker">Panel de administración</span>
-        <h1>Log de actividad</h1>
-        <p>Quién hizo qué, con fecha y hora.</p>
-    </div>
+<section class="log-pantalla">
+  <header class="log-header">
+    <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
+    <span class="kicker">Panel de administración</span>
+    <h1>Log de actividad</h1>
+    <div class="ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+    <p class="log-subtitulo">Las crónicas del reino: quién hizo qué, y cuándo.</p>
+  </header>
 
-    @if (cargando()) {
-        <p>Cargando...</p>
-    } @else if (entradas().length === 0) {
-        <p class="log-vacio">Todavía no hay actividad registrada.</p>
-    } @else {
-        <table class="log-tabla">
-        <thead>
-            <tr>
-            <th>Quién</th>
-            <th>Qué hizo</th>
-            <th>Cuándo</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (entrada of entradas(); track entrada.id) {
-            <tr>
-                <td>
-                @if (entrada.perfiles) {
-                    {{ entrada.perfiles.nombre }} {{ entrada.perfiles.apellido }}
-                } @else {
-                    <span class="log-usuario-borrado">Usuario eliminado</span>
-                }
-                </td>
-                <td>{{ entrada.accion }}</td>
-                <td class="log-fecha">{{ entrada.creado_en | date: 'short' : '' : 'es' }}</td>
-            </tr>
-            }
-        </tbody>
-        </table>
+  @if (cargando()) {
+    <p class="log-estado">Cargando...</p>
+  } @else if (entradas().length === 0) {
+    <div class="log-vacio">
+      <img src="/img/knight_face.png" alt="" aria-hidden="true" />
+      <p>Todavía no hay actividad registrada.</p>
+    </div>
+  } @else {
+    <p class="log-total">{{ entradas().length }} {{ entradas().length === 1 ? 'acción' : 'acciones' }} registradas</p>
+
+    @for (grupo of grupos(); track grupo.titulo) {
+      <section class="log-dia">
+        <h2 class="dia-titulo"><span>{{ grupo.titulo }}</span></h2>
+
+        <ol class="linea-tiempo">
+          @for (entrada of grupo.entradas; track entrada.id) {
+            <li class="evento" [attr.data-tipo]="tipoDe(entrada.accion)">
+              <span class="evento-icono" aria-hidden="true">{{ iconoDe(entrada.accion) }}</span>
+
+              <div class="evento-card">
+                <p class="evento-accion">{{ entrada.accion }}</p>
+
+                <div class="evento-meta">
+                  @if (entrada.perfiles; as p) {
+                    <span class="evento-usuario">
+                      <app-blobatar [name]="p.nombre" [size]="22" animate="hover" />
+                      {{ p.nombre }} {{ p.apellido }}
+                    </span>
+                  } @else {
+                    <span class="evento-usuario usuario-borrado">Usuario eliminado</span>
+                  }
+                  <time class="evento-hora" [attr.datetime]="entrada.creado_en">{{
+                    entrada.creado_en | date: 'HH:mm' : '' : 'es'
+                  }}</time>
+                </div>
+              </div>
+            </li>
+          }
+        </ol>
+      </section>
     }
-    </section>
+  }
+</section>
