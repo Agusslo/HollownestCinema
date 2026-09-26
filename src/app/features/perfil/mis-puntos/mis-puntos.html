@@ -1,30 +1,89 @@
 <section class="mis-puntos">
+  <header class="puntos-header">
+    <span class="kicker">Tu recorrido por Hallownest</span>
     <h1>Mis puntos</h1>
+    <div class="ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+  </header>
 
-    @if (usuario(); as u) {
-        <p class="puntos-disponibles">Puntos disponibles: <strong>{{ u.puntos }}</strong></p>
-    }
+  @if (error()) {
+    <p class="aviso aviso-error">{{ error() }}</p>
+  }
 
-    @if (error()) {
-        <p class="aviso aviso-error">{{ error() }}</p>
-    }
+  @if (usuario(); as u) {
+    <!-- Bolsa de geo: el saldo actual, como la moneda del juego -->
+    <div class="bolsa">
+      <div class="geo-moneda" aria-hidden="true"><span class="geo-brillo"></span></div>
 
-    @if (cargando()) {
-        <p>Cargando...</p>
-    } @else if (movimientos().length === 0) {
-        <p class="sin-canjes">Todavía no tenés movimientos de puntos.</p>
-    } @else {
-        <h2 class="subtitulo-historial">Historial de puntos</h2>
-        <div class="lista-canjes">
-        @for (mov of movimientos(); track $index) {
-            <article class="tarjeta-canje" [class.ganancia]="mov.puntos > 0">
-                <span class="canje-descripcion">{{ mov.descripcion }}</span>
-                <span class="canje-fecha">{{ mov.fecha | date: 'short' : '' : 'es' }}</span>
-                <span class="canje-puntos" [class.positivo]="mov.puntos > 0">
-                    {{ mov.puntos > 0 ? '+' : '' }}{{ mov.puntos }} pts
-                </span>
-            </article>
+      <div class="bolsa-info">
+        <span class="bolsa-label">Geo acumulado</span>
+        <span class="bolsa-total">
+          {{ u.puntos | number: '1.0-0' : 'es' }}
+          <small>pts</small>
+        </span>
+        @if (config(); as c) {
+          <span class="bolsa-equivale">
+            @if (entradasDisponibles() > 0) {
+              Te alcanza para
+              <strong
+                >{{ entradasDisponibles() }}
+                {{ entradasDisponibles() === 1 ? 'entrada gratis' : 'entradas gratis' }}</strong
+              >
+            } @else {
+              Te faltan
+              <strong>{{ c.puntos_por_entrada_gratis - u.puntos | number: '1.0-0' : 'es' }} pts</strong>
+              para tu primera entrada gratis
+            }
+          </span>
         }
-        </div>
-    }
+      </div>
+
+      <img class="bolsa-knight" src="/img/The_Knight.png" alt="" aria-hidden="true" />
+    </div>
+
+    <div class="stats">
+      <div class="stat stat-ganado">
+        <span class="stat-label">Ganados</span>
+        <span class="stat-valor">+{{ totalGanado() | number: '1.0-0' : 'es' }}</span>
+      </div>
+      <div class="stat stat-canjeado">
+        <span class="stat-label">Canjeados</span>
+        <span class="stat-valor">−{{ totalCanjeado() | number: '1.0-0' : 'es' }}</span>
+      </div>
+    </div>
+  }
+
+  @if (cargando()) {
+    <p class="estado">Cargando...</p>
+  } @else if (movimientos().length === 0) {
+    <div class="sin-movimientos">
+      <img src="/img/knight_face.png" alt="" aria-hidden="true" />
+      <p>Todavía no tenés movimientos de puntos.<br />Cada compra te suma geo.</p>
+    </div>
+  } @else {
+    <h2 class="subtitulo-historial">
+      <span aria-hidden="true">◆</span> Historial <span aria-hidden="true">◆</span>
+    </h2>
+
+    <ol class="linea-tiempo">
+      @for (mov of movimientos(); track $index) {
+        <li class="movimiento" [class.ganancia]="mov.puntos > 0">
+          <span class="nodo" aria-hidden="true"></span>
+          <div class="movimiento-card">
+            <div class="movimiento-textos">
+              <span class="movimiento-tipo">{{ etiquetaTipo(mov.tipo) }}</span>
+              <span class="movimiento-titulo">{{ mov.titulo }}</span>
+              <span class="movimiento-fecha">{{
+                mov.fecha | date: "d 'de' MMMM, HH:mm" : '' : 'es'
+              }}</span>
+            </div>
+            <span class="movimiento-puntos">
+              {{ mov.puntos > 0 ? '+' : '−'
+              }}{{ (mov.puntos > 0 ? mov.puntos : -mov.puntos) | number: '1.0-0' : 'es' }}
+              <small>pts</small>
+            </span>
+          </div>
+        </li>
+      }
+    </ol>
+  }
 </section>

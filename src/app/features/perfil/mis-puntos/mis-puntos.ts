@@ -1,10 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { Component, computed, inject, signal } from '@angular/core';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
 import { Fidelizacion } from '../../../core/services/fidelizacion';
 import { Ordenes } from '../../../core/services/ordenes';
-import { ICanjeConDetalle } from '../../../core/interfaces/canje';
+import { ICanjeConDetalle, IFidelizacionConfig } from '../../../core/interfaces/canje';
 import { IOrdenConDetalle } from '../../../core/interfaces/orden';
 import IPerfil from '../../../core/interfaces/perfil';
 
@@ -15,12 +15,21 @@ import IPerfil from '../../../core/interfaces/perfil';
 interface IMovimientoPuntos {
   fecha: string;
   puntos: number; // positivo = ganancia, negativo = gasto
-  descripcion: string;
+  tipo: 'compra' | 'entrada' | 'candy';
+  // Separado del tipo para poder mostrarlos con estilos distintos:
+  // tipo chiquito arriba ("Entrada gratis"), nombre grande abajo.
+  titulo: string;
 }
+
+const ETIQUETAS_TIPO: Record<IMovimientoPuntos['tipo'], string> = {
+  compra: 'Compra',
+  entrada: 'Entrada gratis',
+  candy: 'Canje de candy',
+};
 
 @Component({
   selector: 'app-mis-puntos',
-  imports: [DatePipe],
+  imports: [DatePipe, DecimalPipe],
   templateUrl: './mis-puntos.html',
   styleUrl: './mis-puntos.css',
 })
@@ -34,6 +43,28 @@ export class MisPuntos {
   protected movimientos = signal<IMovimientoPuntos[]>([]);
   protected cargando = signal(true);
   protected error = signal<string | null>(null);
+  protected config = signal<IFidelizacionConfig | null>(null);
+
+  protected totalGanado = computed(() =>
+    this.movimientos()
+      .filter((m) => m.puntos > 0)
+      .reduce((total, m) => total + m.puntos, 0),
+  );
+  protected totalCanjeado = computed(() =>
+    this.movimientos()
+      .filter((m) => m.puntos < 0)
+      .reduce((total, m) => total - m.puntos, 0),
+  );
+  // Cuántas entradas gratis alcanzan con los puntos actuales
+  protected entradasDisponibles = computed(() => {
+    const porEntrada = this.config()?.puntos_por_entrada_gratis;
+    const puntos = this.usuario()?.puntos ?? 0;
+    return porEntrada ? Math.floor(puntos / porEntrada) : 0;
+  });
+
+  protected etiquetaTipo(tipo: IMovimientoPuntos['tipo']): string {
+    return ETIQUETAS_TIPO[tipo];
+  }
 
   constructor() {
     this.cargarDatos();
@@ -61,10 +92,12 @@ export class MisPuntos {
       // ganancias: `ordenes` ya guarda `total` y `credito_usado` por
       // compra, y con eso alcanza para recalcular lo mismo que ya calculó
       // Entradas.comprar() en su momento al acreditar los puntos.
-      const [compras, canjes] = await Promise.all([
+      const [compras, canjes, config] = await Promise.all([
         this.ordenesService.obtenerMisCompras(usuario.id),
         this.fidelizacionService.obtenerHistorial(usuario.id),
+        this.fidelizacionService.obtenerConfig(),
       ]);
+      this.config.set(config);
 
       const ganancias: IMovimientoPuntos[] = compras
         .map((orden) => ({
@@ -73,14 +106,16 @@ export class MisPuntos {
           // pagado de verdad (total - lo cubierto con crédito). Lo que se
           // pagó con crédito o con puntos no vuelve a sumar puntos acá.
           puntos: Math.floor(Math.max(orden.total - orden.credito_usado, 0)),
-          descripcion: this.descripcionCompra(orden),
+          tipo: 'compra' as const,
+          titulo: this.tituloCompra(orden),
         }))
         .filter((mov) => mov.puntos > 0);
 
       const gastos: IMovimientoPuntos[] = canjes.map((canje) => ({
         fecha: canje.creado_en,
         puntos: -canje.puntos_gastados,
-        descripcion: this.descripcionCanje(canje),
+        tipo: canje.tipo === 'entrada' ? ('entrada' as const) : ('candy' as const),
+        titulo: this.tituloCanje(canje),
       }));
 
       // Mezclamos las dos listas y ordenamos por fecha, más nuevo primero
@@ -98,20 +133,18 @@ export class MisPuntos {
     }
   }
 
-  private descripcionCompra(orden: IOrdenConDetalle): string {
+  private tituloCompra(orden: IOrdenConDetalle): string {
     if (orden.entradas.length > 0) {
-      return `Compra: ${orden.entradas[0].funciones.peliculas.nombre}`;
+      return orden.entradas[0].funciones.peliculas.nombre;
     }
-    return 'Compra';
+    return `Orden #${orden.id}`;
   }
 
-  // Arma el texto de cada renglón de canje: si fue una entrada gratis,
-  // muestra el nombre de la película; si fue candy, la cantidad y el
-  // producto (ej: "2x Pochoclo grande").
-  private descripcionCanje(canje: ICanjeConDetalle): string {
+  // Nombre de cada renglón de canje: si fue una entrada gratis, el de la
+  // película; si fue candy, la cantidad y el producto (ej: "2x Pochoclo grande").
+  private tituloCanje(canje: ICanjeConDetalle): string {
     if (canje.tipo === 'entrada') {
-      const nombrePelicula = canje.entradas?.funciones.peliculas.nombre ?? 'Entrada';
-      return `Entrada gratis: ${nombrePelicula}`;
+      return canje.entradas?.funciones.peliculas.nombre ?? 'Entrada';
     }
 
     const nombreProducto = canje.candy_productos?.nombre ?? 'Candy';

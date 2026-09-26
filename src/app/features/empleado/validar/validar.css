@@ -1,41 +1,141 @@
 .validar-pantalla {
-  max-width: 520px;
+  max-width: 540px;
   margin: 2rem auto;
   padding: 1.5rem;
+  box-sizing: border-box;
 }
 
-.validar-pantalla h1 {
-  font-family: 'Trajan Pro', serif;
-  color: var(--hk-pale);
-  margin-bottom: 1.25rem;
+/* ── Encabezado ── */
+.validar-header {
+  position: relative;
+  margin-bottom: 1.4rem;
+  text-align: center;
 }
 
-.selector-modo {
+.validar-header .empleado-grub {
+  margin: 0 auto 6px;
+}
+
+.kicker {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.validar-header h1 {
+  margin: 0;
+  color: var(--hk-soul);
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* Línea ornamental estilo menú de Hollow Knight: ──── ◆ ──── */
+.ornamento {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 0.7rem;
+  color: var(--hk-pale);
+  font-size: 0.6rem;
 }
 
-.selector-modo button {
-  flex: 1;
-  padding: 0.6rem;
-  background: var(--hk-shell);
+.ornamento span {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hk-pale));
+}
+
+.ornamento span:last-child {
+  background: linear-gradient(90deg, var(--hk-pale), transparent);
+}
+
+/* ── Panel principal ── */
+.panel {
+  position: relative;
+  padding: 1.5rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(79, 196, 227, 0.12), transparent 40%),
+    linear-gradient(145deg, rgba(36, 36, 58, 0.98), rgba(15, 15, 30, 0.98));
+  border: 1px solid rgba(79, 196, 227, 0.22);
+  border-radius: 10px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--hk-focus), transparent 75%);
+}
+
+/* ── Selector de modo (segmentado) ── */
+.selector-modo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-bottom: 1.4rem;
+  padding: 4px;
+  background: rgba(10, 10, 18, 0.55);
   border: var(--borde-hk);
+  border-radius: 999px;
+}
+
+.selector-modo button,
+.selector-modo button:hover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.8rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
   color: var(--hk-soft-text);
-  border-radius: 4px;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  box-shadow: none;
   cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.selector-modo button:hover {
+  color: var(--hk-soul);
 }
 
 .selector-modo button.activo {
+  background: rgba(79, 196, 227, 0.14);
   border-color: var(--hk-focus);
   color: var(--hk-focus);
-  box-shadow: 0 0 8px rgba(79, 196, 227, 0.35);
+  box-shadow: 0 0 14px rgba(79, 196, 227, 0.25);
 }
 
+.modo-icono {
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+/* ── Código ── */
 .form-codigo label {
   display: block;
-  margin-bottom: 0.4rem;
-  color: var(--hk-soft-text);
+  margin-bottom: 0.5rem;
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .fila-input {
@@ -45,27 +145,43 @@
 
 .fila-input input {
   flex: 1;
-  padding: 0.6rem;
-  background: var(--hk-void);
-  border: var(--borde-hk);
+  min-width: 0;
+  height: 46px;
+  min-height: 46px;
+  padding: 0 0.9rem;
+  background: rgba(10, 10, 18, 0.6);
+  border: 1px solid rgba(212, 212, 224, 0.2);
   color: var(--hk-soul);
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .fila-input input:focus {
   outline: none;
   border-color: var(--hk-focus);
-  box-shadow: 0 0 6px rgba(79, 196, 227, 0.4);
+  box-shadow: 0 0 10px rgba(79, 196, 227, 0.3);
 }
 
-.fila-input button {
-  padding: 0.6rem 1.1rem;
+.fila-input button,
+.fila-input button:hover {
+  flex-shrink: 0;
+  height: 46px;
+  padding: 0 1.3rem;
   background: var(--hk-focus);
-  color: var(--hk-void);
+  color: #04141a;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
   cursor: pointer;
-  font-weight: 600;
+  transition:
+    filter 0.2s,
+    box-shadow 0.2s;
+}
+
+.fila-input button:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 0 16px rgba(79, 196, 227, 0.45);
 }
 
 .fila-input button:disabled {
@@ -74,60 +190,136 @@
 }
 
 .ayuda-error {
-  color: var(--hk-grimm);
+  margin: 0.4rem 0 0;
+  color: #ff9e9e;
   font-size: 0.85rem;
-  margin-top: 0.3rem;
 }
 
+/* ── Separador "o" con líneas ── */
 .separador-o {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1.3rem 0;
   color: var(--hk-muted-text);
-  margin: 1.1rem 0;
-  font-size: 0.85rem;
+  font-family: 'Trajan', serif;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
 }
 
+.separador-o::before,
+.separador-o::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(212, 212, 224, 0.16);
+}
+
+/* ── Cámara ── */
 .camara-seccion {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.8rem;
 }
 
-.btn-camara {
+.btn-camara,
+.btn-camara:hover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
   width: 100%;
-  padding: 0.65rem;
-  background: transparent;
-  border: 1px dashed var(--hk-ash);
-  color: var(--hk-soft-text);
-  border-radius: 4px;
+  padding: 0.9rem;
+  background: rgba(79, 196, 227, 0.04);
+  border: 1px dashed rgba(79, 196, 227, 0.45);
+  color: var(--hk-pale);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  box-shadow: none;
   cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
 }
 
 .btn-camara:hover {
+  background: rgba(79, 196, 227, 0.1);
+  border-style: solid;
   border-color: var(--hk-focus);
   color: var(--hk-focus);
 }
 
-.btn-cancelar {
+/* Marco de escáner: cuatro esquinas, como el visor de una cámara */
+.qr-marco {
+  position: relative;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+}
+
+.qr-marco i {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-color: currentColor;
+  border-style: solid;
+  border-width: 0;
+}
+
+.qr-marco i:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.qr-marco i:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+
+.qr-marco i:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+
+.qr-marco i:nth-child(4) {
+  right: 0;
+  bottom: 0;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+}
+
+.btn-cancelar,
+.btn-cancelar:hover {
+  background: rgba(192, 57, 43, 0.08);
   border-style: solid;
   border-color: var(--hk-grimm);
-  color: var(--hk-pale);
+  color: #ff9e9e;
 }
 
 .lector-qr {
   width: 100%;
-  max-width: 320px;
-  border-radius: 6px;
+  max-width: 340px;
+  border-radius: 8px;
   overflow: hidden;
-  border: var(--borde-hk);
+  border: 1px solid var(--hk-focus);
+  box-shadow: 0 0 20px rgba(79, 196, 227, 0.25);
 }
 
+/* ── Avisos ── */
 .aviso {
-  margin-top: 1rem;
-  padding: 0.7rem 1rem;
-  border-radius: 4px;
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
 }
 
 .aviso-error {
@@ -142,53 +334,203 @@
   color: var(--hk-pale);
 }
 
+/* ── Resultado: un "ticket" con borde troquelado ── */
 .tarjeta-resultado {
+  position: relative;
   margin-top: 1.5rem;
-  padding: 1.2rem;
-  background: var(--hk-shell);
-  border: var(--borde-hk);
-  border-radius: 6px;
+  padding: 1.3rem 1.4rem 1.4rem;
+  background: linear-gradient(160deg, rgba(36, 36, 58, 0.98), rgba(20, 20, 36, 0.98));
+  border: 1px solid rgba(232, 168, 50, 0.4);
+  border-left: 4px solid var(--hk-geo);
+  border-radius: 10px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+}
+
+/* Muescas a los costados, como un ticket de cine */
+.tarjeta-resultado::before,
+.tarjeta-resultado::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--hk-void);
+  transform: translateY(-50%);
+}
+
+.tarjeta-resultado::before {
+  left: -11px;
+}
+
+.tarjeta-resultado::after {
+  right: -10px;
+  border-left: 1px solid rgba(232, 168, 50, 0.4);
+}
+
+.tarjeta-resultado.usada {
+  border-color: rgba(192, 57, 43, 0.5);
+  border-left-color: var(--hk-grimm);
+}
+
+.resultado-kicker {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.tarjeta-resultado.usada .resultado-kicker {
+  color: #ff9e9e;
 }
 
 .tarjeta-resultado h2 {
-  color: var(--hk-pale);
-  margin-bottom: 0.8rem;
+  margin: 0 0 1rem;
+  color: var(--hk-soul);
+  font-size: 1.25rem;
+  letter-spacing: 1px;
 }
 
 .tarjeta-resultado dl {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0.3rem 0.8rem;
-  color: var(--hk-soft-text);
+  gap: 0.45rem 1rem;
+  margin: 0;
+  padding-top: 0.9rem;
+  border-top: 1px dashed rgba(212, 212, 224, 0.2);
 }
 
 .tarjeta-resultado dt {
-  color: var(--hk-muted-text);
+  color: var(--hk-soft-text);
+  font-family: 'Trajan', serif;
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  align-self: center;
+}
+
+.tarjeta-resultado dd {
+  margin: 0;
+  color: var(--hk-pale);
 }
 
 .lista-candy {
+  margin: 0;
+  padding: 0.9rem 0 0;
+  border-top: 1px dashed rgba(212, 212, 224, 0.2);
   list-style: none;
-  padding: 0;
-  color: var(--hk-soft-text);
+  color: var(--hk-pale);
 }
 
 .lista-candy li {
-  padding: 0.2rem 0;
+  padding: 0.25rem 0;
 }
 
-.btn-confirmar {
-  margin-top: 1rem;
+.lista-candy li::before {
+  content: '◆';
+  margin-right: 0.5rem;
+  color: var(--hk-geo);
+  font-size: 0.6rem;
+  vertical-align: middle;
+}
+
+.btn-confirmar,
+.btn-confirmar:hover {
   width: 100%;
-  padding: 0.7rem;
-  background: var(--hk-geo);
-  color: var(--hk-void);
+  margin-top: 1.2rem;
+  padding: 0.85rem;
+  background: linear-gradient(180deg, #f2c14e, var(--hk-geo));
+  color: #1a1204;
   border: none;
-  border-radius: 4px;
-  font-weight: 600;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 2px;
   cursor: pointer;
+  transition:
+    filter 0.2s,
+    box-shadow 0.2s;
+}
+
+.btn-confirmar:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 0 18px rgba(232, 168, 50, 0.45);
 }
 
 .btn-confirmar:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+/* ── Celulares ── */
+@media (max-width: 480px) {
+  .validar-pantalla {
+    margin: 1rem auto;
+    padding: 1rem 0.75rem;
+  }
+
+  .panel {
+    padding: 1.1rem;
+  }
+
+  .fila-input {
+    flex-direction: column;
+  }
+
+  .fila-input button {
+    width: 100%;
+  }
+
+  .tarjeta-resultado {
+    padding: 1.1rem;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .panel,
+:host-context(.tema-claro) .tarjeta-resultado {
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(41, 64, 71, 0.14);
+}
+
+:host-context(.tema-claro) .panel {
+  border-color: rgba(22, 141, 168, 0.3);
+}
+
+:host-context(.tema-claro) .selector-modo {
+  background: var(--hk-deep);
+}
+
+:host-context(.tema-claro) .fila-input input {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.25);
+}
+
+:host-context(.tema-claro) .fila-input button {
+  background: #0e6f86;
+  color: #ffffff;
+}
+
+:host-context(.tema-claro) .btn-camara {
+  background: rgba(22, 141, 168, 0.05);
+  border-color: rgba(22, 141, 168, 0.5);
+}
+
+:host-context(.tema-claro) .btn-cancelar,
+:host-context(.tema-claro) .ayuda-error,
+:host-context(.tema-claro) .tarjeta-resultado.usada .resultado-kicker {
+  color: #a8281b;
+}
+
+:host-context(.tema-claro) .btn-confirmar {
+  color: #ffffff;
+  background: linear-gradient(180deg, #c48a2c, var(--hk-geo));
+}
+
+:host-context(.tema-claro) .aviso-error {
+  background: rgba(192, 57, 43, 0.08);
+  color: #7a1d13;
 }

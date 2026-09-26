@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
 import { Ordenes } from '../../../core/services/ordenes';
@@ -13,7 +13,7 @@ const HORAS_LIMITE_CANCELACION = 2;
 
 @Component({
   selector: 'app-mis-compras',
-  imports: [DatePipe],
+  imports: [DatePipe, DecimalPipe],
   templateUrl: './mis-compras.html',
   styleUrl: './mis-compras.css',
 })

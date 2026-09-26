@@ -1,102 +1,149 @@
 <section class="mis-compras">
+  <header class="compras-header">
+    <span class="kicker">Tus funciones en Hallownest</span>
     <h1>Mis compras</h1>
+    <div class="ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+  </header>
 
-    @if (usuario(); as u) {
-        <p class="credito-disponible">Crédito disponible: <strong>${{ u.credito }}</strong></p>
-    }
+  @if (usuario(); as u) {
+    <div class="credito">
+      <span class="credito-icono" aria-hidden="true">💰</span>
+      <div class="credito-textos">
+        <span class="credito-label">Crédito disponible</span>
+        <span class="credito-monto">${{ u.credito | number: '1.0-0' : 'es' }}</span>
+      </div>
+      <span class="credito-ayuda">Se usa en tu próxima compra</span>
+    </div>
+  }
 
-    @if (mensaje()) {
-        <p class="aviso aviso-ok">{{ mensaje() }}</p>
-    }
-    @if (error()) {
-        <p class="aviso aviso-error">{{ error() }}</p>
-    }
+  @if (mensaje()) {
+    <p class="aviso aviso-ok">{{ mensaje() }}</p>
+  }
+  @if (error()) {
+    <p class="aviso aviso-error">{{ error() }}</p>
+  }
 
-    @if (cargando()) {
-        <p>Cargando...</p>
-    } @else if (compras().length === 0) {
-        <p class="sin-compras">Todavía no hiciste ninguna compra.</p>
-    } @else {
-        <div class="lista-compras">
-        @for (orden of compras(); track orden.id) {
-            <article class="tarjeta-compra" [class.cancelada]="orden.cancelada_en">
-            <header>
-                <span class="orden-id">Orden #{{ orden.id }}</span>
-                <span class="orden-fecha">{{ orden.creado_en | date: 'short' : '' : 'es' }}</span>
+  @if (cargando()) {
+    <p class="estado">Cargando...</p>
+  } @else if (compras().length === 0) {
+    <div class="sin-compras">
+      <img src="/img/knight_face.png" alt="" aria-hidden="true" />
+      <p>Todavía no hiciste ninguna compra.</p>
+    </div>
+  } @else {
+    <div class="lista-compras">
+      @for (orden of compras(); track orden.id) {
+        <article class="ticket" [class.cancelada]="orden.cancelada_en">
+          <!-- Talón: la fecha de la función, como en un ticket de cine -->
+          @if (orden.entradas.length > 0) {
+            <div class="talon">
+              <span class="talon-dia">{{
+                orden.entradas[0].funciones.fecha_hora | date: 'd' : '' : 'es'
+              }}</span>
+              <span class="talon-mes">{{
+                orden.entradas[0].funciones.fecha_hora | date: 'MMM' : '' : 'es'
+              }}</span>
+              <span class="talon-hora">{{
+                orden.entradas[0].funciones.fecha_hora | date: 'HH:mm' : '' : 'es'
+              }}</span>
+            </div>
+          } @else {
+            <div class="talon">
+              <span class="talon-dia" aria-hidden="true">🍿</span>
+              <span class="talon-mes">Candy</span>
+            </div>
+          }
+
+          <div class="ticket-cuerpo">
+            <header class="ticket-header">
+              <span class="orden-id">Orden #{{ orden.id }}</span>
+              <span class="orden-fecha"
+                >Comprada el {{ orden.creado_en | date: "d/M, HH:mm" : '' : 'es' }}</span
+              >
             </header>
 
             @if (orden.entradas.length > 0) {
-                <div class="funcion-info">
-                <p class="funcion-pelicula">{{ orden.entradas[0].funciones.peliculas.nombre }}</p>
-                <p class="funcion-meta">
-                    {{ orden.entradas[0].funciones.salas.nombre }} ·
-                    {{ orden.entradas[0].funciones.formato }} · {{ orden.entradas[0].funciones.idioma }} ·
-                    {{ orden.entradas[0].funciones.fecha_hora | date: 'short' : '' : 'es' }}
-                </p>
-                <p class="funcion-butacas">
-                    {{ orden.entradas.length }}
-                    {{ orden.entradas.length === 1 ? 'entrada' : 'entradas' }} · Butacas
-                    {{ butacasTexto(orden) }}
-                </p>
-                </div>
+              <h2 class="funcion-pelicula">{{ orden.entradas[0].funciones.peliculas.nombre }}</h2>
+
+              <div class="chips">
+                <span class="chip">{{ orden.entradas[0].funciones.salas.nombre }}</span>
+                <span class="chip chip-formato">{{ orden.entradas[0].funciones.formato }}</span>
+                <span class="chip">{{ orden.entradas[0].funciones.idioma }}</span>
+              </div>
+
+              <p class="funcion-butacas">
+                <span class="dato-label"
+                  >{{ orden.entradas.length }}
+                  {{ orden.entradas.length === 1 ? 'entrada' : 'entradas' }}</span
+                >
+                Butacas <strong>{{ butacasTexto(orden) }}</strong>
+              </p>
             }
 
             @if (orden.orden_candy_items.length > 0) {
-                <p class="candy-resumen">🍬 {{ candyTexto(orden) }}</p>
+              <p class="candy-resumen">
+                <span class="dato-label">Candy</span>
+                {{ candyTexto(orden) }}
+              </p>
             }
 
-            <footer>
+            <footer class="ticket-footer">
+              <div class="pago">
                 <span class="orden-total">
-                @if (orden.total > 0) {
-                    Total: ${{ orden.total }}
-                } @else {
+                  @if (orden.total > 0) {
+                    ${{ orden.total | number: '1.0-0' : 'es' }}
+                  } @else {
                     Pagado con puntos
-                }
+                  }
                 </span>
                 @if (puntosGastados(orden) > 0) {
-                <span class="puntos-usados">⭐ {{ puntosGastados(orden) }} pts usados</span>
+                  <span class="puntos-usados">⭐ {{ puntosGastados(orden) }} pts usados</span>
                 }
+              </div>
 
-                @if (orden.cancelada_en) {
-                <span class="estado-cancelada">Cancelada</span>
-                } @else if (puedeCancelarse(orden)) {
+              @if (orden.cancelada_en) {
+                <span class="sello-cancelada">Cancelada</span>
+              } @else if (puedeCancelarse(orden)) {
                 @if (confirmando() === orden.id) {
-                    <span class="confirmar-cancelacion">
-                    <span class="confirmar-texto">¿Seguro? Se te acreditarán ${{ montoACreditar(orden) }}.</span>
-                    <button
-                        type="button"
-                        class="btn-confirmar-si"
-                        [disabled]="cancelando()"
-                        (click)="confirmarCancelacion(orden)"
+                  <span class="confirmar-cancelacion">
+                    <span class="confirmar-texto"
+                      >¿Seguro? Se te acreditarán ${{ montoACreditar(orden) }}.</span
                     >
-                        Sí, cancelar
+                    <button
+                      type="button"
+                      class="btn-confirmar-si"
+                      [disabled]="cancelando()"
+                      (click)="confirmarCancelacion(orden)"
+                    >
+                      Sí, cancelar
                     </button>
                     <button
-                        type="button"
-                        class="btn-confirmar-no"
-                        [disabled]="cancelando()"
-                        (click)="cancelarConfirmacion()"
+                      type="button"
+                      class="btn-confirmar-no"
+                      [disabled]="cancelando()"
+                      (click)="cancelarConfirmacion()"
                     >
-                        No
+                      No
                     </button>
-                    </span>
+                  </span>
                 } @else {
-                    <button type="button" class="btn-cancelar" (click)="pedirConfirmacion(orden.id)">
+                  <button type="button" class="btn-cancelar" (click)="pedirConfirmacion(orden.id)">
                     Cancelar compra
-                    </button>
+                  </button>
                 }
-                } @else {
+              } @else {
                 <span class="no-cancelable">
-                    @if (tieneEntradaValidada(orden)) {
+                  @if (tieneEntradaValidada(orden)) {
                     Ya se usó una entrada
-                    } @else {
+                  } @else {
                     Fuera de plazo para cancelar
-                    }
+                  }
                 </span>
-                }
+              }
             </footer>
-            </article>
-        }
-        </div>
-    }
-    </section>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
