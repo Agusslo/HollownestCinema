@@ -20,12 +20,35 @@
   text-shadow: 0 0 20px rgba(79, 196, 227, 0.15);
 }
 
-.resenias-divisor {
-  width: 100px;
+.resenias-kicker {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* ──── ◆ ──── */
+.resenias-ornamento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  color: var(--hk-geo);
+  font-size: 0.5rem;
+}
+
+.resenias-ornamento span {
+  width: 80px;
   height: 1px;
-  margin: 12px auto 0;
-  background: linear-gradient(90deg, transparent, var(--hk-focus), transparent);
-  opacity: 0.5;
+  background: linear-gradient(90deg, transparent, var(--hk-pale));
+}
+
+.resenias-ornamento span:last-child {
+  background: linear-gradient(90deg, var(--hk-pale), transparent);
 }
 
 /* ── Loading ── */
@@ -104,24 +127,27 @@
 }
 
 .resenia-item {
-  background: linear-gradient(180deg, var(--hk-shell) 0%, var(--hk-deep) 100%);
-  border: 1px solid rgba(212, 212, 224, 0.08);
-  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, rgba(36, 36, 58, 0.96), rgba(18, 18, 32, 0.98));
+  border: 1px solid rgba(212, 212, 224, 0.1);
+  border-left: 3px solid var(--hk-geo);
+  border-radius: 10px;
   padding: 18px 22px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
   transition:
     border-color 0.3s,
     box-shadow 0.3s;
 }
 
 .resenia-item:hover {
-  border-color: rgba(79, 196, 227, 0.2);
-  box-shadow:
-    0 8px 26px rgba(0, 0, 0, 0.5),
-    0 0 16px rgba(79, 196, 227, 0.04);
+  border-color: rgba(232, 168, 50, 0.35);
+  border-left-color: var(--hk-geo);
 }
 
 .resenia-header {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -199,11 +225,15 @@
 }
 
 .resenia-comentario {
+  position: relative;
+  z-index: 1;
   margin: 0;
   font-family: 'Perpetua', serif;
-  font-size: 1rem;
+  font-size: 1.05rem;
+  font-style: italic;
   color: var(--hk-pale);
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 /* ── Avisos / Estados vacíos ── */
@@ -211,8 +241,8 @@
 .resenia-aviso-caja {
   padding: 24px;
   background: rgba(17, 17, 34, 0.6);
-  border: 1px dashed rgba(212, 212, 224, 0.12);
-  border-radius: 4px;
+  border: 1px dashed rgba(212, 212, 224, 0.18);
+  border-radius: 10px;
   text-align: center;
   margin-bottom: 32px;
 }
@@ -232,13 +262,20 @@
   filter: drop-shadow(0 0 6px var(--hk-focus));
 }
 
+.sin-resenias-img {
+  display: block;
+  width: 44px;
+  margin: 0 auto 10px;
+  opacity: 0.55;
+}
+
 .sin-resenias,
 .resenia-aviso {
   margin: 0;
   font-family: 'Perpetua', serif;
   font-style: italic;
-  font-size: 1rem;
-  color: var(--hk-ash);
+  font-size: 1.02rem;
+  color: var(--hk-soft-text);
 }
 
 .resenia-aviso-caja.exito .resenia-aviso {
@@ -250,19 +287,40 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  padding: 28px;
-  background: linear-gradient(180deg, rgba(28, 28, 46, 0.95) 0%, rgba(17, 17, 34, 0.98) 100%);
-  border: 1px solid rgba(212, 212, 224, 0.12);
-  border-radius: 6px;
-  box-shadow:
-    0 12px 36px rgba(0, 0, 0, 0.6),
-    0 0 30px rgba(79, 196, 227, 0.03);
+  padding: 30px 28px 28px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(79, 196, 227, 0.12), transparent 50%),
+    linear-gradient(160deg, rgba(36, 36, 58, 0.98), rgba(12, 12, 24, 0.99));
+  border: 1px solid rgba(79, 196, 227, 0.22);
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   position: relative;
 }
 
+/* Filo celeste arriba */
+.form-resenia::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--hk-focus), transparent);
+}
+
 .form-encabezado {
-  text-align: left;
+  text-align: center;
   margin-bottom: 4px;
+}
+
+.form-kicker {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
 
 .form-titulo {
@@ -278,8 +336,8 @@
   margin: 6px 0 0;
   font-family: 'Perpetua', serif;
   font-style: italic;
-  font-size: 0.88rem;
-  color: var(--hk-ash);
+  font-size: 0.95rem;
+  color: var(--hk-soft-text);
 }
 
 /* ── Selector de Estrellas interactivo ── */
@@ -425,9 +483,9 @@
   resize: vertical;
   min-height: 90px;
   padding: 14px 16px;
-  background: #090912;
-  border: 1px solid rgba(212, 212, 224, 0.14);
-  border-radius: 4px;
+  background: rgba(8, 8, 16, 0.6);
+  border: 1px solid rgba(212, 212, 224, 0.18);
+  border-radius: 8px;
   color: var(--hk-soul);
   font-family: 'Perpetua', serif;
   font-size: 1.05rem;
@@ -475,33 +533,36 @@
 }
 
 /* ── Botón Publicar ── */
-.boton-enviar {
+/* Mismo botón principal que login y los formularios de admin; el brillo
+   al pasar lo agrega la directiva appGlowHover. */
+.boton-enviar,
+.boton-enviar:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  align-self: flex-start;
-  min-height: 44px;
-  min-width: 180px;
-  padding: 10px 28px;
-  background: linear-gradient(180deg, rgba(79, 196, 227, 0.18) 0%, rgba(79, 196, 227, 0.04) 100%);
-  border: 1px solid var(--hk-focus);
-  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
-  color: var(--hk-focus);
+  align-self: center;
+  width: min(100%, 280px);
+  min-height: 48px;
+  padding: 0 28px;
+  background: linear-gradient(180deg, #6fd3ee, var(--hk-focus));
+  border: none;
+  border-radius: 8px;
+  color: #04141a;
   font-family: 'Trajan', serif;
   font-size: 0.85rem;
-  letter-spacing: 2px;
+  font-weight: 700;
+  letter-spacing: 3px;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s ease;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  transition:
+    filter 0.2s,
+    transform 0.2s,
+    box-shadow 0.25s;
 }
 
 .boton-enviar:hover:not(:disabled) {
-  background: var(--hk-focus);
-  color: var(--hk-void);
-  box-shadow:
-    0 0 20px rgba(79, 196, 227, 0.5),
-    0 4px 14px rgba(0, 0, 0, 0.6);
+  filter: brightness(1.08);
   transform: translateY(-1px);
 }
 
@@ -531,4 +592,69 @@
     width: 28px;
     height: 28px;
   }
+}
+
+@media (max-width: 620px) {
+  .resenias-seccion {
+    margin-top: 44px;
+    padding: 0;
+  }
+
+  .resenia-item {
+    padding: 14px 16px;
+  }
+
+  .resenia-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .boton-enviar {
+    width: 100%;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .resenia-item,
+:host-context(.tema-claro) .form-resenia {
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(41, 64, 71, 0.1);
+}
+
+:host-context(.tema-claro) .resenia-item {
+  border-color: rgba(41, 64, 71, 0.16);
+  border-left-color: var(--hk-geo);
+}
+
+:host-context(.tema-claro) .form-resenia {
+  border-color: rgba(22, 141, 168, 0.28);
+}
+
+:host-context(.tema-claro) .comentario-input {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.25);
+}
+
+:host-context(.tema-claro) .comentario-input::placeholder {
+  color: rgba(41, 64, 71, 0.5);
+}
+
+:host-context(.tema-claro) .sin-resenias-caja,
+:host-context(.tema-claro) .resenia-aviso-caja {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(41, 64, 71, 0.2);
+}
+
+:host-context(.tema-claro) .sin-resenias-img {
+  filter: invert(1);
+}
+
+:host-context(.tema-claro) .promedio-badge {
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(166, 111, 28, 0.2);
+}
+
+:host-context(.tema-claro) .boton-enviar {
+  background: linear-gradient(180deg, #1a8aa5, #0e6f86);
+  color: #ffffff;
 }

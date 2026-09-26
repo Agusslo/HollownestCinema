@@ -6,10 +6,11 @@ import { IReseniaConAutor } from '../../../core/interfaces/resenia';
 import IPerfil from '../../../core/interfaces/perfil';
 import { BlobatarComponent } from '../../../shared/components/blobatar/blobatar';
 import { LoadingComponent } from '../../../shared/components/loading/loading';
+import { GlowHover } from '../../../shared/directives/glow-hover';
 
 @Component({
   selector: 'app-resenias',
-  imports: [ReactiveFormsModule, BlobatarComponent, LoadingComponent],
+  imports: [ReactiveFormsModule, BlobatarComponent, LoadingComponent, GlowHover],
   templateUrl: './resenias.html',
   styleUrl: './resenias.css',
 })

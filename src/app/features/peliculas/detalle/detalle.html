@@ -28,13 +28,17 @@
     </div>
 
     <section class="funciones-section">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Elegí tu horario</p>
-          <h2>Funciones</h2>
-        </div>
-        <span class="function-count">{{ funciones().length }} disponibles</span>
-      </div>
+      <header class="seccion-header">
+        <span class="seccion-kicker">Elegí tu horario</span>
+        <h2>Funciones</h2>
+        <div class="seccion-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+        @if (funciones().length > 0) {
+          <span class="function-count">
+            {{ funciones().length }}
+            {{ funciones().length === 1 ? 'función disponible' : 'funciones disponibles' }}
+          </span>
+        }
+      </header>
 
       @if (funciones().length === 0) {
         <p class="empty-state">No hay funciones cargadas para esta película.</p>
@@ -43,6 +47,7 @@
           @for (funcion of funciones(); track funcion.id) {
             <a
               class="funcion-card"
+              appGlowHover
               [routerLink]="[
                 '/pelicula',
                 generarSlug(p.nombre),
@@ -50,15 +55,26 @@
                 generarSlugFuncion(funcion),
               ]"
             >
-              <span class="funcion-fecha">{{
-                funcion.fecha_hora | date: "EEEE d 'de' MMMM" : '' : 'es'
-              }}</span>
+              <!-- Talón con el día, como en los tickets de Mis compras -->
+              <span class="funcion-talon">
+                <span class="talon-dia">{{ funcion.fecha_hora | date: 'd' : '' : 'es' }}</span>
+                <span class="talon-mes">{{ funcion.fecha_hora | date: 'MMM' : '' : 'es' }}</span>
+              </span>
+
+              <span class="funcion-cuerpo">
+                <span class="funcion-fecha">{{
+                  funcion.fecha_hora | date: 'EEEE' : '' : 'es'
+                }}</span>
+                <span class="funcion-chips">
+                  <span class="chip">{{ funcion.salas.nombre }}</span>
+                  <span class="chip chip-formato">{{ funcion.formato }}</span>
+                  <span class="chip">{{ funcion.idioma }}</span>
+                </span>
+              </span>
+
               <strong class="funcion-hora">{{
-                funcion.fecha_hora | date: 'shortTime' : '' : 'es'
+                funcion.fecha_hora | date: 'HH:mm' : '' : 'es'
               }}</strong>
-              <span class="funcion-detalle"
-                >{{ funcion.salas.nombre }} · {{ funcion.formato }} · {{ funcion.idioma }}</span
-              >
               <span class="funcion-arrow" aria-hidden="true">&rsaquo;</span>
             </a>
           }

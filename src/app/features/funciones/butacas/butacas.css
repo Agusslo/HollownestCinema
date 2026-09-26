@@ -1541,3 +1541,532 @@ h1 {
   background: rgba(232, 168, 50, 0.18);
   border-color: var(--hk-geo);
 }
+/* ══════════════════════════════════════════════════════════════════
+   Estética Hollow Knight de la pantalla de compra.
+   Va al final a propósito para pisar lo anterior. Varios botones de acá
+   (combos, pestañas, "Agregar") heredaban del estilo global de
+   button[type='button'] la Trajan en mayúsculas con letter-spacing, por
+   eso se los normaliza explícitamente.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ──── ◆ ──── (encabezado de la sala y del candy bar) */
+.ornamento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 12px 0 4px;
+  color: var(--hk-focus);
+  font-size: 0.5rem;
+}
+
+.ornamento span {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hk-pale));
+}
+
+.ornamento span:last-child {
+  background: linear-gradient(90deg, var(--hk-pale), transparent);
+}
+
+.sala-heading {
+  margin-bottom: 22px;
+}
+
+/* ── Resumen de compra ── */
+.resumen-compra {
+  gap: 14px;
+  padding: 26px 22px 20px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(79, 196, 227, 0.12), transparent 50%),
+    linear-gradient(160deg, rgba(36, 36, 58, 0.98), rgba(12, 12, 24, 0.99));
+  border-color: rgba(79, 196, 227, 0.25);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+}
+
+/* Filo celeste arriba, como el resto de las tarjetas */
+.resumen-compra::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--hk-focus), transparent);
+}
+
+.resumen-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding-bottom: 14px;
+  text-align: center;
+  border-bottom: 1px solid rgba(212, 212, 224, 0.12);
+}
+
+.resumen-kicker,
+.resumen-subtitulo {
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.resumen-subtitulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: -4px;
+  color: var(--hk-soft-text);
+}
+
+.resumen-subtitulo::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(212, 212, 224, 0.25), transparent);
+}
+
+.resumen-pelicula {
+  margin-top: 4px;
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 1rem;
+  letter-spacing: 1.5px;
+  line-height: 1.3;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.resumen-sala {
+  color: var(--hk-soft-text);
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.resumen-butacas-seccion {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.resumen-butacas-titulo {
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+}
+
+/* Botón principal: el mismo celeste sólido que login y admin */
+.btn-comprar,
+.btn-comprar:hover:not(:disabled) {
+  height: 52px;
+  padding: 0 20px;
+  background: linear-gradient(180deg, #6fd3ee, var(--hk-focus));
+  color: #04141a;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  letter-spacing: 3px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  transition:
+    filter 0.2s,
+    transform 0.2s,
+    box-shadow 0.25s;
+}
+
+.btn-comprar:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.btn-comprar:disabled {
+  background: rgba(212, 212, 224, 0.08);
+  color: var(--hk-soft-text);
+  border: 1px solid rgba(212, 212, 224, 0.16);
+}
+
+/* Link al candy bar: discreto, debajo del botón */
+.aviso-candy-bar,
+.aviso-candy-bar:hover {
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  background: transparent;
+  border: 1px dashed rgba(232, 168, 50, 0.35);
+  border-radius: 8px;
+  color: var(--hk-pale);
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 0.92rem;
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: center;
+  box-shadow: none;
+}
+
+.aviso-candy-bar strong {
+  color: var(--hk-geo);
+}
+
+.aviso-candy-bar:hover {
+  background: rgba(232, 168, 50, 0.08);
+  border-color: var(--hk-geo);
+}
+
+.aviso-flecha {
+  color: var(--hk-geo);
+  animation: flecha-rebote 1.6s ease-in-out infinite;
+}
+
+@keyframes flecha-rebote {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+/* ── Candy bar ── */
+.candy-bar {
+  margin-top: 64px;
+  padding-top: 44px;
+  border-top: none;
+  position: relative;
+}
+
+/* Filo de luz arriba de la sección en vez de una línea plana */
+.candy-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79, 196, 227, 0.45), transparent);
+}
+
+.candy-heading {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.candy-heading h2 {
+  display: block;
+  padding-bottom: 0;
+  letter-spacing: 4px;
+}
+
+.candy-heading h2::after {
+  display: none;
+}
+
+/* Combos: bloque dorado con título entre líneas */
+.combos-destacados {
+  margin-bottom: 30px;
+  padding: 18px 18px 16px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(232, 168, 50, 0.1), transparent 55%),
+    rgba(20, 16, 10, 0.35);
+  border: 1px solid rgba(232, 168, 50, 0.3);
+  border-radius: 12px;
+}
+
+.combos-titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+}
+
+.combos-titulo::before,
+.combos-titulo::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232, 168, 50, 0.5));
+}
+
+.combos-titulo::after {
+  background: linear-gradient(90deg, rgba(232, 168, 50, 0.5), transparent);
+}
+
+.combos-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+  gap: 14px;
+}
+
+.combo-card,
+.combo-card:hover {
+  position: relative;
+  gap: 6px;
+  padding: 16px 16px 14px;
+  background: linear-gradient(160deg, rgba(36, 36, 58, 0.95), rgba(18, 18, 30, 0.97));
+  border: 1px solid rgba(232, 168, 50, 0.3);
+  border-radius: 10px;
+  color: var(--hk-pale);
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  text-transform: none;
+  transition:
+    border-color 0.2s,
+    transform 0.2s,
+    box-shadow 0.25s;
+}
+
+.combo-card:hover:not(:disabled) {
+  border-color: var(--hk-geo);
+  transform: translateY(-2px);
+}
+
+.combo-card.elegido {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(232, 168, 50, 0.2), transparent 55%),
+    linear-gradient(160deg, rgba(36, 36, 58, 0.95), rgba(18, 18, 30, 0.97));
+  border-color: var(--hk-geo);
+}
+
+.combo-card:disabled {
+  opacity: 0.5;
+}
+
+.combo-nombre {
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 0.9rem;
+  font-weight: normal;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.combo-precio {
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 1.4rem;
+  line-height: 1.1;
+  text-shadow: 0 0 14px rgba(232, 168, 50, 0.3);
+}
+
+.combo-incluye {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+  padding-top: 8px;
+  color: var(--hk-muted-text);
+  font-size: 0.88rem;
+  border-top: 1px dashed rgba(212, 212, 224, 0.16);
+}
+
+.combo-item {
+  line-height: 1.35;
+}
+
+.combo-estado {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 2px 9px;
+  color: #1a1204;
+  background: var(--hk-geo);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.combos-ayuda {
+  margin-top: 12px;
+  text-align: center;
+  color: var(--hk-soft-text);
+  font-size: 0.88rem;
+}
+
+/* Pestañas de categorías: Trajan chiquita, la activa en celeste */
+.candy-tabs {
+  justify-content: center;
+  margin-bottom: 26px;
+}
+
+.candy-tab,
+.candy-tab:hover {
+  padding: 8px 18px;
+  background: rgba(22, 22, 38, 0.7);
+  border: 1px solid rgba(212, 212, 224, 0.14);
+  border-radius: 999px;
+  color: var(--hk-soft-text);
+  font-family: 'Trajan', serif;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  box-shadow: none;
+}
+
+.candy-tab:hover {
+  border-color: rgba(79, 196, 227, 0.4);
+  color: var(--hk-pale);
+}
+
+.candy-tab.activa {
+  background: rgba(79, 196, 227, 0.14);
+  border-color: var(--hk-focus);
+  color: var(--hk-focus);
+}
+
+/* Productos */
+.candy-grid {
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 18px;
+}
+
+.candy-card {
+  padding: 12px 12px 14px;
+  background: linear-gradient(165deg, rgba(36, 36, 58, 0.92), rgba(14, 14, 26, 0.96));
+  border: 1px solid rgba(79, 196, 227, 0.18);
+  border-radius: 12px;
+}
+
+.candy-card:hover {
+  border-color: rgba(79, 196, 227, 0.5);
+}
+
+.candy-img {
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+.candy-nombre {
+  font-size: 1rem;
+}
+
+.candy-precio {
+  margin: 4px 0 12px;
+  font-size: 1.15rem;
+}
+
+.candy-agregar,
+.candy-agregar:hover {
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  box-shadow: none;
+}
+
+.candy-agregar:hover {
+  color: #04141a;
+  background: var(--hk-focus);
+}
+
+.candy-stepper {
+  height: 40px;
+  border-radius: 8px;
+}
+
+.candy-stepper button,
+.candy-stepper button:hover {
+  padding: 0;
+  font-family: 'Perpetua', serif;
+  letter-spacing: 0;
+  box-shadow: none;
+}
+
+/* En pantallas angostas el resumen deja de ser sticky; relative para que
+   el filo de ::before siga pegado a su borde. */
+@media (max-width: 900px) {
+  .resumen-compra {
+    position: relative;
+  }
+}
+
+/* ── Celulares ── */
+@media (max-width: 620px) {
+  .ornamento span {
+    width: 44px;
+  }
+
+  .resumen-compra {
+    padding: 22px 16px 16px;
+  }
+
+  .candy-bar {
+    margin-top: 40px;
+    padding-top: 32px;
+  }
+
+  .combos-destacados {
+    padding: 14px 12px;
+  }
+
+  .candy-tabs {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+
+  .candy-tab {
+    flex-shrink: 0;
+  }
+
+  .candy-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .resumen-compra {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(22, 141, 168, 0.08), transparent 50%),
+    #ffffff;
+}
+
+:host-context(.tema-claro) .btn-comprar:not(:disabled) {
+  background: linear-gradient(180deg, #1a8aa5, #0e6f86);
+  color: #ffffff;
+}
+
+:host-context(.tema-claro) .combos-destacados {
+  background: rgba(232, 168, 50, 0.06);
+  border-color: rgba(166, 111, 28, 0.3);
+}
+
+:host-context(.tema-claro) .combo-card,
+:host-context(.tema-claro) .combo-card.elegido,
+:host-context(.tema-claro) .candy-card {
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(41, 64, 71, 0.08);
+}
+
+:host-context(.tema-claro) .combo-card.elegido {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(232, 168, 50, 0.16), transparent 55%),
+    #ffffff;
+}
+
+:host-context(.tema-claro) .combo-precio {
+  color: #8a5a10;
+  text-shadow: none;
+}
+
+:host-context(.tema-claro) .candy-card {
+  border-color: rgba(41, 64, 71, 0.16);
+}
+
+:host-context(.tema-claro) .candy-tab {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.2);
+}
+
+:host-context(.tema-claro) .candy-tab.activa {
+  background: rgba(22, 141, 168, 0.1);
+  border-color: var(--hk-focus);
+}

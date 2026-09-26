@@ -5,6 +5,7 @@
     <header class="sala-heading">
       <p class="eyebrow">Elegí dónde sentarte</p>
       <h1>Seleccioná tu butaca</h1>
+      <div class="ornamento" aria-hidden="true"><span></span>◆<span></span></div>
       @if (peliculaActual()?.restriccion_edad; as restriccion) {
         <p class="aviso-restriccion">
           🔞 Esta función es apta para mayores de {{ restriccion }} años.
@@ -69,11 +70,15 @@
       </section>
 
       <aside class="resumen-compra">
-        <button type="button" class="aviso-candy-bar" (click)="irACandyBar()">
-          <span aria-hidden="true">🍿</span>
-          ¿Querés sumar candy bar? Elegilo acá abajo
-          <span aria-hidden="true">↓</span>
-        </button>
+        <header class="resumen-header">
+          <span class="resumen-kicker">Tu compra</span>
+          @if (peliculaActual(); as peli) {
+            <span class="resumen-pelicula">{{ peli.nombre }}</span>
+          }
+          @if (funcion()?.salas?.nombre; as sala) {
+            <span class="resumen-sala">{{ sala }} · {{ funcion()?.formato }}</span>
+          }
+        </header>
 
         <div class="resumen-butacas-seccion">
           <div class="resumen-butacas-header">
@@ -173,6 +178,9 @@
         }
 
         @if (usuario(); as u) {
+          @if (u.credito > 0 || u.puntos > 0) {
+            <span class="resumen-subtitulo">Pagar con</span>
+          }
           @if (u.credito > 0) {
             <label
               class="opcion-toggle"
@@ -282,10 +290,17 @@
         <button
           type="button"
           class="btn-comprar"
+          appGlowHover
           [disabled]="seleccionadas().size === 0 || comprando()"
           (click)="confirmarCompra()"
         >
           {{ comprando() ? 'Procesando...' : 'Confirmar compra' }}
+        </button>
+
+        <button type="button" class="aviso-candy-bar" (click)="irACandyBar()">
+          <span aria-hidden="true">🍿</span>
+          <span>¿Sumás algo para picar? <strong>Ver candy bar</strong></span>
+          <span class="aviso-flecha" aria-hidden="true">↓</span>
         </button>
       </aside>
     </div>
@@ -295,16 +310,19 @@
         <div class="candy-heading">
           <p class="eyebrow">¿Querés sumar algo para picar?</p>
           <h2>Candy bar</h2>
+          <div class="ornamento" aria-hidden="true"><span></span>◆<span></span></div>
         </div>
 
         @if (combosDisponibles().length > 0) {
           <div class="combos-destacados">
-            <p class="combos-titulo">✨ Combos especiales</p>
+            <p class="combos-titulo"><span>Combos especiales</span></p>
             <div class="combos-grid">
               @for (combo of combosDisponibles(); track combo.id) {
                 <button
                   type="button"
                   class="combo-card"
+                  appGlowHover
+                  color="#e8a832"
                   [class.elegido]="comboSeleccionado()?.id === combo.id"
                   [disabled]="seleccionadas().size === 0"
                   (click)="elegirCombo(combo)"
@@ -312,11 +330,16 @@
                   <span class="combo-nombre">{{ combo.nombre }}</span>
                   <span class="combo-precio">${{ combo.precio }}</span>
                   <span class="combo-incluye">
-                    Incluye 1 entrada
+                    <span class="combo-item">🎟️ 1 entrada</span>
                     @for (item of combo.combo_items; track item.producto_id) {
-                      + {{ item.cantidad }}&times; {{ item.candy_productos.nombre }}
+                      <span class="combo-item"
+                        >◆ {{ item.cantidad }}&times; {{ item.candy_productos.nombre }}</span
+                      >
                     }
                   </span>
+                  @if (comboSeleccionado()?.id === combo.id) {
+                    <span class="combo-estado">✓ Aplicado</span>
+                  }
                 </button>
               }
             </div>
@@ -343,7 +366,7 @@
 
         <div class="candy-grid">
           @for (producto of productosDeCategoriaActiva(); track producto.id) {
-            <div class="candy-card">
+            <div class="candy-card" appGlowHover>
               <img
                 class="candy-img"
                 [src]="producto.imagen_url"

@@ -1,7 +1,8 @@
 <section class="resenias-seccion">
   <div class="resenias-header-container">
+    <span class="resenias-kicker">Testimonios del reino</span>
     <h2 class="resenias-titulo">Reseñas de Hallownest</h2>
-    <div class="resenias-divisor"></div>
+    <div class="resenias-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
   </div>
 
   @if (cargando()) {
@@ -21,6 +22,7 @@
 
     @if (resenias().length === 0) {
       <div class="sin-resenias-caja">
+        <img class="sin-resenias-img" src="/img/knight_face.png" alt="" aria-hidden="true" />
         <p class="sin-resenias">
           El silencio reina en estos pasajes... Sé el primero en dejar tu testimonio.
         </p>
@@ -28,7 +30,7 @@
     } @else {
       <ul class="lista-resenias">
         @for (resenia of resenias(); track resenia.id) {
-          <li class="resenia-item">
+          <li class="resenia-item" appGlowHover color="#e8a832">
             <div class="resenia-header">
               <div class="autor-info">
                 <app-blobatar
@@ -108,6 +110,7 @@
     } @else {
       <form class="form-resenia" [formGroup]="formulario" (ngSubmit)="enviar()">
         <div class="form-encabezado">
+          <span class="form-kicker">Tu voz en Hallownest</span>
           <h3 class="form-titulo">Inscribir testimonio</h3>
           <p class="form-subtitulo">Compartí tu veredicto con los demás exploradores</p>
         </div>
@@ -199,7 +202,7 @@
           <p class="form-error">{{ error() }}</p>
         }
 
-        <button type="submit" class="boton-enviar" [disabled]="enviando()">
+        <button type="submit" class="boton-enviar" appGlowHover [disabled]="enviando()">
           <span class="btn-texto">{{ enviando() ? 'Inscribiendo...' : 'Publicar reseña' }}</span>
         </button>
       </form>

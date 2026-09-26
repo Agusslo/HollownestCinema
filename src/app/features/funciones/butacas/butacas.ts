@@ -21,10 +21,11 @@ import ICandyCategoria from '../../../core/interfaces/candy-categoria';
 import { ICandyProductoConCategoria } from '../../../core/interfaces/candy-producto';
 import { Pdf } from '../../../core/services/pdf';
 import { LoadingComponent } from '../../../shared/components/loading/loading';
+import { GlowHover } from '../../../shared/directives/glow-hover';
 
 @Component({
   selector: 'app-butacas',
-  imports: [LoadingComponent],
+  imports: [LoadingComponent, GlowHover],
   templateUrl: './butacas.html',
   styleUrl: './butacas.css',
 })

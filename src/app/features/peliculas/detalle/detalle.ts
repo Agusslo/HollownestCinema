@@ -8,10 +8,11 @@ import { IFuncionConSala } from '../../../core/interfaces/funcion';
 import { Resenias } from '../resenias/resenias';
 import { DuracionPipe } from '../../../core/pipes/duracion-pipe';
 import { LoadingComponent } from '../../../shared/components/loading/loading';
+import { GlowHover } from '../../../shared/directives/glow-hover';
 
 @Component({
   selector: 'app-detalle',
-  imports: [RouterLink, DatePipe, Resenias, DuracionPipe, LoadingComponent],
+  imports: [RouterLink, DatePipe, Resenias, DuracionPipe, LoadingComponent, GlowHover],
   templateUrl: './detalle.html',
   styleUrl: './detalle.css',
 })
