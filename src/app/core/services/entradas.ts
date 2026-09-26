@@ -2,10 +2,12 @@ import { Service, inject } from '@angular/core';
 import { Supabase } from './supabase';
 import { Ordenes } from './ordenes';
 import { Candy } from './candy';
+import { Fidelizacion } from './fidelizacion';
 import { Formato } from '../interfaces/funcion';
 import IPerfil from '../interfaces/perfil';
 import IOrden from '../interfaces/orden';
 import { IEntradaValidacion } from '../interfaces/entrada';
+import ICanje from '../interfaces/canje';
 import { tipoDeButaca } from './butacas';
 
 const PRECIOS_POR_FORMATO: Record<Formato, number> = {
@@ -25,6 +27,7 @@ export class Entradas {
   private supabase = inject(Supabase);
   private ordenesService = inject(Ordenes);
   private candyService = inject(Candy);
+  private fidelizacionService = inject(Fidelizacion);
 
   // Trae las butacas ocupadas de esta función — pero si la orden a la que
   // pertenece una entrada está cancelada, esa butaca NO cuenta como
@@ -47,6 +50,16 @@ export class Entradas {
     return tipoDeButaca(codigo) === 'vip' ? Math.round(base * RECARGO_VIP) : base;
   }
 
+  // Lo mismo que precioPorButaca(), pero en puntos en vez de pesos — se
+  // usa tanto acá adentro (al validar/descontar un canje) como desde la
+  // pantalla de butacas (para mostrar el costo antes de confirmar), así
+  // el recargo VIP no queda duplicado en dos archivos.
+  costoEntradaEnPuntos(puntosPorEntradaGratis: number, codigo: string): number {
+    return tipoDeButaca(codigo) === 'vip'
+      ? Math.round(puntosPorEntradaGratis * RECARGO_VIP)
+      : puntosPorEntradaGratis;
+  }
+
   async comprar(
     funcion_id: number,
     butacas: string[],
@@ -54,13 +67,47 @@ export class Entradas {
     candyItems: { producto_id: number; cantidad: number }[] = [],
     total: number = 0,
     creditoAUsar: number = 0,
+    // Fidelización — canje: `butacasCanjeadas` es el subconjunto de
+    // `butacas` que se paga con puntos en vez de plata (entrada gratis).
+    // `candyCanjeado` es candy pagado con puntos — aparte de `candyItems`
+    // (el candy pagado con plata), con `puntos` ya siendo el costo total
+    // de esa línea (cantidad × puntos que vale 1 unidad).
+    butacasCanjeadas: string[] = [],
+    candyCanjeado: { producto_id: number; cantidad: number; puntos: number }[] = [],
   ): Promise<{
     orden: IOrden;
-    entradas: { fila: string; columna: number; codigo_qr: string }[];
+    entradas: { id: number; fila: string; columna: number; codigo_qr: string }[];
   }> {
     const aplicaCupon = usuario !== null && !usuario.cupon_primera_compra_usado;
 
-    // 1. Creamos la orden primero — es el contenedor que agrupa esta
+    // 1. Cuánto cuesta en puntos lo que se quiere canjear. Se calcula acá
+    // adentro con el valor que configuró el admin — no confiamos en un
+    // total de puntos que mande el cliente (a diferencia del total en
+    // pesos, que ya funcionaba así de antes). Las butacas VIP cuestan más
+    // puntos, con el mismo recargo (RECARGO_VIP) que ya se les aplica en
+    // pesos — si no, canjear una VIP "regalaría" ese recargo.
+    const costoEnPuntosPorButaca = new Map<string, number>();
+    let puntosGastados = 0;
+
+    if (usuario && butacasCanjeadas.length > 0) {
+      const config = await this.fidelizacionService.obtenerConfig();
+
+      for (const codigo of butacasCanjeadas) {
+        const costo = this.costoEntradaEnPuntos(config.puntos_por_entrada_gratis, codigo);
+
+        costoEnPuntosPorButaca.set(codigo, costo);
+        puntosGastados += costo;
+      }
+    }
+    for (const item of candyCanjeado) {
+      puntosGastados += item.puntos;
+    }
+
+    if (usuario && puntosGastados > usuario.puntos) {
+      throw new Error('No tenés suficientes puntos para este canje.');
+    }
+
+    // 2. Creamos la orden primero — es el contenedor que agrupa esta
     // compra completa (entradas + candy). Su codigo_qr es el que sirve
     // para retirar el candy bar, separado del QR de cada butaca. Guarda
     // el total real pagado y cuánto de eso fue con crédito, para poder
@@ -78,18 +125,23 @@ export class Entradas {
 
     const { data, error } = await this.supabase.Supabase.from('entradas')
       .insert(nuevasEntradas)
-      .select('fila, columna, codigo_qr');
+      .select('id, fila, columna, codigo_qr');
 
     if (error) throw error;
 
-    // 2. Si eligió candy, lo vinculamos a la misma orden
-    if (candyItems.length > 0) {
-      await this.candyService.agregarItems(orden.id, candyItems);
+    // 3. Si eligió candy (pagado con plata, canjeado con puntos, o las
+    // dos cosas), lo vinculamos a la misma orden — todo junto, porque
+    // para retirarlo en el candy bar da igual cómo se pagó.
+    if (candyItems.length > 0 || candyCanjeado.length > 0) {
+      await this.candyService.agregarItems(orden.id, [
+        ...candyItems,
+        ...candyCanjeado.map(({ producto_id, cantidad }) => ({ producto_id, cantidad })),
+      ]);
     }
 
-    // 3. Actualizaciones al perfil del comprador — todas juntas en un
-    // solo update en vez de 3 llamadas separadas (cupón usado, crédito
-    // descontado, puntos ganados).
+    // 4. Actualizaciones al perfil del comprador — todas juntas en un
+    // solo update (cupón usado, crédito descontado, puntos ganados,
+    // puntos gastados en el canje).
     if (usuario) {
       const cambiosPerfil: Partial<
         Pick<IPerfil, 'cupon_primera_compra_usado' | 'credito' | 'puntos'>
@@ -103,11 +155,18 @@ export class Entradas {
       }
 
       // Fidelización: 1 punto por cada peso REALMENTE pagado. No sumamos
-      // puntos sobre la parte cubierta con crédito — ahí no salió plata
-      // de verdad de ningún lado.
+      // puntos sobre la parte cubierta con crédito ni sobre la pagada con
+      // puntos — en ninguna de las dos salió plata de verdad, y sumar ahí
+      // sería un loop infinito de puntos.
       const montoPagado = total - creditoAUsar;
+      let puntosNuevos = usuario.puntos;
       if (montoPagado > 0) {
-        cambiosPerfil.puntos = usuario.puntos + Math.floor(montoPagado);
+        puntosNuevos += Math.floor(montoPagado);
+      }
+      puntosNuevos -= puntosGastados;
+
+      if (puntosNuevos !== usuario.puntos) {
+        cambiosPerfil.puntos = puntosNuevos;
       }
 
       if (Object.keys(cambiosPerfil).length > 0) {
@@ -117,6 +176,42 @@ export class Entradas {
 
         if (errorPerfil) throw errorPerfil;
       }
+    }
+
+    // 5. Recién con las entradas ya insertadas (necesitamos sus id) y el
+    // perfil ya actualizado, guardamos el historial de canjes.
+    if (usuario && puntosGastados > 0) {
+      const canjes: Omit<ICanje, 'id' | 'creado_en'>[] = [];
+
+      for (const entrada of data) {
+        const codigo = `${entrada.fila}${entrada.columna}`;
+        const costo = costoEnPuntosPorButaca.get(codigo);
+        if (costo === undefined) continue; // esta butaca no se canjeó, se pagó normal
+
+        canjes.push({
+          usuario_id: usuario.id,
+          orden_id: orden.id,
+          tipo: 'entrada',
+          entrada_id: entrada.id,
+          candy_producto_id: null,
+          cantidad: 1,
+          puntos_gastados: costo,
+        });
+      }
+
+      for (const item of candyCanjeado) {
+        canjes.push({
+          usuario_id: usuario.id,
+          orden_id: orden.id,
+          tipo: 'candy',
+          entrada_id: null,
+          candy_producto_id: item.producto_id,
+          cantidad: item.cantidad,
+          puntos_gastados: item.puntos,
+        });
+      }
+
+      await this.fidelizacionService.registrarCanjes(canjes);
     }
 
     return { orden, entradas: data };

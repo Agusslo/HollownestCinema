@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, signal, viewChild, OnDestroy } from '@angular/core';
+import { Component, inject, signal, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Supabase } from '../../../core/services/supabase';
@@ -10,11 +10,13 @@ import { Auth } from '../../../core/services/auth';
 import { Cupones } from '../../../core/services/cupones';
 import { Candy } from '../../../core/services/candy';
 import { Combos } from '../../../core/services/combos';
+import { Fidelizacion } from '../../../core/services/fidelizacion';
 import { IComboConItems } from '../../../core/interfaces/combo';
 import { IFuncionConSala } from '../../../core/interfaces/funcion';
 import IPelicula from '../../../core/interfaces/pelicula';
 import IPerfil from '../../../core/interfaces/perfil';
 import ICupon from '../../../core/interfaces/cupon';
+import { IFidelizacionConfig } from '../../../core/interfaces/canje';
 import ICandyCategoria from '../../../core/interfaces/candy-categoria';
 import { ICandyProductoConCategoria } from '../../../core/interfaces/candy-producto';
 import { Pdf } from '../../../core/services/pdf';
@@ -38,6 +40,7 @@ export class Butacas implements OnDestroy {
   private cuponesService = inject(Cupones);
   private candyService = inject(Candy);
   private combosService = inject(Combos);
+  private fidelizacionService = inject(Fidelizacion);
 
   // Canal de Supabase Realtime — se abre en cargarDatos() y se cierra en
   // ngOnDestroy() para no dejar la conexión abierta al salir de la pantalla.
@@ -72,8 +75,11 @@ export class Butacas implements OnDestroy {
   protected combosDisponibles = signal<IComboConItems[]>([]);
   protected comboSeleccionado = signal<IComboConItems | null>(null);
 
+  // Fidelización — canje de entradas con puntos
+  protected fidelizacionConfig = signal<IFidelizacionConfig | null>(null);
+  protected usarPuntos = signal(false);
+
   private pdfService = inject(Pdf);
-  private mapaSala = viewChild<ElementRef<HTMLElement>>('mapaSala');
   constructor() {
     this.cargarDatos();
   }
@@ -127,6 +133,7 @@ export class Butacas implements OnDestroy {
 
     this.usuario.set(await this.authService.usuarioActual());
     this.cupones.set(await this.cuponesService.obtenerTodos());
+    this.fidelizacionConfig.set(await this.fidelizacionService.obtenerConfig());
 
     const [categorias, productos] = await Promise.all([
       this.candyService.obtenerCategorias(),
@@ -141,16 +148,6 @@ export class Butacas implements OnDestroy {
     this.combosDisponibles.set(await this.combosService.obtenerActivos());
 
     this.cargando.set(false);
-    // En pantallas angostas la sala no entra entera: arrancamos con el
-    // scroll en el medio, así se ve el centro y queda claro que se puede
-    // mover para los dos lados.
-    setTimeout(() => this.centrarMapa());
-  }
-
-  private centrarMapa(): void {
-    const mapa = this.mapaSala()?.nativeElement;
-    if (!mapa) return;
-    mapa.scrollLeft = (mapa.scrollWidth - mapa.clientWidth) / 2;
   }
 
   // Escucha en vivo cuando se inserta una entrada nueva para ESTA función
@@ -318,10 +315,13 @@ export class Butacas implements OnDestroy {
 
     // Antes era "precio del formato × cantidad de butacas"; ahora cada
     // butaca puede tener un precio distinto si es VIP, así que sumamos
-    // butaca por butaca en vez de multiplicar por un precio único.
-    const preciosButacas = Array.from(this.seleccionadas()).map((codigo) =>
-      this.entradasService.precioPorButaca(funcionActual.formato, codigo),
-    );
+    // butaca por butaca en vez de multiplicar por un precio único. Las
+    // butacas canjeadas con puntos quedan afuera de esta cuenta — son
+    // gratis en pesos, ya se "pagaron" con puntos.
+    const canjeadas = new Set(this.butacasCanjeadas());
+    const preciosButacas = Array.from(this.seleccionadas())
+      .filter((codigo) => !canjeadas.has(codigo))
+      .map((codigo) => this.entradasService.precioPorButaca(funcionActual.formato, codigo));
     let subtotalEntradas = preciosButacas.reduce((acumulado, precio) => acumulado + precio, 0);
 
     const combo = this.comboSeleccionado();
@@ -353,6 +353,44 @@ export class Butacas implements OnDestroy {
 
   protected montoAPagar(): number {
     return this.calcularTotal() - this.creditoAUsar();
+  }
+
+  // Fidelización: de las butacas seleccionadas, cuáles se terminan pagando
+  // con puntos. Canjeamos primero las más baratas en puntos (las que no son
+  // VIP) para que el saldo alcance para la mayor cantidad de entradas
+  // posible, y paramos apenas los puntos no alcanzan para la siguiente.
+  protected butacasCanjeadas(): string[] {
+    const config = this.fidelizacionConfig();
+    const usuario = this.usuario();
+    if (!this.usarPuntos() || !config || !usuario) return [];
+
+    const ordenadas = Array.from(this.seleccionadas()).sort(
+      (a, b) =>
+        this.entradasService.costoEntradaEnPuntos(config.puntos_por_entrada_gratis, a) -
+        this.entradasService.costoEntradaEnPuntos(config.puntos_por_entrada_gratis, b),
+    );
+
+    const canjeadas: string[] = [];
+    let puntosRestantes = usuario.puntos;
+
+    for (const codigo of ordenadas) {
+      const costo = this.entradasService.costoEntradaEnPuntos(config.puntos_por_entrada_gratis, codigo);
+      if (costo > puntosRestantes) break; // ya no alcanza ni para la más barata que queda
+      canjeadas.push(codigo);
+      puntosRestantes -= costo;
+    }
+
+    return canjeadas;
+  }
+
+  protected puntosAUsar(): number {
+    const config = this.fidelizacionConfig();
+    if (!config) return 0;
+    return this.butacasCanjeadas().reduce(
+      (acumulado, codigo) =>
+        acumulado + this.entradasService.costoEntradaEnPuntos(config.puntos_por_entrada_gratis, codigo),
+      0,
+    );
   }
 
   // Misma cuenta que ya usa Cupones para "mayores de 50" — la duplico acá
@@ -437,6 +475,7 @@ export class Butacas implements OnDestroy {
         candyItems,
         this.calcularTotal(),
         this.creditoAUsar(),
+        this.butacasCanjeadas(),
       );
 
       const detalle = await this.funcionesService.obtenerDetalleCompra(this.funcion_id);

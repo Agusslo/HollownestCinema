@@ -1274,19 +1274,142 @@ h1 {
 }
 
 /* ── Crédito disponible (resumen de compra) ── */
-.toggle-credito {
+/* Tarjeta con interruptor (crédito / puntos). El label global del sitio
+   es flex en columna — acá lo forzamos a fila: ícono · textos · switch. */
+.opcion-toggle {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 8px;
-  margin: 10px 0;
-  font-size: 0.85rem;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 12px;
+  text-align: left;
   color: var(--hk-pale);
+  background: rgba(79, 196, 227, 0.04);
+  border: 1px solid rgba(212, 212, 224, 0.14);
+  border-radius: 10px;
   cursor: pointer;
+  user-select: none;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
 }
 
-.toggle-credito input {
-  width: auto;
-  accent-color: var(--hk-focus);
+.opcion-toggle:hover {
+  border-color: rgba(79, 196, 227, 0.45);
+}
+
+.opcion-toggle.activa {
+  background: rgba(79, 196, 227, 0.1);
+  border-color: var(--hk-focus);
+}
+
+.opcion-icono {
+  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.opcion-textos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Fuente de sistema (como en las butacas): a este tamaño la decorativa
+   en negrita se volvía ilegible. */
+.opcion-titulo,
+.opcion-detalle {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.opcion-titulo {
+  color: var(--hk-soul);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.opcion-detalle {
+  color: var(--hk-soft-text);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+/* Interruptor: el checkbox dibujado a mano. Pisa explícitamente todo lo
+   del estilo global de input (alto de 48px, padding, borde y el brillo
+   de :focus, que eran las "dos sombras raras" al hacer click). */
+.opcion-toggle .switch,
+.opcion-toggle .switch:focus {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  display: block;
+  width: 42px;
+  height: 24px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--hk-stone);
+  box-shadow: inset 0 0 0 1px rgba(212, 212, 224, 0.2);
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.opcion-toggle .switch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s;
+}
+
+.opcion-toggle .switch:checked {
+  background: var(--hk-focus);
+  box-shadow: none;
+}
+
+.opcion-toggle .switch:checked::before {
+  transform: translateX(18px);
+}
+
+/* Aro de foco sólo al navegar con teclado, no al hacer click */
+.opcion-toggle .switch:focus-visible {
+  outline: 2px solid var(--hk-focus);
+  outline-offset: 2px;
+}
+
+:host-context(.tema-claro) .opcion-toggle {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.18);
+}
+
+:host-context(.tema-claro) .opcion-toggle.activa {
+  background: rgba(22, 141, 168, 0.08);
+  border-color: var(--hk-focus);
+}
+
+:host-context(.tema-claro) .opcion-toggle .switch {
+  background: #c4ced2;
+  box-shadow: none;
+}
+
+:host-context(.tema-claro) .opcion-toggle .switch:checked {
+  background: #0e6f86;
 }
 
 .credito-aplicado {

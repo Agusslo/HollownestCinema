@@ -13,7 +13,7 @@
     </header>
 
     <div class="seleccion-layout">
-      <section #mapaSala class="mapa-sala" aria-label="Mapa de butacas">
+      <section class="mapa-sala" aria-label="Mapa de butacas">
         <div class="pantalla-wrap">
           <div class="pantalla">
             <span class="pantalla-texto"
@@ -159,13 +159,38 @@
 
         @if (usuario(); as u) {
           @if (u.credito > 0) {
-            <label class="toggle-credito">
+            <label class="opcion-toggle" [class.activa]="usarCredito()">
+              <span class="opcion-icono" aria-hidden="true">💰</span>
+              <span class="opcion-textos">
+                <span class="opcion-titulo">Usar mi crédito</span>
+                <span class="opcion-detalle">${{ u.credito }} disponibles</span>
+              </span>
               <input
                 type="checkbox"
+                role="switch"
+                class="switch"
                 [checked]="usarCredito()"
                 (change)="usarCredito.set(!usarCredito())"
               />
-              Usar mi crédito disponible (${{ u.credito }})
+            </label>
+          }
+          @if (u.puntos > 0 && fidelizacionConfig(); as config) {
+            <label class="opcion-toggle" [class.activa]="usarPuntos()">
+              <span class="opcion-icono" aria-hidden="true">⭐</span>
+              <span class="opcion-textos">
+                <span class="opcion-titulo">Usar mis puntos</span>
+                <span class="opcion-detalle">{{ u.puntos }} pts disponibles</span>
+                <span class="opcion-detalle"
+                  >{{ config.puntos_por_entrada_gratis }} pts = 1 entrada gratis</span
+                >
+              </span>
+              <input
+                type="checkbox"
+                role="switch"
+                class="switch"
+                [checked]="usarPuntos()"
+                (change)="usarPuntos.set(!usarPuntos())"
+              />
             </label>
           }
         }
@@ -174,6 +199,17 @@
           <span class="total-label">TOTAL</span>
           <span class="total-monto">${{ calcularTotal() }}</span>
         </div>
+
+        @if (puntosAUsar() > 0) {
+          <div class="credito-aplicado">
+            <span>
+              {{ butacasCanjeadas().length }}
+              {{ butacasCanjeadas().length === 1 ? 'entrada gratis' : 'entradas gratis' }} con
+              puntos
+            </span>
+            <span>−{{ puntosAUsar() }} pts</span>
+          </div>
+        }
 
         @if (creditoAUsar() > 0) {
           <div class="credito-aplicado">

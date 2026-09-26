@@ -203,6 +203,29 @@ textarea:focus {
   color-scheme: light;
 }
 
+/* Los estilos de arriba son para campos de texto: a checkboxes y radios
+   les daban 48px de alto, padding y el brillo de :focus, que al hacer
+   click aparecía como una segunda sombra alrededor de la casilla. */
+input[type='checkbox'],
+input[type='radio'],
+input[type='checkbox']:focus,
+input[type='radio']:focus {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+input[type='checkbox']:focus-visible,
+input[type='radio']:focus-visible {
+  outline: 2px solid var(--hk-focus);
+  outline-offset: 2px;
+}
+
 .tema-claro input:-webkit-autofill,
 .tema-claro input:-webkit-autofill:hover,
 .tema-claro input:-webkit-autofill:focus,
