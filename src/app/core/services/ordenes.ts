@@ -58,7 +58,7 @@ export class Ordenes {
                 `id, creado_en, total, credito_usado, cancelada_en,
                 entradas ( id, fila, columna, validada_en,
                     funciones ( fecha_hora, formato, idioma,
-                        peliculas ( nombre ),
+                        peliculas ( id, nombre, imagen_url ),
                         salas ( nombre ) ) ),
                 orden_candy_items ( cantidad, candy_productos ( nombre ) ),
                 canjes ( tipo, entrada_id, puntos_gastados )`,

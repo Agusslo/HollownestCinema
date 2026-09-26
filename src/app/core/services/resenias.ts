@@ -19,6 +19,20 @@ export class Resenias {
         return data as unknown as IReseniaConAutor[];
     }
 
+    // Para "Mis películas": todas las reseñas que dejó UN usuario, sin
+    // importar de qué película — a diferencia de obtenerPorPelicula(), que
+    // filtra al revés (todas las reseñas de UNA película, de cualquier
+    // usuario). Se usa para mostrar "tu calificación" en cada tarjeta de
+    // película vista.
+    async obtenerPorUsuario(usuario_id: string): Promise<IResenia[]> {
+        const { data, error } = await this.supabase.Supabase.from('resenias')
+        .select('*')
+        .eq('usuario_id', usuario_id);
+
+        if (error) throw error;
+        return data as IResenia[];
+    }
+
     async crear(resenia: Omit<IResenia, 'id' | 'creado_en'>): Promise<void> {
         const { error } = await this.supabase.Supabase.from('resenias').insert(resenia);
 

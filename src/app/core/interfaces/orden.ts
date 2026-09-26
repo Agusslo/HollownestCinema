@@ -35,7 +35,11 @@ export interface IOrdenConDetalle {
             fecha_hora: string;
             formato: string;
             idioma: string;
-            peliculas: { nombre: string };
+            // id e imagen_url se agregaron para "Mis películas": ahí
+            // necesitamos poder agrupar por película y mostrar su póster,
+            // cosa que "Mis compras" no necesitaba antes (por eso no
+            // estaban acá).
+            peliculas: { id: number; nombre: string; imagen_url: string };
             salas: { nombre: string };
         };
     }[];
