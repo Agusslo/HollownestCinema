@@ -7,6 +7,7 @@ import { Ordenes } from '../../../core/services/ordenes';
 import { ICanjeConDetalle, IFidelizacionConfig } from '../../../core/interfaces/canje';
 import { IOrdenConDetalle } from '../../../core/interfaces/orden';
 import IPerfil from '../../../core/interfaces/perfil';
+import { GlowHover } from '../../../shared/directives/glow-hover';
 
 // Un renglón de "Mis puntos": puede ser una GANANCIA (una compra pagada
 // con plata, que sumó puntos) o un GASTO (un canje, que restó puntos).
@@ -29,7 +30,7 @@ const ETIQUETAS_TIPO: Record<IMovimientoPuntos['tipo'], string> = {
 
 @Component({
   selector: 'app-mis-puntos',
-  imports: [DatePipe, DecimalPipe],
+  imports: [DatePipe, DecimalPipe, GlowHover],
   templateUrl: './mis-puntos.html',
   styleUrl: './mis-puntos.css',
 })

@@ -181,7 +181,6 @@
 
 .fila-input button:hover:not(:disabled) {
   filter: brightness(1.1);
-  box-shadow: 0 0 16px rgba(79, 196, 227, 0.45);
 }
 
 .fila-input button:disabled {
@@ -457,7 +456,6 @@
 
 .btn-confirmar:hover:not(:disabled) {
   filter: brightness(1.08);
-  box-shadow: 0 0 18px rgba(232, 168, 50, 0.45);
 }
 
 .btn-confirmar:disabled {

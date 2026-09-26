@@ -33,7 +33,12 @@
   } @else {
     <div class="lista-compras">
       @for (orden of compras(); track orden.id) {
-        <article class="ticket" [class.cancelada]="orden.cancelada_en">
+        <article
+          class="ticket"
+          appGlowHover
+          [color]="orden.cancelada_en ? '#c0392b' : '#4fc4e3'"
+          [class.cancelada]="orden.cancelada_en"
+        >
           <!-- Talón: la fecha de la función, como en un ticket de cine -->
           @if (orden.entradas.length > 0) {
             <div class="talon">

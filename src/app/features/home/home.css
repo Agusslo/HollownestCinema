@@ -1277,3 +1277,309 @@
   --hk-badge-bg: rgba(10, 10, 18, 0.88);
   --borde-hk: 1px solid rgba(212, 212, 224, 0.15);
 }
+/* ── Buscador rediseñado: título con ornamento y una fila de dos
+   "píldoras" (búsqueda + género). Va al final para pisar lo de arriba. ── */
+.buscador {
+  width: min(100%, 720px);
+}
+
+.buscador-label {
+  margin-bottom: 0;
+  color: var(--hk-soul);
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+  letter-spacing: 4px;
+}
+
+.buscador-ornamento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0 18px;
+  color: var(--hk-focus);
+  font-size: 0.5rem;
+}
+
+.buscador-ornamento span {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hk-pale));
+}
+
+.buscador-ornamento span:last-child {
+  background: linear-gradient(90deg, var(--hk-pale), transparent);
+}
+
+.buscador-fila {
+  display: flex;
+  gap: 10px;
+}
+
+.buscador-control {
+  flex: 1;
+  min-width: 0;
+  background: rgba(22, 22, 38, 0.7);
+  border: 1px solid rgba(79, 196, 227, 0.28);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.buscador-control:focus-within {
+  border-color: var(--hk-focus);
+  box-shadow:
+    0 0 0 3px rgba(79, 196, 227, 0.12),
+    0 8px 24px rgba(79, 196, 227, 0.12);
+}
+
+.buscador-icono {
+  left: 18px;
+  font-size: 1.35rem;
+}
+
+.buscador-input {
+  height: 48px;
+  min-height: 48px;
+  padding: 0 20px 0 48px;
+  font-size: 1rem;
+  box-shadow: none;
+}
+
+.buscador-input:focus {
+  box-shadow: none;
+}
+
+.genero-select {
+  flex-shrink: 0;
+  width: 210px;
+  height: 50px;
+  min-height: 50px;
+  margin: 0;
+  padding: 0 40px 0 20px;
+  appearance: none;
+  -webkit-appearance: none;
+  /* Flechita propia en vez de la del sistema */
+  background:
+    linear-gradient(45deg, transparent 50%, var(--hk-focus) 50%) calc(100% - 22px) 52% / 6px 6px no-repeat,
+    linear-gradient(135deg, var(--hk-focus) 50%, transparent 50%) calc(100% - 16px) 52% / 6px 6px no-repeat,
+    rgba(22, 22, 38, 0.7);
+  border: 1px solid rgba(79, 196, 227, 0.28);
+  border-radius: 999px;
+  color: var(--hk-pale);
+  font-size: 0.95rem;
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.genero-select:focus {
+  border-color: var(--hk-focus);
+  box-shadow: 0 0 0 3px rgba(79, 196, 227, 0.12);
+}
+
+@media (max-width: 620px) {
+  .buscador-fila {
+    flex-direction: column;
+  }
+
+  .buscador-control {
+    border-radius: 999px;
+  }
+
+  .genero-select {
+    width: 100%;
+    margin-top: 0;
+    padding: 0 40px 0 20px;
+    border-radius: 999px;
+  }
+}
+
+:host-context(.tema-claro) .buscador-control,
+:host-context(.tema-claro) .genero-select {
+  background-color: #ffffff;
+  border-color: rgba(41, 64, 71, 0.2);
+  box-shadow: 0 6px 18px rgba(41, 64, 71, 0.08);
+}
+
+:host-context(.tema-claro) .genero-select {
+  background:
+    linear-gradient(45deg, transparent 50%, var(--hk-focus) 50%) calc(100% - 22px) 52% / 6px 6px no-repeat,
+    linear-gradient(135deg, var(--hk-focus) 50%, transparent 50%) calc(100% - 16px) 52% / 6px 6px no-repeat,
+    #ffffff;
+}
+
+/* ── Encabezados de sección (más vistas / cartelera / resultados) ── */
+.seccion-header {
+  max-width: 1200px;
+  margin: 64px auto 28px;
+  text-align: center;
+}
+
+.seccion-kicker {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.seccion-header .seccion-titulo {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  color: var(--hk-soul);
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  letter-spacing: 4px;
+  text-align: center;
+}
+
+.seccion-ornamento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  color: var(--hk-focus);
+  font-size: 0.5rem;
+}
+
+.seccion-ornamento span {
+  width: 90px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hk-pale));
+}
+
+.seccion-ornamento span:last-child {
+  background: linear-gradient(90deg, var(--hk-pale), transparent);
+}
+
+.seccion-header-oro .seccion-kicker,
+.seccion-header-oro .seccion-ornamento {
+  color: var(--hk-geo);
+}
+
+.seccion-header-oro .seccion-titulo {
+  text-shadow: 0 0 22px rgba(232, 168, 50, 0.25);
+}
+
+/* ── Tarjetas de póster: un panel con marco, el póster y una placa con
+   el nombre. El brillo al pasar el mouse lo pone la directiva
+   appGlowHover sobre la tarjeta entera (celeste en la cartelera, dorado
+   en las más vistas), así que acá ya no hay box-shadow en :hover. ── */
+.poster-card,
+.destacada-card {
+  padding: 10px 10px 0;
+  background: linear-gradient(165deg, rgba(36, 36, 58, 0.92), rgba(14, 14, 26, 0.96));
+  border: 1px solid rgba(79, 196, 227, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+.poster-card:hover {
+  border-color: rgba(79, 196, 227, 0.55);
+}
+
+.destacada-card {
+  border-color: rgba(232, 168, 50, 0.3);
+}
+
+.destacada-card:hover {
+  border-color: rgba(232, 168, 50, 0.7);
+}
+
+.poster-frame,
+.destacada-frame {
+  border: none;
+  border-radius: 8px;
+}
+
+.poster-card:hover .poster-frame,
+.destacada-card:hover .destacada-frame {
+  box-shadow: none;
+}
+
+/* Placa con el nombre, separada del póster por un filo ornamental */
+.poster-nombre,
+.destacada-nombre {
+  position: relative;
+  margin: 0;
+  padding: 14px 8px 16px;
+  color: var(--hk-pale);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.poster-nombre::before,
+.destacada-nombre::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79, 196, 227, 0.45), transparent);
+}
+
+.destacada-nombre::before {
+  background: linear-gradient(90deg, transparent, rgba(232, 168, 50, 0.55), transparent);
+}
+
+/* El Nº 1 se destaca aunque no le pasen el mouse */
+.destacada-card:nth-child(1) {
+  border-color: rgba(232, 168, 50, 0.6);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.4),
+    0 0 26px rgba(232, 168, 50, 0.18);
+}
+
+.destacadas-grid {
+  max-width: 900px;
+  align-items: start;
+}
+
+@media (max-width: 620px) {
+  .seccion-header {
+    margin: 36px auto 18px;
+  }
+
+  .seccion-ornamento span {
+    width: 50px;
+  }
+
+  .poster-card,
+  .destacada-card {
+    padding: 6px 6px 0;
+    border-radius: 10px;
+  }
+
+  .poster-nombre,
+  .destacada-nombre {
+    padding: 10px 4px 12px;
+    font-size: 0.85rem;
+    text-transform: none;
+    text-align: center;
+  }
+}
+
+:host-context(.tema-claro) .poster-card,
+:host-context(.tema-claro) .destacada-card {
+  background: #ffffff;
+  box-shadow: 0 10px 26px rgba(41, 64, 71, 0.12);
+}
+
+:host-context(.tema-claro) .poster-card {
+  border-color: rgba(41, 64, 71, 0.16);
+}
+
+:host-context(.tema-claro) .destacada-card {
+  border-color: rgba(166, 111, 28, 0.35);
+}
+
+:host-context(.tema-claro) .seccion-header-oro .seccion-titulo {
+  text-shadow: none;
+}

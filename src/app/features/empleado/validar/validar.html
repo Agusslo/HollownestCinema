@@ -40,7 +40,7 @@
         autocomplete="off"
         (keydown.enter)="buscar()"
       />
-      <button type="button" [disabled]="buscando()" (click)="buscar()">
+      <button type="button" appGlowHover [disabled]="buscando()" (click)="buscar()">
         {{ buscando() ? 'Buscando…' : 'Buscar' }}
       </button>
     </div>
@@ -53,7 +53,7 @@
 
   <div class="camara-seccion">
     @if (!camaraActiva()) {
-      <button type="button" class="btn-camara" (click)="activarCamara()">
+      <button type="button" class="btn-camara" appGlowHover (click)="activarCamara()">
         <span class="qr-marco" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
         Escanear con la cámara
       </button>
@@ -100,6 +100,8 @@
         <button
           type="button"
           class="btn-confirmar"
+          appGlowHover
+          color="#e8a832"
           [disabled]="confirmando()"
           (click)="confirmarEntrada()"
         >
@@ -127,6 +129,8 @@
         <button
           type="button"
           class="btn-confirmar"
+          appGlowHover
+          color="#e8a832"
           [disabled]="confirmando()"
           (click)="confirmarCandy()"
         >

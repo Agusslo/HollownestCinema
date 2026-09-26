@@ -68,7 +68,11 @@
       @for (mov of movimientos(); track $index) {
         <li class="movimiento" [class.ganancia]="mov.puntos > 0">
           <span class="nodo" aria-hidden="true"></span>
-          <div class="movimiento-card">
+          <div
+            class="movimiento-card"
+            appGlowHover
+            [color]="mov.puntos > 0 ? '#e8a832' : '#4fc4e3'"
+          >
             <div class="movimiento-textos">
               <span class="movimiento-tipo">{{ etiquetaTipo(mov.tipo) }}</span>
               <span class="movimiento-titulo">{{ mov.titulo }}</span>

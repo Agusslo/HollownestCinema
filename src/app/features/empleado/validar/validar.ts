@@ -9,12 +9,13 @@ import { Component, inject, signal, OnDestroy } from '@angular/core';
     import { IEntradaValidacion } from '../../../core/interfaces/entrada';
     import { IOrdenConCandy } from '../../../core/interfaces/orden';
     import IPerfil from '../../../core/interfaces/perfil';
+    import { GlowHover } from '../../../shared/directives/glow-hover';
 
     type Modo = 'entrada' | 'candy';
 
     @Component({
     selector: 'app-validar',
-    imports: [ReactiveFormsModule, DatePipe],
+    imports: [ReactiveFormsModule, DatePipe, GlowHover],
     templateUrl: './validar.html',
     styleUrl: './validar.css',
     })

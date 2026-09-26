@@ -19,8 +19,14 @@ export class GlowHover {
   color = input('#4fc4e3');
 
   onMouseEnter() {
-    this.el.nativeElement.style.boxShadow = `0 0 16px ${this.color()}`;
-    this.el.nativeElement.style.transition = 'box-shadow 0.25s ease';
+    const elemento = this.el.nativeElement;
+    elemento.style.boxShadow = `0 0 16px ${this.color()}`;
+    // Sólo le ponemos transición si el elemento no tiene una propia: si
+    // no, pisaríamos las del CSS (por ejemplo la de transform que hace
+    // "levantar" los pósters) y esos efectos dejarían de animarse.
+    if (getComputedStyle(elemento).transitionDuration === '0s') {
+      elemento.style.transition = 'box-shadow 0.25s ease';
+    }
   }
 
   onMouseLeave() {

@@ -178,6 +178,8 @@
   <div class="buscador" id="seccion-cartelera">
     <img class="void-ghost" src="/img/void.png" alt="" aria-hidden="true" />
     <label class="buscador-label" for="buscar-pelicula">Explorá la cartelera</label>
+    <div class="buscador-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+    <div class="buscador-fila">
     <div class="buscador-control">
       <span class="buscador-icono" aria-hidden="true">⌕</span>
       <input
@@ -202,14 +204,23 @@
         <option [value]="genero.id">{{ genero.nombre }}</option>
       }
     </select>
+    </div>
   </div>
 
   @if (resultadosBusqueda(); as resultados) {
-    <h2 class="seccion-titulo resultados-titulo">Resultados de búsqueda</h2>
+    <header class="seccion-header">
+      <span class="seccion-kicker">Tu búsqueda</span>
+      <h2 class="seccion-titulo">Resultados</h2>
+      <div class="seccion-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+    </header>
     @if (resultados.length > 0) {
       <div class="cartelera">
         @for (pelicula of resultados; track pelicula.id) {
-          <a class="poster-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
+          <a
+            class="poster-card"
+            appGlowHover
+            [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]"
+          >
             <div class="poster-frame">
               <span class="poster-duracion">⏱ {{ pelicula.duracion_minutos | duracion }}</span>
               <img
@@ -234,10 +245,19 @@
     }
   } @else {
     @if (destacadas().length > 0) {
-      <h2 class="seccion-titulo destacadas-titulo">Las más vistas de Hallownest</h2>
+      <header class="seccion-header seccion-header-oro">
+      <span class="seccion-kicker">Top 3 del reino</span>
+      <h2 class="seccion-titulo">Las más vistas de Hallownest</h2>
+      <div class="seccion-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+    </header>
       <div class="destacadas-grid">
         @for (pelicula of destacadas(); track pelicula.id; let i = $index) {
-          <a class="destacada-card" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
+          <a
+            class="destacada-card"
+            appGlowHover
+            color="#e8a832"
+            [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]"
+          >
             <div class="destacada-frame">
               <div class="destacada-rango">
                 <span class="rango-simbolo">✦</span>
@@ -262,9 +282,13 @@
     }
 
     @if (peliculas().length > 0) {
-      <h2 class="seccion-titulo">
-        {{ destacadas().length > 0 ? 'Resto de la cartelera' : 'Cartelera' }}
-      </h2>
+      <header class="seccion-header">
+        <span class="seccion-kicker">Todas las funciones</span>
+        <h2 class="seccion-titulo">
+          {{ destacadas().length > 0 ? 'Resto de la cartelera' : 'Cartelera' }}
+        </h2>
+        <div class="seccion-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+      </header>
       <div class="cartelera">
         @for (pelicula of peliculas(); track pelicula.id) {
           <a

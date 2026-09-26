@@ -26,7 +26,7 @@
             <li class="evento" [attr.data-tipo]="tipoDe(entrada.accion)">
               <span class="evento-icono" aria-hidden="true">{{ iconoDe(entrada.accion) }}</span>
 
-              <div class="evento-card">
+              <div class="evento-card" appGlowHover [color]="colorDe(entrada.accion)">
                 <p class="evento-accion">{{ entrada.accion }}</p>
 
                 <div class="evento-meta">

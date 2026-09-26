@@ -5,6 +5,7 @@ import { Auth } from '../../../core/services/auth';
 import { Ordenes } from '../../../core/services/ordenes';
 import { IOrdenConDetalle } from '../../../core/interfaces/orden';
 import IPerfil from '../../../core/interfaces/perfil';
+import { GlowHover } from '../../../shared/directives/glow-hover';
 
 // Mismo límite que ya usa Ordenes.cancelar() del lado del servicio — acá
 // lo repetimos sólo para decidir si mostramos el botón de cancelar o no.
@@ -13,7 +14,7 @@ const HORAS_LIMITE_CANCELACION = 2;
 
 @Component({
   selector: 'app-mis-compras',
-  imports: [DatePipe, DecimalPipe],
+  imports: [DatePipe, DecimalPipe, GlowHover],
   templateUrl: './mis-compras.html',
   styleUrl: './mis-compras.css',
 })

@@ -1,13 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth } from './core/services/auth';
 import IPerfil from './core/interfaces/perfil';
 import { Supabase } from './core/services/supabase';
 import { BlobatarComponent } from './shared/components/blobatar/blobatar';
+import { GlowHover } from './shared/directives/glow-hover';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, BlobatarComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, BlobatarComponent, GlowHover],
   templateUrl: './app.html',
   styleUrl: './app.css',
   host: {

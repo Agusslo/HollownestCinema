@@ -5,82 +5,107 @@
   </a>
 
   <nav class="nav-links">
-    <a class="nav-item" [routerLink]="['/']">Cartelera</a>
-    <button
-      class="nav-item theme-toggle"
-      type="button"
-      (click)="alternarTema()"
-      [attr.aria-label]="temaClaro() ? 'Usar fondo oscuro' : 'Usar fondo claro'"
-      [attr.aria-pressed]="temaClaro()"
-    >
-      <span aria-hidden="true">{{ temaClaro() ? '☾' : '☀' }}</span>
-      {{ temaClaro() ? 'Oscuro' : 'Claro' }}
-    </button>
+    <div class="nav-principal">
+      <a
+        class="nav-link"
+        [routerLink]="['/']"
+        routerLinkActive="activo"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Cartelera</a
+      >
 
-    @if (!cargandoAuth()) {
-      @if (usuario(); as u) {
-        <div class="nav-item user-badge">
-          <app-blobatar [name]="u.nombre" [size]="32" animate="hover" class="user-blobatar" />
-          <span class="user-nombre">{{ u.nombre }}</span>
-        </div>
-        <a class="nav-item" [routerLink]="['/mis-compras']">Mis compras</a>
-        <a class="nav-item" [routerLink]="['/mis-puntos']">Mis puntos</a>
+      @if (!cargandoAuth() && usuario(); as u) {
+        <a class="nav-link" [routerLink]="['/mis-compras']" routerLinkActive="activo"
+          >Mis compras</a
+        >
+        <a class="nav-link" [routerLink]="['/mis-puntos']" routerLinkActive="activo"
+          >Mis puntos</a
+        >
 
         @if (u.rol === 'admin' || u.rol === 'empleado') {
           <div class="admin-menu">
             <button
               type="button"
-              class="nav-item admin-menu-btn"
+              class="nav-link admin-menu-btn"
+              [class.activo]="menuAdminAbierto()"
+              [attr.aria-expanded]="menuAdminAbierto()"
               (click)="menuAdminAbierto.set(!menuAdminAbierto())"
             >
-              Panel <span aria-hidden="true">{{ menuAdminAbierto() ? '▴' : '▾' }}</span>
+              Panel <span class="flecha" aria-hidden="true">▾</span>
             </button>
             @if (menuAdminAbierto()) {
               <div class="admin-menu-panel">
                 @if (u.rol === 'admin') {
+                  <span class="menu-seccion">Administración</span>
                   <a [routerLink]="['/admin/peliculas/nueva']" (click)="menuAdminAbierto.set(false)"
-                    >Nueva película</a
+                    >🎬 Nueva película</a
                   >
                   <a [routerLink]="['/admin/funciones/nueva']" (click)="menuAdminAbierto.set(false)"
-                    >Nueva función</a
+                    >🕰️ Nueva función</a
                   >
                   <a [routerLink]="['/admin/cupones']" (click)="menuAdminAbierto.set(false)"
-                    >Cupones</a
+                    >🏷️ Cupones</a
                   >
                   <a [routerLink]="['/admin/candy/nuevo']" (click)="menuAdminAbierto.set(false)"
-                    >Candy bar</a
+                    >🍿 Candy bar</a
                   >
                   <a [routerLink]="['/admin/combos/nuevo']" (click)="menuAdminAbierto.set(false)"
-                    >Combos</a
+                    >🎁 Combos</a
                   >
                   <a [routerLink]="['/admin/log-actividad']" (click)="menuAdminAbierto.set(false)"
-                    >Log de actividad</a
+                    >📜 Log de actividad</a
                   >
                   <hr />
                 }
+                <span class="menu-seccion">Puerta</span>
                 <a [routerLink]="['/empleado/validar']" (click)="menuAdminAbierto.set(false)"
-                  >Validar QR</a
+                  >🎟️ Validar QR</a
                 >
               </div>
             }
           </div>
         }
-
-        <button class="nav-item btn-salir" type="button" (click)="cerrarSesion()">Salir</button>
-      } @else {
-        <div class="nav-item user-badge shade">
-          <app-blobatar
-            name="Sombra"
-            [size]="32"
-            animate="hover"
-            class="user-blobatar shade-blobatar"
-          />
-          <span class="user-nombre">Sombra</span>
-        </div>
-        <a class="nav-item" [routerLink]="['/login']">Ingresar</a>
-        <a class="nav-item nav-primary" [routerLink]="['/registro']">Registrarme</a>
       }
-    }
+    </div>
+
+    <span class="nav-divisor" aria-hidden="true"></span>
+
+    <div class="nav-acciones">
+      <button
+        class="nav-icono"
+        appGlowHover
+        color="#e8a832"
+        type="button"
+        (click)="alternarTema()"
+        [attr.aria-label]="temaClaro() ? 'Usar fondo oscuro' : 'Usar fondo claro'"
+        [attr.aria-pressed]="temaClaro()"
+        [title]="temaClaro() ? 'Modo oscuro' : 'Modo claro'"
+      >
+        <span aria-hidden="true">{{ temaClaro() ? '☾' : '☀' }}</span>
+      </button>
+
+      @if (!cargandoAuth()) {
+        @if (usuario(); as u) {
+          <div class="user-badge" appGlowHover>
+            <app-blobatar [name]="u.nombre" [size]="30" animate="hover" class="user-blobatar" />
+            <span class="user-nombre">{{ u.nombre }}</span>
+          </div>
+          <button class="btn-salir" type="button" (click)="cerrarSesion()">Salir</button>
+        } @else {
+          <div class="user-badge shade" appGlowHover color="#4a4a5e">
+            <app-blobatar
+              name="Sombra"
+              [size]="30"
+              animate="hover"
+              class="user-blobatar shade-blobatar"
+            />
+            <span class="user-nombre">Sombra</span>
+          </div>
+          <a class="nav-link" [routerLink]="['/login']" routerLinkActive="activo">Ingresar</a>
+          <a class="nav-primary" appGlowHover [routerLink]="['/registro']">Registrarme</a>
+        }
+      }
+    </div>
   </nav>
 </header>
 

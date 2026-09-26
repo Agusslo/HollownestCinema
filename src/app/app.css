@@ -10,6 +10,19 @@
   border-bottom: 1px solid rgba(79, 196, 227, 0.15);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
   box-sizing: border-box;
+  position: relative;
+  z-index: 30;
+}
+
+/* Filo de luz en el borde inferior del header */
+.nav-header::after {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79, 196, 227, 0.6), transparent);
 }
 
 .nav-links {
@@ -51,77 +64,202 @@
   letter-spacing: 3px;
 }
 
-/* ── Nav items (Simétricos y de altura unificada) ── */
-.nav-item {
-  height: 42px;
-  min-width: 105px;
-  padding: 0 18px;
+/* ── Links de sección: texto limpio estilo menú de Hollow Knight ── */
+.nav-principal,
+.nav-acciones {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 16px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  color: var(--hk-pale);
+  font-family: 'Trajan', 'Times New Roman', serif;
+  font-size: 0.82rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.25s,
+    text-shadow 0.25s;
+}
+
+/* Rombos a los costados, como el cursor de selección del menú del juego */
+.nav-link::before,
+.nav-link::after {
+  content: '◆';
+  position: absolute;
+  top: 50%;
+  font-size: 0.45rem;
+  color: var(--hk-focus);
+  opacity: 0;
+  transition:
+    opacity 0.25s,
+    transform 0.25s;
+}
+
+.nav-link::before {
+  left: 2px;
+  transform: translate(-6px, -50%);
+}
+
+.nav-link::after {
+  right: 2px;
+  transform: translate(6px, -50%);
+}
+
+.nav-link .flecha {
+  font-size: 0.7rem;
+  transition: transform 0.25s;
+}
+
+/* El :hover repite background/box-shadow para pisar el degradé del
+   estilo global de button[type='button'] (el botón de Panel). */
+.nav-link:hover,
+.nav-link.activo {
+  color: var(--hk-soul);
+  text-shadow: 0 0 14px rgba(79, 196, 227, 0.55);
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.nav-link:hover::before,
+.nav-link:hover::after,
+.nav-link.activo::before,
+.nav-link.activo::after {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+.nav-link.activo {
+  color: var(--hk-focus);
+}
+
+.admin-menu-btn.activo .flecha {
+  transform: rotate(180deg);
+}
+
+/* Separador vertical entre secciones y acciones de cuenta */
+.nav-divisor {
+  width: 1px;
+  height: 26px;
+  margin: 0 6px;
+  background: linear-gradient(180deg, transparent, rgba(212, 212, 224, 0.3), transparent);
+}
+
+/* ── Botón de tema: ícono redondo ── */
+.nav-icono,
+.nav-icono:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  background: rgba(22, 22, 38, 0.55);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: rgba(22, 22, 38, 0.6);
   border: 1px solid rgba(212, 212, 224, 0.18);
-  border-radius: 21px;
-  color: var(--hk-pale);
-  text-decoration: none;
-  font-family: 'Trajan', 'Times New Roman', serif;
-  font-size: 0.85rem;
-  font-weight: bold;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  white-space: nowrap;
-  box-sizing: border-box;
-  transition: all 0.25s ease;
-  backdrop-filter: blur(8px);
-}
-
-.nav-item:hover {
-  background-color: rgba(79, 196, 227, 0.12);
-  border-color: var(--hk-focus);
-  color: #ffffff;
-  box-shadow: 0 0 16px rgba(79, 196, 227, 0.3);
-  transform: translateY(-1px);
-}
-
-.nav-primary {
-  background: linear-gradient(135deg, rgba(79, 196, 227, 0.25), rgba(79, 196, 227, 0.08));
-  border-color: var(--hk-focus);
-  color: #e0f7fc;
-}
-
-.nav-primary:hover {
-  background: linear-gradient(135deg, rgba(79, 196, 227, 0.35), rgba(79, 196, 227, 0.15));
-  color: #ffffff;
-}
-
-.theme-toggle {
-  padding: 0 16px;
-  gap: 8px;
-}
-
-.theme-toggle span {
+  border-radius: 50%;
+  color: var(--hk-geo);
   font-family: 'Perpetua', serif;
   font-size: 1.15rem;
   line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s,
+    transform 0.4s;
+}
+
+.nav-icono:hover {
+  border-color: var(--hk-geo);
+  transform: rotate(25deg);
+}
+
+/* ── Registrarme: el único botón "lleno" cuando no hay sesión ── */
+.nav-primary {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 18px;
+  background: linear-gradient(180deg, #6fd3ee, var(--hk-focus));
+  border-radius: 20px;
+  color: #04141a;
+  font-family: 'Trajan', 'Times New Roman', serif;
+  font-size: 0.78rem;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    box-shadow 0.25s,
+    filter 0.25s;
+}
+
+.nav-primary:hover {
+  filter: brightness(1.08);
+}
+
+/* ── Salir: discreto, se enciende en rojo al pasar ── */
+.btn-salir,
+.btn-salir:hover {
+  height: 36px;
+  padding: 0 14px;
+  background: transparent;
+  border: 1px solid rgba(212, 212, 224, 0.16);
+  border-radius: 18px;
+  color: var(--hk-soft-text);
+  font-family: 'Trajan', 'Times New Roman', serif;
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  box-shadow: none;
+  cursor: pointer;
+  transition:
+    color 0.25s,
+    border-color 0.25s,
+    background-color 0.25s;
+}
+
+.btn-salir:hover {
+  color: #ff9e9e;
+  border-color: var(--hk-grimm);
+  background: rgba(192, 57, 43, 0.1);
 }
 
 /* ── User badge con Blobatar ── */
 .user-badge {
-  min-width: auto;
-  padding: 0 16px 0 8px;
-  gap: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 40px;
+  padding: 0 16px 0 5px;
   background: rgba(22, 22, 38, 0.75);
   border: 1px solid rgba(79, 196, 227, 0.35);
-  box-shadow: 0 0 14px rgba(79, 196, 227, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 0 14px rgba(79, 196, 227, 0.12);
+  box-sizing: border-box;
   cursor: default;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
 }
 
 .user-badge:hover {
   border-color: var(--hk-focus);
-  background: rgba(79, 196, 227, 0.12);
-  box-shadow: 0 0 18px rgba(79, 196, 227, 0.35);
-  transform: none;
 }
 
 .user-blobatar {
@@ -145,44 +283,70 @@
 }
 
 .user-nombre {
-  font-family: 'Trajan', serif;
-  font-size: 0.92rem;
-  letter-spacing: 1.5px;
   color: #ffffff;
+  font-family: 'Trajan', serif;
+  font-size: 0.85rem;
   font-weight: bold;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 .user-badge.shade {
   border-color: rgba(74, 74, 94, 0.4);
+  box-shadow: none;
 }
 
 .user-badge.shade .user-nombre {
   color: var(--hk-ash);
 }
 
+/* ── Modo claro ── */
 :host-context(.tema-claro) .nav-header {
   border-bottom-color: rgba(41, 64, 71, 0.18);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-:host-context(.tema-claro) .nav-item {
-  background: rgba(244, 246, 245, 0.9);
-  border-color: rgba(41, 64, 71, 0.2);
-  color: #294047;
+:host-context(.tema-claro) .nav-header::after {
+  background: linear-gradient(90deg, transparent, rgba(22, 141, 168, 0.5), transparent);
 }
 
-:host-context(.tema-claro) .nav-item:hover {
-  background-color: rgba(22, 141, 168, 0.12);
-  border-color: var(--hk-focus);
-  color: #15252b;
+:host-context(.tema-claro) .nav-link:hover,
+:host-context(.tema-claro) .nav-link.activo {
+  text-shadow: none;
 }
 
+:host-context(.tema-claro) .nav-icono,
 :host-context(.tema-claro) .user-badge {
   background: #ffffff;
-  border-color: rgba(22, 141, 168, 0.4);
+  border-color: rgba(41, 64, 71, 0.2);
+  box-shadow: none;
+}
+
+:host-context(.tema-claro) .nav-icono {
+  color: #6a5ac4;
 }
 
 :host-context(.tema-claro) .user-nombre {
+  color: #15252b;
+}
+
+:host-context(.tema-claro) .nav-primary {
+  background: linear-gradient(180deg, #1a8aa5, #0e6f86);
+  color: #ffffff;
+}
+
+:host-context(.tema-claro) .btn-salir:hover {
+  color: #a8281b;
+}
+
+:host-context(.tema-claro) .admin-menu-panel {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.2);
+  box-shadow: 0 12px 28px rgba(41, 64, 71, 0.16);
+}
+
+:host-context(.tema-claro) .admin-menu-panel a:hover {
+  background: rgba(22, 141, 168, 0.1);
   color: #15252b;
 }
 
@@ -208,33 +372,60 @@ main > *:not(router-outlet) {
 }
 
 /* ── Responsive ── */
-@media (max-width: 620px) {
+@media (max-width: 1100px) {
   .nav-header {
-    align-items: stretch;
     flex-direction: column;
-    gap: 14px;
-  }
-
-  .logo {
-    justify-content: center;
+    gap: 12px;
   }
 
   .nav-links {
-    display: flex;
     flex-wrap: wrap;
     justify-content: center;
   }
+}
 
-  .nav-item {
-    min-width: 0;
-    flex: 1 1 auto;
-    height: 38px;
-    padding: 0 12px;
-    font-size: 0.75rem;
+@media (max-width: 620px) {
+  .nav-header {
+    padding: 14px 12px;
   }
 
-  .user-badge {
-    padding: 0 12px 0 4px;
+  .logo-icon {
+    height: 38px;
+  }
+
+  .logo-text {
+    font-size: 1.05rem;
+  }
+
+  /* Secciones en una fila y las acciones de cuenta debajo */
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .nav-principal {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .nav-link {
+    padding: 0 12px;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+  }
+
+  .nav-divisor {
+    width: 60%;
+    height: 1px;
+    margin: 0;
+    background: linear-gradient(90deg, transparent, rgba(212, 212, 224, 0.25), transparent);
+  }
+
+  .nav-acciones {
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 
@@ -305,6 +496,15 @@ main > *:not(router-outlet) {
 .admin-menu-panel a:hover {
   background: rgba(79, 196, 227, 0.12);
   color: #ffffff;
+}
+
+.menu-seccion {
+  padding: 6px 12px 4px;
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .admin-menu-panel hr {
