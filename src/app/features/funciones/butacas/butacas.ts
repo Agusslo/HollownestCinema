@@ -345,6 +345,21 @@ export class Butacas implements OnDestroy {
   // más de lo que cuesta la compra.
   protected usarCredito = signal(false);
 
+  // Crédito y puntos son excluyentes: sólo uno de los dos a la vez. Activar
+  // uno apaga el otro automáticamente, para no complicar la cuenta de "qué
+  // butaca se pagó con qué" en una misma compra.
+  protected toggleUsarCredito(): void {
+    const nuevo = !this.usarCredito();
+    this.usarCredito.set(nuevo);
+    if (nuevo) this.usarPuntos.set(false);
+  }
+
+  protected toggleUsarPuntos(): void {
+    const nuevo = !this.usarPuntos();
+    this.usarPuntos.set(nuevo);
+    if (nuevo) this.usarCredito.set(false);
+  }
+
   protected creditoAUsar(): number {
     if (!this.usarCredito()) return 0;
     const disponible = this.usuario()?.credito ?? 0;

@@ -40,4 +40,8 @@ export interface IOrdenConDetalle {
         };
     }[];
     orden_candy_items: { cantidad: number; candy_productos: { nombre: string } }[];
+    // Qué de esta orden se pagó con puntos (Fidelización) — vacío si la
+    // orden se pagó entera con plata/crédito. `entrada_id` identifica cuál
+    // entrada puntual fue, para poder aclararlo butaca por butaca.
+    canjes: { tipo: 'entrada' | 'candy'; entrada_id: number | null; puntos_gastados: number }[];
 }

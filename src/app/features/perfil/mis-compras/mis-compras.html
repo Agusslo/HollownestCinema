@@ -46,7 +46,16 @@
             }
 
             <footer>
-                <span class="orden-total">Total: ${{ orden.total }}</span>
+                <span class="orden-total">
+                @if (orden.total > 0) {
+                    Total: ${{ orden.total }}
+                } @else {
+                    Pagado con puntos
+                }
+                </span>
+                @if (puntosGastados(orden) > 0) {
+                <span class="puntos-usados">⭐ {{ puntosGastados(orden) }} pts usados</span>
+                }
 
                 @if (orden.cancelada_en) {
                 <span class="estado-cancelada">Cancelada</span>

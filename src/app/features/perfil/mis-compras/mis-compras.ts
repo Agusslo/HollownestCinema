@@ -38,16 +38,29 @@ export class MisCompras {
   }
 
   private async cargarDatos() {
-    const usuario = await this.authService.usuarioActual();
-    this.usuario.set(usuario);
+    this.cargando.set(true);
+    this.error.set(null);
 
-    if (!usuario) {
-      this.router.navigateByUrl('/login');
-      return;
+    // Antes, si cualquiera de los dos await de acá abajo fallaba (por
+    // ejemplo un error de red o de la consulta a Supabase), la excepción
+    // quedaba sin atajar: cargando() nunca se ponía en false y la pantalla
+    // se quedaba en "Cargando..." para siempre, sin ningún aviso. Con el
+    // try/catch, ahora se ve el error de verdad en vez de tildarse.
+    try {
+      const usuario = await this.authService.usuarioActual();
+      this.usuario.set(usuario);
+
+      if (!usuario) {
+        this.router.navigateByUrl('/login');
+        return;
+      }
+
+      this.compras.set(await this.ordenesService.obtenerMisCompras(usuario.id));
+    } catch (e) {
+      this.error.set((e as Error).message);
+    } finally {
+      this.cargando.set(false);
     }
-
-    this.compras.set(await this.ordenesService.obtenerMisCompras(usuario.id));
-    this.cargando.set(false);
   }
 
   // Misma regla que el service: activa, sin entradas usadas, y falta más
@@ -64,6 +77,18 @@ export class MisCompras {
 
   protected montoACreditar(orden: IOrdenConDetalle): number {
     return orden.total - orden.credito_usado;
+  }
+
+  // Fidelización: cuántos puntos se gastaron en esta orden (0 si se pagó
+  // entera con plata y/o crédito, sin canjear nada).
+  protected puntosGastados(orden: IOrdenConDetalle): number {
+    return orden.canjes.reduce((acc, canje) => acc + canje.puntos_gastados, 0);
+  }
+
+  // Para aclarar butaca por butaca cuál fue la que se pagó con puntos, no
+  // sólo mostrar un total de puntos gastados para toda la orden.
+  protected entradaCanjeada(orden: IOrdenConDetalle, entradaId: number): boolean {
+    return orden.canjes.some((canje) => canje.tipo === 'entrada' && canje.entrada_id === entradaId);
   }
 
   // Todas las entradas de una orden pertenecen siempre a la misma función

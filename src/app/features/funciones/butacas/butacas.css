@@ -1304,6 +1304,18 @@ h1 {
   border-color: var(--hk-focus);
 }
 
+/* Crédito y puntos son excluyentes — mientras uno está activo, el otro se
+   ve apagado y no responde al click (el switch de adentro ya tiene
+   [disabled], esto es sólo la señal visual). */
+.opcion-toggle.deshabilitada {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.opcion-toggle.deshabilitada:hover {
+  border-color: rgba(212, 212, 224, 0.14);
+}
+
 .opcion-icono {
   flex-shrink: 0;
   font-size: 1rem;

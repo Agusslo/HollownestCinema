@@ -211,7 +211,17 @@ export class Entradas {
         });
       }
 
-      await this.fidelizacionService.registrarCanjes(canjes);
+      // Este insert es sólo el historial (para que lo veas en tu perfil) —
+      // la compra en sí ya quedó confirmada arriba (entradas creadas,
+      // puntos ya descontados del perfil). Si esto falla por lo que sea
+      // (ej. la tabla `canjes` recién creada y la cache de Supabase
+      // todavía no se enteró), no tiene que arruinar la compra que la
+      // persona ya pagó: sólo avisamos por consola y seguimos.
+      try {
+        await this.fidelizacionService.registrarCanjes(canjes);
+      } catch (e) {
+        console.warn('No se pudo guardar el historial de canjes (la compra sí se realizó):', e);
+      }
     }
 
     return { orden, entradas: data };

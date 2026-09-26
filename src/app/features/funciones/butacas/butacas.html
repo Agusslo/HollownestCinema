@@ -159,23 +159,35 @@
 
         @if (usuario(); as u) {
           @if (u.credito > 0) {
-            <label class="opcion-toggle" [class.activa]="usarCredito()">
+            <label
+              class="opcion-toggle"
+              [class.activa]="usarCredito()"
+              [class.deshabilitada]="usarPuntos()"
+            >
               <span class="opcion-icono" aria-hidden="true">💰</span>
               <span class="opcion-textos">
                 <span class="opcion-titulo">Usar mi crédito</span>
                 <span class="opcion-detalle">${{ u.credito }} disponibles</span>
+                @if (usarPuntos()) {
+                  <span class="opcion-detalle">No se puede combinar con puntos</span>
+                }
               </span>
               <input
                 type="checkbox"
                 role="switch"
                 class="switch"
                 [checked]="usarCredito()"
-                (change)="usarCredito.set(!usarCredito())"
+                [disabled]="usarPuntos()"
+                (change)="toggleUsarCredito()"
               />
             </label>
           }
           @if (u.puntos > 0 && fidelizacionConfig(); as config) {
-            <label class="opcion-toggle" [class.activa]="usarPuntos()">
+            <label
+              class="opcion-toggle"
+              [class.activa]="usarPuntos()"
+              [class.deshabilitada]="usarCredito()"
+            >
               <span class="opcion-icono" aria-hidden="true">⭐</span>
               <span class="opcion-textos">
                 <span class="opcion-titulo">Usar mis puntos</span>
@@ -183,13 +195,17 @@
                 <span class="opcion-detalle"
                   >{{ config.puntos_por_entrada_gratis }} pts = 1 entrada gratis</span
                 >
+                @if (usarCredito()) {
+                  <span class="opcion-detalle">No se puede combinar con crédito</span>
+                }
               </span>
               <input
                 type="checkbox"
                 role="switch"
                 class="switch"
                 [checked]="usarPuntos()"
-                (change)="usarPuntos.set(!usarPuntos())"
+                [disabled]="usarCredito()"
+                (change)="toggleUsarPuntos()"
               />
             </label>
           }

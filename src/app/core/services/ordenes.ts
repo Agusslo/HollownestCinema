@@ -60,7 +60,8 @@ export class Ordenes {
                     funciones ( fecha_hora, formato, idioma,
                         peliculas ( nombre ),
                         salas ( nombre ) ) ),
-                orden_candy_items ( cantidad, candy_productos ( nombre ) )`,
+                orden_candy_items ( cantidad, candy_productos ( nombre ) ),
+                canjes ( tipo, entrada_id, puntos_gastados )`,
             )
             .eq('usuario_id', usuario_id)
             .order('creado_en', { ascending: false });
