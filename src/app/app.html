@@ -24,6 +24,7 @@
           <span class="user-nombre">{{ u.nombre }}</span>
         </div>
         <a class="nav-item" [routerLink]="['/mis-compras']">Mis compras</a>
+        <a class="nav-item" [routerLink]="['/mis-puntos']">Mis puntos</a>
 
         @if (u.rol === 'admin' || u.rol === 'empleado') {
           <div class="admin-menu">

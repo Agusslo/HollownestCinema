@@ -65,7 +65,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 ### Fidelización
 - [x] Acumulación de puntos por compra (1 punto por cada peso gastado)
 - [x] Canje de puntos por entradas gratis o productos de candy bar, con el costo en puntos de cada recompensa configurable por el admin
-- [ ] Historial de puntos acumulados y canjes, visible en el perfil del usuario
+- [x] Historial de puntos acumulados y canjes, visible en el perfil del usuario
 - [x] Los puntos no se transfieren entre usuarios
 
 ### Próximamente y preventa

@@ -85,4 +85,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/perfil/mis-compras/mis-compras').then((m) => m.MisCompras),
   },
+  {
+    path: 'mis-puntos',
+    canActivate: [perfilCompletoGuard],
+    loadComponent: () =>
+      import('./features/perfil/mis-puntos/mis-puntos').then((m) => m.MisPuntos),
+  },
 ];

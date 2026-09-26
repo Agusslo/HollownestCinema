@@ -1,0 +1,30 @@
+<section class="mis-puntos">
+    <h1>Mis puntos</h1>
+
+    @if (usuario(); as u) {
+        <p class="puntos-disponibles">Puntos disponibles: <strong>{{ u.puntos }}</strong></p>
+    }
+
+    @if (error()) {
+        <p class="aviso aviso-error">{{ error() }}</p>
+    }
+
+    @if (cargando()) {
+        <p>Cargando...</p>
+    } @else if (movimientos().length === 0) {
+        <p class="sin-canjes">Todavía no tenés movimientos de puntos.</p>
+    } @else {
+        <h2 class="subtitulo-historial">Historial de puntos</h2>
+        <div class="lista-canjes">
+        @for (mov of movimientos(); track $index) {
+            <article class="tarjeta-canje" [class.ganancia]="mov.puntos > 0">
+                <span class="canje-descripcion">{{ mov.descripcion }}</span>
+                <span class="canje-fecha">{{ mov.fecha | date: 'short' : '' : 'es' }}</span>
+                <span class="canje-puntos" [class.positivo]="mov.puntos > 0">
+                    {{ mov.puntos > 0 ? '+' : '' }}{{ mov.puntos }} pts
+                </span>
+            </article>
+        }
+        </div>
+    }
+</section>

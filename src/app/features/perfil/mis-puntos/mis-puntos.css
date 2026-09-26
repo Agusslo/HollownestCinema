@@ -1,0 +1,137 @@
+.mis-puntos {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.mis-puntos h1 {
+  font-family: 'Trajan', serif;
+  color: var(--hk-pale);
+  margin-bottom: 0.5rem;
+}
+
+.puntos-disponibles {
+  color: var(--hk-focus);
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.subtitulo-historial {
+  font-family: 'Trajan', serif;
+  color: var(--hk-pale);
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+
+.aviso {
+  padding: 0.7rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.aviso-error {
+  background: rgba(192, 57, 43, 0.12);
+  border: 1px solid var(--hk-grimm);
+  color: var(--hk-pale);
+}
+
+.sin-canjes {
+  color: var(--hk-soft-text);
+}
+
+.lista-canjes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tarjeta-canje {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  background: var(--hk-shell);
+  border: var(--borde-hk);
+  border-left: 3px solid var(--hk-focus);
+  border-radius: 6px;
+  padding: 0.9rem 1.2rem;
+}
+
+/* Una compra que ganó puntos se distingue con un borde dorado en vez del
+   celeste que usan los gastos (canjes) — para poder diferenciarlas de
+   un vistazo, sin tener que leer el signo del número. */
+.tarjeta-canje.ganancia {
+  border-left-color: var(--hk-geo);
+}
+
+.canje-descripcion {
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.95rem;
+}
+
+.canje-fecha {
+  color: var(--hk-muted-text);
+  font-size: 0.85rem;
+}
+
+.canje-puntos {
+  color: var(--hk-focus);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.canje-puntos.positivo {
+  color: var(--hk-geo);
+}
+
+@media (min-width: 768px) {
+  .mis-puntos {
+    max-width: 900px;
+    padding: 2rem;
+  }
+
+  .mis-puntos h1 {
+    font-size: 2.2rem;
+  }
+
+  .puntos-disponibles {
+    font-size: 1.3rem;
+  }
+
+  .tarjeta-canje {
+    padding: 1.1rem 1.6rem;
+  }
+}
+
+/* ── Celulares ── */
+@media (max-width: 480px) {
+  .mis-puntos {
+    margin: 1rem auto;
+    padding: 1rem 0.75rem;
+  }
+
+  .mis-puntos h1 {
+    font-size: 1.5rem;
+  }
+
+  .tarjeta-canje {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.9rem;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .tarjeta-canje {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.18);
+  box-shadow: 0 6px 18px rgba(41, 64, 71, 0.1);
+}
+
+:host-context(.tema-claro) .aviso-error {
+  background: rgba(192, 57, 43, 0.08);
+  color: #7a1d13;
+}
