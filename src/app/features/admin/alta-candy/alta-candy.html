@@ -40,6 +40,19 @@
       Imagen (URL, opcional)
       <input type="text" formControlName="imagen_url" placeholder="https://..." />
     </label>
+
+    <label>
+      Puntos para canjear (opcional)
+      <input
+        type="number"
+        formControlName="puntos_canje"
+        min="0"
+        placeholder="Vacío = no se puede canjear con puntos"
+      />
+      @if (formulario.controls.puntos_canje.touched && formulario.controls.puntos_canje.invalid) {
+        <span class="campo-error">Tiene que ser un número mayor o igual a 0.</span>
+      }
+    </label>
   </div>
 
   @if (mensaje()) {

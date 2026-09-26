@@ -24,6 +24,9 @@ export class AltaCandy {
     }),
     categoria_id: new FormControl<number | null>(null, { validators: [Validators.required] }),
     imagen_url: new FormControl(''),
+    // Opcional (sin required): si se deja vacío, este producto no se va a
+    // poder canjear con puntos, sólo comprar con plata/crédito.
+    puntos_canje: new FormControl<number | null>(null, { validators: [Validators.min(0)] }),
   });
 
   constructor() {
@@ -46,10 +49,17 @@ export class AltaCandy {
         precio: datos.precio,
         categoria_id: datos.categoria_id!, // ya sabemos que no es null: el form es invalido si lo es
         imagen_url: datos.imagen_url || null,
+        puntos_canje: datos.puntos_canje ?? null,
       });
 
       this.mensaje.set(`"${datos.nombre}" se agregó al candy bar.`);
-      this.formulario.reset({ nombre: '', precio: 0, categoria_id: null, imagen_url: '' });
+      this.formulario.reset({
+        nombre: '',
+        precio: 0,
+        categoria_id: null,
+        imagen_url: '',
+        puntos_canje: null,
+      });
     } catch (e) {
       this.mensaje.set((e as Error).message);
     } finally {
