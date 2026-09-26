@@ -565,6 +565,14 @@ h1 {
   font-size: 1rem;
 }
 
+/* Unidades de candy pagadas con puntos en vez de plata — mismo celeste
+   que ya usamos para crédito/puntos, para que se identifique de un
+   vistazo que eso no salió de tu bolsillo en pesos. */
+.candy-item-canjeado {
+  color: var(--hk-focus);
+  font-size: 0.85rem;
+}
+
 /* ── Cupón Pill ── */
 .cupon-pill {
   display: flex;

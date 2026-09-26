@@ -225,6 +225,16 @@ export class Butacas implements OnDestroy {
       nuevas.add(butaca);
     }
     this.seleccionadas.set(nuevas);
+
+    // El combo necesita al menos 1 butaca elegida (es "entrada + candy a
+    // precio fijo" — sin entrada no tiene sentido). Si te quedás sin
+    // butacas mientras había un combo elegido, lo sacamos solo: si no,
+    // quedaba "elegido" para siempre sin forma de sacarlo a mano, porque
+    // el botón del combo se deshabilita justamente cuando no hay butacas
+    // seleccionadas.
+    if (nuevas.size === 0 && this.comboSeleccionado()) {
+      this.comboSeleccionado.set(null);
+    }
   }
 
   // ── Candy bar ──
@@ -286,11 +296,19 @@ export class Butacas implements OnDestroy {
   }
 
   protected candySubtotal(): number {
+    // Las unidades de candy canjeadas con puntos (ver candyCanjeado() más
+    // abajo) no se cobran en pesos — por eso a cada línea le restamos la
+    // cantidad canjeada antes de multiplicar por el precio.
+    const canjeadoPorProducto = new Map(
+      this.candyCanjeado().map((item) => [item.producto_id, item.cantidad]),
+    );
+
     return Math.round(
-      this.itemsCandyEnCarrito().reduce(
-        (acumulado, item) => acumulado + item.producto.precio * item.cantidad,
-        0,
-      ),
+      this.itemsCandyEnCarrito().reduce((acumulado, item) => {
+        const cantidadCanjeada = canjeadoPorProducto.get(item.producto.id) ?? 0;
+        const cantidadPagada = item.cantidad - cantidadCanjeada;
+        return acumulado + item.producto.precio * cantidadPagada;
+      }, 0),
     );
   }
 
@@ -306,7 +324,16 @@ export class Butacas implements OnDestroy {
   // no, así que acá sólo confirmamos por las dudas.
   protected elegirCombo(combo: IComboConItems) {
     if (this.seleccionadas().size === 0) return;
-    this.comboSeleccionado.set(this.comboSeleccionado()?.id === combo.id ? null : combo);
+    const yaEstabaElegido = this.comboSeleccionado()?.id === combo.id;
+    this.comboSeleccionado.set(yaEstabaElegido ? null : combo);
+
+    // El combo es "entrada + candy a precio fijo" pagado con plata o
+    // crédito — no tiene sentido combinarlo con puntos (ya viene con un
+    // precio especial armado por el admin, no con el costo normal en
+    // puntos de una entrada suelta o un candy suelto).
+    if (!yaEstabaElegido) {
+      this.usarPuntos.set(false);
+    }
   }
 
   protected calcularTotal(): number {
@@ -354,7 +381,11 @@ export class Butacas implements OnDestroy {
     if (nuevo) this.usarPuntos.set(false);
   }
 
+  // Además de excluir crédito, los puntos tampoco se pueden usar si hay un
+  // combo elegido (el combo ya tiene su propio precio fijo armado por el
+  // admin — ver elegirCombo() más arriba).
   protected toggleUsarPuntos(): void {
+    if (this.comboSeleccionado()) return;
     const nuevo = !this.usarPuntos();
     this.usarPuntos.set(nuevo);
     if (nuevo) this.usarCredito.set(false);
@@ -406,6 +437,52 @@ export class Butacas implements OnDestroy {
         acumulado + this.entradasService.costoEntradaEnPuntos(config.puntos_por_entrada_gratis, codigo),
       0,
     );
+  }
+
+  // Fidelización — canje de candy con puntos. Con lo que sobra después de
+  // canjear entradas (butacasCanjeadas de arriba tiene prioridad), vemos
+  // qué candy del carrito tiene un costo en puntos configurado
+  // (producto.puntos_canje) y canjeamos tantas unidades como alcancen,
+  // empezando por el más barato en puntos. Si en una línea el saldo sólo
+  // alcanza para parte de las unidades (ej. pediste 3 pochoclos pero sólo
+  // te alcanza para 2), esas 2 se canjean y la 3ra se cobra en pesos.
+  protected candyCanjeado(): { producto_id: number; cantidad: number; puntos: number }[] {
+    const usuario = this.usuario();
+    if (!this.usarPuntos() || !usuario) return [];
+
+    let puntosRestantes = usuario.puntos - this.puntosAUsar();
+
+    const candidatos = this.itemsCandyEnCarrito()
+      .filter((item) => item.producto.puntos_canje != null && item.producto.puntos_canje > 0)
+      .sort((a, b) => (a.producto.puntos_canje as number) - (b.producto.puntos_canje as number));
+
+    const canjeado: { producto_id: number; cantidad: number; puntos: number }[] = [];
+
+    for (const item of candidatos) {
+      const costoUnidad = item.producto.puntos_canje as number;
+      const unidadesQueAlcanzan = Math.min(item.cantidad, Math.floor(puntosRestantes / costoUnidad));
+      if (unidadesQueAlcanzan <= 0) continue;
+
+      canjeado.push({
+        producto_id: item.producto.id,
+        cantidad: unidadesQueAlcanzan,
+        puntos: unidadesQueAlcanzan * costoUnidad,
+      });
+      puntosRestantes -= unidadesQueAlcanzan * costoUnidad;
+    }
+
+    return canjeado;
+  }
+
+  protected puntosCandyAUsar(): number {
+    return this.candyCanjeado().reduce((acumulado, item) => acumulado + item.puntos, 0);
+  }
+
+  // Para el template: cuántas unidades de ESTE producto puntual (por su
+  // id) ya están cubiertas por puntos, para poder aclararlo en el resumen
+  // del carrito de candy.
+  protected cantidadCanjeadaCandy(producto_id: number): number {
+    return this.candyCanjeado().find((item) => item.producto_id === producto_id)?.cantidad ?? 0;
   }
 
   // Misma cuenta que ya usa Cupones para "mayores de 50" — la duplico acá
@@ -461,11 +538,21 @@ export class Butacas implements OnDestroy {
         ? combo.combo_items.map((item) => ({ producto_id: item.producto_id, cantidad: item.cantidad }))
         : [];
 
+      // Del carrito de candy, restamos las unidades que se van a canjear
+      // con puntos (candyCanjeado) — esas van aparte, no como candyItems
+      // (que es sólo lo que se paga con plata). Si no restáramos esto acá,
+      // Entradas.comprar() insertaría la cantidad dos veces: una como
+      // pagada y otra como canjeada.
+      const canjeadoPorProducto = new Map(
+        this.candyCanjeado().map((item) => [item.producto_id, item.cantidad]),
+      );
       const candyItems = [
-        ...Array.from(this.carritoCandy().entries()).map(([producto_id, cantidad]) => ({
-          producto_id,
-          cantidad,
-        })),
+        ...Array.from(this.carritoCandy().entries())
+          .map(([producto_id, cantidad]) => ({
+            producto_id,
+            cantidad: cantidad - (canjeadoPorProducto.get(producto_id) ?? 0),
+          }))
+          .filter((item) => item.cantidad > 0),
         ...itemsDelCombo,
       ];
 
@@ -491,6 +578,7 @@ export class Butacas implements OnDestroy {
         this.calcularTotal(),
         this.creditoAUsar(),
         this.butacasCanjeadas(),
+        this.candyCanjeado(),
       );
 
       const detalle = await this.funcionesService.obtenerDetalleCompra(this.funcion_id);

@@ -133,7 +133,22 @@
                 <span class="candy-item-nombre"
                   >{{ item.cantidad }}&times; {{ item.producto.nombre }}</span
                 >
-                <span class="candy-item-precio">${{ item.producto.precio * item.cantidad }}</span>
+                @if (cantidadCanjeadaCandy(item.producto.id) > 0) {
+                  <span class="candy-item-precio candy-item-canjeado">
+                    @if (cantidadCanjeadaCandy(item.producto.id) < item.cantidad) {
+                      ${{
+                        item.producto.precio * (item.cantidad - cantidadCanjeadaCandy(item.producto.id))
+                      }}
+                      +
+                    }
+                    ⭐ {{ cantidadCanjeadaCandy(item.producto.id) }}
+                    {{ cantidadCanjeadaCandy(item.producto.id) === 1 ? 'canjeada' : 'canjeadas' }}
+                    ({{ cantidadCanjeadaCandy(item.producto.id) * (item.producto.puntos_canje ?? 0) }}
+                    pts)
+                  </span>
+                } @else {
+                  <span class="candy-item-precio">${{ item.producto.precio * item.cantidad }}</span>
+                }
               </div>
             }
           </div>
@@ -186,7 +201,7 @@
             <label
               class="opcion-toggle"
               [class.activa]="usarPuntos()"
-              [class.deshabilitada]="usarCredito()"
+              [class.deshabilitada]="usarCredito() || comboSeleccionado() !== null"
             >
               <span class="opcion-icono" aria-hidden="true">⭐</span>
               <span class="opcion-textos">
@@ -197,6 +212,8 @@
                 >
                 @if (usarCredito()) {
                   <span class="opcion-detalle">No se puede combinar con crédito</span>
+                } @else if (comboSeleccionado()) {
+                  <span class="opcion-detalle">No se puede combinar con un combo</span>
                 }
               </span>
               <input
@@ -204,7 +221,7 @@
                 role="switch"
                 class="switch"
                 [checked]="usarPuntos()"
-                [disabled]="usarCredito()"
+                [disabled]="usarCredito() || comboSeleccionado() !== null"
                 (change)="toggleUsarPuntos()"
               />
             </label>
@@ -216,14 +233,22 @@
           <span class="total-monto">${{ calcularTotal() }}</span>
         </div>
 
-        @if (puntosAUsar() > 0) {
+        @if (puntosAUsar() > 0 || puntosCandyAUsar() > 0) {
           <div class="credito-aplicado">
             <span>
-              {{ butacasCanjeadas().length }}
-              {{ butacasCanjeadas().length === 1 ? 'entrada gratis' : 'entradas gratis' }} con
-              puntos
+              @if (butacasCanjeadas().length > 0) {
+                {{ butacasCanjeadas().length }}
+                {{ butacasCanjeadas().length === 1 ? 'entrada gratis' : 'entradas gratis' }}
+              }
+              @if (butacasCanjeadas().length > 0 && candyCanjeado().length > 0) {
+                +
+              }
+              @if (candyCanjeado().length > 0) {
+                candy canjeado
+              }
+              con puntos
             </span>
-            <span>−{{ puntosAUsar() }} pts</span>
+            <span>−{{ puntosAUsar() + puntosCandyAUsar() }} pts</span>
           </div>
         }
 
