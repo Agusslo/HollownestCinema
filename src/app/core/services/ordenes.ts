@@ -81,7 +81,8 @@ export class Ordenes {
         const { data: orden, error: errorOrden } = await this.supabase.Supabase.from('ordenes')
             .select(
                 `id, usuario_id, total, credito_usado, cancelada_en,
-                entradas ( id, validada_en, funciones ( fecha_hora ) )`,
+                entradas ( id, validada_en, funciones ( fecha_hora ) ),
+                canjes ( puntos_gastados )`,
             )
             .eq('id', ordenId)
             .single();
@@ -93,6 +94,7 @@ export class Ordenes {
             credito_usado: number;
             cancelada_en: string | null;
             entradas: { validada_en: string | null; funciones: { fecha_hora: string } }[];
+            canjes: { puntos_gastados: number }[];
         };
 
         if (ordenData.usuario_id !== usuarioId) {
@@ -117,6 +119,15 @@ export class Ordenes {
         }
 
         const montoACreditar = ordenData.total - ordenData.credito_usado;
+        // Fidelización: si esta orden tenía algo canjeado con puntos (una
+        // entrada gratis, candy, o las dos cosas), al cancelar se los
+        // devolvemos igual que hacemos con el crédito — mismo criterio:
+        // no le tiene que quedar debiendo nada a la persona porque canceló
+        // a tiempo.
+        const puntosADevolver = ordenData.canjes.reduce(
+            (acumulado, canje) => acumulado + canje.puntos_gastados,
+            0,
+        );
 
         const { error: errorCancelar } = await this.supabase.Supabase.from('ordenes')
             .update({ cancelada_en: new Date().toISOString() })
@@ -133,17 +144,27 @@ export class Ordenes {
             .eq('orden_id', ordenId);
         if (errorEntradas) throw errorEntradas;
 
-        if (montoACreditar > 0) {
+        if (montoACreditar > 0 || puntosADevolver > 0) {
             const { data: perfil, error: errorGet } = await this.supabase.Supabase.from('perfiles')
-                .select('credito')
+                .select('credito, puntos')
                 .eq('id', usuarioId)
                 .single();
             if (errorGet) throw errorGet;
 
-            const { error: errorCredito } = await this.supabase.Supabase.from('perfiles')
-                .update({ credito: (perfil as { credito: number }).credito + montoACreditar })
+            const perfilData = perfil as { credito: number; puntos: number };
+            const cambios: { credito?: number; puntos?: number } = {};
+
+            if (montoACreditar > 0) {
+                cambios.credito = perfilData.credito + montoACreditar;
+            }
+            if (puntosADevolver > 0) {
+                cambios.puntos = perfilData.puntos + puntosADevolver;
+            }
+
+            const { error: errorUpdate } = await this.supabase.Supabase.from('perfiles')
+                .update(cambios)
                 .eq('id', usuarioId);
-            if (errorCredito) throw errorCredito;
+            if (errorUpdate) throw errorUpdate;
         }
     }
 }

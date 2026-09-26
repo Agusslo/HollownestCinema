@@ -127,8 +127,21 @@ export class MisCompras {
     this.error.set(null);
     try {
       await this.ordenesService.cancelar(orden.id, usuarioActual.id);
+
+      // El mensaje cambia según qué se devuelve: puede ser sólo crédito,
+      // sólo puntos (si la orden se pagó entera con puntos, el crédito a
+      // devolver da 0), o las dos cosas si fue una compra mixta.
+      const partes: string[] = [];
+      if (this.montoACreditar(orden) > 0) {
+        partes.push(`$${this.montoACreditar(orden)} de crédito`);
+      }
+      if (this.puntosGastados(orden) > 0) {
+        partes.push(`${this.puntosGastados(orden)} puntos`);
+      }
       this.mensaje.set(
-        `Compra cancelada. Se acreditaron $${this.montoACreditar(orden)} a tu cuenta.`,
+        partes.length > 0
+          ? `Compra cancelada. Se te devolvieron ${partes.join(' y ')}.`
+          : 'Compra cancelada.',
       );
       this.confirmando.set(null);
       await this.cargarDatos();
