@@ -1,8 +1,9 @@
-<form class="funcion-form" [formGroup]="formulario" (ngSubmit)="guardar()">
+<form class="funcion-form admin-form" [formGroup]="formulario" (ngSubmit)="guardar()">
   <header class="form-header">
     <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
     <span class="form-kicker">Panel de administración</span>
     <h1>Nueva función</h1>
+    <div class="admin-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
     <p>Programá una proyección y prepará la sala para tu público.</p>
   </header>
 
@@ -58,7 +59,7 @@
     <p class="form-mensaje">{{ mensaje() }}</p>
   }
 
-  <button class="submit-button" type="submit">
+  <button class="submit-button" appGlowHover type="submit">
     <span>Guardar función</span>
     <span aria-hidden="true">→</span>
   </button>

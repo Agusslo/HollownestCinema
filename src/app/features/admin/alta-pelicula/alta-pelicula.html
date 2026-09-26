@@ -1,8 +1,9 @@
-<form class="pelicula-form" [formGroup]="formulario" (ngSubmit)="guardar()">
+<form class="pelicula-form admin-form" [formGroup]="formulario" (ngSubmit)="guardar()">
   <header class="form-header">
     <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
     <span class="form-kicker">Panel de administración</span>
     <h1>Nueva película</h1>
+    <div class="admin-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
     <p>Completá los datos para sumar una historia a la cartelera.</p>
   </header>
 
@@ -54,7 +55,7 @@
     </div>
   </fieldset>
 
-  <button class="submit-button" type="submit">
+  <button class="submit-button" appGlowHover type="submit">
     <span>Guardar película</span>
     <span aria-hidden="true">→</span>
   </button>

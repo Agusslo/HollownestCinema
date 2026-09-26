@@ -1,11 +1,12 @@
 @if (cargando()) {
   <app-loading mensaje="Cargando cupones" />
 } @else {
-  <form class="cupones-form" [formGroup]="formulario" (ngSubmit)="guardar()">
+  <form class="cupones-form admin-form" [formGroup]="formulario" (ngSubmit)="guardar()">
     <div class="form-header">
       <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
       <span class="form-kicker">Panel de administración</span>
       <h1>Cupones de descuento</h1>
+      <div class="admin-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
       <p>
         Configurá el porcentaje de cada tipo de cupón. Se aplica el mayor entre los que le
         correspondan al usuario, nunca se suman.
@@ -36,7 +37,7 @@
       <p class="mensaje">{{ mensaje() }}</p>
     }
 
-    <button type="submit" class="submit-button" [disabled]="guardando()">
+    <button type="submit" class="submit-button" appGlowHover [disabled]="guardando()">
       <span>{{ guardando() ? 'Guardando...' : 'Guardar cambios' }}</span>
       <span aria-hidden="true">&rarr;</span>
     </button>

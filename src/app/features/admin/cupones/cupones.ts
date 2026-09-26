@@ -6,10 +6,11 @@ import { Logs } from '../../../core/services/logs';
 import ICupon from '../../../core/interfaces/cupon';
 import IPerfil from '../../../core/interfaces/perfil';
 import { LoadingComponent } from '../../../shared/components/loading/loading';
+import { GlowHover } from '../../../shared/directives/glow-hover';
 
 @Component({
   selector: 'app-cupones',
-  imports: [ReactiveFormsModule, LoadingComponent],
+  imports: [ReactiveFormsModule, LoadingComponent, GlowHover],
   templateUrl: './cupones.html',
   styleUrl: './cupones.css',
 })

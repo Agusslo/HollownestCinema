@@ -346,7 +346,7 @@
 }
 
 :host-context(.tema-claro) .admin-menu-panel a:hover {
-  background: rgba(22, 141, 168, 0.1);
+  background: linear-gradient(90deg, rgba(22, 141, 168, 0.12), transparent);
   color: #15252b;
 }
 
@@ -472,43 +472,125 @@ main > *:not(router-outlet) {
 
 .admin-menu-panel {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 12px);
   right: 0;
   z-index: 20;
   display: flex;
   flex-direction: column;
-  min-width: 190px;
-  padding: 8px;
-  background: linear-gradient(180deg, var(--hk-shell) 0%, var(--hk-deep) 100%);
-  border: 1px solid rgba(79, 196, 227, 0.25);
+  min-width: 230px;
+  padding: 14px 10px 12px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(79, 196, 227, 0.12), transparent 55%),
+    linear-gradient(180deg, rgba(30, 30, 50, 0.98), rgba(10, 10, 20, 0.99));
+  border: 1px solid rgba(79, 196, 227, 0.3);
   border-radius: 10px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.6),
+    0 0 24px rgba(79, 196, 227, 0.08);
+  animation: menu-aparecer 0.18s ease-out;
 }
 
+@keyframes menu-aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Piquito que apunta al botón "Panel" */
+.admin-menu-panel::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  right: 34px;
+  width: 12px;
+  height: 12px;
+  background: rgb(30, 30, 50);
+  border-top: 1px solid rgba(79, 196, 227, 0.3);
+  border-left: 1px solid rgba(79, 196, 227, 0.3);
+  transform: rotate(45deg);
+}
+
+/* Opciones: texto Trajan con el rombo-cursor del menú del juego */
 .admin-menu-panel a {
-  padding: 9px 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 9px 14px 9px 30px;
   border-radius: 6px;
   color: var(--hk-pale);
+  font-family: 'Trajan', 'Times New Roman', serif;
+  font-size: 0.74rem;
+  letter-spacing: 1.5px;
   text-decoration: none;
-  font-size: 0.88rem;
+  text-transform: uppercase;
+  transition:
+    color 0.2s,
+    background-color 0.2s,
+    padding-left 0.2s,
+    text-shadow 0.2s;
+}
+
+.admin-menu-panel a::before {
+  content: '◇';
+  position: absolute;
+  left: 12px;
+  font-size: 0.6rem;
+  color: rgba(212, 212, 224, 0.35);
+  transition:
+    color 0.2s,
+    transform 0.2s;
 }
 
 .admin-menu-panel a:hover {
-  background: rgba(79, 196, 227, 0.12);
-  color: #ffffff;
+  padding-left: 34px;
+  background: linear-gradient(90deg, rgba(79, 196, 227, 0.14), transparent);
+  color: var(--hk-soul);
+  text-shadow: 0 0 12px rgba(79, 196, 227, 0.5);
 }
 
+.admin-menu-panel a:hover::before {
+  content: '◆';
+  color: var(--hk-focus);
+  transform: translateX(3px);
+}
+
+/* Títulos de sección con filo ornamental: ─ ADMINISTRACIÓN ─── */
 .menu-seccion {
-  padding: 6px 12px 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 12px 8px;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
   font-size: 0.62rem;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   text-transform: uppercase;
 }
 
+.menu-seccion::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(79, 196, 227, 0.45), transparent);
+}
+
 .admin-menu-panel hr {
-  margin: 6px 4px;
+  margin: 8px 12px 10px;
   border: none;
-  border-top: 1px solid rgba(212, 212, 224, 0.15);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 212, 224, 0.25), transparent);
+}
+
+:host-context(.tema-claro) .admin-menu-panel::before {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.2);
+}
+
+:host-context(.tema-claro) .admin-menu-panel a:hover {
+  text-shadow: none;
 }

@@ -6,10 +6,11 @@ import { Auth } from '../../../core/services/auth';
 import { Logs } from '../../../core/services/logs';
 import { ICandyProductoConCategoria } from '../../../core/interfaces/candy-producto';
 import IPerfil from '../../../core/interfaces/perfil';
+import { GlowHover } from '../../../shared/directives/glow-hover';
 
 @Component({
   selector: 'app-alta-combo',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, GlowHover],
   templateUrl: './alta-combo.html',
   styleUrl: './alta-combo.css',
 })

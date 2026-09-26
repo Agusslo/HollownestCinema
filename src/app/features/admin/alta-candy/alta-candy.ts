@@ -5,10 +5,11 @@ import { Auth } from '../../../core/services/auth';
 import { Logs } from '../../../core/services/logs';
 import ICandyCategoria from '../../../core/interfaces/candy-categoria';
 import IPerfil from '../../../core/interfaces/perfil';
+import { GlowHover } from '../../../shared/directives/glow-hover';
 
 @Component({
   selector: 'app-alta-candy',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, GlowHover],
   templateUrl: './alta-candy.html',
   styleUrl: './alta-candy.css',
 })

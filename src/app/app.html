@@ -36,30 +36,30 @@
             @if (menuAdminAbierto()) {
               <div class="admin-menu-panel">
                 @if (u.rol === 'admin') {
-                  <span class="menu-seccion">Administración</span>
+                  <span class="menu-seccion"><span>Administración</span></span>
                   <a [routerLink]="['/admin/peliculas/nueva']" (click)="menuAdminAbierto.set(false)"
-                    >🎬 Nueva película</a
+                    >Nueva película</a
                   >
                   <a [routerLink]="['/admin/funciones/nueva']" (click)="menuAdminAbierto.set(false)"
-                    >🕰️ Nueva función</a
+                    >Nueva función</a
                   >
                   <a [routerLink]="['/admin/cupones']" (click)="menuAdminAbierto.set(false)"
-                    >🏷️ Cupones</a
+                    >Cupones</a
                   >
                   <a [routerLink]="['/admin/candy/nuevo']" (click)="menuAdminAbierto.set(false)"
-                    >🍿 Candy bar</a
+                    >Candy bar</a
                   >
                   <a [routerLink]="['/admin/combos/nuevo']" (click)="menuAdminAbierto.set(false)"
-                    >🎁 Combos</a
+                    >Combos</a
                   >
                   <a [routerLink]="['/admin/log-actividad']" (click)="menuAdminAbierto.set(false)"
-                    >📜 Log de actividad</a
+                    >Log de actividad</a
                   >
                   <hr />
                 }
-                <span class="menu-seccion">Puerta</span>
+                <span class="menu-seccion"><span>Puerta</span></span>
                 <a [routerLink]="['/empleado/validar']" (click)="menuAdminAbierto.set(false)"
-                  >🎟️ Validar QR</a
+                  >Validar QR</a
                 >
               </div>
             }

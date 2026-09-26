@@ -1,8 +1,9 @@
-<form class="candy-form" [formGroup]="formulario" (ngSubmit)="guardar()">
+<form class="candy-form admin-form" [formGroup]="formulario" (ngSubmit)="guardar()">
   <div class="form-header">
     <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
     <span class="form-kicker">Panel de administración</span>
     <h1>Nuevo producto de candy bar</h1>
+    <div class="admin-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
     <p>Cargá un producto nuevo para que aparezca en la compra de candy junto a la entrada.</p>
   </div>
 
@@ -59,7 +60,7 @@
     <p class="mensaje">{{ mensaje() }}</p>
   }
 
-  <button type="submit" class="submit-button" [disabled]="guardando()">
+  <button type="submit" class="submit-button" appGlowHover [disabled]="guardando()">
     <span>{{ guardando() ? 'Guardando...' : 'Agregar producto' }}</span>
     <span aria-hidden="true">&rarr;</span>
   </button>

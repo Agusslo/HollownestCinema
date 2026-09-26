@@ -7,10 +7,11 @@ import { Logs } from '../../../core/services/logs';
 import IPelicula from '../../../core/interfaces/pelicula';
 import IPerfil from '../../../core/interfaces/perfil';
 import { Formato, Idioma } from '../../../core/interfaces/funcion';
+import { GlowHover } from '../../../shared/directives/glow-hover';
 
 @Component({
   selector: 'app-alta-funcion',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, GlowHover],
   templateUrl: './alta-funcion.html',
   styleUrl: './alta-funcion.css',
 })
