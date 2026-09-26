@@ -1,0 +1,358 @@
+.mis-peliculas {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* ── Encabezado ── */
+.peliculas-header {
+  margin-bottom: 1.6rem;
+  text-align: center;
+}
+
+.kicker {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.peliculas-header h1 {
+  margin: 0;
+  color: var(--hk-soul);
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+/* ──── ◆ ──── */
+.ornamento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0.7rem 0;
+  color: var(--hk-pale);
+  font-size: 0.6rem;
+}
+
+.ornamento span {
+  width: 90px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hk-pale));
+}
+
+.ornamento span:last-child {
+  background: linear-gradient(90deg, var(--hk-pale), transparent);
+}
+
+.subtitulo {
+  margin: 0;
+  color: var(--hk-soft-text);
+  font-style: italic;
+}
+
+/* ── Números del diario ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  max-width: 560px;
+  margin: 0 auto 2.2rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.8rem 0.5rem;
+  background: linear-gradient(160deg, rgba(36, 36, 58, 0.95), rgba(18, 18, 32, 0.97));
+  border: 1px solid rgba(79, 196, 227, 0.2);
+  border-radius: 10px;
+}
+
+.stat-valor {
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.stat-oro {
+  border-color: rgba(232, 168, 50, 0.3);
+}
+
+.stat-oro .stat-valor {
+  color: var(--hk-geo);
+}
+
+.stat-label {
+  color: var(--hk-soft-text);
+  font-family: 'Trajan', serif;
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ── Grilla de tarjetas ── */
+.grilla-peliculas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.tarjeta-pelicula {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  text-decoration: none;
+  background: linear-gradient(165deg, rgba(36, 36, 58, 0.92), rgba(14, 14, 26, 0.96));
+  border: 1px solid rgba(79, 196, 227, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.3s,
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+/* El brillo lo agrega la directiva appGlowHover */
+.tarjeta-pelicula:hover {
+  transform: translateY(-5px);
+  border-color: rgba(79, 196, 227, 0.55);
+}
+
+.poster-marco {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.poster {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.tarjeta-pelicula:hover .poster {
+  transform: scale(1.03);
+}
+
+.veces-vista {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 3px 10px;
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: var(--hk-badge-bg);
+  border: 1px solid var(--hk-geo);
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+}
+
+.tarjeta-info {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 6px 6px;
+  text-align: center;
+}
+
+/* Filo de luz entre el póster y la placa */
+.tarjeta-info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79, 196, 227, 0.45), transparent);
+}
+
+.pelicula-nombre {
+  margin: 0;
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  line-height: 1.35;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+/* Estrellas (con medias), mismo dibujo que en las reseñas */
+.estrellas {
+  display: flex;
+  gap: 3px;
+}
+
+.estrella {
+  width: 17px;
+  height: 17px;
+}
+
+.estrella .estrella-base {
+  fill: rgba(212, 212, 224, 0.15);
+  stroke: rgba(212, 212, 224, 0.25);
+  stroke-width: 0.8px;
+}
+
+.estrella.llena .estrella-base,
+.estrella-mitad {
+  fill: var(--hk-geo);
+  stroke: var(--hk-geo);
+  filter: drop-shadow(0 0 4px rgba(232, 168, 50, 0.6));
+}
+
+.sin-calificar {
+  color: var(--hk-focus);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.pelicula-fechas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+}
+
+.fecha-vista {
+  padding: 1px 9px;
+  color: var(--hk-muted-text);
+  font-size: 0.75rem;
+  text-transform: capitalize;
+  background: rgba(212, 212, 224, 0.06);
+  border: 1px solid rgba(212, 212, 224, 0.14);
+  border-radius: 999px;
+}
+
+/* ── Estados ── */
+.estado {
+  color: var(--hk-soft-text);
+  text-align: center;
+}
+
+.sin-peliculas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 2rem 1rem;
+  color: var(--hk-soft-text);
+  text-align: center;
+}
+
+.sin-peliculas img {
+  width: 56px;
+  opacity: 0.6;
+}
+
+.aviso {
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.aviso-error {
+  background: rgba(192, 57, 43, 0.12);
+  border: 1px solid var(--hk-grimm);
+  color: var(--hk-pale);
+}
+
+/* ── Celulares ── */
+@media (max-width: 520px) {
+  .mis-peliculas {
+    margin: 1rem auto;
+    padding: 1rem 0.75rem;
+  }
+
+  .ornamento span {
+    width: 50px;
+  }
+
+  .stats {
+    gap: 0.5rem;
+    margin-bottom: 1.6rem;
+  }
+
+  .stat-valor {
+    font-size: 1.3rem;
+  }
+
+  .stat-label {
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+  }
+
+  .grilla-peliculas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .tarjeta-pelicula {
+    padding: 6px;
+    border-radius: 10px;
+  }
+
+  .tarjeta-pelicula:hover {
+    transform: none;
+  }
+
+  .pelicula-nombre {
+    font-family: 'Perpetua', 'Georgia', serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.2px;
+    text-transform: none;
+  }
+
+  .estrella {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .tarjeta-pelicula,
+:host-context(.tema-claro) .stat {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.16);
+  box-shadow: 0 8px 22px rgba(41, 64, 71, 0.1);
+}
+
+:host-context(.tema-claro) .stat-oro {
+  border-color: rgba(166, 111, 28, 0.35);
+}
+
+:host-context(.tema-claro) .fecha-vista {
+  background: var(--hk-shell);
+  border-color: rgba(41, 64, 71, 0.18);
+}
+
+:host-context(.tema-claro) .estrella .estrella-base {
+  fill: rgba(41, 64, 71, 0.1);
+  stroke: rgba(41, 64, 71, 0.25);
+}
+
+:host-context(.tema-claro) .estrella.llena .estrella-base,
+:host-context(.tema-claro) .estrella-mitad {
+  fill: var(--hk-geo);
+  stroke: var(--hk-geo);
+}
+
+:host-context(.tema-claro) .aviso-error {
+  background: rgba(192, 57, 43, 0.08);
+  color: #7a1d13;
+}

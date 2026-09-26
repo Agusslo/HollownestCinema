@@ -1,0 +1,94 @@
+<section class="mis-peliculas">
+  <header class="peliculas-header">
+    <span class="kicker">Diario del cazador</span>
+    <h1>Mis películas</h1>
+    <div class="ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+    <p class="subtitulo">Cada historia que presenciaste en las salas de Hallownest.</p>
+  </header>
+
+  @if (error()) {
+    <p class="aviso aviso-error">{{ error() }}</p>
+  }
+
+  @if (cargando()) {
+    <p class="estado">Cargando...</p>
+  } @else if (peliculasVistas().length === 0) {
+    <div class="sin-peliculas">
+      <img src="/img/knight_face.png" alt="" aria-hidden="true" />
+      <p>
+        Tu diario está en blanco.<br />Cuando validen tu entrada en la puerta, la película va a
+        aparecer acá.
+      </p>
+    </div>
+  } @else {
+    <!-- Registro: números del diario -->
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-valor">{{ peliculasVistas().length }}</span>
+        <span class="stat-label">{{ peliculasVistas().length === 1 ? 'Película' : 'Películas' }}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-valor">{{ totalFunciones() }}</span>
+        <span class="stat-label">{{ totalFunciones() === 1 ? 'Función' : 'Funciones' }}</span>
+      </div>
+      <div class="stat stat-oro">
+        <span class="stat-valor">{{ promedioCalificacion() ?? '—' }}</span>
+        <span class="stat-label">Promedio ★</span>
+      </div>
+    </div>
+
+    <div class="grilla-peliculas">
+      @for (pelicula of peliculasVistas(); track pelicula.id) {
+        <a
+          class="tarjeta-pelicula"
+          appGlowHover
+          [color]="pelicula.miCalificacion !== null ? '#e8a832' : '#4fc4e3'"
+          [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]"
+        >
+          <div class="poster-marco">
+            <img class="poster" [src]="pelicula.imagen_url" [alt]="pelicula.nombre" />
+            @if (pelicula.fechas.length > 1) {
+              <span class="veces-vista">Vista ×{{ pelicula.fechas.length }}</span>
+            }
+          </div>
+
+          <div class="tarjeta-info">
+            <p class="pelicula-nombre">{{ pelicula.nombre }}</p>
+
+            @if (pelicula.miCalificacion !== null) {
+              <div class="estrellas" [attr.aria-label]="pelicula.miCalificacion + ' de 5 estrellas'">
+                @for (n of [1, 2, 3, 4, 5]; track n) {
+                  <svg
+                    class="estrella"
+                    [class]="'estrella ' + tipoEstrella(n, pelicula.miCalificacion)"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      class="estrella-base"
+                      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    />
+                    @if (tipoEstrella(n, pelicula.miCalificacion) === 'media') {
+                      <path
+                        class="estrella-mitad"
+                        d="M12 2v15.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                      />
+                    }
+                  </svg>
+                }
+              </div>
+            } @else {
+              <span class="sin-calificar">✦ Dejá tu reseña</span>
+            }
+
+            <div class="pelicula-fechas">
+              @for (fecha of pelicula.fechas; track fecha) {
+                <span class="fecha-vista">{{ fecha | date: "d MMM ''yy" : '' : 'es' }}</span>
+              }
+            </div>
+          </div>
+        </a>
+      }
+    </div>
+  }
+</section>

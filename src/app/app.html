@@ -21,6 +21,9 @@
         <a class="nav-link" [routerLink]="['/mis-puntos']" routerLinkActive="activo"
           >Mis puntos</a
         >
+        <a class="nav-link" [routerLink]="['/mis-peliculas']" routerLinkActive="activo"
+          >Mis películas</a
+        >
 
         @if (u.rol === 'admin' || u.rol === 'empleado') {
           <div class="admin-menu">
