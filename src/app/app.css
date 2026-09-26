@@ -183,6 +183,14 @@
     transform 0.4s;
 }
 
+/* Ícono dibujado en SVG: queda centrado exacto en el círculo (con el
+   carácter ☀ de la fuente quedaba corrido por las métricas del glifo). */
+.tema-svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
 .nav-icono:hover {
   border-color: var(--hk-geo);
   transform: rotate(25deg);
