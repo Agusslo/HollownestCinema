@@ -1,7 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Candy } from '../../../core/services/candy';
+import { Auth } from '../../../core/services/auth';
+import { Logs } from '../../../core/services/logs';
 import ICandyCategoria from '../../../core/interfaces/candy-categoria';
+import IPerfil from '../../../core/interfaces/perfil';
 
 @Component({
   selector: 'app-alta-candy',
@@ -11,6 +14,12 @@ import ICandyCategoria from '../../../core/interfaces/candy-categoria';
 })
 export class AltaCandy {
   private candyService = inject(Candy);
+  private authService = inject(Auth);
+  private logsService = inject(Logs);
+
+  // Igual que en AltaFuncion/AltaPelicula: sólo para saber DE QUIÉN es la
+  // acción a la hora de loguearla.
+  private usuario: IPerfil | null = null;
 
   protected categorias = signal<ICandyCategoria[]>([]);
   protected guardando = signal(false);
@@ -31,6 +40,7 @@ export class AltaCandy {
 
   constructor() {
     this.candyService.obtenerCategorias().then((categorias) => this.categorias.set(categorias));
+    this.authService.usuarioActual().then((usuario) => (this.usuario = usuario));
   }
 
   protected async guardar() {
@@ -51,6 +61,15 @@ export class AltaCandy {
         imagen_url: datos.imagen_url || null,
         puntos_canje: datos.puntos_canje ?? null,
       });
+
+      // Este llamado faltaba antes — la creación de un producto de candy
+      // no quedaba registrada en el Log de actividad.
+      if (this.usuario) {
+        await this.logsService.registrar(
+          this.usuario.id,
+          `Creó el producto de candy "${datos.nombre}" ($${datos.precio})`,
+        );
+      }
 
       this.mensaje.set(`"${datos.nombre}" se agregó al candy bar.`);
       this.formulario.reset({

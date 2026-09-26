@@ -2,7 +2,10 @@ import { Component, inject, signal } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Combos } from '../../../core/services/combos';
 import { Candy } from '../../../core/services/candy';
+import { Auth } from '../../../core/services/auth';
+import { Logs } from '../../../core/services/logs';
 import { ICandyProductoConCategoria } from '../../../core/interfaces/candy-producto';
+import IPerfil from '../../../core/interfaces/perfil';
 
 @Component({
   selector: 'app-alta-combo',
@@ -13,6 +16,12 @@ import { ICandyProductoConCategoria } from '../../../core/interfaces/candy-produ
 export class AltaCombo {
   private combosService = inject(Combos);
   private candyService = inject(Candy);
+  private authService = inject(Auth);
+  private logsService = inject(Logs);
+
+  // Igual que en el resto de las pantallas de admin: sólo para saber DE
+  // QUIÉN es la acción a la hora de loguearla.
+  private usuario: IPerfil | null = null;
 
   protected productos = signal<ICandyProductoConCategoria[]>([]);
   protected guardando = signal(false);
@@ -32,6 +41,7 @@ export class AltaCombo {
 
   constructor() {
     this.candyService.obtenerProductos().then((productos) => this.productos.set(productos));
+    this.authService.usuarioActual().then((usuario) => (this.usuario = usuario));
   }
 
   protected cantidadDe(producto_id: number): number {
@@ -71,6 +81,15 @@ export class AltaCombo {
       }));
 
       await this.combosService.crear({ ...datos, activo: true }, items);
+
+      // Esto era justo lo que faltaba y encontraste probando: crear un
+      // combo no quedaba registrado en el Log de actividad.
+      if (this.usuario) {
+        await this.logsService.registrar(
+          this.usuario.id,
+          `Creó el combo "${datos.nombre}" ($${datos.precio})`,
+        );
+      }
 
       this.mensaje.set(`Combo "${datos.nombre}" creado.`);
       this.formulario.reset({ nombre: '', precio: 0 });

@@ -2,7 +2,10 @@ import { Component, inject, signal } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Peliculas } from '../../../core/services/peliculas';
 import { Generos } from '../../../core/services/generos';
+import { Auth } from '../../../core/services/auth';
+import { Logs } from '../../../core/services/logs';
 import IGenero from '../../../core/interfaces/genero';
+import IPerfil from '../../../core/interfaces/perfil';
 
 @Component({
   selector: 'app-alta-pelicula',
@@ -13,6 +16,13 @@ import IGenero from '../../../core/interfaces/genero';
 export class AltaPelicula {
   private peliculasService = inject(Peliculas);
   private generosService = inject(Generos);
+  private authService = inject(Auth);
+  private logsService = inject(Logs);
+
+  // Mismo criterio que ya usa AltaFuncion: el guard de la ruta ya garantiza
+  // que quien está acá es admin, esto sólo lo necesitamos para saber DE
+  // QUIÉN es la acción, para el log de actividad.
+  private usuario: IPerfil | null = null;
 
   protected generosDisponibles = signal<IGenero[]>([]);
   protected generosSeleccionados = signal<Set<number>>(new Set());
@@ -32,6 +42,7 @@ export class AltaPelicula {
 
   constructor() {
     this.cargarGeneros();
+    this.authService.usuarioActual().then((usuario) => (this.usuario = usuario));
   }
 
   private async cargarGeneros() {
@@ -70,6 +81,13 @@ export class AltaPelicula {
       restriccion_edad: valores.restriccion_edad ? Number(valores.restriccion_edad) : null,
     });
     await this.generosService.asignarAPelicula(pelicula.id, [...this.generosSeleccionados()]);
+
+    // Antes esta creación no quedaba registrada en el Log de actividad —
+    // faltaba este llamado, a diferencia de AltaFuncion y Cupones que sí
+    // lo tenían desde el principio.
+    if (this.usuario) {
+      await this.logsService.registrar(this.usuario.id, `Creó la película "${pelicula.nombre}"`);
+    }
 
     this.formulario.reset();
     this.generosSeleccionados.set(new Set());
