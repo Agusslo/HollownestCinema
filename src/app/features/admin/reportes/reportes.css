@@ -280,6 +280,71 @@
   text-align: center;
 }
 
+/* ── Ranking de "más vistas" (reusa --barra-color/--barra-pista y las
+   clases .barra/.barra-relleno de la tabla de facturación — mismo look,
+   ya validado, sin inventar un color nuevo) ── */
+.rankings {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.ranking {
+  padding: 1.2rem 1.4rem;
+  background: linear-gradient(160deg, rgba(36, 36, 58, 0.96), rgba(16, 16, 30, 0.98));
+  border: 1px solid rgba(79, 196, 227, 0.22);
+  border-radius: 12px;
+}
+
+.ranking-titulo {
+  margin: 0 0 0.9rem;
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.lista-ranking {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fila-ranking {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.ranking-nombre {
+  flex-shrink: 0;
+  width: 40%;
+  color: var(--hk-pale);
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ranking-cantidad {
+  flex-shrink: 0;
+  min-width: 1.8em;
+  color: var(--hk-soul);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.sin-datos-chico {
+  margin: 0;
+  color: var(--hk-soft-text);
+  font-size: 0.85rem;
+}
+
 /* ── Estados ── */
 .estado {
   color: var(--hk-soft-text);
@@ -359,6 +424,15 @@
     display: block;
     width: fit-content;
     margin: 0.25rem 0 0;
+  }
+
+  /* En celular, semana y mes se apilan en vez de ir lado a lado */
+  .rankings {
+    grid-template-columns: 1fr;
+  }
+
+  .ranking-nombre {
+    width: 34%;
   }
 }
 

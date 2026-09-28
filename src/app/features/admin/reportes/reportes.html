@@ -92,4 +92,59 @@
       facturación.
     </p>
   }
+
+  @if (!cargando()) {
+    <h2 class="seccion-titulo"><span>Películas más vistas</span></h2>
+
+    <div class="rankings">
+      <div class="ranking">
+        <h3 class="ranking-titulo">Última semana</h3>
+        @if (masVistas().semana.length === 0) {
+          <p class="sin-datos-chico">Sin entradas vendidas en los últimos 7 días.</p>
+        } @else {
+          <ol class="lista-ranking">
+            @for (item of masVistas().semana; track item.pelicula_id) {
+              <li class="fila-ranking">
+                <span class="ranking-nombre">{{ item.nombre }}</span>
+                <span class="barra" aria-hidden="true">
+                  <span
+                    class="barra-relleno"
+                    [style.width.%]="porcentajeRanking(item.cantidad, masVistas().semana)"
+                  ></span>
+                </span>
+                <span class="ranking-cantidad">{{ item.cantidad }}</span>
+              </li>
+            }
+          </ol>
+        }
+      </div>
+
+      <div class="ranking">
+        <h3 class="ranking-titulo">Último mes</h3>
+        @if (masVistas().mes.length === 0) {
+          <p class="sin-datos-chico">Sin entradas vendidas en los últimos 30 días.</p>
+        } @else {
+          <ol class="lista-ranking">
+            @for (item of masVistas().mes; track item.pelicula_id) {
+              <li class="fila-ranking">
+                <span class="ranking-nombre">{{ item.nombre }}</span>
+                <span class="barra" aria-hidden="true">
+                  <span
+                    class="barra-relleno"
+                    [style.width.%]="porcentajeRanking(item.cantidad, masVistas().mes)"
+                  ></span>
+                </span>
+                <span class="ranking-cantidad">{{ item.cantidad }}</span>
+              </li>
+            }
+          </ol>
+        }
+      </div>
+    </div>
+
+    <p class="nota">
+      "Más vistas" cuenta entradas vendidas (orden no cancelada), en ventanas móviles de 7 y 30 días
+      hacia atrás desde hoy — no semana/mes calendario.
+    </p>
+  }
 </section>

@@ -79,7 +79,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 
 ### Reportes de administración
 - [x] Reporte de facturación diaria (monto facturado y cantidad de entradas vendidas por día)
-- [ ] Gráfico de películas más vistas por semana y por mes
+- [x] Gráfico de películas más vistas por semana y por mes
 - [ ] Producto de candy bar más vendido
 - [ ] Exportación de los reportes a PDF y a Excel
 
