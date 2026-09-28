@@ -6,3 +6,19 @@ export default interface IFacturacionDiaria {
     montoFacturado: number;
     entradasVendidas: number;
 }
+
+// Una fila del ranking de "películas más vistas": la película y cuántas
+// entradas vendió dentro de la ventana de tiempo que se esté mirando
+// (última semana o último mes).
+export interface IPeliculaMasVista {
+    pelicula_id: number;
+    nombre: string;
+    cantidad: number;
+}
+
+// Lo que devuelve el reporte completo: los dos rankings ya armados y
+// ordenados, listos para dibujar.
+export interface IReporteMasVistas {
+    semana: IPeliculaMasVista[];
+    mes: IPeliculaMasVista[];
+}
