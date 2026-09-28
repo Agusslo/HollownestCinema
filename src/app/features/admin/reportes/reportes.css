@@ -1,0 +1,393 @@
+.reportes {
+  /* Color de las barras: validado contra la superficie de la tabla en
+     cada tema (banda de luminosidad + contraste ≥ 3:1). */
+  --barra-color: #c08418;
+  --barra-pista: rgba(212, 212, 224, 0.08);
+
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* ── Encabezado ── */
+.reportes-header {
+  margin-bottom: 1.8rem;
+  text-align: center;
+}
+
+.reportes-header .admin-flea {
+  margin: 0 auto 6px;
+}
+
+.kicker {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.reportes-header h1 {
+  margin: 0;
+  color: var(--hk-soul);
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+/* ──── ◆ ──── */
+.ornamento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0.7rem 0;
+  color: var(--hk-pale);
+  font-size: 0.6rem;
+}
+
+.ornamento span {
+  width: 90px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hk-pale));
+}
+
+.ornamento span:last-child {
+  background: linear-gradient(90deg, var(--hk-pale), transparent);
+}
+
+.subtitulo {
+  margin: 0;
+  color: var(--hk-soft-text);
+  font-style: italic;
+}
+
+/* ── Fila de KPIs ── */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 2.4rem;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem 1.2rem;
+  background: linear-gradient(160deg, rgba(36, 36, 58, 0.95), rgba(18, 18, 32, 0.97));
+  border: 1px solid rgba(79, 196, 227, 0.22);
+  border-radius: 10px;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
+}
+
+.kpi-oro {
+  border-color: rgba(232, 168, 50, 0.35);
+}
+
+.kpi-label {
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.64rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.kpi-oro .kpi-label {
+  color: var(--hk-geo);
+}
+
+/* Números grandes en sans proporcional: se leen mejor que en la fuente
+   decorativa a este tamaño. */
+.kpi-valor {
+  color: var(--hk-soul);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: clamp(1.4rem, 3.4vw, 1.9rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.kpi-detalle {
+  color: var(--hk-soft-text);
+  font-size: 0.85rem;
+}
+
+/* ── Título de sección: ─ FACTURACIÓN DIARIA ─ ── */
+.seccion-titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 1rem;
+  color: var(--hk-pale);
+  font-size: 0.85rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.seccion-titulo::before,
+.seccion-titulo::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 212, 224, 0.3));
+}
+
+.seccion-titulo::after {
+  background: linear-gradient(90deg, rgba(212, 212, 224, 0.3), transparent);
+}
+
+/* ── Tabla ── */
+.tabla-marco {
+  overflow-x: auto;
+  background: linear-gradient(160deg, rgba(36, 36, 58, 0.96), rgba(16, 16, 30, 0.98));
+  border: 1px solid rgba(79, 196, 227, 0.22);
+  border-radius: 12px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+}
+
+.tabla-facturacion {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-facturacion th,
+.tabla-facturacion td {
+  padding: 0.75rem 1.1rem;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.tabla-facturacion th {
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.66rem;
+  font-weight: normal;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(79, 196, 227, 0.2);
+}
+
+.tabla-facturacion td {
+  color: var(--hk-pale);
+  border-bottom: 1px solid rgba(212, 212, 224, 0.07);
+}
+
+.tabla-facturacion tbody tr {
+  transition: background-color 0.2s;
+}
+
+.tabla-facturacion tbody tr:hover {
+  background: rgba(79, 196, 227, 0.05);
+}
+
+.tabla-facturacion tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Números alineados a la derecha y con dígitos de ancho fijo */
+.num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.col-fecha {
+  white-space: nowrap;
+}
+
+.dia-semana {
+  display: inline-block;
+  min-width: 2.6em;
+  color: var(--hk-soft-text);
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.etiqueta-mejor {
+  margin-left: 0.5rem;
+  padding: 1px 8px;
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.58rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: 1px solid rgba(232, 168, 50, 0.45);
+  border-radius: 999px;
+  vertical-align: middle;
+}
+
+.tabla-facturacion tr.mejor {
+  background: rgba(232, 168, 50, 0.05);
+}
+
+.col-monto {
+  width: 50%;
+}
+
+.monto {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.monto-valor {
+  flex-shrink: 0;
+  min-width: 6.5em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Barra fina, extremo redondeado de 4px, anclada a la izquierda */
+.barra {
+  flex: 1;
+  height: 6px;
+  background: var(--barra-pista);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.barra-relleno {
+  display: block;
+  height: 100%;
+  background: var(--barra-color);
+  border-radius: 0 4px 4px 0;
+}
+
+.tabla-facturacion tfoot td {
+  color: var(--hk-soul);
+  font-weight: 700;
+  border-top: 1px solid rgba(232, 168, 50, 0.35);
+  border-bottom: none;
+}
+
+.tabla-facturacion tfoot td:first-child {
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  font-weight: normal;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.nota {
+  margin: 0.9rem 0 0;
+  color: var(--hk-soft-text);
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+}
+
+/* ── Estados ── */
+.estado {
+  color: var(--hk-soft-text);
+  text-align: center;
+}
+
+.sin-datos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 2rem 1rem;
+  color: var(--hk-soft-text);
+  text-align: center;
+}
+
+.sin-datos img {
+  width: 56px;
+  opacity: 0.6;
+}
+
+.aviso {
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.aviso-error {
+  background: rgba(192, 57, 43, 0.12);
+  border: 1px solid var(--hk-grimm);
+  color: var(--hk-pale);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .reportes {
+    margin: 1rem auto;
+    padding: 1rem 0.75rem;
+  }
+
+  .ornamento span {
+    width: 50px;
+  }
+
+  .kpis {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .kpi {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0.8rem 1rem;
+  }
+
+  .kpi-detalle {
+    width: 100%;
+  }
+
+  .tabla-facturacion th,
+  .tabla-facturacion td {
+    padding: 0.6rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  /* En celular la barra pasa abajo del número */
+  .monto {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.3rem;
+  }
+
+  .etiqueta-mejor {
+    display: block;
+    width: fit-content;
+    margin: 0.25rem 0 0;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .reportes {
+  --barra-color: #a66f1c;
+  --barra-pista: rgba(41, 64, 71, 0.1);
+}
+
+:host-context(.tema-claro) .kpi,
+:host-context(.tema-claro) .tabla-marco {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.16);
+  box-shadow: 0 8px 22px rgba(41, 64, 71, 0.1);
+}
+
+:host-context(.tema-claro) .kpi-oro {
+  border-color: rgba(166, 111, 28, 0.35);
+}
+
+:host-context(.tema-claro) .tabla-facturacion td {
+  border-bottom-color: rgba(41, 64, 71, 0.1);
+}
+
+:host-context(.tema-claro) .tabla-facturacion tbody tr:hover {
+  background: rgba(22, 141, 168, 0.06);
+}
+
+:host-context(.tema-claro) .aviso-error {
+  background: rgba(192, 57, 43, 0.08);
+  color: #7a1d13;
+}

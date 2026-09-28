@@ -1,0 +1,95 @@
+<section class="reportes">
+  <header class="reportes-header">
+    <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
+    <span class="kicker">Panel de administración</span>
+    <h1>Reportes</h1>
+    <div class="ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+    <p class="subtitulo">El tesoro del reino, día por día.</p>
+  </header>
+
+  @if (error()) {
+    <p class="aviso aviso-error">{{ error() }}</p>
+  }
+
+  @if (cargando()) {
+    <p class="estado">Cargando...</p>
+  } @else if (facturacion().length === 0) {
+    <div class="sin-datos">
+      <img src="/img/knight_face.png" alt="" aria-hidden="true" />
+      <p>Todavía no hay ninguna venta registrada.</p>
+    </div>
+  } @else {
+    <!-- Números del período -->
+    <div class="kpis">
+      <div class="kpi kpi-oro" appGlowHover color="#e8a832">
+        <span class="kpi-label">Facturado</span>
+        <span class="kpi-valor">${{ totalFacturado() | number: '1.0-0' : 'es' }}</span>
+        <span class="kpi-detalle">{{ facturacion().length }} días con actividad</span>
+      </div>
+      <div class="kpi" appGlowHover>
+        <span class="kpi-label">Entradas vendidas</span>
+        <span class="kpi-valor">{{ totalEntradas() | number: '1.0-0' : 'es' }}</span>
+        <span class="kpi-detalle">en todo el período</span>
+      </div>
+      <div class="kpi" appGlowHover>
+        <span class="kpi-label">Promedio por entrada</span>
+        <span class="kpi-valor">${{ ticketPromedio() | number: '1.0-0' : 'es' }}</span>
+        <span class="kpi-detalle">facturado ÷ entradas</span>
+      </div>
+    </div>
+
+    <h2 class="seccion-titulo"><span>Facturación diaria</span></h2>
+
+    <div class="tabla-marco">
+      <table class="tabla-facturacion">
+        <thead>
+          <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col" class="col-monto">Monto facturado</th>
+            <th scope="col" class="num">Entradas</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (fila of facturacion(); track fila.fecha) {
+            <tr [class.mejor]="mejorDia()?.fecha === fila.fecha">
+              <td class="col-fecha">
+                <span class="dia-semana">{{ fila.fecha | date: 'EEE' : '' : 'es' }}</span>
+                {{ fila.fecha | date: 'dd/MM/yyyy' : '' : 'es' }}
+                @if (mejorDia()?.fecha === fila.fecha) {
+                  <span class="etiqueta-mejor">◆ Mejor día</span>
+                }
+              </td>
+              <td class="col-monto">
+                <!-- Barra: largo relativo al mejor día; el número queda
+                     siempre escrito al lado (la barra no es la única forma
+                     de leer el valor). -->
+                <div class="monto">
+                  <span class="monto-valor">${{ fila.montoFacturado | number: '1.0-0' : 'es' }}</span>
+                  <span class="barra" aria-hidden="true">
+                    <span
+                      class="barra-relleno"
+                      [style.width.%]="porcentajeDelMaximo(fila.montoFacturado)"
+                    ></span>
+                  </span>
+                </div>
+              </td>
+              <td class="num">{{ fila.entradasVendidas }}</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Total</td>
+            <td class="col-monto">${{ totalFacturado() | number: '1.0-0' : 'es' }}</td>
+            <td class="num">{{ totalEntradas() | number: '1.0-0' : 'es' }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <p class="nota">
+      El monto es lo pagado en pesos: las entradas canjeadas con puntos suman al conteo pero no a la
+      facturación.
+    </p>
+  }
+</section>

@@ -42,6 +42,11 @@ export const routes: Routes = [
       import('./features/admin/log-actividad/log-actividad').then((m) => m.LogActividad),
   },
   {
+    path: 'admin/reportes',
+    canActivate: [perfilCompletoGuard, rolGuard(['admin'])],
+    loadComponent: () => import('./features/admin/reportes/reportes').then((m) => m.Reportes),
+  },
+  {
     path: 'empleado/validar',
     canActivate: [perfilCompletoGuard, rolGuard(['empleado', 'admin'])],
     loadComponent: () => import('./features/empleado/validar/validar').then((m) => m.Validar),
