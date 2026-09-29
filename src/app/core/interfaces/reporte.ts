@@ -22,3 +22,15 @@ export interface IReporteMasVistas {
     semana: IPeliculaMasVista[];
     mes: IPeliculaMasVista[];
 }
+
+// Una fila del ranking de candy bar: el producto y cuántas unidades se
+// vendieron en total, de siempre (sin ventana de tiempo). Cuenta lo
+// comprado suelto, lo que vino adentro de un combo, y lo canjeado con
+// puntos — las tres formas terminan guardadas en la misma tabla
+// (orden_candy_items), así que para este reporte son lo mismo: una
+// unidad vendida.
+export interface ICandyMasVendido {
+    producto_id: number;
+    nombre: string;
+    cantidad: number;
+}

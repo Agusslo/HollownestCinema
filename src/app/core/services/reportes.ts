@@ -1,6 +1,10 @@
 import { Service, inject } from '@angular/core';
     import { Supabase } from './supabase';
-    import IFacturacionDiaria, { IPeliculaMasVista, IReporteMasVistas } from '../interfaces/reporte';
+    import IFacturacionDiaria, {
+    IPeliculaMasVista,
+    IReporteMasVistas,
+    ICandyMasVendido,
+    } from '../interfaces/reporte';
 
     @Service()
     export class Reportes {
@@ -128,5 +132,52 @@ import { Service, inject } from '@angular/core';
         }
 
         return [...conteo.values()].sort((a, b) => b.cantidad - a.cantidad).slice(0, 5);
+    }
+
+    // Reporte de "candy más vendido": ranking de todos los productos de
+    // candy por cantidad de unidades vendidas, de siempre (sin ventana de
+    // tiempo — a diferencia de obtenerMasVistas, acá no hace falta
+    // semana/mes porque el catálogo de candy es chico y lo que importa es
+    // el acumulado histórico). Mismo criterio de siempre: las órdenes
+    // CANCELADAS no cuentan.
+    //
+    // Ojo con una diferencia importante respecto a contarYRankear() de
+    // arriba: ahí cada FILA de "entradas" es una sola entrada, entonces
+    // alcanza con sumar 1 por fila (existente.cantidad++). Acá cada fila
+    // de "orden_candy_items" YA trae su propia cantidad adentro (comprar 3
+    // pochoclos en el mismo carrito es una sola fila con cantidad: 3), así
+    // que hay que sumar fila.cantidad, no contar filas.
+    async obtenerCandyMasVendido(): Promise<ICandyMasVendido[]> {
+        // `ordenes!inner(cancelada_en)` es el mismo patrón de siempre para
+        // poder filtrar por un campo de la tabla relacionada.
+        const { data, error } = await this.supabase.Supabase.from('orden_candy_items')
+        .select('producto_id, cantidad, candy_productos(nombre), ordenes!inner(cancelada_en)')
+        .is('ordenes.cancelada_en', null);
+
+        if (error) throw error;
+
+        const filas = data as unknown as {
+        producto_id: number;
+        cantidad: number;
+        candy_productos: { nombre: string };
+        }[];
+
+        const conteo = new Map<number, ICandyMasVendido>();
+
+        for (const fila of filas) {
+        const existente = conteo.get(fila.producto_id);
+
+        if (existente) {
+            existente.cantidad += fila.cantidad;
+        } else {
+            conteo.set(fila.producto_id, {
+            producto_id: fila.producto_id,
+            nombre: fila.candy_productos.nombre,
+            cantidad: fila.cantidad,
+            });
+        }
+        }
+
+        return [...conteo.values()].sort((a, b) => b.cantidad - a.cantidad);
     }
     }

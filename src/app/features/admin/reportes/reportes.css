@@ -65,6 +65,44 @@
   font-style: italic;
 }
 
+/* ── Botones de exportar ── */
+.reportes-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.9rem;
+  margin-bottom: 1.8rem;
+}
+
+/* Mismo lenguaje visual que .admin-form .submit-button (styles.css),
+   adaptado a un botón más chico para que entren los dos lado a lado. */
+.boton-exportar {
+  padding: 0.65rem 1.4rem;
+  background: linear-gradient(180deg, #6fd3ee, var(--hk-focus));
+  color: #04141a;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Trajan', serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    filter 0.2s,
+    transform 0.2s;
+}
+
+.boton-exportar:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.boton-exportar-oro {
+  background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+  color: #2b1c02;
+}
+
 /* ── Fila de KPIs ── */
 .kpis {
   display: grid;
@@ -118,11 +156,14 @@
 }
 
 /* ── Título de sección: ─ FACTURACIÓN DIARIA ─ ── */
+/* Títulos de sección con aire arriba (separan cada bloque) y siempre a
+   todo el ancho, para que las líneas de los costados se vean. */
 .seccion-titulo {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 0 0 1rem;
+  width: 100%;
+  margin: 3.2rem 0 1.2rem;
   color: var(--hk-pale);
   font-size: 0.85rem;
   letter-spacing: 3px;
@@ -139,6 +180,11 @@
 
 .seccion-titulo::after {
   background: linear-gradient(90deg, rgba(212, 212, 224, 0.3), transparent);
+}
+
+/* El primero (Facturación diaria) ya tiene el espacio de los KPIs arriba */
+.kpis + .seccion-titulo {
+  margin-top: 0;
 }
 
 /* ── Tabla ── */
@@ -272,13 +318,6 @@
   text-transform: uppercase;
 }
 
-.nota {
-  margin: 0.9rem 0 0;
-  color: var(--hk-soft-text);
-  font-size: 0.85rem;
-  font-style: italic;
-  text-align: center;
-}
 
 /* ── Ranking de "más vistas" (reusa --barra-color/--barra-pista y las
    clases .barra/.barra-relleno de la tabla de facturación — mismo look,
@@ -314,10 +353,6 @@
   list-style: none;
 }
 
-.lista-ranking {
-  gap: 0.95rem;
-}
-
 /* Nombre completo arriba (puede ocupar dos líneas) con la cantidad a la
    derecha, y la barra debajo a todo el ancho:
      spiderman across the spiderverse      57
@@ -345,6 +380,7 @@
 .ranking-cantidad {
   grid-column: 2;
   grid-row: 1;
+  flex-shrink: 0;
   min-width: 1.8em;
   color: var(--hk-soul);
   font-weight: 600;
@@ -393,6 +429,10 @@
 
 /* ── Responsive ── */
 @media (max-width: 640px) {
+  .seccion-titulo {
+    margin-top: 2.2rem;
+  }
+
   .reportes {
     margin: 1rem auto;
     padding: 1rem 0.75rem;
@@ -474,4 +514,17 @@
 :host-context(.tema-claro) .aviso-error {
   background: rgba(192, 57, 43, 0.08);
   color: #7a1d13;
+}
+
+/* Mismo criterio que .tema-claro .admin-form .submit-button en
+   styles.css: en modo claro el gradiente celeste/dorado clarito pierde
+   contraste contra el fondo blanco, así que se oscurece. */
+:host-context(.tema-claro) .boton-exportar {
+  background: linear-gradient(180deg, #1a8aa5, #0e6f86);
+  color: #ffffff;
+}
+
+:host-context(.tema-claro) .boton-exportar-oro {
+  background: linear-gradient(180deg, #c98a1f, #a66f1c);
+  color: #ffffff;
 }

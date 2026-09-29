@@ -11,6 +11,23 @@
     <p class="aviso aviso-error">{{ error() }}</p>
   }
 
+  @if (!cargando() && facturacion().length > 0) {
+    <div class="reportes-acciones">
+      <button type="button" class="boton-exportar" appGlowHover (click)="exportarPdf()">
+        <span>Exportar a PDF</span>
+      </button>
+      <button
+        type="button"
+        class="boton-exportar boton-exportar-oro"
+        appGlowHover
+        color="#e8a832"
+        (click)="exportarExcel()"
+      >
+        <span>Exportar a Excel</span>
+      </button>
+    </div>
+  }
+
   @if (cargando()) {
     <p class="estado">Cargando...</p>
   } @else if (facturacion().length === 0) {
@@ -87,10 +104,6 @@
       </table>
     </div>
 
-    <p class="nota">
-      El monto es lo pagado en pesos: las entradas canjeadas con puntos suman al conteo pero no a la
-      facturación.
-    </p>
   }
 
   @if (!cargando()) {
@@ -142,9 +155,45 @@
       </div>
     </div>
 
-    <p class="nota">
-      "Más vistas" cuenta entradas vendidas (orden no cancelada), en ventanas móviles de 7 y 30 días
-      hacia atrás desde hoy — no semana/mes calendario.
-    </p>
+  }
+
+  @if (!cargando()) {
+    <h2 class="seccion-titulo"><span>Candy bar</span></h2>
+
+    @if (candyMasVendido().length === 0) {
+      <p class="sin-datos-chico">Todavía no se vendió candy.</p>
+    } @else {
+      <!-- El producto #1 va destacado como KPI (misma idea que "Mejor día"
+           en la tabla de facturación): responde de un vistazo la pregunta
+           del README, "¿cuál es el más vendido?", sin obligar a leer todo
+           el ranking de abajo para encontrarlo. -->
+      <div class="kpis">
+        <div class="kpi kpi-oro" appGlowHover color="#e8a832">
+          <span class="kpi-label">Más vendido</span>
+          <span class="kpi-valor">{{ candyMasVendido()[0].nombre }}</span>
+          <span class="kpi-detalle">
+            {{ candyMasVendido()[0].cantidad | number: '1.0-0' : 'es' }} unidades vendidas
+          </span>
+        </div>
+      </div>
+
+      <div class="ranking">
+        <ol class="lista-ranking">
+          @for (item of candyMasVendido(); track item.producto_id) {
+            <li class="fila-ranking">
+              <span class="ranking-nombre">{{ item.nombre }}</span>
+              <span class="barra" aria-hidden="true">
+                <span
+                  class="barra-relleno"
+                  [style.width.%]="porcentajeRanking(item.cantidad, candyMasVendido())"
+                ></span>
+              </span>
+              <span class="ranking-cantidad">{{ item.cantidad }}</span>
+            </li>
+          }
+        </ol>
+      </div>
+    }
+
   }
 </section>

@@ -2,6 +2,7 @@ import { Service } from '@angular/core';
 import jsPDF from 'jspdf';
 import QRCode from 'qrcode';
 import { tipoDeButaca } from './butacas';
+import { cargarLogo, registrarTrajan } from './pdf-recursos';
 
 export interface DatosEntradaPdf {
     pelicula: string;
@@ -42,14 +43,10 @@ const CENTRO = HOJA.ancho / 2;
 
 @Service()
 export class Pdf {
-    // La fuente y el logo se descargan una sola vez y quedan cacheados
-    private trajanBase64: string | null = null;
-    private logoDataUrl: string | null = null;
-
     async generarEntradas(entradas: DatosEntradaPdf[], candy?: DatosCandyPdf): Promise<void> {
         const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-        const fuente = await this.registrarTrajan(doc);
-        const logo = await this.cargarLogo();
+        const fuente = await registrarTrajan(doc);
+        const logo = await cargarLogo();
 
         for (let i = 0; i < entradas.length; i++) {
             if (i > 0) doc.addPage();
@@ -345,54 +342,6 @@ export class Pdf {
             align: 'center',
             charSpace: 1,
         });
-    }
-
-    // ── Recursos ─────────────────────────────────────────────────────────
-
-    // Registra TrajanPro (la misma fuente de la web) dentro del PDF. jsPDF
-    // sólo acepta .ttf y lo necesita en base64. Si falla la descarga,
-    // seguimos con una fuente estándar para no bloquear la compra.
-    private async registrarTrajan(doc: jsPDF): Promise<string> {
-        try {
-            if (!this.trajanBase64) {
-                const respuesta = await fetch('/fonts/TrajanPro-Regular.ttf');
-                if (!respuesta.ok) throw new Error('No se pudo cargar la fuente');
-                this.trajanBase64 = this.aBase64(await respuesta.arrayBuffer());
-            }
-            doc.addFileToVFS('TrajanPro-Regular.ttf', this.trajanBase64);
-            doc.addFont('TrajanPro-Regular.ttf', 'Trajan', 'normal');
-            return 'Trajan';
-        } catch {
-            return 'times';
-        }
-    }
-
-    private async cargarLogo(): Promise<string | null> {
-        if (this.logoDataUrl) return this.logoDataUrl;
-        try {
-            const respuesta = await fetch('/img/knight_face.png');
-            if (!respuesta.ok) return null;
-            const blob = await respuesta.blob();
-            this.logoDataUrl = await new Promise<string>((resolve, reject) => {
-                const lector = new FileReader();
-                lector.onload = () => resolve(lector.result as string);
-                lector.onerror = () => reject(lector.error);
-                lector.readAsDataURL(blob);
-            });
-            return this.logoDataUrl;
-        } catch {
-            return null;
-        }
-    }
-
-    private aBase64(buffer: ArrayBuffer): string {
-        const bytes = new Uint8Array(buffer);
-        let binario = '';
-        // De a pedazos: String.fromCharCode con millones de argumentos revienta la pila
-        for (let i = 0; i < bytes.length; i += 0x8000) {
-            binario += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-        }
-        return btoa(binario);
     }
 
     private capitalizar(texto: string): string {
