@@ -45,8 +45,19 @@ export class Entradas {
 
   // Precio de una butaca puntual: el precio base del formato, más el
   // recargo si esa butaca es VIP (filas R, S, T).
-  precioPorButaca(formato: Formato, codigo: string): number {
-    const base = PRECIOS_POR_FORMATO[formato];
+  //
+  // Preventa: si la película está en preventa, se pasa su precio especial
+  // como tercer parámetro, y reemplaza al precio base del formato. Pero se
+  // cobra el MENOR de los dos: la preventa es un beneficio, nunca puede
+  // salir más cara que la entrada normal. Ejemplo con preventa a $24.000:
+  //   - 2D (normal $18.800) → $18.800 (la preventa sería más cara)
+  //   - 4D (normal $28.600) → $24.000
+  //   - 4D VIP → $24.000 × 1,3 = $31.200 (el recargo VIP se suma encima)
+  // Si no se pasa (null), es el precio normal de siempre: por eso ninguna
+  // otra parte de la app que ya usaba esta función tuvo que cambiar.
+  precioPorButaca(formato: Formato, codigo: string, precioPreventa: number | null = null): number {
+    const normal = PRECIOS_POR_FORMATO[formato];
+    const base = precioPreventa !== null ? Math.min(precioPreventa, normal) : normal;
     return tipoDeButaca(codigo) === 'vip' ? Math.round(base * RECARGO_VIP) : base;
   }
 

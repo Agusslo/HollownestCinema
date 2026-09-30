@@ -21,12 +21,17 @@
     }
 
     @if (resenias().length === 0) {
-      <div class="sin-resenias-caja">
-        <img class="sin-resenias-img" src="/img/knight_face.png" alt="" aria-hidden="true" />
-        <p class="sin-resenias">
-          El silencio reina en estos pasajes... Sé el primero en dejar tu testimonio.
-        </p>
-      </div>
+      <!-- Antes del estreno no mostramos la caja de "Sé el primero...":
+           todavía nadie puede reseñar, y el cartel dorado de más abajo ya
+           explica desde cuándo se va a poder. -->
+      @if (!estreno()) {
+        <div class="sin-resenias-caja">
+          <img class="sin-resenias-img" src="/img/knight_face.png" alt="" aria-hidden="true" />
+          <p class="sin-resenias">
+            El silencio reina en estos pasajes... Sé el primero en dejar tu testimonio.
+          </p>
+        </div>
+      }
     } @else {
       <ul class="lista-resenias">
         @for (resenia of resenias(); track resenia.id) {
@@ -102,8 +107,8 @@
       <div class="resenia-aviso-caja estreno">
         <span class="aviso-icon">◆</span>
         <p class="resenia-aviso">
-          Esta historia todavía no llegó a las salas. Vas a poder dejar tu reseña desde el
-          estreno, el {{ estrenoTexto() }}.
+          Esta historia todavía no llegó a las salas. Vas a poder dejar tu reseña desde el estreno,
+          el {{ estrenoTexto() }}.
         </p>
       </div>
     } @else if (!usuarioActual()) {

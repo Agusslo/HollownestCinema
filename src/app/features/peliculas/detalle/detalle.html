@@ -57,19 +57,35 @@
 
       <!-- Avisos de Próximamente / Preventa, arriba de la lista de funciones -->
       @if (estado() === 'proximamente') {
-        <p class="aviso-venta">
-          ◆ La venta todavía no abrió. Se va a poder comprar desde el {{ inicioPreventa() }}, en
-          preventa. Pedí que te avisemos desde la sección Próximamente de la cartelera.
-        </p>
+        <div class="aviso-venta">
+          <span class="aviso-esquina aviso-esquina-izq" aria-hidden="true"></span>
+          <span class="aviso-esquina aviso-esquina-der" aria-hidden="true"></span>
+          <span class="aviso-kicker">Las puertas siguen selladas</span>
+          <h3 class="aviso-titulo">La venta todavía no abrió</h3>
+          <div class="aviso-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+          <p class="aviso-texto">
+            La preventa se abre el <strong class="aviso-fecha">{{ inicioPreventa() }}</strong>.
+            Pedí que te avisemos y no te quedás sin butaca.
+          </p>
+          <a class="aviso-boton" routerLink="/" fragment="proximamente">Avisame desde Próximamente</a>
+        </div>
       } @else if (estado() === 'preventa') {
-        <p class="aviso-venta">
-          ◆ ¡Preventa abierta!
-          @if (p.precio_preventa) {
-            Entrada a ${{ p.precio_preventa | number: '1.0-0' : 'es' }} (las butacas VIP suman su
-            recargo)
-          }
-          hasta el día del estreno, el {{ fechaCorta(p.fecha_estreno) }}.
-        </p>
+        <div class="aviso-venta">
+          <span class="aviso-esquina aviso-esquina-izq" aria-hidden="true"></span>
+          <span class="aviso-esquina aviso-esquina-der" aria-hidden="true"></span>
+          <span class="aviso-kicker">Las puertas se abren antes</span>
+          <h3 class="aviso-titulo">¡Preventa abierta!</h3>
+          <div class="aviso-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+          <p class="aviso-texto">
+            @if (p.precio_preventa) {
+              Entrada a
+              <strong class="aviso-fecha">${{ p.precio_preventa | number: '1.0-0' : 'es' }}</strong>
+              (las butacas VIP suman su recargo)
+            }
+            hasta el día del estreno, el
+            <strong class="aviso-fecha">{{ fechaCorta(p.fecha_estreno) }}</strong>.
+          </p>
+        </div>
       }
 
       @if (funciones().length === 0) {

@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnDestroy } from '@angular/core';
+import { Component, computed, inject, signal, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Supabase } from '../../../core/services/supabase';
@@ -57,6 +57,22 @@ export class Butacas implements OnDestroy {
   protected seleccionadas = signal<Set<string>>(new Set());
   protected funcion = signal<IFuncionConSala | null>(null);
   protected peliculaActual = signal<IPelicula | null>(null);
+
+  // Precio de preventa que corresponde cobrar ahora: el de la película si
+  // está en preventa, o null si se vende a precio normal (en cartelera, o
+  // en preventa pero sin precio especial cargado).
+  protected precioPreventa = computed(() => {
+    const pelicula = this.peliculaActual();
+    if (!pelicula || this.peliculasService.estadoVenta(pelicula) !== 'preventa') return null;
+    return pelicula.precio_preventa;
+  });
+
+  // '2026-12-12' → '12/12', para el aviso de preventa.
+  protected fechaCorta(fecha: string | null | undefined): string {
+    if (!fecha) return '';
+    const [, mes, dia] = fecha.split('-');
+    return `${dia}/${mes}`;
+  }
   protected usuario = signal<IPerfil | null>(null);
   protected cupones = signal<ICupon[]>([]);
   protected cargando = signal(true);
@@ -125,7 +141,21 @@ export class Butacas implements OnDestroy {
 
     this.funcion_id = funcionEncontrada.id;
     this.funcion.set(funcionEncontrada);
-    this.peliculaActual.set(await this.peliculasService.obtenerPorId(funcionEncontrada.pelicula_id));
+    const pelicula = await this.peliculasService.obtenerPorId(funcionEncontrada.pelicula_id);
+    this.peliculaActual.set(pelicula);
+
+    // Si la película sigue en Próximamente (el admin todavía no abrió la
+    // venta), no se puede comprar. El detalle ya no deja entrar acá, pero
+    // alguien podría escribir la URL de las butacas a mano: por eso se
+    // vuelve a chequear. Se corta igual que cuando no se encuentra la
+    // función: con el mensaje de error y sin cargar la sala.
+    if (this.peliculasService.estadoVenta(pelicula) === 'proximamente') {
+      this.error.set(
+        `La venta de "${pelicula.nombre}" todavía no abrió. Vas a poder comprar desde la preventa.`,
+      );
+      this.cargando.set(false);
+      return;
+    }
     this.layout.set(this.butacasService.generarLayoutSala());
 
     const ocupadasArray = await this.entradasService.obtenerButacasOcupadas(this.funcion_id);
@@ -349,7 +379,9 @@ export class Butacas implements OnDestroy {
     const canjeadas = new Set(this.butacasCanjeadas());
     const preciosButacas = Array.from(this.seleccionadas())
       .filter((codigo) => !canjeadas.has(codigo))
-      .map((codigo) => this.entradasService.precioPorButaca(funcionActual.formato, codigo));
+      .map((codigo) =>
+        this.entradasService.precioPorButaca(funcionActual.formato, codigo, this.precioPreventa()),
+      );
     let subtotalEntradas = preciosButacas.reduce((acumulado, precio) => acumulado + precio, 0);
 
     const combo = this.comboSeleccionado();

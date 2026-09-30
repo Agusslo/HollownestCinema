@@ -6,6 +6,13 @@
       <p class="eyebrow">Elegí dónde sentarte</p>
       <h1>Seleccioná tu butaca</h1>
       <div class="ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+      @if (precioPreventa(); as precio) {
+        <p class="aviso-vip">
+          ◆ Preventa: entrada a ${{ precio }} hasta el estreno, el
+          {{ fechaCorta(peliculaActual()?.fecha_estreno) }}. Si en tu formato la entrada normal sale
+          menos, se cobra la normal.
+        </p>
+      }
       @if (peliculaActual()?.restriccion_edad; as restriccion) {
         <p class="aviso-restriccion">
           🔞 Esta función es apta para mayores de {{ restriccion }} años.
