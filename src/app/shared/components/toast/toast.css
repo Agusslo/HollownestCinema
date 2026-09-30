@@ -1,0 +1,152 @@
+/* Contenedor fijo abajo a la derecha, por encima de todo. Va abajo (y no
+   arriba) para no tapar los botones del header, y a 76px del borde para
+   no pisar la franja del bichito que camina (.bug-container, 60px de alto).
+   Los toasts se apilan uno debajo del otro. pointer-events: none hace que
+   el espacio vacío del contenedor no tape clicks de la página; cada toast
+   los vuelve a activar para que se pueda tocar la × y el enlace. */
+.toasts {
+  position: fixed;
+  bottom: 76px;
+  right: 1rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(360px, calc(100vw - 2rem));
+  pointer-events: none;
+}
+
+/* Todos los colores salen de las variables --hk-* de styles.css, así que el
+   modo claro funciona solo: .tema-claro cambia las variables y el toast
+   las toma sin necesitar reglas propias. */
+.toast {
+  --acento: var(--hk-focus);
+
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 14px 14px 16px;
+  background: linear-gradient(160deg, var(--hk-shell), var(--hk-deep));
+  border: 1px solid var(--hk-stone);
+  border-left: 3px solid var(--acento);
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  pointer-events: auto;
+  animation: entrar 0.3s ease-out;
+}
+
+/* Cada tipo sólo cambia el color de acento */
+.toast-exito {
+  --acento: var(--hk-geo);
+}
+
+.toast-error {
+  --acento: var(--hk-grimm);
+}
+
+.toast-advertencia {
+  --acento: var(--hk-infection);
+}
+
+.toast-info {
+  --acento: var(--hk-focus);
+}
+
+.toast-icono {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: var(--acento);
+  border: 1px solid var(--acento);
+  border-radius: 50%;
+  font-family: 'Trajan', 'Times New Roman', serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.toast-cuerpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-titulo {
+  margin: 0 0 3px;
+  color: var(--acento);
+  font-family: 'Trajan', 'Times New Roman', serif;
+  font-size: 0.78rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.toast-mensaje {
+  margin: 0;
+  color: var(--hk-panel-text);
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.toast-enlace {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--acento);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.toast-enlace:hover {
+  text-decoration: underline;
+}
+
+.toast-cerrar {
+  flex-shrink: 0;
+  padding: 0 4px;
+  color: var(--hk-soft-text);
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.toast-cerrar:hover {
+  color: var(--hk-soul);
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* En modo claro la sombra negra queda pesada sobre el fondo blanco:
+   misma sombra suave que usan las tarjetas de Reportes en ese tema. */
+:host-context(.tema-claro) .toast {
+  box-shadow: 0 10px 24px rgba(41, 64, 71, 0.16);
+}
+
+/* Quien tiene activado "reducir movimiento" en su sistema no ve la animación */
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}
+
+/* En el celular ocupan todo el ancho de la pantalla */
+@media (max-width: 560px) {
+  .toasts {
+    bottom: 68px;
+    right: 0.75rem;
+    left: 0.75rem;
+    width: auto;
+  }
+}

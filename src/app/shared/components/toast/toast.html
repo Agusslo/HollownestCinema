@@ -1,0 +1,35 @@
+    <!-- aria-live="polite": los lectores de pantalla leen en voz alta cada toast
+        nuevo sin interrumpir lo que el usuario está haciendo. -->
+    <section class="toasts" aria-live="polite">
+    @for (toast of toastsService.toasts(); track toast.id) {
+        <!-- Un solo bloque para los 4 tipos: lo único que cambia es la clase
+            (toast-exito, toast-error, ...), que en el CSS define el color. -->
+        <article [class]="'toast toast-' + toast.tipo">
+        <span class="toast-icono" aria-hidden="true">{{ iconos[toast.tipo] }}</span>
+
+        <div class="toast-cuerpo">
+            <p class="toast-titulo">{{ toast.titulo }}</p>
+            <p class="toast-mensaje">{{ toast.mensaje }}</p>
+
+            @if (toast.enlace) {
+            <a
+                class="toast-enlace"
+                [routerLink]="toast.enlace.ruta"
+                (click)="toastsService.cerrar(toast.id)"
+            >
+                {{ toast.enlace.texto }} →
+            </a>
+            }
+        </div>
+
+        <button
+            type="button"
+            class="toast-cerrar"
+            aria-label="Cerrar aviso"
+            (click)="toastsService.cerrar(toast.id)"
+        >
+            ×
+        </button>
+        </article>
+    }
+    </section>

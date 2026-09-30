@@ -5,10 +5,11 @@ import IPerfil from './core/interfaces/perfil';
 import { Supabase } from './core/services/supabase';
 import { BlobatarComponent } from './shared/components/blobatar/blobatar';
 import { GlowHover } from './shared/directives/glow-hover';
+import { ToastComponent } from './shared/components/toast/toast';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, BlobatarComponent, GlowHover],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, BlobatarComponent, GlowHover, ToastComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
   host: {
