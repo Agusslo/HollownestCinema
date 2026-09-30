@@ -1,5 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  FormGroup,
+  FormControl,
+  ValidationErrors,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Peliculas } from '../../../core/services/peliculas';
 import { Funciones } from '../../../core/services/funciones';
 import { Auth } from '../../../core/services/auth';
@@ -8,6 +15,13 @@ import IPelicula from '../../../core/interfaces/pelicula';
 import IPerfil from '../../../core/interfaces/perfil';
 import { Formato, Idioma } from '../../../core/interfaces/funcion';
 import { GlowHover } from '../../../shared/directives/glow-hover';
+
+// El <input type="datetime-local"> deja elegir cualquier fecha: sin esto se
+// podía programar una función que ya pasó y nadie iba a poder comprar.
+function validarFechaFutura(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  return new Date(control.value).getTime() <= Date.now() ? { fechaPasada: true } : null;
+}
 
 @Component({
   selector: 'app-alta-funcion',
@@ -31,7 +45,10 @@ export class AltaFuncion {
 
   protected formulario = new FormGroup({
     pelicula_id: new FormControl<number | null>(null, { validators: [Validators.required] }),
-    fecha_hora: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    fecha_hora: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, validarFechaFutura],
+    }),
     formato: new FormControl<Formato>('2d', { nonNullable: true, validators: [Validators.required] }),
     idioma: new FormControl<Idioma>('castellano', { nonNullable: true, validators: [Validators.required] }),
   });

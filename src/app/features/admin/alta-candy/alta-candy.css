@@ -16,14 +16,6 @@
   color: var(--hk-soul);
 }
 
-.campo-error {
-  color: var(--hk-grimm);
-  font-family: 'Perpetua', 'Georgia', serif;
-  font-size: 0.72rem;
-  letter-spacing: 0;
-  text-transform: none;
-}
-
 .mensaje {
   margin: 0 0 14px;
   color: var(--hk-focus);

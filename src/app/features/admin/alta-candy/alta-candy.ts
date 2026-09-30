@@ -27,13 +27,18 @@ export class AltaCandy {
   protected mensaje = signal<string | null>(null);
 
   protected formulario = new FormGroup({
-    nombre: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    // /\S/: que no sea un nombre de puros espacios (required solo lo deja pasar).
+    nombre: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.pattern(/\S/)],
+    }),
     precio: new FormControl(0, {
       nonNullable: true,
       validators: [Validators.required, Validators.min(0)],
     }),
     categoria_id: new FormControl<number | null>(null, { validators: [Validators.required] }),
-    imagen_url: new FormControl(''),
+    // Opcional, pero si se carga tiene que ser un link.
+    imagen_url: new FormControl('', { validators: [Validators.pattern(/^https?:\/\/\S+$/)] }),
     // Opcional (sin required): si se deja vacío, este producto no se va a
     // poder canjear con puntos, sólo comprar con plata/crédito.
     puntos_canje: new FormControl<number | null>(null, { validators: [Validators.min(0)] }),

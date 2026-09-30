@@ -50,7 +50,9 @@
   background: linear-gradient(90deg, var(--hk-pale), transparent);
 }
 
-/* ── Bolsa de geo ── */
+/* ── Bolsa de geo ──
+   Estética de la roca de geo del juego: piedra negra con relieve gris y
+   el saldo en blanco pálido, como el contador de geo del HUD. */
 .bolsa {
   position: relative;
   display: flex;
@@ -59,60 +61,34 @@
   padding: 1.6rem 1.8rem;
   overflow: hidden;
   background:
-    radial-gradient(circle at 12% 50%, rgba(232, 168, 50, 0.16), transparent 45%),
-    linear-gradient(145deg, rgba(36, 36, 58, 0.98), rgba(15, 15, 30, 0.98));
-  border: 1px solid rgba(232, 168, 50, 0.35);
+    radial-gradient(circle at 13% 50%, rgba(212, 212, 224, 0.12), transparent 42%),
+    linear-gradient(145deg, #1c1c24, #0a0a0f);
+  border: 1px solid rgba(212, 212, 224, 0.2);
   border-radius: 12px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-/* Moneda de geo dibujada con CSS: dorado con relieve y un brillo */
-.geo-moneda {
+.geo-roca {
   position: relative;
   flex-shrink: 0;
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 35% 30%,
-    #fff2c4 0%,
-    #f2c14e 30%,
-    #c98a1c 70%,
-    #7a4f0c 100%
-  );
-  box-shadow:
-    inset 0 -4px 8px rgba(0, 0, 0, 0.35),
-    inset 0 3px 6px rgba(255, 255, 255, 0.4),
-    0 0 24px rgba(232, 168, 50, 0.45);
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  /* La roca es casi negra: el halo pálido la despega del fondo oscuro */
+  filter: drop-shadow(0 0 1px rgba(212, 212, 224, 0.55))
+    drop-shadow(0 0 14px rgba(212, 212, 224, 0.22));
   animation: geo-flotar 3.5s ease-in-out infinite;
-}
-
-.geo-moneda::after {
-  content: '';
-  position: absolute;
-  inset: 14px;
-  border-radius: 50%;
-  border: 2px solid rgba(122, 79, 12, 0.45);
-}
-
-.geo-brillo {
-  position: absolute;
-  top: 12px;
-  left: 16px;
-  width: 16px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.7);
-  transform: rotate(-30deg);
 }
 
 @keyframes geo-flotar {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateY(0) rotate(0deg);
   }
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-5px) rotate(-3deg);
   }
 }
 
@@ -125,7 +101,7 @@
 }
 
 .bolsa-label {
-  color: var(--hk-geo);
+  color: var(--hk-pale);
   font-family: 'Trajan', serif;
   font-size: 0.75rem;
   letter-spacing: 2px;
@@ -133,17 +109,17 @@
 }
 
 .bolsa-total {
-  color: #f5d27a;
+  color: var(--hk-soul);
   font-family: 'Trajan', serif;
   font-size: clamp(2rem, 6vw, 2.8rem);
   line-height: 1.1;
-  text-shadow: 0 0 18px rgba(232, 168, 50, 0.4);
+  text-shadow: 0 0 18px rgba(212, 212, 224, 0.3);
 }
 
 .bolsa-total small {
   font-size: 0.4em;
   letter-spacing: 1px;
-  color: var(--hk-geo);
+  color: var(--hk-pale);
 }
 
 .bolsa-equivale {
@@ -382,20 +358,9 @@
     padding: 1.2rem;
   }
 
-  .geo-moneda {
-    width: 54px;
-    height: 54px;
-  }
-
-  .geo-moneda::after {
-    inset: 10px;
-  }
-
-  .geo-brillo {
-    top: 9px;
-    left: 12px;
-    width: 12px;
-    height: 6px;
+  .geo-roca {
+    width: 64px;
+    height: 64px;
   }
 
   .bolsa-knight {
@@ -433,14 +398,18 @@
 /* ── Modo claro ── */
 :host-context(.tema-claro) .bolsa {
   background:
-    radial-gradient(circle at 12% 50%, rgba(232, 168, 50, 0.18), transparent 45%),
+    radial-gradient(circle at 13% 50%, rgba(41, 64, 71, 0.08), transparent 42%),
     linear-gradient(145deg, #ffffff, var(--hk-shell));
-  border-color: rgba(166, 111, 28, 0.35);
+  border-color: rgba(41, 64, 71, 0.2);
   box-shadow: 0 12px 30px rgba(41, 64, 71, 0.14);
 }
 
+:host-context(.tema-claro) .geo-roca {
+  filter: drop-shadow(0 6px 10px rgba(41, 64, 71, 0.3));
+}
+
 :host-context(.tema-claro) .bolsa-total {
-  color: #8a5a10;
+  color: #1c1c24;
   text-shadow: none;
 }
 

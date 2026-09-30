@@ -33,7 +33,11 @@ export class AltaCombo {
   protected cantidades = signal<Map<number, number>>(new Map());
 
   protected formulario = new FormGroup({
-    nombre: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    // /\S/: que no sea un nombre de puros espacios (required solo lo deja pasar).
+    nombre: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.pattern(/\S/)],
+    }),
     precio: new FormControl(0, {
       nonNullable: true,
       validators: [Validators.required, Validators.min(1)],

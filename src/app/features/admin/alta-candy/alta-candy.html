@@ -40,6 +40,9 @@
     <label>
       Imagen (URL, opcional)
       <input type="text" formControlName="imagen_url" placeholder="https://..." />
+      @if (formulario.controls.imagen_url.touched && formulario.controls.imagen_url.invalid) {
+        <span class="campo-error">Tiene que ser un link que empiece con http:// o https://.</span>
+      }
     </label>
 
     <label>
@@ -55,6 +58,10 @@
       }
     </label>
   </div>
+
+  @if (formulario.invalid && formulario.touched) {
+    <p class="form-error">Faltan completar campos: revisá los que están marcados en rojo.</p>
+  }
 
   @if (mensaje()) {
     <p class="mensaje">{{ mensaje() }}</p>

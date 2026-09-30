@@ -780,6 +780,47 @@ form {
   color: var(--hk-pale);
 }
 
+/* ── Validación ──
+   Angular ya les pone ng-invalid/ng-touched a los controles, así que el
+   borde rojo sale solo en cualquier formulario de admin, sin tocar el HTML. */
+.admin-form .form-fields input.ng-invalid.ng-touched,
+.admin-form .form-fields select.ng-invalid.ng-touched,
+.admin-form .form-fields textarea.ng-invalid.ng-touched {
+  border-color: var(--hk-grimm);
+  box-shadow: 0 0 8px rgba(192, 57, 43, 0.2);
+}
+
+.admin-form .campo-error {
+  color: var(--hk-grimm);
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.admin-form .form-error,
+.admin-form .form-mensaje {
+  margin: 16px 0 14px;
+  padding: 9px 12px;
+  font-size: 0.88rem;
+}
+
+.admin-form .form-error {
+  color: #ff9e9e;
+  border-left: 2px solid var(--hk-grimm);
+  background: rgba(192, 57, 43, 0.1);
+}
+
+.admin-form .form-mensaje {
+  color: var(--hk-focus);
+  border-left: 2px solid var(--hk-focus);
+  background: rgba(79, 196, 227, 0.1);
+}
+
+.tema-claro .admin-form .form-error {
+  color: #a3281c;
+}
+
 /* ── Botón de guardar: celeste sólido con la flecha que avanza ──
    El brillo al pasar el mouse lo agrega la directiva appGlowHover. */
 .admin-form .submit-button,

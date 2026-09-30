@@ -15,24 +15,6 @@
   grid-column: span 2;
 }
 
-.form-error {
-  margin: 16px 0 14px;
-  padding: 9px 12px;
-  color: #ff9e9e;
-  border-left: 2px solid var(--hk-grimm);
-  background: rgba(192, 57, 43, 0.1);
-  font-size: 0.88rem;
-}
-
-.form-mensaje {
-  margin: 16px 0 14px;
-  padding: 9px 12px;
-  color: var(--hk-focus);
-  border-left: 2px solid var(--hk-focus);
-  background: rgba(79, 196, 227, 0.1);
-  font-size: 0.88rem;
-}
-
 @media (max-width: 560px) {
 
   .form-fields {
