@@ -75,6 +75,16 @@
 
 html {
   scroll-behavior: smooth;
+  --alto-vista: 100vh;
+}
+
+/* En escritorio se ve como un 90% de zoom del navegador */
+@media (min-width: 992px) {
+  html {
+    zoom: 0.9;
+    /* compensa el zoom para que 100vh siga ocupando toda la pantalla */
+    --alto-vista: calc(100vh / 0.9);
+  }
 }
 
 router-outlet {
@@ -390,7 +400,7 @@ form {
 }
 
 .pantalla-loading.pantalla-completa {
-  min-height: calc(100vh - 120px);
+  min-height: calc(var(--alto-vista) - 120px);
 }
 
 .loading-soul {

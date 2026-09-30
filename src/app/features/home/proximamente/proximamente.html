@@ -1,0 +1,59 @@
+    <div class="proximamente-grid">
+    @for (pelicula of peliculas(); track pelicula.id) {
+        <!-- <article> y no <a> como en la cartelera: adentro hay un <button>
+            ("Avisame"), y un botón no puede ir dentro de un link. El link a la
+            película queda en el póster y el nombre. -->
+        <article class="proxima-card" appGlowHover color="#e8a832">
+        <a class="proxima-poster" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
+            <img
+            [src]="pelicula.imagen_url"
+            [alt]="pelicula.nombre"
+            onerror="
+                this.src =
+                'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
+            "
+            />
+            <span class="proxima-estreno">Estreno {{ fechaCorta(pelicula.fecha_estreno) }}</span>
+        </a>
+
+        <a class="proxima-nombre" [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]">
+            {{ pelicula.nombre }}
+        </a>
+
+        @if (estado(pelicula) === 'preventa') {
+            <!-- El admin ya abrió la venta: se puede comprar, al precio de preventa -->
+            <p class="proxima-detalle proxima-detalle-abierta">
+            ◆ Preventa abierta
+            @if (pelicula.precio_preventa) {
+                · ${{ pelicula.precio_preventa | number: '1.0-0' : 'es' }}
+            }
+            </p>
+            <a
+            class="proxima-boton proxima-boton-comprar"
+            [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]"
+            >
+            Comprar
+            </a>
+        } @else {
+            <p class="proxima-detalle">Preventa desde el {{ inicioPreventa(pelicula) }}</p>
+            <!-- aria-pressed: le dice a los lectores de pantalla que es un botón
+                que se prende y se apaga, y en qué estado está. -->
+            <button
+            type="button"
+            class="proxima-boton"
+            [class.pedido]="avisosPedidos().has(pelicula.id)"
+            [disabled]="procesando().has(pelicula.id)"
+            [attr.aria-pressed]="avisosPedidos().has(pelicula.id)"
+            [title]="avisosPedidos().has(pelicula.id) ? 'Tocá para cancelar el aviso' : ''"
+            (click)="alternarAviso(pelicula)"
+            >
+            @if (avisosPedidos().has(pelicula.id)) {
+                ✓ Te vamos a avisar
+            } @else {
+                🔔 Avisame
+            }
+            </button>
+        }
+        </article>
+    }
+    </div>

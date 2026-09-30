@@ -1,0 +1,191 @@
+/* Mismo lenguaje visual que las tarjetas de la cartelera (home.css), pero
+   con acento dorado y pósters un poco más chicos: son películas que
+   todavía no se pueden ver, así que no compiten con la cartelera. Los
+   estilos de la Home no llegan acá (cada componente tiene su CSS
+   encapsulado), por eso se repiten las ideas en vez de reusar las clases. */
+.proximamente-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.proxima-card {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background: linear-gradient(165deg, rgba(36, 36, 58, 0.92), rgba(14, 14, 26, 0.96));
+  border: 1px solid rgba(232, 168, 50, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-color 0.3s;
+}
+
+.proxima-card:hover {
+  border-color: rgba(232, 168, 50, 0.7);
+  transform: translateY(-4px);
+}
+
+/* ── Póster con la cinta de la fecha de estreno ── */
+.proxima-poster {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.proxima-poster img {
+  display: block;
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.proxima-card:hover .proxima-poster img {
+  transform: scale(1.02);
+}
+
+.proxima-estreno {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 7px 8px;
+  background: linear-gradient(180deg, rgba(10, 10, 18, 0.2), rgba(10, 10, 18, 0.92));
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.proxima-nombre {
+  margin: 12px 4px 4px;
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.78rem;
+  letter-spacing: 1.5px;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+
+.proxima-nombre:hover {
+  color: var(--hk-soul);
+}
+
+.proxima-detalle {
+  margin: 0 0 12px;
+  color: var(--hk-soft-text);
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.proxima-detalle-abierta {
+  color: var(--hk-geo);
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* ── Botón "Avisame" / "Comprar en preventa" ── */
+.proxima-boton {
+  margin-top: auto; /* lo empuja al fondo: todos los botones quedan alineados */
+  padding: 10px 12px;
+  color: var(--hk-focus);
+  background: transparent;
+  border: 1px solid var(--hk-focus);
+  border-radius: 8px;
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.proxima-boton:hover:not(:disabled) {
+  background: rgba(79, 196, 227, 0.1);
+}
+
+/* Ya pidió aviso: dorado "encendido" */
+.proxima-boton.pedido {
+  color: var(--hk-geo);
+  border-color: var(--hk-geo);
+  background: rgba(232, 168, 50, 0.1);
+}
+
+.proxima-boton.pedido:hover:not(:disabled) {
+  background: rgba(232, 168, 50, 0.18);
+}
+
+.proxima-boton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.proxima-boton-comprar {
+  color: #2b1c02;
+  background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+  border-color: transparent;
+}
+
+.proxima-boton-comprar:hover {
+  filter: brightness(1.08);
+}
+
+/* ── Celular: dos columnas con pósters más bajos ── */
+@media (max-width: 560px) {
+  .proximamente-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .proxima-card {
+    padding: 6px;
+  }
+
+  .proxima-poster img {
+    height: 220px;
+  }
+
+  .proxima-nombre {
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+  }
+
+  .proxima-boton {
+    padding: 9px 6px;
+    font-size: 0.62rem;
+    letter-spacing: 1px;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .proxima-card {
+  background: #ffffff;
+  border-color: rgba(166, 111, 28, 0.35);
+  box-shadow: 0 10px 26px rgba(41, 64, 71, 0.12);
+}
+
+:host-context(.tema-claro) .proxima-estreno {
+  background: linear-gradient(180deg, rgba(244, 246, 245, 0.2), rgba(244, 246, 245, 0.95));
+}
+
+:host-context(.tema-claro) .proxima-boton-comprar {
+  color: #ffffff;
+  background: linear-gradient(180deg, #c98a1f, #a66f1c);
+}

@@ -364,7 +364,7 @@ main {
   justify-content: center;
   align-items: flex-start;
   overflow-x: hidden;
-  min-height: calc(100vh - 75px);
+  min-height: calc(var(--alto-vista) - 75px);
   padding: clamp(24px, 5vw, 56px) clamp(16px, 5vw, 72px);
   background:
     radial-gradient(ellipse at 50% 0%, rgba(79, 196, 227, 0.03) 0%, transparent 60%), var(--hk-void);
