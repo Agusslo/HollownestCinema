@@ -262,6 +262,22 @@
   filter: drop-shadow(0 0 6px var(--hk-focus));
 }
 
+/* Película que todavía no se estrenó: mismo formato que el aviso de
+   "ya reseñaste", pero en dorado, el color de Próximamente. */
+.resenia-aviso-caja.estreno {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-color: rgba(232, 168, 50, 0.35);
+  background: rgba(232, 168, 50, 0.06);
+}
+
+.resenia-aviso-caja.estreno .aviso-icon {
+  color: var(--hk-geo);
+  filter: drop-shadow(0 0 6px var(--hk-geo));
+}
+
 .sin-resenias-img {
   display: block;
   width: 44px;

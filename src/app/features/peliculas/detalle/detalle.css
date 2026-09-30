@@ -272,6 +272,36 @@ h2 {
   transform: translate(4px, -54%);
 }
 
+/* ── Próximamente y preventa ── */
+.eyebrow-oro {
+  color: var(--hk-geo);
+}
+
+.aviso-venta {
+  margin: 0 0 16px;
+  padding: 14px 18px;
+  color: var(--hk-panel-text);
+  line-height: 1.5;
+  text-align: center;
+  background: rgba(232, 168, 50, 0.07);
+  border: 1px solid rgba(232, 168, 50, 0.35);
+  border-radius: 10px;
+}
+
+/* Función de una película que todavía no abrió la venta: se ve, pero
+   apagada y sin efecto al pasar el mouse. El !important le gana al brillo
+   que agrega appGlowHover (que lo pone como estilo en línea). */
+.funcion-card.bloqueada {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none !important;
+}
+
+.funcion-card.bloqueada:hover {
+  border-color: rgba(79, 196, 227, 0.22);
+  transform: none;
+}
+
 .empty-state {
   padding: 18px;
   color: var(--hk-muted-text);

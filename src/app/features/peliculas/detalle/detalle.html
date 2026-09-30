@@ -7,7 +7,22 @@
         <img class="detalle-poster" [src]="p.imagen_url" [alt]="'Póster de ' + p.nombre" />
       </div>
       <div class="pelicula-info">
-        <p class="eyebrow">Ahora en cartelera</p>
+        <!-- El cartel de arriba del título cambia según el estado de venta -->
+        @switch (estado()) {
+          @case ('proximamente') {
+            <p class="eyebrow eyebrow-oro">
+              Próximamente · estreno {{ fechaCorta(p.fecha_estreno) }}
+            </p>
+          }
+          @case ('preventa') {
+            <p class="eyebrow eyebrow-oro">
+              Preventa abierta · estreno {{ fechaCorta(p.fecha_estreno) }}
+            </p>
+          }
+          @default {
+            <p class="eyebrow">Ahora en cartelera</p>
+          }
+        }
         <h1>
           {{ p.nombre }}
           @if (p.restriccion_edad) {
@@ -40,20 +55,41 @@
         }
       </header>
 
+      <!-- Avisos de Próximamente / Preventa, arriba de la lista de funciones -->
+      @if (estado() === 'proximamente') {
+        <p class="aviso-venta">
+          ◆ La venta todavía no abrió. Se va a poder comprar desde el {{ inicioPreventa() }}, en
+          preventa. Pedí que te avisemos desde la sección Próximamente de la cartelera.
+        </p>
+      } @else if (estado() === 'preventa') {
+        <p class="aviso-venta">
+          ◆ ¡Preventa abierta!
+          @if (p.precio_preventa) {
+            Entrada a ${{ p.precio_preventa | number: '1.0-0' : 'es' }} (las butacas VIP suman su
+            recargo)
+          }
+          hasta el día del estreno, el {{ fechaCorta(p.fecha_estreno) }}.
+        </p>
+      }
+
       @if (funciones().length === 0) {
         <p class="empty-state">No hay funciones cargadas para esta película.</p>
       } @else {
         <div class="funciones-lista">
           @for (funcion of funciones(); track funcion.id) {
+            <!-- Si todavía no abrió la venta, routerLink recibe null: el
+                 link queda sin destino y la función se ve pero no se puede
+                 tocar para comprar. -->
             <a
               class="funcion-card"
               appGlowHover
-              [routerLink]="[
-                '/pelicula',
-                generarSlug(p.nombre),
-                'butacas',
-                generarSlugFuncion(funcion),
-              ]"
+              [class.bloqueada]="!puedeComprar()"
+              [attr.aria-disabled]="!puedeComprar()"
+              [routerLink]="
+                puedeComprar()
+                  ? ['/pelicula', generarSlug(p.nombre), 'butacas', generarSlugFuncion(funcion)]
+                  : null
+              "
             >
               <!-- Talón con el día, como en los tickets de Mis compras -->
               <span class="funcion-talon">
@@ -82,6 +118,6 @@
       }
     </section>
 
-    <app-resenias [peliculaId]="p.id" />
+    <app-resenias [peliculaId]="p.id" [estreno]="estrenoPendiente()" />
   </article>
 }

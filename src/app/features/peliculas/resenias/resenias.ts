@@ -22,6 +22,22 @@ export class Resenias {
   // [peliculaId]="pelicula.id" en su HTML.
   peliculaId = input.required<number>();
 
+  // Fecha de estreno ('YYYY-MM-DD') si la película TODAVÍA NO SE ESTRENÓ;
+  // null si ya se estrenó. Nadie puede reseñar una película que todavía
+  // no vio, así que mientras tenga fecha acá, el formulario no se muestra.
+  // Es opcional (input y no input.required) para que el componente siga
+  // andando igual si en algún lugar se usa sin pasarle este dato.
+  estreno = input<string | null>(null);
+
+  // '2026-12-12' → '12/12', partiendo el texto (sin new Date(), para que
+  // la zona horaria no corra el día).
+  protected estrenoTexto = computed(() => {
+    const fecha = this.estreno();
+    if (!fecha) return '';
+    const [, mes, dia] = fecha.split('-');
+    return `${dia}/${mes}`;
+  });
+
   protected resenias = signal<IReseniaConAutor[]>([]);
   protected cargando = signal(true);
   protected usuarioActual = signal<IPerfil | null>(null);
@@ -128,6 +144,15 @@ export class Resenias {
     const usuario = this.usuarioActual();
     if (!usuario) {
       this.error.set('Tenés que iniciar sesión para dejar una reseña.');
+      return;
+    }
+
+    // Doble control: el HTML ya esconde el formulario antes del estreno,
+    // pero lo chequeamos también acá por si igual se llegara a enviar.
+    if (this.estreno()) {
+      this.error.set(
+        `Vas a poder reseñar esta película desde su estreno, el ${this.estrenoTexto()}.`,
+      );
       return;
     }
 

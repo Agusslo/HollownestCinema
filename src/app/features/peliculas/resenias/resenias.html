@@ -96,7 +96,17 @@
       </ul>
     }
 
-    @if (!usuarioActual()) {
+    <!-- Primero va el chequeo del estreno: antes de que la película salga,
+         nadie puede reseñarla, esté logueado o no. -->
+    @if (estreno()) {
+      <div class="resenia-aviso-caja estreno">
+        <span class="aviso-icon">◆</span>
+        <p class="resenia-aviso">
+          Esta historia todavía no llegó a las salas. Vas a poder dejar tu reseña desde el
+          estreno, el {{ estrenoTexto() }}.
+        </p>
+      </div>
+    } @else if (!usuarioActual()) {
       <div class="resenia-aviso-caja">
         <p class="resenia-aviso">Necesitás iniciar sesión como viajero para inscribir tu reseña.</p>
       </div>
