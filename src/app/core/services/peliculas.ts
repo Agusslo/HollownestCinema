@@ -3,6 +3,15 @@ import { Supabase } from './supabase';
 import IGenero from '../interfaces/genero';
 import IPelicula, { IPeliculaConGeneros } from '../interfaces/pelicula';
 
+// La consigna: "abrir la venta de entradas 7 días antes del estreno".
+const DIAS_PREVENTA = 7;
+
+// En qué momento está una película respecto de su estreno:
+// - 'proximamente': falta más de una semana, todavía no se vende.
+// - 'preventa': falta una semana o menos, ya se vende a precio de preventa.
+// - 'cartelera': ya se estrenó (o nunca tuvo fecha de estreno cargada).
+export type EstadoVenta = 'proximamente' | 'preventa' | 'cartelera';
+
 @Service()
 export class Peliculas {
   private supabase = inject(Supabase);
@@ -90,5 +99,42 @@ export class Peliculas {
   // géneros, más cómodo para usar en los templates.
   generosDe(pelicula: IPeliculaConGeneros): IGenero[] {
     return pelicula.peliculas_generos.map((pg) => pg.generos);
+  }
+
+  // ── Próximamente y preventa ──────────────────────────────────────────
+  // El estado NO se guarda en la base: se calcula comparando fechas cada
+  // vez que se pregunta. Por eso no hace falta un cron que "cambie" nada a
+  // medianoche: lo que avanza es el día de hoy, no el dato.
+  //
+  // Las fechas se comparan como texto 'YYYY-MM-DD'. Funciona porque en ese
+  // formato el orden alfabético coincide con el orden de las fechas (año,
+  // después mes, después día, siempre con la misma cantidad de dígitos):
+  // '2026-12-05' < '2026-12-12' tanto como texto como en el calendario.
+  estadoVenta(pelicula: IPelicula): EstadoVenta {
+    const hoy = this.hoy();
+
+    if (!pelicula.fecha_estreno || hoy >= pelicula.fecha_estreno) return 'cartelera';
+    return hoy >= this.inicioPreventa(pelicula.fecha_estreno) ? 'preventa' : 'proximamente';
+  }
+
+  // Día en que arranca la preventa: 7 días antes del estreno.
+  // '2026-12-12' → '2026-12-05'. La cuenta se hace en UTC para tratar la
+  // fecha como un día de calendario puro, sin que la zona horaria la
+  // corra; setUTCDate() se encarga solo de cambiar de mes o de año
+  // ('2026-12-03' → '2026-11-26').
+  inicioPreventa(fecha_estreno: string): string {
+    const fecha = new Date(`${fecha_estreno}T00:00:00Z`);
+    fecha.setUTCDate(fecha.getUTCDate() - DIAS_PREVENTA);
+    return fecha.toISOString().slice(0, 10);
+  }
+
+  // Hoy como 'YYYY-MM-DD' según el reloj de quien usa la app (Argentina).
+  // No uso toISOString() porque ese devuelve la fecha en UTC: a las 22hs
+  // de Argentina ya sería "mañana" en UTC.
+  private hoy(): string {
+    const ahora = new Date();
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    const dia = String(ahora.getDate()).padStart(2, '0');
+    return `${ahora.getFullYear()}-${mes}-${dia}`;
   }
 }
