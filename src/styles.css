@@ -37,8 +37,8 @@
   --hk-infection: #ff8c00;
   --hk-shade: #1a1a28;
   --hk-grimm: #c0392b;
-  --hk-muted-text: rgba(240, 240, 240, 0.78);
-  --hk-soft-text: rgba(240, 240, 240, 0.62);
+  --hk-muted-text: rgba(240, 240, 240, 0.82);
+  --hk-soft-text: rgba(240, 240, 240, 0.72);
   --hk-panel-text: rgba(240, 240, 240, 0.84);
   --hk-badge-bg: rgba(10, 10, 18, 0.88);
   --hk-seat-text: #c0c0d0;
@@ -254,7 +254,7 @@ button[type='button'] {
   border: 1px solid var(--hk-ash);
   border-radius: 2px;
   padding: 12px 24px;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   text-transform: uppercase;
   letter-spacing: 2px;
   transition: all 0.3s;
@@ -281,7 +281,7 @@ button:disabled {
   text-align: center;
   margin: 18px 0;
   color: var(--hk-ash);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 .divisor-auth::before,
@@ -364,7 +364,7 @@ form {
 /* ── Mensajes ── */
 .error-msg {
   color: var(--hk-grimm);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 /* ── Spinner Global (Hollow Knight Soul Spinner) ── */
@@ -455,7 +455,7 @@ form {
   margin: -4px 0 8px;
   padding: 0;
   color: var(--hk-grimm);
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   line-height: 1.3;
 }
 
@@ -511,7 +511,7 @@ form {
   margin-bottom: 8px;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -556,7 +556,7 @@ form {
 .auth-card label {
   color: var(--hk-pale);
   font-family: 'Trajan', serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -704,7 +704,7 @@ form {
   margin-bottom: 8px;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -740,11 +740,10 @@ form {
 }
 
 .admin-form .form-header p {
-  max-width: 440px;
+  max-width: 480px;
   margin: 0 auto;
-  color: var(--hk-soft-text);
-  font-size: 0.95rem;
-  font-style: italic;
+  color: var(--hk-muted-text);
+  font-size: 1.02rem;
   line-height: 1.5;
 }
 
@@ -754,7 +753,7 @@ form {
   gap: 7px;
   color: var(--hk-pale);
   font-family: 'Trajan', serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -803,7 +802,7 @@ form {
 .admin-form .campo-error {
   color: var(--hk-grimm);
   font-family: 'Perpetua', 'Georgia', serif;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -812,7 +811,7 @@ form {
 .admin-form .form-mensaje {
   margin: 16px 0 14px;
   padding: 9px 12px;
-  font-size: 0.88rem;
+  font-size: 0.94rem;
 }
 
 .admin-form .form-error {
@@ -847,7 +846,7 @@ form {
   border: none;
   border-radius: 8px;
   font-family: 'Trajan', serif;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -896,7 +895,7 @@ form {
   .admin-form .submit-button {
     height: 48px;
     padding: 0 16px;
-    font-size: 0.78rem;
+    font-size: 0.88rem;
     letter-spacing: 2px;
   }
 }

@@ -25,7 +25,7 @@
   margin-bottom: 6px;
   color: var(--hk-geo);
   font-family: 'Trajan', serif;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -182,7 +182,7 @@
 
 .resenia-autor {
   font-family: 'Trajan', serif;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   letter-spacing: 1.5px;
   color: var(--hk-soul);
 }
@@ -334,7 +334,7 @@
   margin-bottom: 6px;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.65rem;
+  font-size: 0.77rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -480,7 +480,7 @@
 
 .etiqueta-calificacion {
   font-family: 'Trajan', serif;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   letter-spacing: 2px;
   color: var(--hk-pale);
   text-transform: uppercase;
@@ -528,7 +528,7 @@
   display: block;
   text-align: right;
   font-family: 'Perpetua', serif;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   color: var(--hk-ash);
   margin-top: 5px;
 }
@@ -543,7 +543,7 @@
 .form-error {
   margin: 0;
   font-family: 'Perpetua', serif;
-  font-size: 0.88rem;
+  font-size: 0.94rem;
   color: var(--hk-grimm);
   letter-spacing: 0.5px;
 }
@@ -565,7 +565,7 @@
   border-radius: 8px;
   color: #04141a;
   font-family: 'Trajan', serif;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;

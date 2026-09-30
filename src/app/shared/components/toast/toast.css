@@ -62,7 +62,7 @@
   border: 1px solid var(--acento);
   border-radius: 50%;
   font-family: 'Trajan', 'Times New Roman', serif;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 700;
 }
 
@@ -75,7 +75,7 @@
   margin: 0 0 3px;
   color: var(--acento);
   font-family: 'Trajan', 'Times New Roman', serif;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
 }
@@ -92,7 +92,7 @@
   display: inline-block;
   margin-top: 8px;
   color: var(--acento);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-weight: 700;
   text-decoration: none;
 }

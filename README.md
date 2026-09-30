@@ -71,7 +71,7 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 ### Próximamente y preventa
 - [x] Sección "Próximamente" con películas que se estrenan en las próximas semanas
 - [ ] Alerta/notificación al usuario cuando se habilite la venta de entradas de una película que estaba en "Próximamente"
-- [ ] Preventa: entradas disponibles 7 días antes del estreno a un precio especial, configurable película por película, que vuelve solo al precio normal pasada la fecha de estreno
+- [x] Preventa: entradas disponibles 7 días antes del estreno a un precio especial, configurable película por película, que vuelve solo al precio normal pasada la fecha de estreno
 
 ### Perfil del usuario
 - [x] Registro con mail, nombre, apellido, fecha de nacimiento, tipo de sangre, color de ojos y días de vacaciones por año

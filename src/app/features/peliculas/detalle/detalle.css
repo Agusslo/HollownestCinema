@@ -49,7 +49,7 @@
 .eyebrow {
   margin: 0 0 12px;
   color: var(--hk-focus);
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -86,7 +86,7 @@ h1 {
 .meta-label,
 .function-count {
   color: var(--hk-soft-text);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
 }
 
@@ -105,7 +105,7 @@ h1 {
   margin-bottom: 6px;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -142,7 +142,7 @@ h1 {
   display: inline-block;
   padding: 3px 12px;
   color: var(--hk-soft-text);
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   border: 1px solid rgba(212, 212, 224, 0.16);
   border-radius: 999px;
 }
@@ -207,7 +207,7 @@ h2 {
   margin-top: 4px;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.65rem;
+  font-size: 0.77rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -223,7 +223,7 @@ h2 {
 .funcion-fecha {
   color: var(--hk-pale);
   font-family: 'Trajan', serif;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -237,7 +237,7 @@ h2 {
 .chip {
   padding: 1px 9px;
   color: var(--hk-pale);
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   text-transform: capitalize;
   background: rgba(212, 212, 224, 0.06);
   border: 1px solid rgba(212, 212, 224, 0.16);
@@ -319,7 +319,7 @@ h2 {
   margin-bottom: 4px;
   color: var(--hk-geo);
   font-family: 'Trajan', serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 3px;
   text-transform: uppercase;
   opacity: 0.85;
@@ -372,7 +372,7 @@ h2 {
   padding: 9px 20px;
   color: var(--hk-geo);
   font-family: 'Trajan', serif;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   letter-spacing: 2px;
   text-decoration: none;
   text-transform: uppercase;
@@ -454,7 +454,7 @@ h2 {
   border: 1px solid rgba(79, 196, 227, 0.25);
   border-radius: 20px;
   color: var(--hk-pale);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -508,7 +508,7 @@ h2 {
 
   .sinopsis {
     margin: 14px 0;
-    font-size: 0.82rem;
+    font-size: 0.88rem;
     line-height: 1.5;
   }
 

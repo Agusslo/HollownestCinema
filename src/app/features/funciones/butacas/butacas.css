@@ -72,7 +72,7 @@
 .eyebrow {
   margin: 0 0 8px;
   color: var(--hk-focus);
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 3px;
   text-transform: uppercase;
   font-family: 'Trajan', serif;
@@ -111,7 +111,7 @@ h1 {
 .pantalla-texto {
   color: var(--hk-void);
   font-family: 'Trajan', serif;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -297,7 +297,7 @@ h1 {
   display: inline-block;
   margin-top: 8px;
   padding: 6px 12px;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-weight: 600;
   color: #ff9e9e;
   background: rgba(192, 57, 43, 0.12);
@@ -308,11 +308,84 @@ h1 {
 .aviso-vip {
   margin-top: 8px;
   padding: 6px 10px;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   color: var(--hk-geo);
   background: rgba(232, 168, 50, 0.1);
   border-left: 2px solid var(--hk-geo);
   border-radius: 3px;
+}
+
+/* ── Aviso de preventa: placa dorada centrada con sello ── */
+.aviso-preventa {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 12px auto 0;
+  padding: 12px 20px 12px 12px;
+  text-align: left;
+  background:
+    radial-gradient(ellipse at left, rgba(232, 168, 50, 0.14), transparent 70%),
+    linear-gradient(180deg, var(--hk-shell), var(--hk-deep));
+  border: 1px solid rgba(232, 168, 50, 0.45);
+  border-radius: 6px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 0 18px rgba(232, 168, 50, 0.05);
+}
+
+.aviso-preventa-sello {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  color: #2b1c02;
+  background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+  border-radius: 4px;
+  font-family: 'Trajan', serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.aviso-preventa-texto {
+  margin: 0;
+  color: var(--hk-panel-text);
+  font-size: 1.02rem;
+  line-height: 1.45;
+}
+
+.aviso-preventa-texto strong {
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+}
+
+.aviso-preventa-nota {
+  display: block;
+  margin-top: 2px;
+  color: var(--hk-soft-text);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 560px) {
+  .aviso-preventa {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+}
+
+:host-context(.tema-claro) .aviso-preventa {
+  background: var(--hk-shell);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+:host-context(.tema-claro) .aviso-preventa-sello {
+  color: #ffffff;
+  background: linear-gradient(180deg, #c98a1f, #a66f1c);
 }
 
 /* ── Referencias ── */
@@ -322,7 +395,7 @@ h1 {
   justify-content: center;
   gap: 8px 24px;
   margin-bottom: 16px;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   color: var(--hk-pale);
   font-family: 'Perpetua', serif;
   letter-spacing: 0.5px;
@@ -515,7 +588,7 @@ h1 {
 .vacio-titulo {
   color: var(--hk-pale);
   font-family: 'Trajan', serif;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   font-weight: bold;
@@ -570,7 +643,7 @@ h1 {
    vistazo que eso no salió de tu bolsillo en pesos. */
 .candy-item-canjeado {
   color: var(--hk-focus);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 /* ── Cupón Pill ── */
@@ -885,7 +958,7 @@ h1 {
   border: 1px solid rgba(212, 212, 224, 0.12);
   border-radius: 24px;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-family: 'Perpetua', serif;
   letter-spacing: 0.8px;
   transition:
@@ -973,7 +1046,7 @@ h1 {
   border: 1px solid rgba(79, 196, 227, 0.4);
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-family: 'Perpetua', serif;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -1169,11 +1242,11 @@ h1 {
   }
 
   .vacio-titulo {
-    font-size: 0.78rem;
+    font-size: 0.88rem;
   }
 
   .vacio-subtexto {
-    font-size: 0.88rem;
+    font-size: 0.94rem;
   }
 
   .butacas-codigos {
@@ -1185,7 +1258,7 @@ h1 {
   }
 
   .total-label {
-    font-size: 0.82rem;
+    font-size: 0.88rem;
   }
 
   .total-monto {
@@ -1222,13 +1295,13 @@ h1 {
   }
 
   .pantalla-texto {
-    font-size: 0.65rem;
+    font-size: 0.77rem;
     letter-spacing: 1px;
   }
 
   .referencias {
     gap: 6px 14px;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
 
   .ref-box {
@@ -1251,7 +1324,7 @@ h1 {
   }
 
   .candy-nombre {
-    font-size: 0.85rem;
+    font-size: 0.91rem;
   }
 
   .candy-precio {
@@ -1260,7 +1333,7 @@ h1 {
 
   .candy-tab {
     padding: 7px 14px;
-    font-size: 0.78rem;
+    font-size: 0.88rem;
   }
 }
 /* ── Combo aplicado (resumen de compra) ── */
@@ -1349,14 +1422,14 @@ h1 {
 
 .opcion-titulo {
   color: var(--hk-soul);
-  font-size: 0.88rem;
+  font-size: 0.94rem;
   font-weight: 600;
   line-height: 1.25;
 }
 
 .opcion-detalle {
   color: var(--hk-soft-text);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 400;
   line-height: 1.35;
 }
@@ -1435,7 +1508,7 @@ h1 {
 .credito-aplicado {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   color: var(--hk-focus);
   margin: 4px 0;
 }
@@ -1453,7 +1526,7 @@ h1 {
   margin: 0 0 10px;
   color: var(--hk-geo);
   font-family: 'Trajan', 'Times New Roman', serif;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -1507,14 +1580,14 @@ h1 {
 
 .combo-incluye {
   color: var(--hk-soft-text);
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   line-height: 1.4;
 }
 
 .combos-ayuda {
   margin: 8px 0 0;
   color: var(--hk-muted-text);
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-style: italic;
 }
 /* ── Aviso fijo de candy bar (arriba del resumen, que es sticky) ── */
@@ -1532,7 +1605,7 @@ h1 {
   text-decoration: none;
   text-align: left;
   font-family: inherit;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
 }
@@ -1610,7 +1683,7 @@ h1 {
 .resumen-subtitulo {
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.65rem;
+  font-size: 0.77rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -1643,7 +1716,7 @@ h1 {
 
 .resumen-sala {
   color: var(--hk-soft-text);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   text-transform: capitalize;
 }
 
@@ -1779,7 +1852,7 @@ h1 {
   align-items: center;
   gap: 12px;
   margin: 0 0 16px;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   letter-spacing: 3px;
 }
 
@@ -1859,7 +1932,7 @@ h1 {
   margin-top: 4px;
   padding-top: 8px;
   color: var(--hk-muted-text);
-  font-size: 0.88rem;
+  font-size: 0.94rem;
   border-top: 1px dashed rgba(212, 212, 224, 0.16);
 }
 
@@ -1875,7 +1948,7 @@ h1 {
   color: #1a1204;
   background: var(--hk-geo);
   border-radius: 999px;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: 700;
 }
 
@@ -1883,7 +1956,7 @@ h1 {
   margin-top: 12px;
   text-align: center;
   color: var(--hk-soft-text);
-  font-size: 0.88rem;
+  font-size: 0.94rem;
 }
 
 /* Pestañas de categorías: Trajan chiquita, la activa en celeste */
@@ -1900,7 +1973,7 @@ h1 {
   border-radius: 999px;
   color: var(--hk-soft-text);
   font-family: 'Trajan', serif;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   letter-spacing: 2px;
   text-transform: uppercase;
   box-shadow: none;
@@ -1954,7 +2027,7 @@ h1 {
   padding: 0 10px;
   border-radius: 8px;
   font-family: 'Trajan', serif;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 2px;
   box-shadow: none;
 }

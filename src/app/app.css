@@ -84,7 +84,7 @@
   border-radius: 0;
   color: var(--hk-pale);
   font-family: 'Trajan', 'Times New Roman', serif;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: bold;
   letter-spacing: 2px;
   text-decoration: none;
@@ -121,7 +121,7 @@
 }
 
 .nav-link .flecha {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   transition: transform 0.25s;
 }
 
@@ -206,7 +206,7 @@
   border-radius: 20px;
   color: #04141a;
   font-family: 'Trajan', 'Times New Roman', serif;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-weight: bold;
   letter-spacing: 1.5px;
   text-decoration: none;
@@ -231,7 +231,7 @@
   border-radius: 18px;
   color: var(--hk-soft-text);
   font-family: 'Trajan', 'Times New Roman', serif;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   box-shadow: none;
@@ -293,7 +293,7 @@
 .user-nombre {
   color: #ffffff;
   font-family: 'Trajan', serif;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-weight: bold;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -420,7 +420,7 @@ main > *:not(router-outlet) {
 
   .nav-link {
     padding: 0 12px;
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     letter-spacing: 1.5px;
   }
 
@@ -532,7 +532,7 @@ main > *:not(router-outlet) {
   border-radius: 6px;
   color: var(--hk-pale);
   font-family: 'Trajan', 'Times New Roman', serif;
-  font-size: 0.74rem;
+  font-size: 0.84rem;
   letter-spacing: 1.5px;
   text-decoration: none;
   text-transform: uppercase;
@@ -575,7 +575,7 @@ main > *:not(router-outlet) {
   padding: 2px 12px 8px;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.62rem;
+  font-size: 0.74rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }

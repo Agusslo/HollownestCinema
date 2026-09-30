@@ -1,0 +1,70 @@
+    <!-- Usa la misma tarjeta .admin-form (styles.css) que el resto de las
+        pantallas de admin, así el encabezado queda igual que en Cupones o
+        Nueva película. -->
+    <section class="admin-form preventas">
+    <div class="form-header">
+        <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
+        <span class="form-kicker">Panel de administración</span>
+        <h1>Preventas</h1>
+        <div class="admin-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+        <p>
+        Las películas que todavía no se estrenaron. Desde 7 días antes del estreno podés abrir la
+        venta a precio de preventa; el día del estreno vuelven solas al precio normal.
+        </p>
+    </div>
+
+    @if (cargando()) {
+        <app-loading mensaje="Consultando los próximos estrenos" />
+    } @else if (peliculas().length === 0) {
+        <p class="preventas-vacio">
+        No hay películas en Próximamente. Cargá una con fecha de estreno desde "Nueva película".
+        </p>
+    } @else {
+        <ul class="preventas-lista">
+        @for (pelicula of peliculas(); track pelicula.id) {
+            <li class="preventa-item" [class.abierta]="estado(pelicula) === 'preventa'">
+            <img
+                class="preventa-poster"
+                [src]="pelicula.imagen_url"
+                [alt]="pelicula.nombre"
+                onerror="this.style.visibility = 'hidden'"
+            />
+
+            <div class="preventa-info">
+                <p class="preventa-nombre">{{ pelicula.nombre }}</p>
+                <p class="preventa-datos">
+                Estreno {{ fechaCorta(pelicula.fecha_estreno) }} ·
+                @if (pelicula.precio_preventa) {
+                    preventa a ${{ pelicula.precio_preventa | number: '1.0-0' : 'es' }}
+                } @else {
+                    preventa a precio normal
+                }
+                </p>
+            </div>
+
+            <div class="preventa-accion">
+                @if (estado(pelicula) === 'preventa') {
+                <span class="preventa-estado">◆ Venta abierta</span>
+                } @else if (puedeAbrir(pelicula)) {
+                <button
+                    type="button"
+                    class="preventa-boton"
+                    appGlowHover
+                    color="#e8a832"
+                    [disabled]="procesando() === pelicula.id"
+                    (click)="abrirVenta(pelicula)"
+                >
+                    {{ procesando() === pelicula.id ? 'Abriendo...' : 'Abrir venta' }}
+                </button>
+                } @else {
+                <!-- Todavía faltan más de 7 días: el botón se ve, pero apagado,
+                    y abajo dice desde cuándo se va a poder usar. -->
+                <button type="button" class="preventa-boton" disabled>Abrir venta</button>
+                <span class="preventa-desde">Disponible desde el {{ inicioPreventa(pelicula) }}</span>
+                }
+            </div>
+            </li>
+        }
+        </ul>
+    }
+    </section>

@@ -16,7 +16,7 @@
   margin-bottom: 0.4rem;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -103,7 +103,7 @@
 .bolsa-label {
   color: var(--hk-pale);
   font-family: 'Trajan', serif;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -161,7 +161,7 @@
 .stat-label {
   color: var(--hk-soft-text);
   font-family: 'Trajan', serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -191,7 +191,7 @@
 
 .subtitulo-historial span {
   color: var(--hk-focus);
-  font-size: 0.6rem;
+  font-size: 0.72rem;
   vertical-align: middle;
 }
 
@@ -274,7 +274,7 @@
 .movimiento-tipo {
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.66rem;
+  font-size: 0.78rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -292,7 +292,7 @@
 
 .movimiento-fecha {
   color: var(--hk-soft-text);
-  font-size: 0.82rem;
+  font-size: 0.88rem;
 }
 
 .movimiento-puntos {

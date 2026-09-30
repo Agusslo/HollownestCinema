@@ -21,7 +21,7 @@
   margin-bottom: 0.4rem;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -101,7 +101,7 @@
   border: 1px solid transparent;
   border-radius: 999px;
   color: var(--hk-soft-text);
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   letter-spacing: 1.5px;
   box-shadow: none;
   cursor: pointer;
@@ -133,7 +133,7 @@
   margin-bottom: 0.5rem;
   color: var(--hk-pale);
   font-family: 'Trajan', serif;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -170,7 +170,7 @@
   color: #04141a;
   border: none;
   border-radius: 6px;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   font-weight: 700;
   letter-spacing: 2px;
   cursor: pointer;
@@ -191,7 +191,7 @@
 .ayuda-error {
   margin: 0.4rem 0 0;
   color: #ff9e9e;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 /* ── Separador "o" con líneas ── */
@@ -202,7 +202,7 @@
   margin: 1.3rem 0;
   color: var(--hk-muted-text);
   font-family: 'Trajan', serif;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -235,7 +235,7 @@
   border: 1px dashed rgba(79, 196, 227, 0.45);
   color: var(--hk-pale);
   border-radius: 8px;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   letter-spacing: 2px;
   box-shadow: none;
   cursor: pointer;
@@ -377,7 +377,7 @@
   margin-bottom: 0.3rem;
   color: var(--hk-geo);
   font-family: 'Trajan', serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -405,7 +405,7 @@
 .tarjeta-resultado dt {
   color: var(--hk-soft-text);
   font-family: 'Trajan', serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   align-self: center;
@@ -445,7 +445,7 @@
   color: #1a1204;
   border: none;
   border-radius: 8px;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-weight: 700;
   letter-spacing: 2px;
   cursor: pointer;

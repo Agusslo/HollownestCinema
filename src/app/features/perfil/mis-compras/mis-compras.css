@@ -16,7 +16,7 @@
   margin-bottom: 0.4rem;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -77,7 +77,7 @@
 .credito-label {
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -92,7 +92,7 @@
 .credito-ayuda {
   margin-left: auto;
   color: var(--hk-soft-text);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   text-align: right;
 }
 
@@ -206,7 +206,7 @@
   margin-top: 0.2rem;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -215,7 +215,7 @@
   margin-top: 0.5rem;
   padding: 0.1rem 0.5rem;
   color: var(--hk-pale);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-weight: 700;
   border: 1px solid rgba(212, 212, 224, 0.2);
   border-radius: 999px;
@@ -238,14 +238,14 @@
 .orden-id {
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
 
 .orden-fecha {
   color: var(--hk-soft-text);
-  font-size: 0.8rem;
+  font-size: 0.86rem;
 }
 
 .funcion-pelicula {
@@ -269,7 +269,7 @@
 .chip {
   padding: 0.12rem 0.6rem;
   color: var(--hk-pale);
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   text-transform: capitalize;
   background: rgba(212, 212, 224, 0.06);
   border: 1px solid rgba(212, 212, 224, 0.16);
@@ -297,7 +297,7 @@
   margin-right: 0.4rem;
   color: var(--hk-soft-text);
   font-family: 'Trajan', serif;
-  font-size: 0.65rem;
+  font-size: 0.77rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
 }
@@ -328,12 +328,12 @@
 
 .puntos-usados {
   color: var(--hk-focus);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 .no-cancelable {
   color: var(--hk-soft-text);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-style: italic;
 }
 
@@ -355,7 +355,7 @@
   padding: 0.2rem 0.8rem;
   color: #ff8a80;
   font-family: 'Trajan', serif;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   letter-spacing: 3px;
   text-transform: uppercase;
   border: 2px solid currentColor;
@@ -399,7 +399,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   color: var(--hk-pale);
 }
 
@@ -464,7 +464,7 @@
   }
 
   .talon-hora {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     padding: 0.1rem 0.35rem;
   }
 

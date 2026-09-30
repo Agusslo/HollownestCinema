@@ -27,7 +27,7 @@
   padding: 0 8px;
   color: var(--hk-soul);
   font-family: 'Trajan', 'Times New Roman', serif;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -35,7 +35,7 @@
 .fieldset-hint {
   margin: 0 0 8px;
   color: var(--hk-soft-text);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-style: italic;
 }
 
@@ -79,7 +79,7 @@
 }
 
 .genre-option span {
-  font-size: 0.76rem;
+  font-size: 0.86rem;
   letter-spacing: 0.2px;
 }
 

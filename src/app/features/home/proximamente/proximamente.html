@@ -35,7 +35,9 @@
             Comprar
             </a>
         } @else {
-            <p class="proxima-detalle">Preventa desde el {{ inicioPreventa(pelicula) }}</p>
+            <p class="proxima-detalle proxima-detalle-fecha">
+            Preventa desde el <strong>{{ inicioPreventa(pelicula) }}</strong>
+            </p>
             <!-- aria-pressed: le dice a los lectores de pantalla que es un botón
                 que se prende y se apaga, y en qué estado está. -->
             <button

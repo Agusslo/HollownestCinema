@@ -123,6 +123,24 @@ export class Peliculas {
     return pelicula.venta_abierta_en ? 'preventa' : 'proximamente';
   }
 
+  // Botón "Abrir venta" de la pantalla de admin Preventas: guarda la fecha
+  // y hora de este momento en venta_abierta_en, y desde ahí estadoVenta()
+  // la ve como 'preventa'. El .is('venta_abierta_en', null) hace que sólo
+  // se actualice si la venta TODAVÍA no estaba abierta (mismo truco que
+  // Entradas.validar): así nunca se pisa la fecha original. Devuelve false
+  // si no se actualizó ninguna fila (ya estaba abierta, o RLS lo rechazó
+  // porque quien lo pidió no es admin).
+  async abrirVenta(id: number): Promise<boolean> {
+    const { data, error } = await this.supabase.Supabase.from('peliculas')
+      .update({ venta_abierta_en: new Date().toISOString() })
+      .eq('id', id)
+      .is('venta_abierta_en', null)
+      .select('id');
+
+    if (error) throw error;
+    return (data?.length ?? 0) > 0;
+  }
+
   // ¿Se le puede apretar "Abrir venta" a esta película? Sólo si todavía
   // está en Próximamente y ya faltan 7 días o menos para el estreno (la
   // consigna: "abrir la venta de entradas 7 días antes del estreno").

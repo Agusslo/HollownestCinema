@@ -1,0 +1,160 @@
+/* La tarjeta, el encabezado y los colores base vienen de .admin-form en
+   styles.css; acá va sólo lo propio de esta pantalla: la lista. */
+
+/* El <main> de la app centra su contenido con flex, y eso hace que el
+   componente se achique al ancho de lo que tiene adentro. Con width: 100%
+   el componente ocupa todo el ancho disponible y la tarjeta puede llegar a
+   sus 720px (y seguir centrada por el margin: auto de .admin-form). */
+:host {
+  display: block;
+  width: 100%;
+}
+
+.preventas {
+  width: min(100%, 720px);
+}
+
+.preventas-vacio {
+  margin: 0;
+  padding: 18px;
+  color: var(--hk-soft-text);
+  font-style: italic;
+  text-align: center;
+  border: 1px dashed rgba(212, 212, 224, 0.16);
+  border-radius: 10px;
+}
+
+.preventas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cada película: póster chico | nombre y datos | botón */
+.preventa-item {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 14px 10px 10px;
+  background: rgba(10, 10, 18, 0.35);
+  border: 1px solid rgba(212, 212, 224, 0.12);
+  border-radius: 10px;
+}
+
+/* Venta ya abierta: borde dorado, como las tarjetas de Próximamente */
+.preventa-item.abierta {
+  border-color: rgba(232, 168, 50, 0.45);
+  background: rgba(232, 168, 50, 0.05);
+}
+
+.preventa-poster {
+  width: 52px;
+  height: 76px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.preventa-info {
+  min-width: 0;
+}
+
+.preventa-nombre {
+  margin: 0 0 4px;
+  overflow: hidden;
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 0.91rem;
+  letter-spacing: 1.5px;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.preventa-datos {
+  margin: 0;
+  color: var(--hk-muted-text);
+  font-size: 0.94rem;
+}
+
+.preventa-accion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.preventa-boton {
+  padding: 9px 16px;
+  color: #2b1c02;
+  background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+  border: none;
+  border-radius: 8px;
+  font-family: 'Trajan', serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+.preventa-boton:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.preventa-boton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.preventa-desde {
+  color: var(--hk-muted-text);
+  font-size: 0.9rem;
+}
+
+.preventa-estado {
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.82rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── Celular: el botón pasa abajo del nombre ── */
+@media (max-width: 560px) {
+  .preventa-item {
+    grid-template-columns: 44px 1fr;
+  }
+
+  .preventa-poster {
+    width: 44px;
+    height: 64px;
+  }
+
+  .preventa-accion {
+    grid-column: 1 / -1;
+    align-items: stretch;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .preventa-item {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.16);
+}
+
+:host-context(.tema-claro) .preventa-item.abierta {
+  border-color: rgba(166, 111, 28, 0.45);
+  background: rgba(166, 111, 28, 0.05);
+}
+
+:host-context(.tema-claro) .preventa-boton {
+  color: #ffffff;
+  background: linear-gradient(180deg, #c98a1f, #a66f1c);
+}

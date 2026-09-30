@@ -7,11 +7,18 @@
       <h1>Seleccioná tu butaca</h1>
       <div class="ornamento" aria-hidden="true"><span></span>◆<span></span></div>
       @if (precioPreventa(); as precio) {
-        <p class="aviso-vip">
-          ◆ Preventa: entrada a ${{ precio }} hasta el estreno, el
-          {{ fechaCorta(peliculaActual()?.fecha_estreno) }}. Si en tu formato la entrada normal sale
-          menos, se cobra la normal.
-        </p>
+        <div class="aviso-preventa">
+          <span class="aviso-preventa-sello">Preventa</span>
+          <p class="aviso-preventa-texto">
+            Entrada a
+            <strong>${{ precio | number: '1.0-0' : 'es' }}</strong>
+            hasta el estreno, el
+            <strong>{{ fechaCorta(peliculaActual()?.fecha_estreno) }}</strong>
+            <span class="aviso-preventa-nota">
+              Si en tu formato la entrada normal sale menos, se cobra la normal.
+            </span>
+          </p>
+        </div>
       }
       @if (peliculaActual()?.restriccion_edad; as restriccion) {
         <p class="aviso-restriccion">

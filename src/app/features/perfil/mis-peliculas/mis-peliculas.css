@@ -16,7 +16,7 @@
   margin-bottom: 0.4rem;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -94,7 +94,7 @@
 .stat-label {
   color: var(--hk-soft-text);
   font-family: 'Trajan', serif;
-  font-size: 0.62rem;
+  font-size: 0.74rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -152,7 +152,7 @@
   padding: 3px 10px;
   color: var(--hk-geo);
   font-family: 'Trajan', serif;
-  font-size: 0.65rem;
+  font-size: 0.77rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   background: var(--hk-badge-bg);
@@ -185,7 +185,7 @@
   margin: 0;
   color: var(--hk-soul);
   font-family: 'Trajan', serif;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   letter-spacing: 1.5px;
   line-height: 1.35;
   text-transform: uppercase;
@@ -218,7 +218,7 @@
 
 .sin-calificar {
   color: var(--hk-focus);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-style: italic;
 }
 
@@ -232,7 +232,7 @@
 .fecha-vista {
   padding: 1px 9px;
   color: var(--hk-muted-text);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   text-transform: capitalize;
   background: rgba(212, 212, 224, 0.06);
   border: 1px solid rgba(212, 212, 224, 0.14);
@@ -293,7 +293,7 @@
   }
 
   .stat-label {
-    font-size: 0.55rem;
+    font-size: 0.67rem;
     letter-spacing: 1px;
   }
 

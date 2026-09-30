@@ -60,7 +60,7 @@
   color: var(--hk-geo);
   font-family: 'Trajan', serif;
   font-weight: bold;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   letter-spacing: 1.5px;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
   text-align: center;
@@ -71,7 +71,7 @@
   margin: 12px 4px 4px;
   color: var(--hk-pale);
   font-family: 'Trajan', serif;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   letter-spacing: 1.5px;
   line-height: 1.4;
   text-align: center;
@@ -87,9 +87,28 @@
 .proxima-detalle {
   margin: 0 0 12px;
   color: var(--hk-soft-text);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   font-style: italic;
   text-align: center;
+}
+
+/* "Preventa desde el 05/12": cápsula con la fecha resaltada en dorado */
+.proxima-detalle-fecha {
+  align-self: center;
+  padding: 4px 12px;
+  color: var(--hk-panel-text);
+  font-size: 0.9rem;
+  font-style: normal;
+  background: rgba(232, 168, 50, 0.08);
+  border: 1px solid rgba(232, 168, 50, 0.3);
+  border-radius: 999px;
+}
+
+.proxima-detalle-fecha strong {
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.88rem;
+  letter-spacing: 1px;
 }
 
 .proxima-detalle-abierta {
@@ -107,7 +126,7 @@
   border: 1px solid var(--hk-focus);
   border-radius: 8px;
   font-family: 'Trajan', serif;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 1.5px;
   text-align: center;
@@ -146,8 +165,12 @@
   border-color: transparent;
 }
 
-.proxima-boton-comprar:hover {
-  filter: brightness(1.08);
+/* Mismo peso que .proxima-boton:hover:not(:disabled) para que no le pise
+   el fondo dorado con el celeste transparente (quedaba la letra invisible) */
+.proxima-boton-comprar:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+  filter: brightness(1.1);
+  box-shadow: 0 0 14px rgba(232, 168, 50, 0.35);
 }
 
 /* ── Celular: dos columnas con pósters más bajos ── */
@@ -166,13 +189,13 @@
   }
 
   .proxima-nombre {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     letter-spacing: 1px;
   }
 
   .proxima-boton {
     padding: 9px 6px;
-    font-size: 0.62rem;
+    font-size: 0.74rem;
     letter-spacing: 1px;
   }
 }
@@ -190,7 +213,8 @@
   text-shadow: none;
 }
 
-:host-context(.tema-claro) .proxima-boton-comprar {
+:host-context(.tema-claro) .proxima-boton-comprar,
+:host-context(.tema-claro) .proxima-boton-comprar:hover:not(:disabled) {
   color: #ffffff;
   background: linear-gradient(180deg, #c98a1f, #a66f1c);
 }

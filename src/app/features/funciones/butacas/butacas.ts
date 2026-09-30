@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Supabase } from '../../../core/services/supabase';
 import { Butacas as ButacasService, IFilaSala, tipoDeButaca } from '../../../core/services/butacas';
@@ -25,7 +26,7 @@ import { GlowHover } from '../../../shared/directives/glow-hover';
 
 @Component({
   selector: 'app-butacas',
-  imports: [LoadingComponent, GlowHover],
+  imports: [LoadingComponent, GlowHover, DecimalPipe],
   templateUrl: './butacas.html',
   styleUrl: './butacas.css',
 })

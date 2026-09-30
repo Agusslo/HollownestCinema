@@ -25,7 +25,7 @@
   margin-bottom: 0.4rem;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -83,7 +83,7 @@
   border: none;
   border-radius: 8px;
   font-family: 'Trajan', serif;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -131,7 +131,7 @@
 .kpi-label {
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.64rem;
+  font-size: 0.76rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -152,7 +152,7 @@
 
 .kpi-detalle {
   color: var(--hk-soft-text);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 /* ── Título de sección: ─ FACTURACIÓN DIARIA ─ ── */
@@ -165,7 +165,7 @@
   width: 100%;
   margin: 3.2rem 0 1.2rem;
   color: var(--hk-pale);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   letter-spacing: 3px;
   text-transform: uppercase;
 }
@@ -211,7 +211,7 @@
 .tabla-facturacion th {
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.66rem;
+  font-size: 0.78rem;
   font-weight: normal;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -249,7 +249,7 @@
   display: inline-block;
   min-width: 2.6em;
   color: var(--hk-soft-text);
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   text-transform: capitalize;
 }
 
@@ -258,7 +258,7 @@
   padding: 1px 8px;
   color: var(--hk-geo);
   font-family: 'Trajan', serif;
-  font-size: 0.58rem;
+  font-size: 0.7rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   border: 1px solid rgba(232, 168, 50, 0.45);
@@ -312,7 +312,7 @@
 .tabla-facturacion tfoot td:first-child {
   color: var(--hk-geo);
   font-family: 'Trajan', serif;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: normal;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -339,7 +339,7 @@
   margin: 0 0 0.9rem;
   color: var(--hk-focus);
   font-family: 'Trajan', serif;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -391,7 +391,7 @@
 .sin-datos-chico {
   margin: 0;
   color: var(--hk-soft-text);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 /* ── Estados ── */
@@ -463,7 +463,7 @@
   .tabla-facturacion th,
   .tabla-facturacion td {
     padding: 0.6rem 0.7rem;
-    font-size: 0.85rem;
+    font-size: 0.91rem;
   }
 
   /* En celular la barra pasa abajo del número */
