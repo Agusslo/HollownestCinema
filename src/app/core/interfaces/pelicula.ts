@@ -12,6 +12,11 @@ export default interface IPelicula {
   // Precio fijo de la entrada común durante los 7 días de preventa (el
   // recargo VIP se aplica encima). null = preventa a precio normal.
   precio_preventa: number | null;
+  // Cuándo el admin apretó "Abrir venta" (timestamp). null = todavía no la
+  // abrió. Programar funciones y abrir la venta son cosas separadas, como
+  // en un cine real: aunque la película tenga funciones cargadas, no se
+  // pueden comprar hasta que se abra la venta (o hasta el día del estreno).
+  venta_abierta_en: string | null;
 }
 // Extiende IPelicula con los géneros asignados, vía el join embebido de la
 // tabla intermedia peliculas_generos -> generos (mismo patrón que

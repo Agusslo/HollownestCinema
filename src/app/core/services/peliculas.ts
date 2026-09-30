@@ -7,9 +7,12 @@ import IPelicula, { IPeliculaConGeneros } from '../interfaces/pelicula';
 const DIAS_PREVENTA = 7;
 
 // En qué momento está una película respecto de su estreno:
-// - 'proximamente': falta más de una semana, todavía no se vende.
-// - 'preventa': falta una semana o menos, ya se vende a precio de preventa.
+// - 'proximamente': todavía no se estrenó y el admin no abrió la venta.
+//   Se muestra en "Próximamente" con el botón "Avisame"; no se vende.
+// - 'preventa': todavía no se estrenó, pero el admin ya abrió la venta.
+//   Se vende al precio de preventa.
 // - 'cartelera': ya se estrenó (o nunca tuvo fecha de estreno cargada).
+//   Se vende a precio normal.
 export type EstadoVenta = 'proximamente' | 'preventa' | 'cartelera';
 
 @Service()
@@ -25,7 +28,10 @@ export class Peliculas {
     return data as unknown as IPeliculaConGeneros[];
   }
 
-  async crear(pelicula: Omit<IPelicula, 'id'>): Promise<IPelicula> {
+  // venta_abierta_en también se omite: al crear una película la venta
+  // nunca está abierta (la base la deja en null). Se abre después, desde
+  // el botón "Abrir venta" del admin.
+  async crear(pelicula: Omit<IPelicula, 'id' | 'venta_abierta_en'>): Promise<IPelicula> {
     //omit es una utilidad de typescript que permite omitir una propiedad de un tipo, en este caso omitimos la propiedad id de la interfaz IPelicula
     const { data, error } = await this.supabase.Supabase.from('peliculas')
       .insert(pelicula)
@@ -114,7 +120,18 @@ export class Peliculas {
     const hoy = this.hoy();
 
     if (!pelicula.fecha_estreno || hoy >= pelicula.fecha_estreno) return 'cartelera';
-    return hoy >= this.inicioPreventa(pelicula.fecha_estreno) ? 'preventa' : 'proximamente';
+    return pelicula.venta_abierta_en ? 'preventa' : 'proximamente';
+  }
+
+  // ¿Se le puede apretar "Abrir venta" a esta película? Sólo si todavía
+  // está en Próximamente y ya faltan 7 días o menos para el estreno (la
+  // consigna: "abrir la venta de entradas 7 días antes del estreno").
+  // Ejemplo, estreno 12/12: hasta el 04/12 da false; desde el 05/12, true.
+  puedeAbrirVenta(pelicula: IPelicula): boolean {
+    return (
+      this.estadoVenta(pelicula) === 'proximamente' &&
+      this.hoy() >= this.inicioPreventa(pelicula.fecha_estreno!)
+    );
   }
 
   // Día en que arranca la preventa: 7 días antes del estreno.
