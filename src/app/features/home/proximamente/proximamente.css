@@ -54,12 +54,15 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 7px 8px;
-  background: linear-gradient(180deg, rgba(10, 10, 18, 0.2), rgba(10, 10, 18, 0.92));
+  padding: 8px;
+  background: rgba(10, 10, 18, 0.9);
+  border-top: 1px solid rgba(232, 168, 50, 0.45);
   color: var(--hk-geo);
   font-family: 'Trajan', serif;
-  font-size: 0.7rem;
-  letter-spacing: 2px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
   text-align: center;
   text-transform: uppercase;
 }
@@ -182,7 +185,9 @@
 }
 
 :host-context(.tema-claro) .proxima-estreno {
-  background: linear-gradient(180deg, rgba(244, 246, 245, 0.2), rgba(244, 246, 245, 0.95));
+  background: rgba(244, 246, 245, 0.95);
+  border-top-color: rgba(166, 111, 28, 0.5);
+  text-shadow: none;
 }
 
 :host-context(.tema-claro) .proxima-boton-comprar {

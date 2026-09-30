@@ -7,10 +7,11 @@ import IGenero from '../../core/interfaces/genero';
 import { DuracionPipe } from '../../core/pipes/duracion-pipe';
 import { LoadingComponent } from '../../shared/components/loading/loading';
 import { GlowHover } from '../../shared/directives/glow-hover';
+import { Proximamente } from './proximamente/proximamente';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, DuracionPipe, LoadingComponent, GlowHover],
+  imports: [RouterLink, DuracionPipe, LoadingComponent, GlowHover, Proximamente],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -21,6 +22,9 @@ export class Home implements OnInit, OnDestroy {
   protected destacadas = signal<IPeliculaConGeneros[]>([]);
   protected peliculas = signal<IPeliculaConGeneros[]>([]);
   protected todas = signal<IPeliculaConGeneros[]>([]); //guardamos la lista completa para poder buscar sobre ella
+  // Las que todavía no se estrenaron (próximamente o en preventa): van a la
+  // sección "Próximamente" en vez de a la cartelera.
+  protected proximas = signal<IPeliculaConGeneros[]>([]);
   protected cargando = signal(true);
   protected busqueda = signal('');
   protected generosDisponibles = signal<IGenero[]>([]);
@@ -37,7 +41,7 @@ export class Home implements OnInit, OnDestroy {
   private timerInterval?: any;
 
   protected peliculaBanner = computed(() => {
-    return this.destacadas()[0] ?? this.todas()[0] ?? null;
+    return this.destacadas()[0] ?? this.peliculas()[0] ?? null;
   });
 
   // computed() recalcula esto solo cada vez que cambian busqueda(),
@@ -144,23 +148,42 @@ export class Home implements OnInit, OnDestroy {
     // después de la otra: son dos consultas independientes, no tiene
     // sentido esperar a que termine una para arrancar la otra.
     try {
+      // Pedimos 10 más vendidas (no 3) porque después filtramos: una
+      // película en preventa puede tener entradas vendidas, pero todavía
+      // nadie la vio, así que no puede estar en "Las más vistas".
       const [masVendidas, todas] = await Promise.all([
-        this.peliculasService.obtenerMasVendidas(3),
+        this.peliculasService.obtenerMasVendidas(10),
         this.peliculasService.obtenerTodas(),
       ]);
 
-      // Sacamos de "todas" las que ya aparecen en masVendidas, para no
-      // mostrar una película dos veces en la cartelera.
-      const idsTop = new Set(masVendidas.map((p) => p.id));
-      const resto = todas.filter((p) => !idsTop.has(p.id));
+      // Separamos según el estado de venta (Peliculas.estadoVenta): las
+      // estrenadas van a la cartelera; las demás, a "Próximamente".
+      const enCartelera = (p: IPeliculaConGeneros) =>
+        this.peliculasService.estadoVenta(p) === 'cartelera';
 
-      this.destacadas.set(masVendidas);
+      const top = masVendidas.filter(enCartelera).slice(0, 3);
+
+      // Sacamos de la cartelera las que ya aparecen en el top, para no
+      // mostrar una película dos veces.
+      const idsTop = new Set(top.map((p) => p.id));
+      const resto = todas.filter((p) => enCartelera(p) && !idsTop.has(p.id));
+
+      // Próximamente: ordenadas por fecha de estreno, la más cercana
+      // primero. Las fechas son texto 'YYYY-MM-DD', así que localeCompare
+      // las ordena bien (mismo motivo que en estadoVenta).
+      const proximas = todas
+        .filter((p) => !enCartelera(p))
+        .sort((a, b) => a.fecha_estreno!.localeCompare(b.fecha_estreno!));
+
+      this.destacadas.set(top);
       this.peliculas.set(resto);
+      this.proximas.set(proximas);
       this.todas.set(todas);
     } catch (error) {
       console.error('No se pudo cargar la cartelera', error);
       this.destacadas.set([]);
       this.peliculas.set([]);
+      this.proximas.set([]);
       this.todas.set([]);
     } finally {
       this.cargando.set(false);

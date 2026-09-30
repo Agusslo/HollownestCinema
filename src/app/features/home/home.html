@@ -1,6 +1,6 @@
 @if (cargando()) {
   <app-loading mensaje="Explorando Hallownest" />
-} @else if (peliculas().length === 0 && destacadas().length === 0) {
+} @else if (peliculas().length === 0 && destacadas().length === 0 && proximas().length === 0) {
   <section class="empty-state">
     <img class="empty-shade" src="/img/void.png" alt="" aria-hidden="true" />
     <p class="empty-text">No hay películas en la cartelera aún.</p>
@@ -313,6 +313,18 @@
           </a>
         }
       </div>
+    }
+
+    <!-- Películas que todavía no se estrenaron. El componente muestra las
+         tarjetas con el botón "Avisame"; acá sólo va el título de sección,
+         con el mismo estilo que "Las más vistas". -->
+    @if (proximas().length > 0) {
+      <header class="seccion-header seccion-header-oro">
+        <span class="seccion-kicker">Se acercan al reino</span>
+        <h2 class="seccion-titulo">Próximamente</h2>
+        <div class="seccion-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+      </header>
+      <app-proximamente [peliculas]="proximas()" />
     }
   }
 }
