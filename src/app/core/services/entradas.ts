@@ -21,6 +21,12 @@ const PRECIOS_POR_FORMATO: Record<Formato, number> = {
 // consigna sólo pide que sean "más caras", no da un número.
 const RECARGO_VIP = 1.3;
 
+// Tope de butacas que una misma persona puede comprar para UNA función
+// (sumando todas sus compras de esa función, no sólo la actual). Como es
+// por función, no hace falta "resetear" nada: la función de mañana es otra
+// y arranca de cero.
+export const MAX_BUTACAS_POR_FUNCION = 6;
+
 // Código de Postgres para "duplicate key value violates unique constraint".
 // En `entradas` la única restricción así es (funcion_id, fila, columna):
 // o sea, la butaca ya tiene una entrada.
@@ -82,6 +88,19 @@ export class Entradas {
     return butacas.filter((butaca) => existentes.has(butaca));
   }
 
+  // Cuántas butacas ya tiene compradas esta persona para esta función. Las
+  // de compras canceladas no cuentan: al cancelar recupera ese cupo.
+  async butacasCompradasPorUsuario(funcion_id: number, usuario_id: string): Promise<number> {
+    const { data, error } = await this.supabase.Supabase.from('entradas')
+      .select('id, ordenes!inner(cancelada_en)')
+      .eq('funcion_id', funcion_id)
+      .eq('usuario_id', usuario_id)
+      .is('ordenes.cancelada_en', null);
+
+    if (error) throw error;
+    return data.length;
+  }
+
   // Precio de una butaca puntual: el precio base del formato, más el
   // recargo si esa butaca es VIP (filas R, S, T).
   //
@@ -137,6 +156,23 @@ export class Entradas {
     const yaVendidas = await this.butacasYaVendidas(funcion_id, butacas);
     if (yaVendidas.length > 0) {
       throw new ButacasOcupadasError(yaVendidas);
+    }
+
+    // Límite por persona y por función. La pantalla ya no deja elegir de
+    // más, pero se vuelve a chequear acá con el dato fresco de la base
+    // (pudo haber comprado desde otra pestaña mientras tanto). En una
+    // compra anónima no hay a quién sumarle las anteriores, así que el
+    // tope vale sólo para esta compra.
+    const yaCompradas = usuario
+      ? await this.butacasCompradasPorUsuario(funcion_id, usuario.id)
+      : 0;
+    if (yaCompradas + butacas.length > MAX_BUTACAS_POR_FUNCION) {
+      const restantes = Math.max(0, MAX_BUTACAS_POR_FUNCION - yaCompradas);
+      throw new Error(
+        restantes === 0
+          ? `Ya compraste las ${MAX_BUTACAS_POR_FUNCION} butacas permitidas para esta función.`
+          : `Se pueden comprar hasta ${MAX_BUTACAS_POR_FUNCION} butacas por función: te quedan ${restantes}.`,
+      );
     }
 
     // 1. Cuánto cuesta en puntos lo que se quiere canjear. Se calcula acá

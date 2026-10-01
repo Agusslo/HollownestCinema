@@ -4,7 +4,11 @@ import { DecimalPipe } from '@angular/common';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Supabase } from '../../../core/services/supabase';
 import { Butacas as ButacasService, IFilaSala, tipoDeButaca } from '../../../core/services/butacas';
-import { ButacasOcupadasError, Entradas } from '../../../core/services/entradas';
+import {
+  ButacasOcupadasError,
+  Entradas,
+  MAX_BUTACAS_POR_FUNCION,
+} from '../../../core/services/entradas';
 import { Peliculas } from '../../../core/services/peliculas';
 import { Funciones } from '../../../core/services/funciones';
 import { Auth } from '../../../core/services/auth';
@@ -82,6 +86,13 @@ export class Butacas implements OnDestroy {
   protected comprando = signal(false);
   protected error = signal<string | null>(null);
   protected compraExitosa = signal(false);
+
+  // Límite de butacas por persona y por función (como en Cinemark). Lo que
+  // el usuario ya compró para ESTA función le descuenta del cupo; en una
+  // compra anónima no hay historial, así que queda en 0.
+  protected readonly maxButacas = MAX_BUTACAS_POR_FUNCION;
+  protected yaCompradas = signal(0);
+  protected cupoRestante = computed(() => Math.max(0, this.maxButacas - this.yaCompradas()));
   // La compra salió bien pero el PDF no se pudo generar/descargar
   protected pdfFallido = signal(false);
 
@@ -168,6 +179,7 @@ export class Butacas implements OnDestroy {
     this.suscribirCambiosButacas();
 
     this.usuario.set(await this.authService.usuarioActual());
+    await this.cargarYaCompradas();
     this.cupones.set(await this.cuponesService.obtenerTodos());
     this.fidelizacionConfig.set(await this.fidelizacionService.obtenerConfig());
 
@@ -184,6 +196,15 @@ export class Butacas implements OnDestroy {
     this.combosDisponibles.set(await this.combosService.obtenerActivos());
 
     this.cargando.set(false);
+  }
+
+  private async cargarYaCompradas(): Promise<void> {
+    const usuario = this.usuario();
+    this.yaCompradas.set(
+      usuario
+        ? await this.entradasService.butacasCompradasPorUsuario(this.funcion_id, usuario.id)
+        : 0,
+    );
   }
 
   // Escucha en vivo cuando se inserta una entrada nueva para ESTA función
@@ -263,6 +284,16 @@ export class Butacas implements OnDestroy {
     document.getElementById('resumen-compra')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  private mensajeLimite(): string {
+    if (this.yaCompradas() === 0) {
+      return `Podés comprar hasta ${this.maxButacas} butacas por función.`;
+    }
+    if (this.cupoRestante() === 0) {
+      return `Ya compraste las ${this.maxButacas} butacas permitidas para esta función.`;
+    }
+    return `Ya compraste ${this.yaCompradas()} para esta función y el máximo es ${this.maxButacas}: te quedan ${this.cupoRestante()}.`;
+  }
+
   protected esVip(codigo: string): boolean {
     return tipoDeButaca(codigo) === 'vip';
   }
@@ -274,9 +305,16 @@ export class Butacas implements OnDestroy {
     if (nuevas.has(butaca)) {
       nuevas.delete(butaca);
     } else {
+      // Límite de butacas por persona y por función: no se puede elegir
+      // más de las que todavía le quedan disponibles.
+      if (nuevas.size >= this.cupoRestante()) {
+        this.error.set(this.mensajeLimite());
+        return;
+      }
       nuevas.add(butaca);
     }
     this.seleccionadas.set(nuevas);
+    this.error.set(null);
 
     // El combo necesita al menos 1 butaca elegida (es "entrada + candy a
     // precio fijo" — sin entrada no tiene sentido). Si te quedás sin
@@ -675,6 +713,7 @@ export class Butacas implements OnDestroy {
       const ocupadasArray = await this.entradasService.obtenerButacasOcupadas(this.funcion_id);
       this.ocupadas.set(new Set(ocupadasArray));
       this.usuario.set(await this.authService.usuarioActual());
+      await this.cargarYaCompradas();
 
       // El profe pidió que después de comprar te lleve a ver lo que
       // compraste — primero se muestra el cartel de "¡Gracias por tu

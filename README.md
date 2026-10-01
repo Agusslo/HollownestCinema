@@ -142,6 +142,7 @@ La aplicación se puede instalar y su interfaz carga sin conexión gracias al se
 
 ### Compra y entradas
 - [x] Selección de butacas + compra, con cuenta o anónima
+- [x] Límite de 6 butacas por usuario y por función (sumando todas sus compras de esa función)
 - [x] PDF con los datos de la compra + un único código QR para todas las entradas y el candy
 - [x] Cupón de descuento en la primera compra, con porcentaje configurable por el admin
 - [x] Cupón exclusivo para usuarios mayores de 50 años, también configurable

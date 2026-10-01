@@ -265,9 +265,22 @@
           <div class="resumen-butacas-header">
             <span class="resumen-butacas-titulo">Butacas</span>
             @if (seleccionadas().size > 0) {
-              <span class="resumen-butacas-cantidad">{{ seleccionadas().size }}</span>
+              <span class="resumen-butacas-cantidad"
+                >{{ seleccionadas().size }} / {{ cupoRestante() }}</span
+              >
             }
           </div>
+          <p class="limite-butacas">
+            @if (yaCompradas() === 0) {
+              Máximo {{ maxButacas }} butacas por función.
+            } @else if (cupoRestante() === 0) {
+              Ya compraste las {{ maxButacas }} butacas permitidas para esta función.
+            } @else {
+              Ya compraste {{ yaCompradas() }} para esta función: te
+              {{ cupoRestante() === 1 ? 'queda 1' : 'quedan ' + cupoRestante() }} de
+              {{ maxButacas }}.
+            }
+          </p>
           @if (seleccionadas().size > 0) {
             <div class="resumen-butacas-chips">
               @for (codigo of butacasSeleccionadasOrdenadas(); track codigo) {
