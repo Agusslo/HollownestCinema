@@ -1,321 +1,98 @@
+/* ══════════════════════════════════════════════════════════════════
+   Pantalla de compra: mapa de la sala + candy bar + resumen.
+   Estética Hollow Knight: piedra oscura, celeste "alma" para lo que
+   elegís vos, dorado "geo" para lo que cuesta plata (VIP, candy, total).
+   ══════════════════════════════════════════════════════════════════ */
+
 /* ── Contenedor general ── */
 .butacas-container {
-  width: 100%;
-  max-width: 100%;
-  margin: 24px auto 0;
-  padding: 16px 12px 32px;
-  text-align: center;
-  overflow-x: visible;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  width: 100%;
+  max-width: 100%;
   min-height: calc(var(--alto-vista) - 120px);
+  margin: 24px auto 0;
+  padding: 16px 12px 48px;
+  text-align: center;
   box-sizing: border-box;
 }
 
 .sala-heading {
-  margin-bottom: 14px;
-  text-align: center;
   width: 100%;
-}
-
-.seleccion-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 260px;
-  justify-content: center;
-  align-items: center;
-  justify-items: center;
-  gap: 28px;
-  width: fit-content;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-.mapa-sala {
-  min-width: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
-  overscroll-behavior-x: contain;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(79, 196, 227, 0.8) rgba(15, 23, 42, 0.25);
-  padding-bottom: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* "safe": si la sala es más ancha que la pantalla, en vez de desbordar
-     para los dos lados (y dejar la izquierda fuera del alcance del
-     scroll) se alinea al inicio y se puede scrollear entera. */
-  align-items: safe center;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
+  margin-bottom: 26px;
   text-align: center;
-}
-
-.mapa-sala::-webkit-scrollbar {
-  height: 8px;
-}
-
-.mapa-sala::-webkit-scrollbar-thumb {
-  background: rgba(79, 196, 227, 0.8);
-  border-radius: 999px;
-}
-
-.mapa-sala::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.25);
-  border-radius: 999px;
 }
 
 .eyebrow {
   margin: 0 0 8px;
   color: var(--hk-focus);
+  font-family: 'Trajan', serif;
   font-size: 0.82rem;
   letter-spacing: 3px;
-  text-transform: uppercase;
-  font-family: 'Trajan', serif;
   text-align: center;
+  text-transform: uppercase;
+}
+
+.eyebrow-oro {
+  color: var(--hk-geo);
 }
 
 h1 {
   margin: 0;
   color: var(--hk-soul);
   font-size: clamp(1.25rem, 2.5vw, 1.9rem);
-  text-transform: uppercase;
   letter-spacing: 4px;
   text-align: center;
-}
-
-/* ── Pantalla ── */
-.pantalla-wrap {
-  margin: 0 auto 30px;
-  width: min(84%, 780px);
-  text-align: center;
-}
-
-.pantalla {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 26px;
-  padding: 4px 16px;
-  border-radius: 50px;
-  /* Oscuro: pantalla clara con texto oscuro. En modo claro se invierte
-     sola, porque --hk-soul / --hk-void intercambian sus valores. */
-  background: var(--hk-pale);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-}
-
-.pantalla-texto {
-  color: var(--hk-void);
-  font-family: 'Trajan', serif;
-  font-size: 0.86rem;
-  font-weight: 700;
-  letter-spacing: 2px;
   text-transform: uppercase;
 }
 
-/* ── Sala ── */
-.sala {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  width: max-content;
-  min-width: 100%;
-  margin: 0 auto 16px;
-  /* Aire para el aro de las butacas seleccionadas en los bordes, que si
-     no lo recortaba el overflow de .mapa-sala. */
-  padding: 6px 6px 0;
-}
-
-/* ── Fila ── */
-.fila {
+/* ──── ◆ ──── */
+.ornamento {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-}
-
-.fila-letra {
-  width: 22px;
-  font-size: 0.7rem;
+  gap: 10px;
+  margin: 12px 0 4px;
   color: var(--hk-focus);
-  font-weight: bold;
-  text-align: center;
-  flex-shrink: 0;
-  font-family: 'Trajan', serif;
+  font-size: 0.5rem;
 }
 
-/* ── Pasillo ── */
-.pasillo {
-  display: inline-block;
-  width: 14px;
-  flex-shrink: 0;
+.ornamento span {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hk-pale));
 }
 
-/* ── Butaca (libre) ── */
-.butaca {
-  width: 32px;
-  height: 32px;
-  min-width: 0;
-  padding: 0;
-  border: 1px solid rgba(79, 196, 227, 0.2);
-  background-color: var(--hk-stone);
-  color: var(--hk-seat-text);
-  /* A este tamaño (8-9px) una tipografía decorativa se vuelve ilegible —
-     acá priorizamos que se lea bien por sobre la identidad visual. */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  font-size: 0.64rem;
-  font-weight: 700;
-  -webkit-font-smoothing: antialiased;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  flex-shrink: 0;
-  border-radius: 7px;
-  outline: none;
-  transition: all 0.2s;
+.ornamento span:last-child {
+  background: linear-gradient(90deg, var(--hk-pale), transparent);
 }
 
-/* El estilo global de button[type='button'] pinta un degradé
-   (background-image) que tapaba el background-color de cada estado — por
-   eso la butaca seleccionada se veía oscura en vez de celeste. */
-.butaca,
-.butaca:hover {
-  background-image: none;
-}
-
-/* Reemplaza el aro de foco por defecto del navegador (que quedaba pegado
-   después de cada click y se confundía con una butaca "seleccionada
-   vacía") por uno propio, sólo visible cuando de verdad se navega con
-   teclado — no al hacer click con el mouse. */
-.butaca:focus-visible {
-  outline: 2px solid var(--hk-focus);
-  outline-offset: 2px;
-}
-
-.butaca-icono-ocupado {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  padding: 2px;
-  border-radius: 50%;
-  /* Fondo oscuro fijo (no una variable) — el ícono es claro, así que sin
-     esto se pierde contra un fondo también claro en el tema claro. */
-  background: rgba(10, 10, 18, 0.55);
-}
-
-/* Ícono de silla de ruedas (fila accesible, libre) */
-.butaca-icono {
-  font-size: 0.85rem;
-  line-height: 1;
-}
-
-/* Hover — sólo marca el borde, sin relleno ni brillo, para que no se
-   confunda con una butaca seleccionada. */
-.butaca:hover:not(:disabled) {
-  border-color: var(--hk-focus);
-  color: var(--hk-soul);
-  transform: scale(1.08);
-  z-index: 1;
-}
-
-/* Seleccionada — va al FINAL de todas las reglas de estado (ocupada,
-   accesible, vip) a propósito: si por algún motivo una butaca tuviera
-   dos clases de estado a la vez, seleccionada tiene que ganar siempre.
-   El !important en background/color es un refuerzo extra para
-   garantizar visibilidad — ya tuvimos este mismo bug antes por un
-   empate de especificidad silencioso. */
-.butaca.seleccionada,
-.butaca.accesible.seleccionada,
-.butaca.vip.seleccionada {
-  position: relative;
-  background-color: var(--hk-focus) !important;
-  color: #04141a !important;
-  border: 2px solid #ffffff;
-  transform: scale(1.12);
-  z-index: 2;
-  box-shadow:
-    0 0 0 2px var(--hk-focus),
-    0 0 16px rgba(79, 196, 227, 0.7);
-}
-
-/* Ocupada — Oscura/void */
-.butaca.ocupada {
-  background-color: var(--hk-shade);
-  border-color: rgba(42, 42, 61, 0.5);
-  color: var(--hk-soft-text);
-  cursor: not-allowed;
-}
-
-/* Accesible — filas J y K, celeste suave con ícono de silla de ruedas */
-.butaca.accesible {
-  background-color: rgba(79, 196, 227, 0.15);
-  border-color: var(--hk-focus);
-  color: var(--hk-focus);
-}
-
-.butaca.accesible.ocupada {
-  background-color: var(--hk-shade);
-  border-color: rgba(79, 196, 227, 0.25);
-  color: var(--hk-soft-text);
-}
-
-/* accesible.seleccionada: el color/fondo ya los define el bloque
-   unificado de "Seleccionada" más arriba (con !important) */
-
-/* VIP — últimas 3 filas, dorado como el resto de los acentos "geo" del tema */
-.butaca.vip {
-  background-color: rgba(232, 168, 50, 0.15);
-  border-color: var(--hk-geo);
+.ornamento-oro {
   color: var(--hk-geo);
 }
 
-.butaca.vip.ocupada {
-  background-color: var(--hk-shade);
-  border-color: rgba(232, 168, 50, 0.25);
-  color: var(--hk-soft-text);
+.ornamento-oro span {
+  background: linear-gradient(90deg, transparent, var(--hk-geo));
 }
 
-/* vip.seleccionada: mismo caso, ya lo cubre el bloque unificado de arriba */
-
-.ref-box.accesible {
-  background-color: rgba(79, 196, 227, 0.15);
-  border: 1px solid var(--hk-focus);
+.ornamento-oro span:last-child {
+  background: linear-gradient(90deg, var(--hk-geo), transparent);
 }
 
-.ref-box.vip {
-  background-color: rgba(232, 168, 50, 0.15);
-  border: 1px solid var(--hk-geo);
-}
-
+/* ── Avisos del encabezado ── */
 .aviso-restriccion {
   display: inline-block;
-  margin-top: 8px;
+  margin-top: 10px;
   padding: 6px 12px;
+  color: #ff9e9e;
   font-size: 0.91rem;
   font-weight: 600;
-  color: #ff9e9e;
   background: rgba(192, 57, 43, 0.12);
   border: 1px solid var(--hk-grimm);
   border-radius: 4px;
 }
 
-.aviso-vip {
-  margin-top: 8px;
-  padding: 6px 10px;
-  font-size: 0.85rem;
-  color: var(--hk-geo);
-  background: rgba(232, 168, 50, 0.1);
-  border-left: 2px solid var(--hk-geo);
-  border-radius: 3px;
-}
-
-/* ── Aviso de preventa: placa dorada centrada con sello ── */
 .aviso-preventa {
   display: flex;
   align-items: center;
@@ -369,1293 +146,412 @@ h1 {
   font-size: 0.9rem;
 }
 
-@media (max-width: 560px) {
-  .aviso-preventa {
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px 14px;
-    text-align: center;
+/* ── Layout: columna principal (sala + candy) | resumen sticky ── */
+.seleccion-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 28px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.columna-principal {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  min-width: 0;
+}
+
+/* ══════════════ Sala ══════════════ */
+
+/* Marco tallado con esquinas doradas, como los menús de Hallownest */
+.sala-marco {
+  position: relative;
+  padding: 26px 22px 18px;
+  background:
+    radial-gradient(ellipse 70% 180px at 50% 0%, rgba(79, 196, 227, 0.1), transparent 70%),
+    linear-gradient(180deg, rgba(28, 28, 46, 0.75), rgba(10, 10, 18, 0.85));
+  border: 1px solid rgba(212, 212, 224, 0.12);
+  border-radius: 6px;
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.45),
+    inset 0 0 40px rgba(0, 0, 0, 0.35);
+}
+
+.marco-esquina {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: var(--hk-geo);
+  border-style: solid;
+  border-width: 0;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.marco-esquina-si {
+  top: 7px;
+  left: 7px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.marco-esquina-sd {
+  top: 7px;
+  right: 7px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+
+.marco-esquina-ii {
+  bottom: 7px;
+  left: 7px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+
+.marco-esquina-id {
+  bottom: 7px;
+  right: 7px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+.mapa-sala {
+  display: flex;
+  flex-direction: column;
+  /* "safe": si la sala es más ancha que la pantalla, en vez de desbordar
+     para los dos lados (y dejar la izquierda fuera del alcance del
+     scroll) se alinea al inicio y se puede scrollear entera. */
+  align-items: safe center;
+  width: 100%;
+  min-width: 0;
+  padding-bottom: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(79, 196, 227, 0.6) transparent;
+}
+
+.mapa-sala::-webkit-scrollbar {
+  height: 8px;
+}
+
+.mapa-sala::-webkit-scrollbar-thumb {
+  background: rgba(79, 196, 227, 0.6);
+  border-radius: 999px;
+}
+
+/* ── Pantalla: un arco de luz que ilumina las primeras filas ── */
+.pantalla-wrap {
+  position: relative;
+  width: min(84%, 760px);
+  margin: 0 auto 34px;
+}
+
+.pantalla {
+  height: 26px;
+  border-top: 3px solid var(--hk-pale);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 -6px 18px -4px rgba(212, 212, 224, 0.55);
+  filter: drop-shadow(0 0 6px rgba(79, 196, 227, 0.45));
+}
+
+/* Haz de luz que baja de la pantalla hacia la sala */
+.pantalla::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 4%;
+  right: 4%;
+  height: 90px;
+  background: linear-gradient(180deg, rgba(212, 212, 224, 0.1), transparent);
+  clip-path: polygon(0 0, 100% 0, 88% 100%, 12% 100%);
+  pointer-events: none;
+}
+
+.pantalla-texto {
+  display: block;
+  margin-top: -6px;
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.8rem;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(212, 212, 224, 0.35);
+}
+
+.sala {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: max-content;
+  min-width: 100%;
+  margin: 0 auto 18px;
+  /* Aire para el brillo de las butacas elegidas en los bordes, que si no
+     lo recortaba el overflow de .mapa-sala. */
+  padding: 8px 8px 0;
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+/* Separación antes de la zona accesible y de la VIP, como gradas */
+.fila:not(.fila-accesible) + .fila-accesible,
+.fila-accesible + .fila:not(.fila-accesible),
+.fila:not(.fila-vip) + .fila-vip {
+  margin-top: 10px;
+}
+
+.fila-letra {
+  flex-shrink: 0;
+  width: 24px;
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.78rem;
+  font-weight: bold;
+  text-align: center;
+  opacity: 0.85;
+}
+
+.fila-vip .fila-letra {
+  color: var(--hk-geo);
+}
+
+.pasillo {
+  flex-shrink: 0;
+  width: 16px;
+}
+
+/* ── Butaca ──
+   Forma de asiento: respaldo redondeado arriba y un "almohadón" más
+   grueso abajo (border-bottom). El fondo va en una variable para que el
+   hover/disabled del estilo global de botones no lo pise. */
+.butaca {
+  --fondo: linear-gradient(180deg, #3a3a55 0%, var(--hk-stone) 55%, #1d1d2d 100%);
+  --borde: rgba(79, 196, 227, 0.22);
+
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 30px;
+  min-width: 0;
+  padding: 0;
+  color: var(--hk-seat-text);
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-bottom-width: 4px;
+  border-radius: 11px 11px 4px 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  /* A este tamaño una tipografía decorativa se vuelve ilegible: acá
+     priorizamos que se lea bien el número. */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  cursor: pointer;
+  outline: none;
+  transition:
+    transform 0.15s,
+    border-color 0.15s,
+    box-shadow 0.2s,
+    color 0.15s;
+}
+
+.butaca:hover:not(:disabled),
+.butaca:disabled {
+  background: var(--fondo);
+}
+
+/* Hover: sólo se levanta y se marca el borde, sin relleno, para que no se
+   confunda con una butaca elegida. */
+.butaca:hover:not(:disabled) {
+  z-index: 1;
+  color: var(--hk-soul);
+  border-color: var(--hk-focus);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0 10px rgba(79, 196, 227, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Aro propio sólo al navegar con teclado (no queda pegado al hacer click) */
+.butaca:focus-visible {
+  outline: 2px solid var(--hk-focus);
+  outline-offset: 2px;
+}
+
+/* Accesible — filas J y K */
+.butaca.accesible {
+  --fondo: linear-gradient(180deg, rgba(79, 196, 227, 0.26), rgba(79, 196, 227, 0.08));
+  --borde: rgba(79, 196, 227, 0.6);
+  color: var(--hk-focus);
+}
+
+.butaca-icono {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* VIP — últimas 3 filas, ribete dorado */
+.butaca.vip {
+  --fondo: linear-gradient(180deg, rgba(232, 168, 50, 0.3) 0%, rgba(58, 44, 20, 0.9) 60%, #1f180c 100%);
+  --borde: rgba(232, 168, 50, 0.7);
+  color: #f6d38a;
+}
+
+.butaca.vip:hover:not(:disabled) {
+  border-color: var(--hk-geo);
+  box-shadow: 0 0 12px rgba(232, 168, 50, 0.45);
+}
+
+/* Ocupada — vacío: oscura, con la máscara del Caballero */
+.butaca.ocupada,
+.butaca.accesible.ocupada,
+.butaca.vip.ocupada {
+  --fondo: #0d0d16;
+  --borde: rgba(74, 74, 94, 0.35);
+  color: var(--hk-ash);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+  cursor: not-allowed;
+}
+
+.butaca-icono-ocupado {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  opacity: 0.55;
+  filter: grayscale(1) brightness(0.9);
+}
+
+/* Elegida — brilla como el alma. Va al final de todas las reglas de
+   estado a propósito: si una butaca tuviera dos clases a la vez,
+   "seleccionada" tiene que ganar siempre. */
+.butaca.seleccionada,
+.butaca.accesible.seleccionada,
+.butaca.vip.seleccionada,
+.butaca.seleccionada:hover:not(:disabled) {
+  --fondo: radial-gradient(circle at 50% 30%, #ffffff 0%, #c4f1fb 35%, var(--hk-focus) 100%);
+  --borde: #ffffff;
+  z-index: 2;
+  color: #04141a;
+  border-color: #ffffff;
+  border-bottom-color: #2a9fbe;
+  box-shadow:
+    0 0 0 1px var(--hk-focus),
+    0 0 14px rgba(79, 196, 227, 0.85),
+    0 0 30px rgba(79, 196, 227, 0.35);
+  transform: translateY(-2px) scale(1.08);
+  animation: alma-latido 2.4s ease-in-out infinite;
+}
+
+/* VIP elegida: el mismo brillo, pero conserva el ribete dorado */
+.butaca.vip.seleccionada {
+  border-bottom-color: var(--hk-geo);
+}
+
+@keyframes alma-latido {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px var(--hk-focus),
+      0 0 12px rgba(79, 196, 227, 0.75),
+      0 0 26px rgba(79, 196, 227, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px var(--hk-focus),
+      0 0 18px rgba(79, 196, 227, 0.95),
+      0 0 38px rgba(79, 196, 227, 0.45);
   }
 }
 
-:host-context(.tema-claro) .aviso-preventa {
-  background: var(--hk-shell);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-}
-
-:host-context(.tema-claro) .aviso-preventa-sello {
-  color: #ffffff;
-  background: linear-gradient(180deg, #c98a1f, #a66f1c);
-}
-
-/* ── Referencias ── */
+/* ── Referencias: mini butacas con la misma forma ── */
 .referencias {
+  position: sticky;
+  left: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px 24px;
-  margin-bottom: 16px;
-  font-size: 0.82rem;
+  gap: 8px 22px;
   color: var(--hk-pale);
-  font-family: 'Perpetua', serif;
+  font-size: 0.92rem;
   letter-spacing: 0.5px;
 }
 
 .referencias span {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
 }
 
-.ref-box {
+.ref-butaca {
   display: inline-block;
-  width: 14px;
-  height: 14px;
-  border-radius: 2px;
-  vertical-align: middle;
+  width: 16px;
+  height: 15px;
+  background: linear-gradient(180deg, #3a3a55, var(--hk-stone));
+  border: 1px solid rgba(79, 196, 227, 0.25);
+  border-bottom-width: 3px;
+  border-radius: 6px 6px 2px 2px;
 }
 
-.ref-box.libre {
-  background-color: var(--hk-stone);
-  border: 1px solid rgba(79, 196, 227, 0.2);
+.ref-butaca.seleccionada {
+  background: radial-gradient(circle at 50% 30%, #ffffff, var(--hk-focus));
+  border-color: #ffffff;
+  box-shadow: 0 0 8px rgba(79, 196, 227, 0.7);
 }
 
-.ref-box.ocupada {
-  background-color: var(--hk-shade);
-  border: 1px solid rgba(42, 42, 61, 0.5);
+.ref-butaca.ocupada {
+  background: #0d0d16;
+  border-color: rgba(74, 74, 94, 0.4);
 }
 
-.ref-box.seleccionada {
-  background-color: var(--hk-focus);
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 0 1px var(--hk-focus);
+.ref-butaca.accesible {
+  background: rgba(79, 196, 227, 0.2);
+  border-color: rgba(79, 196, 227, 0.6);
 }
 
-/* ── Resumen de compra ── */
+.ref-butaca.vip {
+  background: linear-gradient(180deg, rgba(232, 168, 50, 0.35), #3a2c14);
+  border-color: rgba(232, 168, 50, 0.7);
+}
+
+/* ══════════════ Resumen de compra ══════════════ */
 .resumen-compra {
   position: sticky;
   top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  max-width: 330px;
-  padding: 24px 22px;
-  background: linear-gradient(180deg, rgba(22, 22, 38, 0.98) 0%, rgba(12, 12, 22, 0.99) 100%);
-  border: 1px solid rgba(79, 196, 227, 0.3);
-  border-radius: 12px;
-  box-shadow:
-    0 12px 36px rgba(0, 0, 0, 0.7),
-    0 0 24px rgba(79, 196, 227, 0.1);
-  backdrop-filter: blur(10px);
-  box-sizing: border-box;
-}
-
-.resumen-butacas-seccion {
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(212, 212, 224, 0.15);
-  text-align: left;
-}
-
-.resumen-butacas-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.resumen-butacas-titulo {
-  color: var(--hk-soul);
-  font-family: 'Trajan', serif;
-  font-size: 1.1rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-
-.resumen-butacas-cantidad {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(79, 196, 227, 0.2);
-  color: var(--hk-focus);
-  border: 1px solid rgba(79, 196, 227, 0.4);
-  border-radius: 12px;
-  padding: 3px 10px;
-  font-size: 0.88rem;
-  font-weight: bold;
-}
-
-.resumen-butacas-card {
-  display: flex;
-  align-items: center;
   gap: 14px;
-  background: rgba(10, 10, 18, 0.75);
-  border: 1px solid rgba(79, 196, 227, 0.4);
-  border-radius: 8px;
-  padding: 12px 14px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-}
-
-.butaca-icono-box {
-  width: 40px;
-  height: 40px;
-  background: rgba(79, 196, 227, 0.18);
-  border: 1px solid rgba(79, 196, 227, 0.35);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: #ffffff;
-}
-
-.icono-butaca-svg {
-  display: block;
-}
-
-.butacas-codigos {
-  color: #ffffff;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  word-break: break-word;
-  line-height: 1.4;
-  font-family: 'Perpetua', Arial, sans-serif;
-}
-
-.resumen-butacas-vacio {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 14px;
-  background: rgba(10, 10, 18, 0.65);
-  border: 1px solid rgba(79, 196, 227, 0.28);
-  border-radius: 8px;
-  box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.35),
-    inset 0 0 12px rgba(79, 196, 227, 0.04);
-  transition:
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.resumen-butacas-vacio:hover {
-  border-color: rgba(79, 196, 227, 0.5);
-  box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.4),
-    0 0 12px rgba(79, 196, 227, 0.15);
-}
-
-.vacio-icono-box {
-  width: 40px;
-  height: 40px;
-  background: rgba(79, 196, 227, 0.12);
-  border: 1px solid rgba(79, 196, 227, 0.3);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(79, 196, 227, 0.15);
-}
-
-.vacio-knight-img {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 6px rgba(79, 196, 227, 0.5));
-  animation: knight-vacio-float 3s ease-in-out infinite;
-}
-
-@keyframes knight-vacio-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-2px);
-  }
-}
-
-.vacio-textos {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  text-align: left;
-}
-
-.vacio-titulo {
-  color: var(--hk-pale);
-  font-family: 'Trajan', serif;
-  font-size: 0.88rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-
-.vacio-subtexto {
-  color: var(--hk-soft-text);
-  font-family: 'Perpetua', Georgia, serif;
-  font-size: 0.95rem;
-  line-height: 1.3;
-}
-
-/* ── Resumen Candy Bar ── */
-.candy-resumen {
-  padding: 12px 0;
-  border-top: 1px solid rgba(212, 212, 224, 0.15);
-  border-bottom: 1px solid rgba(212, 212, 224, 0.15);
-  text-align: left;
-}
-
-.candy-resumen-titulo {
-  margin: 0 0 10px;
-  color: var(--hk-focus);
-  font-size: 0.9rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-family: 'Trajan', serif;
-  font-weight: bold;
-}
-
-.candy-resumen-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 6px 0;
-  color: #f1f5f9;
-  font-size: 0.95rem;
-}
-
-.candy-item-nombre {
-  color: #f8fafc;
-}
-
-.candy-item-precio {
-  font-weight: 700;
-  color: var(--hk-geo);
-  font-size: 1rem;
-}
-
-/* Unidades de candy pagadas con puntos en vez de plata — mismo celeste
-   que ya usamos para crédito/puntos, para que se identifique de un
-   vistazo que eso no salió de tu bolsillo en pesos. */
-.candy-item-canjeado {
-  color: var(--hk-focus);
-  font-size: 0.91rem;
-}
-
-/* ── Cupón Pill ── */
-.cupon-pill {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(225, 29, 72, 0.18);
-  border: 1px solid rgba(225, 29, 72, 0.45);
-  border-radius: 8px;
-  padding: 10px 14px;
-  color: #ffdce3;
-  font-size: 0.92rem;
-  line-height: 1.35;
-  text-align: left;
-}
-
-.cupon-icono {
-  font-size: 1.2rem;
-  flex-shrink: 0;
-}
-
-.cupon-texto strong {
-  color: #ffffff;
-  font-weight: 700;
-}
-
-/* ── Bloque Total ── */
-.total-bloque {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  background: rgba(10, 10, 18, 0.7);
-  border: 1px solid rgba(232, 168, 50, 0.4);
-  border-radius: 8px;
-  padding: 14px 16px;
-  box-shadow: inset 0 0 18px rgba(232, 168, 50, 0.1);
-}
-
-.total-label {
-  font-family: 'Trajan', serif;
-  font-size: 0.9rem;
-  color: #cbd5e1;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-
-.total-monto {
-  font-family: 'Trajan', serif;
-  font-size: 1.85rem;
-  font-weight: bold;
-  color: var(--hk-geo);
-  letter-spacing: 1px;
-  text-shadow: 0 0 16px rgba(232, 168, 50, 0.45);
-}
-
-/* ── Alertas (Error / Éxito) ── */
-.error-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(225, 29, 72, 0.2);
-  border: 1px solid var(--hk-grimm);
-  border-radius: 8px;
-  padding: 12px 14px;
-  color: #ffd2d9;
-  font-size: 0.92rem;
-  line-height: 1.4;
-  text-align: left;
-}
-
-.exito-box {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  background: rgba(79, 196, 227, 0.16);
-  border: 1px solid var(--hk-focus);
-  border-radius: 8px;
-  padding: 14px;
-  color: #e0f7fc;
-  font-size: 0.92rem;
-  line-height: 1.4;
-  text-align: left;
-  box-shadow: 0 0 20px rgba(79, 196, 227, 0.2);
-}
-
-.exito-texto {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.exito-texto strong {
-  color: #ffffff;
-  font-size: 0.98rem;
-  font-family: 'Trajan', serif;
-  letter-spacing: 1px;
-}
-
-.alerta-icono {
-  font-size: 1.25rem;
-  flex-shrink: 0;
-}
-
-/* ── Botón Comprar ── */
-.btn-comprar {
   width: 100%;
-  padding: 16px 20px;
-  border-radius: 8px;
-  font-family: 'Trajan', serif;
-  font-size: 1rem;
-  font-weight: bold;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  background: linear-gradient(135deg, #18687d 0%, #15859e 50%, #29b8de 100%);
-  color: #ffffff;
-  border: 1px solid rgba(79, 196, 227, 0.7);
-  box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(79, 196, 227, 0.35);
-}
-
-.btn-comprar:hover:not(:disabled) {
-  background: linear-gradient(135deg, #1d7b94 0%, #1a9cba 50%, #47caee 100%);
-  transform: translateY(-2px);
-  box-shadow:
-    0 6px 22px rgba(0, 0, 0, 0.6),
-    0 0 28px rgba(79, 196, 227, 0.55);
-}
-
-.btn-comprar:disabled {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: none;
-  cursor: not-allowed;
-  transform: none;
-}
-
-:host-context(.tema-claro) .resumen-compra {
-  background: #ffffff;
-  border-color: rgba(41, 64, 71, 0.22);
-  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
-}
-
-:host-context(.tema-claro) .butaca.ocupada {
-  color: rgba(101, 116, 123, 0.65);
-}
-
-:host-context(.tema-claro) .butaca {
-  color: #294047;
-  font-weight: 700;
-}
-
-:host-context(.tema-claro) .butaca.seleccionada,
-:host-context(.tema-claro) .butaca.accesible.seleccionada,
-:host-context(.tema-claro) .butaca.vip.seleccionada {
-  /* En claro, relleno oscuro con texto blanco: contrasta fuerte contra
-     las butacas libres, que son grises claras. */
-  background-color: #0e6f86 !important;
-  color: #ffffff !important;
-  border-color: #ffffff;
-  box-shadow:
-    0 0 0 2px #0e6f86,
-    0 4px 12px rgba(14, 111, 134, 0.45);
-}
-
-:host-context(.tema-claro) .ref-box.seleccionada {
-  background-color: #0e6f86;
-  box-shadow: 0 0 0 1px #0e6f86;
-}
-
-/* Estos 5 tenían un fondo oscuro FIJO (no una variable de tema), así que
-   en claro quedaban oscuros sobre un fondo que ya es claro. */
-:host-context(.tema-claro) .combo-card {
-  background: rgba(230, 235, 238, 0.85);
-}
-
-:host-context(.tema-claro) .candy-card {
-  background: linear-gradient(180deg, var(--hk-shell) 0%, rgba(210, 218, 222, 0.9) 100%);
-}
-
-:host-context(.tema-claro) .resumen-butacas-vacio {
-  background: rgba(230, 235, 238, 0.75);
-  border-color: rgba(41, 64, 71, 0.2);
-}
-
-:host-context(.tema-claro) .total-bloque {
-  background: rgba(230, 235, 238, 0.7);
-}
-
-:host-context(.tema-claro) .candy-stepper {
-  background: rgba(230, 235, 238, 0.85);
-}
-
-:host-context(.tema-claro) .resumen-butacas-card {
-  background: rgba(230, 235, 238, 0.8);
-  border-color: rgba(41, 64, 71, 0.25);
-}
-
-:host-context(.tema-claro) .butaca-icono-box {
-  background: rgba(41, 64, 71, 0.12);
-  border-color: rgba(41, 64, 71, 0.2);
-  color: #294047;
-}
-
-:host-context(.tema-claro) .butacas-codigos {
-  color: #1e293b;
-}
-
-:host-context(.tema-claro) .resumen-butacas-vacio {
-  background: rgba(230, 235, 238, 0.75);
-  border-color: rgba(22, 141, 168, 0.3);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-:host-context(.tema-claro) .vacio-icono-box {
-  background: rgba(22, 141, 168, 0.1);
-  border-color: rgba(22, 141, 168, 0.25);
-  box-shadow: 0 0 8px rgba(22, 141, 168, 0.12);
-}
-
-:host-context(.tema-claro) .vacio-knight-img {
-  filter: drop-shadow(0 0 4px rgba(22, 141, 168, 0.4));
-}
-
-:host-context(.tema-claro) .vacio-titulo {
-  color: #15252b;
-}
-
-:host-context(.tema-claro) .vacio-subtexto {
-  color: #475569;
-}
-
-:host-context(.tema-claro) .total-bloque {
-  background: #f1f5f9;
-  border-color: rgba(166, 111, 28, 0.35);
-}
-
-:host-context(.tema-claro) .total-label {
-  color: #475569;
-}
-
-:host-context(.tema-claro) .btn-comprar:disabled {
-  background: rgba(41, 64, 71, 0.1);
-  color: rgba(41, 64, 71, 0.55);
-  border-color: rgba(41, 64, 71, 0.25);
-}
-
-:host-context(.tema-claro) .candy-resumen-item {
-  color: #0f172a;
-}
-
-/* ── Candy bar (Correo 4) ── */
-.candy-bar {
-  width: 100%;
-  max-width: 1100px;
-  box-sizing: border-box;
-  margin-top: 56px;
-  padding-top: 40px;
-  border-top: 1px solid rgba(79, 196, 227, 0.12);
-}
-
-.candy-heading {
-  margin-bottom: 24px;
-  text-align: left;
-}
-
-.candy-heading .eyebrow {
-  margin-bottom: 6px;
-}
-
-.candy-heading h2 {
-  margin: 0;
-  color: var(--hk-soul);
-  font-size: clamp(1.4rem, 3vw, 1.8rem);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  font-family: 'Trajan', serif;
-  position: relative;
-  display: inline-block;
-  padding-bottom: 10px;
-}
-
-.candy-heading h2::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--hk-focus), transparent);
-  border-radius: 1px;
-}
-
-.candy-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 28px;
-}
-
-.candy-tab {
-  padding: 9px 20px;
-  color: var(--hk-soft-text);
-  background: var(--hk-shell);
-  border: 1px solid rgba(212, 212, 224, 0.12);
-  border-radius: 24px;
-  cursor: pointer;
-  font-size: 0.91rem;
-  font-family: 'Perpetua', serif;
-  letter-spacing: 0.8px;
-  transition:
-    border-color 0.25s,
-    color 0.25s,
-    background 0.25s;
-}
-
-.candy-tab:hover {
-  border-color: rgba(79, 196, 227, 0.3);
-  color: var(--hk-pale);
-}
-
-.candy-tab.activa {
-  color: var(--hk-focus);
-  border-color: var(--hk-focus);
-  background: rgba(79, 196, 227, 0.06);
-}
-
-.candy-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 22px;
-}
-
-.candy-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 18px;
-  text-align: center;
-  background: linear-gradient(180deg, var(--hk-shell) 0%, rgba(14, 14, 24, 0.95) 100%);
-  border: 1px solid rgba(212, 212, 224, 0.1);
-  border-radius: 8px;
-  transition:
-    border-color 0.25s,
-    box-shadow 0.25s,
-    transform 0.25s;
-}
-
-.candy-card:hover {
-  border-color: rgba(79, 196, 227, 0.25);
-  box-shadow:
-    0 8px 28px rgba(0, 0, 0, 0.4),
-    0 0 12px rgba(79, 196, 227, 0.06);
-  transform: translateY(-2px);
-}
-
-.candy-img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  margin-bottom: 14px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid rgba(212, 212, 224, 0.06);
-}
-
-.candy-nombre {
-  margin: 0;
-  color: var(--hk-soul);
-  font-size: 0.95rem;
-  font-family: 'Perpetua', serif;
-  line-height: 1.35;
-  letter-spacing: 0.3px;
-  min-height: 2.7em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.candy-precio {
-  margin: 6px 0 14px;
-  color: var(--hk-geo);
-  font-size: 1.05rem;
-  font-weight: 700;
-  font-family: 'Trajan', serif;
-  letter-spacing: 0.5px;
-}
-
-.candy-agregar {
-  width: 100%;
-  padding: 10px;
-  color: var(--hk-focus);
-  background: transparent;
-  border: 1px solid rgba(79, 196, 227, 0.4);
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.91rem;
-  font-family: 'Perpetua', serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  transition:
-    background 0.25s,
-    color 0.25s,
-    border-color 0.25s;
-}
-
-.candy-agregar:hover {
-  color: var(--hk-void);
-  background: var(--hk-focus);
-  border-color: var(--hk-focus);
-}
-
-.candy-stepper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 6px 8px;
-  background: rgba(10, 10, 18, 0.6);
-  border: 1px solid var(--hk-focus);
-  border-radius: 6px;
-}
-
-.candy-stepper button {
-  width: 28px;
-  height: 28px;
-  color: var(--hk-focus);
-  background: rgba(79, 196, 227, 0.08);
-  border: 1px solid rgba(79, 196, 227, 0.2);
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-}
-
-.candy-stepper button:hover {
-  background: rgba(79, 196, 227, 0.2);
-}
-
-.candy-stepper span {
-  color: var(--hk-soul);
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.candy-vacio {
-  grid-column: 1 / -1;
-  color: var(--hk-ash);
-  font-size: 0.9rem;
-  font-style: italic;
-  text-align: center;
-  padding: 32px 0;
-}
-
-/* ── Responsive Butacas + Candy ── */
-@media (max-width: 900px) {
-  .butacas-container {
-    width: 100%;
-    max-width: 100%;
-    margin: 12px 0 0;
-    padding: 16px 0 24px;
-    min-height: auto;
-    align-items: flex-start;
-  }
-
-  .sala-heading {
-    text-align: center;
-    padding: 0 12px;
-  }
-
-  .seleccion-layout {
-    width: 100%;
-    grid-template-columns: 1fr;
-    gap: 20px;
-    align-items: center;
-    justify-items: stretch;
-  }
-
-  .mapa-sala {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
-    padding: 0 0 8px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: safe center;
-  }
-
-  .sala {
-    width: max-content;
-    min-width: 100%;
-    margin: 0 auto 16px;
-    padding: 6px 12px 0;
-  }
-
-  /* La pantalla y las referencias quedan fijas al ancho visible (no se
-     van con el scroll de la sala). */
-  .pantalla-wrap,
-  .referencias {
-    position: sticky;
-    left: 0;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0 12px;
-  }
-
-  .resumen-compra {
-    position: static;
-    width: calc(100% - 24px);
-    max-width: 480px;
-    margin: 20px auto 0;
-  }
-
-  .butaca {
-    width: 26px;
-    height: 26px;
-    font-size: 0.42rem;
-  }
-
-  .butaca-icono {
-    font-size: 0.7rem;
-  }
-
-  .fila {
-    gap: 2px;
-  }
-
-  .pasillo {
-    width: 10px;
-  }
-
-  .fila-letra {
-    width: 18px;
-    font-size: 0.6rem;
-  }
-
-  .candy-heading {
-    text-align: center;
-  }
-
-  .candy-heading h2::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .candy-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .butacas-container {
-    padding: 0 4px;
-  }
-
-  .resumen-compra {
-    max-width: 100%;
-    margin: 16px 0 0;
-    padding: 18px 14px;
-    gap: 14px;
-  }
-
-  .resumen-butacas-titulo {
-    font-size: 1rem;
-  }
-
-  .resumen-butacas-card,
-  .resumen-butacas-vacio {
-    padding: 10px 12px;
-    gap: 10px;
-  }
-
-  .butaca-icono-box,
-  .vacio-icono-box {
-    width: 36px;
-    height: 36px;
-  }
-
-  .vacio-knight-img {
-    width: 20px;
-    height: 20px;
-  }
-
-  .vacio-titulo {
-    font-size: 0.88rem;
-  }
-
-  .vacio-subtexto {
-    font-size: 0.94rem;
-  }
-
-  .butacas-codigos {
-    font-size: 0.95rem;
-  }
-
-  .total-bloque {
-    padding: 12px;
-  }
-
-  .total-label {
-    font-size: 0.88rem;
-  }
-
-  .total-monto {
-    font-size: 1.6rem;
-  }
-
-  .btn-comprar {
-    padding: 14px 16px;
-    font-size: 0.92rem;
-  }
-
-  .butaca {
-    width: 22px;
-    height: 22px;
-    font-size: 0.36rem;
-    border-radius: 2px;
-  }
-
-  .fila {
-    gap: 1px;
-  }
-
-  .pasillo {
-    width: 6px;
-  }
-
-  .fila-letra {
-    width: 14px;
-    font-size: 0.5rem;
-  }
-
-  .pantalla {
-    min-height: 22px;
-  }
-
-  .pantalla-texto {
-    font-size: 0.77rem;
-    letter-spacing: 1px;
-  }
-
-  .referencias {
-    gap: 6px 14px;
-    font-size: 0.8rem;
-  }
-
-  .ref-box {
-    width: 11px;
-    height: 11px;
-  }
-
-  .candy-bar {
-    margin-top: 36px;
-    padding: 28px 12px 0;
-  }
-
-  .candy-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .candy-card {
-    padding: 12px;
-  }
-
-  .candy-nombre {
-    font-size: 0.91rem;
-  }
-
-  .candy-precio {
-    font-size: 0.95rem;
-  }
-
-  .candy-tab {
-    padding: 7px 14px;
-    font-size: 0.88rem;
-  }
-}
-/* ── Combo aplicado (resumen de compra) ── */
-.combo-aplicado-pill {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(232, 168, 50, 0.14);
-  border: 1px solid rgba(232, 168, 50, 0.4);
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin-bottom: 10px;
-  color: var(--hk-pale);
-  font-size: 0.9rem;
-}
-
-.combo-aplicado-pill strong {
-  color: var(--hk-geo);
-}
-
-/* ── Crédito disponible (resumen de compra) ── */
-/* Tarjeta con interruptor (crédito / puntos). El label global del sitio
-   es flex en columna — acá lo forzamos a fila: ícono · textos · switch. */
-.opcion-toggle {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  margin: 0;
-  padding: 10px 12px;
-  text-align: left;
-  color: var(--hk-pale);
-  background: rgba(79, 196, 227, 0.04);
-  border: 1px solid rgba(212, 212, 224, 0.14);
-  border-radius: 10px;
-  cursor: pointer;
-  user-select: none;
-  transition:
-    background-color 0.2s,
-    border-color 0.2s;
-}
-
-.opcion-toggle:hover {
-  border-color: rgba(79, 196, 227, 0.45);
-}
-
-.opcion-toggle.activa {
-  background: rgba(79, 196, 227, 0.1);
-  border-color: var(--hk-focus);
-}
-
-/* Crédito y puntos son excluyentes — mientras uno está activo, el otro se
-   ve apagado y no responde al click (el switch de adentro ya tiene
-   [disabled], esto es sólo la señal visual). */
-.opcion-toggle.deshabilitada {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.opcion-toggle.deshabilitada:hover {
-  border-color: rgba(212, 212, 224, 0.14);
-}
-
-.opcion-icono {
-  flex-shrink: 0;
-  font-size: 1rem;
-  line-height: 1;
-}
-
-.opcion-textos {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1;
-  min-width: 0;
-}
-
-/* Fuente de sistema (como en las butacas): a este tamaño la decorativa
-   en negrita se volvía ilegible. */
-.opcion-titulo,
-.opcion-detalle {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  letter-spacing: 0;
-  -webkit-font-smoothing: antialiased;
-}
-
-.opcion-titulo {
-  color: var(--hk-soul);
-  font-size: 0.94rem;
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-.opcion-detalle {
-  color: var(--hk-soft-text);
-  font-size: 0.85rem;
-  font-weight: 400;
-  line-height: 1.35;
-}
-
-/* Interruptor: el checkbox dibujado a mano. Pisa explícitamente todo lo
-   del estilo global de input (alto de 48px, padding, borde y el brillo
-   de :focus, que eran las "dos sombras raras" al hacer click). */
-.opcion-toggle .switch,
-.opcion-toggle .switch:focus {
-  appearance: none;
-  -webkit-appearance: none;
-  position: relative;
-  flex-shrink: 0;
-  display: block;
-  width: 42px;
-  height: 24px;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  border: none;
-  border-radius: 999px;
-  background: var(--hk-stone);
-  box-shadow: inset 0 0 0 1px rgba(212, 212, 224, 0.2);
-  outline: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.opcion-toggle .switch::before {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s;
-}
-
-.opcion-toggle .switch:checked {
-  background: var(--hk-focus);
-  box-shadow: none;
-}
-
-.opcion-toggle .switch:checked::before {
-  transform: translateX(18px);
-}
-
-/* Aro de foco sólo al navegar con teclado, no al hacer click */
-.opcion-toggle .switch:focus-visible {
-  outline: 2px solid var(--hk-focus);
-  outline-offset: 2px;
-}
-
-:host-context(.tema-claro) .opcion-toggle {
-  background: #ffffff;
-  border-color: rgba(41, 64, 71, 0.18);
-}
-
-:host-context(.tema-claro) .opcion-toggle.activa {
-  background: rgba(22, 141, 168, 0.08);
-  border-color: var(--hk-focus);
-}
-
-:host-context(.tema-claro) .opcion-toggle .switch {
-  background: #c4ced2;
-  box-shadow: none;
-}
-
-:host-context(.tema-claro) .opcion-toggle .switch:checked {
-  background: #0e6f86;
-}
-
-.credito-aplicado {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.91rem;
-  color: var(--hk-focus);
-  margin: 4px 0;
-}
-
-/* ── Combos destacados (candy bar) ── */
-.combos-destacados {
-  margin-bottom: 22px;
-  padding: 14px 16px;
-  background: rgba(232, 168, 50, 0.06);
-  border: 1px dashed rgba(232, 168, 50, 0.35);
-  border-radius: 8px;
-}
-
-.combos-titulo {
-  margin: 0 0 10px;
-  color: var(--hk-geo);
-  font-family: 'Trajan', 'Times New Roman', serif;
-  font-size: 0.91rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.combos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
-  gap: 10px;
-}
-
-.combo-card {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 12px 14px;
-  text-align: left;
-  color: var(--hk-pale);
-  background: rgba(10, 10, 18, 0.5);
-  border: 1px solid rgba(232, 168, 50, 0.3);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-
-.combo-card:hover:not(:disabled) {
-  border-color: var(--hk-geo);
-  background: rgba(232, 168, 50, 0.1);
-}
-
-.combo-card.elegido {
-  background: rgba(232, 168, 50, 0.18);
-  border-color: var(--hk-geo);
-  box-shadow: 0 0 10px rgba(232, 168, 50, 0.2);
-}
-
-.combo-card:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.combo-nombre {
-  font-weight: 600;
-  color: var(--hk-soul);
-}
-
-.combo-precio {
-  color: var(--hk-geo);
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.combo-incluye {
-  color: var(--hk-soft-text);
-  font-size: 0.88rem;
-  line-height: 1.4;
-}
-
-.combos-ayuda {
-  margin: 8px 0 0;
-  color: var(--hk-muted-text);
-  font-size: 0.88rem;
-  font-style: italic;
-}
-/* ── Aviso fijo de candy bar (arriba del resumen, que es sticky) ── */
-.aviso-candy-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 10px 14px;
-  margin-bottom: 4px;
-  background: rgba(232, 168, 50, 0.1);
-  border: 1px dashed rgba(232, 168, 50, 0.4);
-  border-radius: 8px;
-  color: var(--hk-geo);
-  text-decoration: none;
-  text-align: left;
-  font-family: inherit;
-  font-size: 0.88rem;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-
-.aviso-candy-bar:hover {
-  background: rgba(232, 168, 50, 0.18);
-  border-color: var(--hk-geo);
-}
-/* ══════════════════════════════════════════════════════════════════
-   Estética Hollow Knight de la pantalla de compra.
-   Va al final a propósito para pisar lo anterior. Varios botones de acá
-   (combos, pestañas, "Agregar") heredaban del estilo global de
-   button[type='button'] la Trajan en mayúsculas con letter-spacing, por
-   eso se los normaliza explícitamente.
-   ══════════════════════════════════════════════════════════════════ */
-
-/* ──── ◆ ──── (encabezado de la sala y del candy bar) */
-.ornamento {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin: 12px 0 4px;
-  color: var(--hk-focus);
-  font-size: 0.5rem;
-}
-
-.ornamento span {
-  width: 80px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--hk-pale));
-}
-
-.ornamento span:last-child {
-  background: linear-gradient(90deg, var(--hk-pale), transparent);
-}
-
-.sala-heading {
-  margin-bottom: 22px;
-}
-
-/* ── Resumen de compra ── */
-.resumen-compra {
-  gap: 14px;
+  /* Si el resumen es más alto que la pantalla, scrollea adentro: si no,
+     el botón de confirmar quedaba fuera de alcance mientras es sticky. */
+  max-height: calc(var(--alto-vista) - 40px);
+  overflow-y: auto;
+  scrollbar-width: thin;
   padding: 26px 22px 20px;
   background:
     radial-gradient(circle at 50% 0%, rgba(79, 196, 227, 0.12), transparent 50%),
     linear-gradient(160deg, rgba(36, 36, 58, 0.98), rgba(12, 12, 24, 0.99));
-  border-color: rgba(79, 196, 227, 0.25);
+  border: 1px solid rgba(79, 196, 227, 0.25);
+  border-radius: 12px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  box-sizing: border-box;
+  text-align: left;
 }
 
 /* Filo celeste arriba, como el resto de las tarjetas */
@@ -1720,32 +616,500 @@ h1 {
   text-transform: capitalize;
 }
 
-.resumen-butacas-seccion {
-  padding-bottom: 0;
-  border-bottom: none;
+/* ── Butacas elegidas: chips que se sacan con un click ── */
+.resumen-butacas-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .resumen-butacas-titulo {
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
   font-size: 0.8rem;
+  font-weight: bold;
   letter-spacing: 3px;
+  text-transform: uppercase;
 }
 
-/* Botón principal: el mismo celeste sólido que login y admin */
+.resumen-butacas-cantidad {
+  min-width: 22px;
+  padding: 1px 8px;
+  color: var(--hk-focus);
+  font-size: 0.88rem;
+  font-weight: bold;
+  text-align: center;
+  background: rgba(79, 196, 227, 0.16);
+  border: 1px solid rgba(79, 196, 227, 0.4);
+  border-radius: 999px;
+}
+
+.resumen-butacas-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip-butaca,
+.chip-butaca:hover {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  color: var(--hk-soul);
+  background: rgba(79, 196, 227, 0.12);
+  border: 1px solid rgba(79, 196, 227, 0.45);
+  border-radius: 999px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.chip-butaca span {
+  color: var(--hk-soft-text);
+  font-weight: 400;
+}
+
+.chip-butaca:hover {
+  border-color: var(--hk-grimm);
+  background: rgba(192, 57, 43, 0.15);
+}
+
+.chip-butaca:hover span {
+  color: #ff9e9e;
+}
+
+.chip-butaca.vip {
+  background: rgba(232, 168, 50, 0.12);
+  border-color: rgba(232, 168, 50, 0.5);
+}
+
+.aviso-vip {
+  margin: 10px 0 0;
+  padding: 6px 10px;
+  color: var(--hk-geo);
+  font-size: 0.9rem;
+  background: rgba(232, 168, 50, 0.1);
+  border-left: 2px solid var(--hk-geo);
+  border-radius: 3px;
+}
+
+.resumen-butacas-vacio {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: rgba(10, 10, 18, 0.65);
+  border: 1px dashed rgba(79, 196, 227, 0.3);
+  border-radius: 8px;
+}
+
+.vacio-icono-box {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(79, 196, 227, 0.12);
+  border: 1px solid rgba(79, 196, 227, 0.3);
+  border-radius: 8px;
+}
+
+.vacio-knight-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(79, 196, 227, 0.5));
+  animation: knight-flotar 3s ease-in-out infinite;
+}
+
+@keyframes knight-flotar {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.vacio-textos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vacio-titulo {
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.88rem;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.vacio-subtexto {
+  color: var(--hk-soft-text);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+/* ── Candy en el resumen, con − / + para cambiarlo sin bajar ── */
+.candy-resumen {
+  padding: 12px 0;
+  border-top: 1px solid rgba(212, 212, 224, 0.12);
+  border-bottom: 1px solid rgba(212, 212, 224, 0.12);
+}
+
+.candy-resumen-titulo {
+  margin: 0 0 10px;
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.candy-resumen-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+  color: var(--hk-panel-text);
+  font-size: 0.95rem;
+}
+
+.candy-item-nombre {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.candy-item-precio {
+  flex-shrink: 0;
+  color: var(--hk-geo);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* Unidades pagadas con puntos: en celeste, como crédito/puntos */
+.candy-item-canjeado {
+  flex-shrink: 1;
+  color: var(--hk-focus);
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+.candy-mini-stepper {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  background: rgba(10, 10, 18, 0.6);
+  border: 1px solid rgba(232, 168, 50, 0.35);
+  border-radius: 999px;
+}
+
+.candy-mini-stepper button,
+.candy-mini-stepper button:hover {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: var(--hk-geo);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  font-family: inherit;
+  font-size: 1rem;
+  letter-spacing: 0;
+  line-height: 1;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.candy-mini-stepper button:hover {
+  background: rgba(232, 168, 50, 0.18);
+}
+
+.candy-mini-stepper span {
+  min-width: 16px;
+  color: var(--hk-soul);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ── Combo / cupón aplicados ── */
+.combo-aplicado-pill,
+.cupon-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  border-radius: 8px;
+}
+
+.combo-aplicado-pill {
+  color: var(--hk-pale);
+  background: rgba(232, 168, 50, 0.12);
+  border: 1px solid rgba(232, 168, 50, 0.4);
+}
+
+.combo-aplicado-pill strong {
+  color: var(--hk-geo);
+}
+
+.cupon-pill {
+  color: #ffdce3;
+  background: rgba(225, 29, 72, 0.16);
+  border: 1px solid rgba(225, 29, 72, 0.45);
+}
+
+.cupon-icono {
+  flex-shrink: 0;
+  font-size: 1.2rem;
+}
+
+.cupon-texto strong {
+  color: #ffffff;
+}
+
+/* ── Crédito / puntos: tarjeta con interruptor ──
+   El label global del sitio es flex en columna: acá va en fila. */
+.opcion-toggle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 12px;
+  color: var(--hk-pale);
+  text-align: left;
+  background: rgba(79, 196, 227, 0.04);
+  border: 1px solid rgba(212, 212, 224, 0.14);
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.opcion-toggle:hover {
+  border-color: rgba(79, 196, 227, 0.45);
+}
+
+.opcion-toggle.activa {
+  background: rgba(79, 196, 227, 0.1);
+  border-color: var(--hk-focus);
+}
+
+/* Crédito y puntos son excluyentes: el que no se puede usar se apaga */
+.opcion-toggle.deshabilitada {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.opcion-toggle.deshabilitada:hover {
+  border-color: rgba(212, 212, 224, 0.14);
+}
+
+.opcion-icono {
+  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.opcion-textos {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.opcion-titulo,
+.opcion-detalle {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.opcion-titulo {
+  color: var(--hk-soul);
+  font-size: 0.94rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.opcion-detalle {
+  color: var(--hk-soft-text);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+/* Interruptor dibujado a mano. Pisa todo lo del estilo global de input
+   (alto, padding, borde y el brillo de :focus). */
+.opcion-toggle .switch,
+.opcion-toggle .switch:focus {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 42px;
+  height: 24px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  background: var(--hk-stone);
+  border: none;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(212, 212, 224, 0.2);
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.opcion-toggle .switch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s;
+}
+
+.opcion-toggle .switch:checked {
+  background: var(--hk-focus);
+  box-shadow: none;
+}
+
+.opcion-toggle .switch:checked::before {
+  transform: translateX(18px);
+}
+
+.opcion-toggle .switch:focus-visible {
+  outline: 2px solid var(--hk-focus);
+  outline-offset: 2px;
+}
+
+.credito-aplicado {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+  color: var(--hk-focus);
+  font-size: 0.91rem;
+}
+
+/* ── Total ── */
+.total-bloque {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 16px;
+  background: rgba(10, 10, 18, 0.7);
+  border: 1px solid rgba(232, 168, 50, 0.4);
+  border-radius: 8px;
+  box-shadow: inset 0 0 18px rgba(232, 168, 50, 0.1);
+}
+
+.total-label {
+  color: var(--hk-muted-text);
+  font-family: 'Trajan', serif;
+  font-size: 0.9rem;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.total-monto {
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 1.85rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 0 0 16px rgba(232, 168, 50, 0.45);
+}
+
+/* ── Alertas ── */
+.error-box,
+.exito-box {
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  text-align: left;
+  border-radius: 8px;
+}
+
+.error-box {
+  align-items: center;
+  color: #ffd2d9;
+  background: rgba(225, 29, 72, 0.2);
+  border: 1px solid var(--hk-grimm);
+}
+
+.exito-box {
+  align-items: flex-start;
+  color: #e0f7fc;
+  background: rgba(79, 196, 227, 0.16);
+  border: 1px solid var(--hk-focus);
+  box-shadow: 0 0 20px rgba(79, 196, 227, 0.2);
+}
+
+.exito-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.exito-texto strong {
+  color: #ffffff;
+  font-family: 'Trajan', serif;
+  font-size: 0.98rem;
+  letter-spacing: 1px;
+}
+
+.alerta-icono {
+  flex-shrink: 0;
+  font-size: 1.25rem;
+}
+
+/* ── Botón principal ── */
 .btn-comprar,
 .btn-comprar:hover:not(:disabled) {
+  width: 100%;
   height: 52px;
   padding: 0 20px;
-  background: linear-gradient(180deg, #6fd3ee, var(--hk-focus));
   color: #04141a;
+  background: linear-gradient(180deg, #6fd3ee, var(--hk-focus));
   border: none;
   border-radius: 8px;
+  font-family: 'Trajan', serif;
   font-size: 0.9rem;
+  font-weight: bold;
   letter-spacing: 3px;
+  text-transform: uppercase;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
   transition:
     filter 0.2s,
-    transform 0.2s,
-    box-shadow 0.25s;
+    transform 0.2s;
 }
 
 .btn-comprar:hover:not(:disabled) {
@@ -1754,28 +1118,34 @@ h1 {
 }
 
 .btn-comprar:disabled {
-  background: rgba(212, 212, 224, 0.08);
   color: var(--hk-soft-text);
+  background: rgba(212, 212, 224, 0.08);
   border: 1px solid rgba(212, 212, 224, 0.16);
+  box-shadow: none;
+  cursor: not-allowed;
 }
 
-/* Link al candy bar: discreto, debajo del botón */
+/* Atajo al candy bar, discreto debajo del botón */
 .aviso-candy-bar,
 .aviso-candy-bar:hover {
+  display: flex;
+  align-items: center;
   justify-content: center;
   gap: 8px;
+  width: 100%;
   margin: 0;
   padding: 10px 12px;
+  color: var(--hk-pale);
   background: transparent;
   border: 1px dashed rgba(232, 168, 50, 0.35);
   border-radius: 8px;
-  color: var(--hk-pale);
   font-family: 'Perpetua', 'Georgia', serif;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   letter-spacing: 0;
-  text-transform: none;
   text-align: center;
+  text-transform: none;
   box-shadow: none;
+  cursor: pointer;
 }
 
 .aviso-candy-bar strong {
@@ -1802,49 +1172,41 @@ h1 {
   }
 }
 
-/* ── Candy bar ── */
+/* ══════════════ Candy bar ══════════════ */
 .candy-bar {
-  margin-top: 64px;
-  padding-top: 44px;
-  border-top: none;
   position: relative;
-}
-
-/* Filo de luz arriba de la sección en vez de una línea plana */
-.candy-bar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 15%;
-  right: 15%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(79, 196, 227, 0.45), transparent);
+  scroll-margin-top: 16px;
 }
 
 .candy-heading {
-  margin-bottom: 30px;
+  margin-bottom: 26px;
   text-align: center;
 }
 
 .candy-heading h2 {
-  display: block;
-  padding-bottom: 0;
+  margin: 0;
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
   letter-spacing: 4px;
+  text-transform: uppercase;
 }
 
-.candy-heading h2::after {
-  display: none;
+.candy-bajada {
+  margin: 8px 0 0;
+  color: var(--hk-muted-text);
+  font-size: 1rem;
 }
 
-/* Combos: bloque dorado con título entre líneas */
+/* ── Combos: placas doradas ── */
 .combos-destacados {
-  margin-bottom: 30px;
-  padding: 18px 18px 16px;
+  margin-bottom: 28px;
+  padding: 18px;
   background:
     radial-gradient(circle at 50% 0%, rgba(232, 168, 50, 0.1), transparent 55%),
     rgba(20, 16, 10, 0.35);
   border: 1px solid rgba(232, 168, 50, 0.3);
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 .combos-titulo {
@@ -1852,8 +1214,11 @@ h1 {
   align-items: center;
   gap: 12px;
   margin: 0 0 16px;
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
   font-size: 0.86rem;
   letter-spacing: 3px;
+  text-transform: uppercase;
 }
 
 .combos-titulo::before,
@@ -1869,27 +1234,32 @@ h1 {
 }
 
 .combos-grid {
-  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr));
   gap: 14px;
 }
 
 .combo-card,
 .combo-card:hover {
   position: relative;
+  display: flex;
+  flex-direction: column;
   gap: 6px;
-  padding: 16px 16px 14px;
+  padding: 16px;
+  color: var(--hk-pale);
+  text-align: left;
   background: linear-gradient(160deg, rgba(36, 36, 58, 0.95), rgba(18, 18, 30, 0.97));
   border: 1px solid rgba(232, 168, 50, 0.3);
-  border-radius: 10px;
-  color: var(--hk-pale);
+  border-radius: 8px;
   font-family: 'Perpetua', 'Georgia', serif;
   font-size: 0.95rem;
   letter-spacing: 0;
   text-transform: none;
+  box-shadow: none;
+  cursor: pointer;
   transition:
     border-color 0.2s,
-    transform 0.2s,
-    box-shadow 0.25s;
+    transform 0.2s;
 }
 
 .combo-card:hover:not(:disabled) {
@@ -1899,20 +1269,21 @@ h1 {
 
 .combo-card.elegido {
   background:
-    radial-gradient(circle at 100% 0%, rgba(232, 168, 50, 0.2), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(232, 168, 50, 0.22), transparent 55%),
     linear-gradient(160deg, rgba(36, 36, 58, 0.95), rgba(18, 18, 30, 0.97));
   border-color: var(--hk-geo);
+  box-shadow: 0 0 16px rgba(232, 168, 50, 0.2);
 }
 
 .combo-card:disabled {
   opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .combo-nombre {
   color: var(--hk-soul);
   font-family: 'Trajan', serif;
   font-size: 0.9rem;
-  font-weight: normal;
   letter-spacing: 1.5px;
   text-transform: uppercase;
 }
@@ -1932,7 +1303,7 @@ h1 {
   margin-top: 4px;
   padding-top: 8px;
   color: var(--hk-muted-text);
-  font-size: 0.94rem;
+  font-size: 0.95rem;
   border-top: 1px dashed rgba(212, 212, 224, 0.16);
 }
 
@@ -1940,143 +1311,412 @@ h1 {
   line-height: 1.35;
 }
 
-.combo-estado {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 2px 9px;
-  color: #1a1204;
-  background: var(--hk-geo);
-  border-radius: 999px;
-  font-size: 0.82rem;
-  font-weight: 700;
+/* Lo que hace el click, siempre a la vista */
+.combo-accion {
+  margin-top: 8px;
+  padding: 7px 10px;
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.78rem;
+  letter-spacing: 1.5px;
+  text-align: center;
+  text-transform: uppercase;
+  border: 1px solid rgba(232, 168, 50, 0.45);
+  border-radius: 6px;
+}
+
+.combo-card.elegido .combo-accion {
+  color: #2b1c02;
+  background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+  border-color: transparent;
 }
 
 .combos-ayuda {
-  margin-top: 12px;
-  text-align: center;
+  margin: 12px 0 0;
   color: var(--hk-soft-text);
-  font-size: 0.94rem;
+  font-size: 0.95rem;
+  text-align: center;
 }
 
-/* Pestañas de categorías: Trajan chiquita, la activa en celeste */
+/* ── Pestañas de categorías ── */
 .candy-tabs {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 26px;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
 .candy-tab,
 .candy-tab:hover {
-  padding: 8px 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  color: var(--hk-muted-text);
   background: rgba(22, 22, 38, 0.7);
-  border: 1px solid rgba(212, 212, 224, 0.14);
-  border-radius: 999px;
-  color: var(--hk-soft-text);
+  border: 1px solid rgba(212, 212, 224, 0.16);
+  border-radius: 4px;
   font-family: 'Trajan', serif;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   letter-spacing: 2px;
   text-transform: uppercase;
   box-shadow: none;
+  cursor: pointer;
 }
 
 .candy-tab:hover {
-  border-color: rgba(79, 196, 227, 0.4);
   color: var(--hk-pale);
+  border-color: rgba(232, 168, 50, 0.45);
 }
 
 .candy-tab.activa {
-  background: rgba(79, 196, 227, 0.14);
-  border-color: var(--hk-focus);
-  color: var(--hk-focus);
+  color: var(--hk-geo);
+  background: rgba(232, 168, 50, 0.12);
+  border-color: var(--hk-geo);
+  box-shadow: inset 0 -2px 0 var(--hk-geo);
 }
 
-/* Productos */
+.candy-tab-badge {
+  min-width: 20px;
+  padding: 1px 6px;
+  color: #2b1c02;
+  background: var(--hk-geo);
+  border-radius: 999px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
+/* ── Productos ── */
 .candy-grid {
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
 }
 
 .candy-card {
-  padding: 12px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 10px 12px;
+  text-align: center;
   background: linear-gradient(165deg, rgba(36, 36, 58, 0.92), rgba(14, 14, 26, 0.96));
-  border: 1px solid rgba(79, 196, 227, 0.18);
-  border-radius: 12px;
+  border: 1px solid rgba(212, 212, 224, 0.12);
+  border-radius: 8px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 
 .candy-card:hover {
-  border-color: rgba(79, 196, 227, 0.5);
+  border-color: rgba(232, 168, 50, 0.45);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Ya está en el carrito: ribete dorado fijo */
+.candy-card.en-carrito {
+  border-color: var(--hk-geo);
+  box-shadow: 0 0 14px rgba(232, 168, 50, 0.18);
+}
+
+.candy-img-wrap {
+  position: relative;
 }
 
 .candy-img {
-  margin-bottom: 12px;
-  border-radius: 8px;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Precio como placa sobre la foto */
+.candy-precio {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  padding: 3px 9px;
+  color: var(--hk-geo);
+  background: rgba(10, 10, 18, 0.88);
+  border: 1px solid rgba(232, 168, 50, 0.5);
+  border-radius: 4px;
+  font-family: 'Trajan', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.candy-en-carrito {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 30px;
+  padding: 3px 8px;
+  color: #2b1c02;
+  background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+  border-radius: 999px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.candy-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
 }
 
 .candy-nombre {
-  font-size: 1rem;
+  margin: 0;
+  color: var(--hk-soul);
+  font-size: 1.05rem;
+  line-height: 1.3;
 }
 
-.candy-precio {
-  margin: 4px 0 12px;
-  font-size: 1.15rem;
+.candy-puntos {
+  margin: 0;
+  color: var(--hk-focus);
+  font-size: 0.85rem;
 }
 
 .candy-agregar,
 .candy-agregar:hover {
+  width: 100%;
   height: 40px;
   padding: 0 10px;
-  border-radius: 8px;
+  color: var(--hk-geo);
+  background: transparent;
+  border: 1px solid rgba(232, 168, 50, 0.55);
+  border-radius: 6px;
   font-family: 'Trajan', serif;
   font-size: 0.82rem;
   letter-spacing: 2px;
+  text-transform: uppercase;
   box-shadow: none;
+  cursor: pointer;
 }
 
 .candy-agregar:hover {
-  color: #04141a;
-  background: var(--hk-focus);
+  color: #2b1c02;
+  background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+  border-color: transparent;
 }
 
 .candy-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   height: 40px;
-  border-radius: 8px;
+  padding: 0 6px;
+  background: rgba(232, 168, 50, 0.1);
+  border: 1px solid var(--hk-geo);
+  border-radius: 6px;
 }
 
 .candy-stepper button,
 .candy-stepper button:hover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
   padding: 0;
-  font-family: 'Perpetua', serif;
+  color: var(--hk-geo);
+  background: rgba(10, 10, 18, 0.5);
+  border: 1px solid rgba(232, 168, 50, 0.35);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1.15rem;
   letter-spacing: 0;
   box-shadow: none;
+  cursor: pointer;
 }
 
-/* En pantallas angostas el resumen deja de ser sticky; relative para que
-   el filo de ::before siga pegado a su borde. */
+.candy-stepper button:hover {
+  background: rgba(232, 168, 50, 0.22);
+}
+
+.candy-stepper span {
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 1.05rem;
+  font-weight: bold;
+}
+
+.candy-vacio {
+  grid-column: 1 / -1;
+  padding: 32px 0;
+  color: var(--hk-soft-text);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* Barra del carrito: sólo cuando el resumen no está al lado (ver media) */
+.candy-barra-carrito {
+  display: none;
+}
+
+/* ══════════════ Responsive ══════════════ */
 @media (max-width: 900px) {
+  .butacas-container {
+    min-height: auto;
+    margin-top: 12px;
+    padding: 16px 0 24px;
+  }
+
+  .sala-heading {
+    padding: 0 12px;
+  }
+
+  .seleccion-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    width: 100%;
+  }
+
+  .columna-principal {
+    gap: 36px;
+  }
+
+  .sala-marco {
+    margin: 0 8px;
+    padding: 22px 8px 14px;
+  }
+
+  /* La pantalla queda fija al ancho visible (no se va con el scroll) */
+  .pantalla-wrap {
+    position: sticky;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 12px;
+  }
+
+  .sala {
+    padding: 8px 10px 0;
+  }
+
+  .butaca {
+    width: 26px;
+    height: 25px;
+    font-size: 0.62rem;
+    border-radius: 9px 9px 3px 3px;
+    border-bottom-width: 3px;
+  }
+
+  .butaca-icono {
+    font-size: 0.75rem;
+  }
+
+  .butaca-icono-ocupado {
+    width: 15px;
+    height: 15px;
+  }
+
+  .fila {
+    gap: 2px;
+  }
+
+  .pasillo {
+    width: 10px;
+  }
+
+  .fila-letra {
+    width: 18px;
+    font-size: 0.68rem;
+  }
+
+  .candy-bar {
+    padding: 0 12px;
+  }
+
   .resumen-compra {
     position: relative;
+    top: auto;
+    max-height: none;
+    overflow-y: visible;
+    width: calc(100% - 24px);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* El candy ya está arriba del resumen: el atajo no hace falta */
+  .aviso-candy-bar {
+    display: none;
+  }
+
+  .candy-barra-carrito {
+    position: sticky;
+    bottom: 12px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 10px 10px 10px 16px;
+    background: rgba(14, 14, 26, 0.96);
+    border: 1px solid var(--hk-geo);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+  }
+
+  .candy-barra-texto {
+    color: var(--hk-panel-text);
+    font-size: 0.98rem;
+    text-align: left;
+  }
+
+  .candy-barra-texto strong {
+    color: var(--hk-geo);
+  }
+
+  .candy-barra-boton,
+  .candy-barra-boton:hover {
+    flex-shrink: 0;
+    padding: 9px 14px;
+    color: #2b1c02;
+    background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+    border: none;
+    border-radius: 6px;
+    font-family: 'Trajan', serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    box-shadow: none;
   }
 }
 
-/* ── Celulares ── */
 @media (max-width: 620px) {
   .ornamento span {
     width: 44px;
+  }
+
+  .aviso-preventa {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+    text-align: center;
   }
 
   .resumen-compra {
     padding: 22px 16px 16px;
   }
 
-  .candy-bar {
-    margin-top: 40px;
-    padding-top: 32px;
-  }
-
   .combos-destacados {
     padding: 14px 12px;
   }
 
+  /* Pestañas en una sola fila que se desliza */
   .candy-tabs {
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -2090,21 +1730,216 @@ h1 {
   }
 
   .candy-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+  }
+
+  .candy-nombre {
+    font-size: 0.98rem;
+  }
+
+  .candy-agregar,
+  .candy-agregar:hover {
+    letter-spacing: 1px;
   }
 }
 
-/* ── Modo claro ── */
+@media (max-width: 480px) {
+  .butaca {
+    width: 22px;
+    height: 21px;
+    font-size: 0.55rem;
+    border-radius: 7px 7px 2px 2px;
+  }
+
+  .fila {
+    gap: 1px;
+  }
+
+  .pasillo {
+    width: 6px;
+  }
+
+  .fila-letra {
+    width: 14px;
+    font-size: 0.6rem;
+  }
+
+  .pantalla-texto {
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+  }
+
+  .referencias {
+    gap: 6px 14px;
+    font-size: 0.85rem;
+  }
+
+  .total-monto {
+    font-size: 1.6rem;
+  }
+}
+
+/* Sin animaciones para quien las tiene desactivadas en el sistema */
+@media (prefers-reduced-motion: reduce) {
+  .butaca.seleccionada,
+  .vacio-knight-img,
+  .aviso-flecha {
+    animation: none;
+  }
+}
+
+/* ══════════════ Modo claro ══════════════ */
+:host-context(.tema-claro) .aviso-preventa {
+  background: var(--hk-shell);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+:host-context(.tema-claro) .aviso-preventa-sello,
+:host-context(.tema-claro) .candy-tab-badge,
+:host-context(.tema-claro) .candy-en-carrito,
+:host-context(.tema-claro) .combo-card.elegido .combo-accion,
+:host-context(.tema-claro) .candy-agregar:hover,
+:host-context(.tema-claro) .candy-barra-boton {
+  color: #ffffff;
+  background: linear-gradient(180deg, #c98a1f, #a66f1c);
+}
+
+:host-context(.tema-claro) .sala-marco {
+  background:
+    radial-gradient(ellipse 70% 180px at 50% 0%, rgba(22, 141, 168, 0.1), transparent 70%),
+    #ffffff;
+  border-color: rgba(41, 64, 71, 0.16);
+  box-shadow: 0 10px 30px rgba(41, 64, 71, 0.1);
+}
+
+:host-context(.tema-claro) .pantalla {
+  border-top-color: var(--hk-ash);
+  box-shadow: 0 -6px 16px -6px rgba(41, 64, 71, 0.4);
+}
+
+:host-context(.tema-claro) .pantalla::after {
+  background: linear-gradient(180deg, rgba(22, 141, 168, 0.1), transparent);
+}
+
+:host-context(.tema-claro) .pantalla-texto {
+  color: var(--hk-ash);
+  text-shadow: none;
+}
+
+:host-context(.tema-claro) .butaca {
+  --fondo: linear-gradient(180deg, #f4f6f5 0%, #dfe5e8 60%, #c4ced2 100%);
+  --borde: rgba(41, 64, 71, 0.28);
+  color: #294047;
+  box-shadow: none;
+}
+
+:host-context(.tema-claro) .butaca.accesible {
+  --fondo: linear-gradient(180deg, rgba(22, 141, 168, 0.2), rgba(22, 141, 168, 0.08));
+  --borde: rgba(22, 141, 168, 0.6);
+  color: #0e6f86;
+}
+
+:host-context(.tema-claro) .butaca.vip {
+  --fondo: linear-gradient(180deg, #fbefd6 0%, #f0d9a8 100%);
+  --borde: rgba(166, 111, 28, 0.7);
+  color: #7a5212;
+}
+
+:host-context(.tema-claro) .butaca.ocupada,
+:host-context(.tema-claro) .butaca.accesible.ocupada,
+:host-context(.tema-claro) .butaca.vip.ocupada {
+  --fondo: #9aa6ab;
+  --borde: rgba(41, 64, 71, 0.3);
+  color: rgba(41, 64, 71, 0.6);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+:host-context(.tema-claro) .butaca-icono-ocupado {
+  opacity: 0.7;
+  filter: grayscale(1) brightness(0.4);
+}
+
+:host-context(.tema-claro) .butaca.seleccionada,
+:host-context(.tema-claro) .butaca.accesible.seleccionada,
+:host-context(.tema-claro) .butaca.vip.seleccionada,
+:host-context(.tema-claro) .butaca.seleccionada:hover:not(:disabled) {
+  --fondo: radial-gradient(circle at 50% 30%, #3fb4d1 0%, #0e6f86 100%);
+  color: #ffffff;
+  border-color: #ffffff;
+  border-bottom-color: #094f60;
+  animation: none;
+  box-shadow:
+    0 0 0 2px #0e6f86,
+    0 4px 12px rgba(14, 111, 134, 0.45);
+}
+
+:host-context(.tema-claro) .ref-butaca {
+  background: linear-gradient(180deg, #f4f6f5, #c4ced2);
+  border-color: rgba(41, 64, 71, 0.28);
+}
+
+:host-context(.tema-claro) .ref-butaca.seleccionada {
+  background: #0e6f86;
+  box-shadow: 0 0 0 1px #0e6f86;
+}
+
+:host-context(.tema-claro) .ref-butaca.ocupada {
+  background: #9aa6ab;
+}
+
+:host-context(.tema-claro) .ref-butaca.vip {
+  background: #f0d9a8;
+  border-color: rgba(166, 111, 28, 0.7);
+}
+
 :host-context(.tema-claro) .resumen-compra {
   background:
     radial-gradient(circle at 50% 0%, rgba(22, 141, 168, 0.08), transparent 50%),
     #ffffff;
+  border-color: rgba(41, 64, 71, 0.22);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
+}
+
+:host-context(.tema-claro) .resumen-butacas-vacio,
+:host-context(.tema-claro) .total-bloque,
+:host-context(.tema-claro) .candy-mini-stepper,
+:host-context(.tema-claro) .candy-stepper button {
+  background: #f1f5f9;
+}
+
+:host-context(.tema-claro) .total-bloque {
+  border-color: rgba(166, 111, 28, 0.35);
 }
 
 :host-context(.tema-claro) .btn-comprar:not(:disabled) {
-  background: linear-gradient(180deg, #1a8aa5, #0e6f86);
   color: #ffffff;
+  background: linear-gradient(180deg, #1a8aa5, #0e6f86);
+}
+
+:host-context(.tema-claro) .btn-comprar:disabled {
+  color: rgba(41, 64, 71, 0.55);
+  background: rgba(41, 64, 71, 0.1);
+  border-color: rgba(41, 64, 71, 0.25);
+}
+
+:host-context(.tema-claro) .opcion-toggle {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.18);
+}
+
+:host-context(.tema-claro) .opcion-toggle.activa {
+  background: rgba(22, 141, 168, 0.08);
+  border-color: var(--hk-focus);
+}
+
+:host-context(.tema-claro) .opcion-toggle .switch {
+  background: #c4ced2;
+  box-shadow: none;
+}
+
+:host-context(.tema-claro) .opcion-toggle .switch:checked {
+  background: #0e6f86;
 }
 
 :host-context(.tema-claro) .combos-destacados {
@@ -2113,8 +1948,8 @@ h1 {
 }
 
 :host-context(.tema-claro) .combo-card,
-:host-context(.tema-claro) .combo-card.elegido,
-:host-context(.tema-claro) .candy-card {
+:host-context(.tema-claro) .candy-card,
+:host-context(.tema-claro) .candy-tab {
   background: #ffffff;
   box-shadow: 0 6px 18px rgba(41, 64, 71, 0.08);
 }
@@ -2134,12 +1969,18 @@ h1 {
   border-color: rgba(41, 64, 71, 0.16);
 }
 
-:host-context(.tema-claro) .candy-tab {
-  background: #ffffff;
-  border-color: rgba(41, 64, 71, 0.2);
+:host-context(.tema-claro) .candy-card.en-carrito {
+  border-color: var(--hk-geo);
 }
 
 :host-context(.tema-claro) .candy-tab.activa {
-  background: rgba(22, 141, 168, 0.1);
-  border-color: var(--hk-focus);
+  background: rgba(166, 111, 28, 0.1);
+}
+
+:host-context(.tema-claro) .candy-precio {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+:host-context(.tema-claro) .candy-barra-carrito {
+  background: rgba(255, 255, 255, 0.96);
 }

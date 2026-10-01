@@ -247,6 +247,15 @@ export class Butacas implements OnDestroy {
     document.getElementById('candy-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // Atajo de la barra del candy (en celular el resumen queda al final)
+  protected irAResumen(): void {
+    document.getElementById('resumen-compra')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  protected esVip(codigo: string): boolean {
+    return tipoDeButaca(codigo) === 'vip';
+  }
+
   protected toggleButaca(butaca: string): void {
     if (this.estaOcupada(butaca)) return;
 
@@ -278,6 +287,18 @@ export class Butacas implements OnDestroy {
 
   protected cantidadEnCarrito(producto_id: number): number {
     return this.carritoCandy().get(producto_id) ?? 0;
+  }
+
+  // Para el numerito de cada pestaña: cuántas unidades de esa categoría
+  // ya hay en el carrito, así se ve de un vistazo qué se eligió.
+  protected cantidadEnCategoria(categoria_id: number): number {
+    return this.itemsCandyEnCarrito()
+      .filter((item) => item.producto.categoria_id === categoria_id)
+      .reduce((acumulado, item) => acumulado + item.cantidad, 0);
+  }
+
+  protected cantidadTotalCandy(): number {
+    return Array.from(this.carritoCandy().values()).reduce((acumulado, n) => acumulado + n, 0);
   }
 
   protected agregarCandy(producto_id: number): void {
@@ -312,19 +333,14 @@ export class Butacas implements OnDestroy {
       );
   }
 
-  protected butacasSeleccionadasTexto(): string {
-    if (this.seleccionadas().size === 0) return '';
-    return Array.from(this.seleccionadas())
-      .sort((a, b) => {
-        const filaA = a.charAt(0);
-        const filaB = b.charAt(0);
-        if (filaA !== filaB) return filaA.localeCompare(filaB);
-        const numA = parseInt(a.slice(1), 10);
-        const numB = parseInt(b.slice(1), 10);
-        return numA - numB;
-      })
-      .map((b) => `${b.charAt(0)} ${b.slice(1)}`)
-      .join(' · ');
+  // Ordenadas por fila y número (A1, A2, B10…), para los chips del resumen
+  protected butacasSeleccionadasOrdenadas(): string[] {
+    return Array.from(this.seleccionadas()).sort((a, b) => {
+      const filaA = a.charAt(0);
+      const filaB = b.charAt(0);
+      if (filaA !== filaB) return filaA.localeCompare(filaB);
+      return parseInt(a.slice(1), 10) - parseInt(b.slice(1), 10);
+    });
   }
 
   protected candySubtotal(): number {
