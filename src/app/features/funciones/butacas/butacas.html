@@ -49,6 +49,9 @@
               >
             </div>
 
+            <!-- Sólo en celular/tablet: la sala no entra de ancho y se desliza -->
+            <p class="sala-deslizar" aria-hidden="true">← Deslizá para ver toda la sala →</p>
+
             <div class="sala">
               @for (fila of layout(); track fila.letra) {
                 <div

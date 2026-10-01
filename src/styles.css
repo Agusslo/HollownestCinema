@@ -109,6 +109,17 @@ router-outlet {
   display: none !important;
 }
 
+/* Ninguna pantalla puede ser más ancha que la ventana. <main> es un flex,
+   y un hijo de un flex por defecto no se achica por debajo de su contenido
+   más ancho (un carrusel, una grilla…): en el celular la pantalla entera
+   quedaba más ancha que el teléfono y se recortaba a los costados. Va acá
+   y no en app.css porque los estilos de un componente no alcanzan a las
+   pantallas que carga el router. */
+main > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
 body {
   margin: 0;
   font-family: 'Perpetua', 'Georgia', serif;
