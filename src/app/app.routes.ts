@@ -1,6 +1,9 @@
 import { Routes } from '@angular/router';
 import { rolGuard } from './core/guards/rol-guard';
 import { perfilCompletoGuard } from './core/guards/perfil-completo-guard';
+import { perfilPendienteGuard } from './core/guards/perfil-pendiente-guard';
+import { sesionGuard } from './core/guards/sesion-guard';
+import { invitadoGuard } from './core/guards/invitado-guard';
 
 export const routes: Routes = [
   {
@@ -84,33 +87,39 @@ export const routes: Routes = [
   },
   {
     path: 'registro',
+    canActivate: [invitadoGuard],
     loadComponent: () => import('./features/auth/registro/registro').then((m) => m.Registro),
   },
   {
     path: 'login',
+    canActivate: [invitadoGuard],
     loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
   },
   {
     path: 'completar-perfil',
+    canActivate: [perfilPendienteGuard],
     loadComponent: () =>
       import('./features/auth/completar-perfil/completar-perfil').then((m) => m.CompletarPerfil),
   },
-    {
+  {
     path: 'mis-compras',
-    canActivate: [perfilCompletoGuard],
+    canActivate: [sesionGuard, perfilCompletoGuard],
     loadComponent: () =>
       import('./features/perfil/mis-compras/mis-compras').then((m) => m.MisCompras),
   },
   {
     path: 'mis-puntos',
-    canActivate: [perfilCompletoGuard],
+    canActivate: [sesionGuard, perfilCompletoGuard],
     loadComponent: () =>
       import('./features/perfil/mis-puntos/mis-puntos').then((m) => m.MisPuntos),
   },
   {
     path: 'mis-peliculas',
-    canActivate: [perfilCompletoGuard],
+    canActivate: [sesionGuard, perfilCompletoGuard],
     loadComponent: () =>
       import('./features/perfil/mis-peliculas/mis-peliculas').then((m) => m.MisPeliculas),
   },
+  // Cualquier URL que no exista vuelve a la cartelera, en vez de dejar la
+  // pantalla en blanco. Tiene que ir última: las rutas se prueban en orden.
+  { path: '**', redirectTo: '' },
 ];
