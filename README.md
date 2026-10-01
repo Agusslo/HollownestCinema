@@ -10,8 +10,8 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 ## 🛠️ Stack Tecnológico
 
 - **Frontend:** Angular 22 (Standalone Components, Signals, Reactive Forms, control flow `@if` / `@for`)
-- **Backend / DB:** Supabase (Auth con mail y Google, PostgreSQL con Row Level Security, Realtime)
-- **PWA:** `@angular/service-worker` (manifest + service worker)
+- **Backend / DB:** Supabase (Auth con mail y Google, PostgreSQL con Row Level Security, Realtime, Storage, Edge Functions y Database Webhooks)
+- **PWA:** `@angular/service-worker` (manifest, service worker y notificaciones push con `SwPush`)
 - **Deploy:** Vercel
 - **Librerías:** `jspdf` (PDF de entradas y reportes), `qrcode` (QR de entradas y órdenes), `html5-qrcode` (lectura de QR con la cámara), `xlsx` (exportación a Excel), `blobatar` (avatares)
 - **Estilos:** CSS propio con variables (`--hk-*`) para el modo claro y oscuro
@@ -20,13 +20,14 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 
 ## 🏛️ Arquitectura
 
-La aplicación es una SPA en Angular conectada a Supabase, que provee la base de datos PostgreSQL, la autenticación y el control de acceso a los datos mediante Row Level Security (RLS).
+La aplicación es una SPA en Angular conectada a Supabase, que provee la base de datos PostgreSQL, la autenticación, el almacenamiento de archivos y el control de acceso a los datos mediante Row Level Security (RLS). Las notificaciones push se envían desde una Edge Function de Supabase.
 
 ```
 src/app/
 ├── core/
 │   ├── services/     → acceso a datos, un service por entidad (peliculas, funciones, entradas,
-│   │                   ordenes, candy, combos, cupones, fidelizacion, reportes, avisos…)
+│   │                   ordenes, candy, combos, cupones, fidelizacion, reportes, avisos…),
+│   │                   archivos (Storage) y notificaciones (push)
 │   ├── interfaces/   → tipos de cada tabla (IPelicula, IOrden, IAviso…)
 │   ├── guards/       → rolGuard (admin / empleado) y perfilCompletoGuard
 │   └── pipes/        → duracion (125 → "2h 5m")
@@ -39,12 +40,16 @@ src/app/
 │   ├── empleado/       validación de QR en puerta
 │   └── admin/          altas, cupones, fidelización, preventas, log de actividad, reportes
 └── shared/
-    ├── components/   → loading, toast (avisos flotantes), blobatar
+    ├── components/   → poster-card (tarjeta de la cartelera), loading, toast, blobatar
     └── directives/   → appGlowHover (brillo al pasar el mouse)
+
+supabase/functions/avisar-preventa/  → Edge Function que envía las notificaciones push
+scripts/generar-claves-vapid.mjs     → genera las claves VAPID de las notificaciones
 ```
 
 - **Servicios como única puerta a los datos:** los componentes acceden a Supabase siempre a través de un service de `core/services`. Cada consulta vive en un solo lugar y los componentes se ocupan de mostrar datos y responder al usuario.
 - **Estado con signals:** cada componente maneja su estado con `signal()`, y todo lo que se deriva de otros datos (totales, estado de venta de una película, permisos para reseñar) se calcula con `computed()`, que se actualiza solo.
+- **Componentes reutilizables:** la tarjeta de póster (`PosterCard`) recibe la película con `input()` y se usa en la cartelera y en la vista previa del alta de películas. Las reseñas avisan al detalle de la película el nuevo promedio con `output()`.
 - **Roles:** `cliente`, `empleado` y `admin`, guardados en la tabla `perfiles`. Los guards controlan el acceso a cada pantalla y las políticas RLS validan cada operación directamente en la base de datos.
 
 ---
@@ -75,7 +80,17 @@ Igual que en un cine real, **programar funciones y abrir la venta son pasos sepa
 El precio de preventa se configura por película. En cada butaca se cobra el menor entre el precio de preventa y el precio normal del formato, y las butacas VIP suman su recargo.
 
 ### Alertas de "Avisame"
-El botón "Avisame" registra el pedido en la tabla `avisos`. Cuando el usuario ingresa a la app, se buscan sus avisos de películas que ya abrieron la venta, se muestra un **toast** con un enlace directo para comprar y el aviso queda marcado como entregado (`avisado_en`).
+El botón "Avisame" registra el pedido en la tabla `avisos` y el usuario recibe la alerta por dos canales:
+
+- **Notificación push:** al tocar "Avisame", el navegador pide permiso para mostrar notificaciones (`SwPush`) y la suscripción se guarda en `push_subscriptions`. Cuando el admin abre la venta, un **Database Webhook** sobre `peliculas` llama a la **Edge Function** `avisar-preventa`, que busca a los usuarios que pidieron aviso y les envía la notificación firmada con las claves **VAPID**. La notificación llega aunque la app esté cerrada y al tocarla abre la página de la película.
+- **Toast dentro de la app:** cuando el usuario ingresa, se buscan sus avisos de películas que ya abrieron la venta, se muestra un toast con un enlace directo para comprar y el aviso queda marcado como entregado (`avisado_en`).
+
+La clave pública VAPID está en el environment de Angular y la privada se guarda como secreto de Supabase, disponible solo para la Edge Function.
+
+### Pósters con Supabase Storage
+En el alta de películas el admin sube el póster como archivo. La imagen se guarda en el bucket público `posters` de **Supabase Storage** y en la tabla se registra su URL pública. El bucket acepta imágenes JPG, PNG y WEBP de hasta 5 MB, y sus políticas RLS permiten subir y borrar solo al admin.
+
+Mientras completa el formulario, el admin ve una **vista previa en vivo** con el mismo componente de la cartelera: el formulario se convierte en signal con `toSignal` y la imagen se muestra antes de subirla con `URL.createObjectURL`.
 
 ### Manejo de fechas
 Las fechas de calendario (estreno, días del reporte) se manejan como texto `'YYYY-MM-DD'`: se comparan directamente como texto, porque en ese formato el orden alfabético coincide con el cronológico, y se formatean separando el texto. De esta forma cada fecha se muestra igual en cualquier zona horaria.
@@ -96,11 +111,11 @@ Se calculan a partir de las órdenes vigentes (no canceladas), agrupando los dat
 Cada acción del admin y del empleado queda registrada con usuario, fecha y hora: alta de películas, funciones, productos y combos; cambios de precios, cupones y puntos; apertura de preventas y validación de QR.
 
 ### PWA
-La aplicación se puede instalar y su interfaz carga sin conexión gracias al service worker de Angular, que se activa en el build de producción.
+La aplicación se puede instalar y su interfaz carga sin conexión gracias al service worker de Angular, que se activa en el build de producción. El mismo service worker recibe y muestra las notificaciones push.
 
 ---
 
-## 📋 Roadmap
+## 📋 Requerimientos
 
 ### Base
 - [x] Inicialización del proyecto con Angular 22
@@ -116,6 +131,7 @@ La aplicación se puede instalar y su interfaz carga sin conexión gracias al se
 - [x] Reseñas: calificación con estrellas + comentario corto, visibles antes de sacar entradas, con promedio
 
 ### Funciones y salas
+- [x] Alta de películas con póster subido a Supabase Storage y vista previa de cómo se verá en la cartelera
 - [x] ABM de funciones: película, horario, formato (2D/3D/4D/5D), idioma
 - [x] Margen obligatorio de 30 min entre funciones de una misma sala
 - [x] Asignación automática de sala al crear una función
@@ -154,7 +170,7 @@ La aplicación se puede instalar y su interfaz carga sin conexión gracias al se
 
 ### Próximamente y preventa
 - [x] Sección "Próximamente" con películas que se estrenan en las próximas semanas
-- [x] Alerta al usuario cuando se habilita la venta de entradas de una película que estaba en "Próximamente"
+- [x] Alerta al usuario cuando se habilita la venta de entradas de una película que estaba en "Próximamente", con notificación push y aviso dentro de la app
 - [x] Preventa: entradas disponibles 7 días antes del estreno a un precio especial, configurable película por película, que vuelve al precio normal desde la fecha de estreno
 
 ### Perfil del usuario
@@ -184,4 +200,17 @@ La aplicación se puede instalar y su interfaz carga sin conexión gracias al se
    ng build
    ```
 
-La configuración de Supabase (URL y clave publicable) está en `src/environments/environment.ts`.
+La configuración de Supabase (URL y clave publicable) y la clave pública VAPID están en `src/environments/environment.ts`.
+
+### Notificaciones push
+1. Generar las claves VAPID (una sola vez):
+   ```bash
+   node scripts/generar-claves-vapid.mjs
+   ```
+2. Copiar la clave pública en `VAPID_PUBLIC_KEY` de los environments.
+3. En Supabase:
+   - Guardar el JSON con las dos claves como secreto `VAPID_KEYS` (Edge Functions → Secrets).
+   - Publicar la Edge Function `supabase/functions/avisar-preventa/index.ts`.
+   - Crear un Database Webhook sobre `peliculas` (evento Update) que llame a esa función.
+
+Las notificaciones se prueban en el build de producción (por ejemplo, en el deploy de Vercel), donde el service worker está activo.
