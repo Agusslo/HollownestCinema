@@ -22,8 +22,14 @@
 }
 
 
-
-
+/* Sin personaje arriba: en el celular no hace falta tanto aire */
+@media (max-width: 620px) {
+  .auth-page {
+    min-height: 0;
+    padding-top: 12px;
+    margin-bottom: 40px;
+  }
+}
 
 form {
   width: 100%;

@@ -4,7 +4,35 @@
     <span class="logo-text">Hollownest Cinema</span>
   </a>
 
-  <nav class="nav-links">
+  <!-- Sólo se ve en el celular: abre y cierra el menú de navegación -->
+  <button
+    type="button"
+    class="nav-hamburguesa"
+    aria-controls="menu-principal"
+    [attr.aria-expanded]="menuMovilAbierto()"
+    [attr.aria-label]="menuMovilAbierto() ? 'Cerrar menú' : 'Abrir menú'"
+    (click)="menuMovilAbierto.set(!menuMovilAbierto())"
+  >
+    <svg class="hamburguesa-svg" viewBox="0 0 24 24" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        @if (menuMovilAbierto()) {
+          <line x1="6" y1="6" x2="18" y2="18" />
+          <line x1="18" y1="6" x2="6" y2="18" />
+        } @else {
+          <line x1="4" y1="7" x2="20" y2="7" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="17" x2="20" y2="17" />
+        }
+      </g>
+    </svg>
+  </button>
+
+  <nav
+    id="menu-principal"
+    class="nav-links"
+    [class.abierto]="menuMovilAbierto()"
+    (click)="cerrarMenuMovilSiEsLink($event)"
+  >
     <div class="nav-principal">
       <a
         class="nav-link"

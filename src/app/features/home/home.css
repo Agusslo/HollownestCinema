@@ -585,18 +585,44 @@
 }
 
 /* ── Responsive Carrusel ── */
-@media (max-width: 860px) {
+@media (max-width: 960px) {
+  /* Los slides dejan de estar superpuestos con position: absolute y pasan
+     a compartir una misma celda de grilla: así el carrusel mide lo que el
+     slide más alto y ningún texto queda cortado en pantallas angostas. */
   .carousel-container {
-    height: 400px;
+    display: grid;
+    height: auto;
+    min-height: 340px;
+  }
+
+  .carousel-slide {
+    position: relative;
+    inset: auto;
+    grid-area: 1 / 1;
+    min-width: 0;
   }
 
   .fiesta-layout,
   .pelicula-layout,
   .candy-layout {
     flex-direction: column;
+    justify-content: center;
     text-align: center;
     align-items: center;
-    padding: 24px 16px 48px;
+    padding: 28px 16px 56px;
+  }
+
+  .fiesta-info {
+    gap: 16px;
+  }
+
+  .pelicula-hero-meta {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .candy-hero-visual {
+    display: none;
   }
 
   .fiesta-info,
@@ -615,12 +641,12 @@
   }
 
   .fiesta-titulo {
-    font-size: 2rem;
+    font-size: clamp(2rem, 6vw, 3rem);
   }
 
   .btn-nav-flecha {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
   }
 
   .void-ghost {
@@ -635,14 +661,23 @@
   }
 
   .carousel-container {
-    height: 300px;
+    min-height: 300px;
   }
 
   .fiesta-layout,
   .pelicula-layout,
   .candy-layout {
-    padding: 20px 14px 44px;
+    padding: 22px 14px 54px;
     gap: 12px;
+  }
+
+  .candy-hero-desc {
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+  }
+
+  .tag-meta {
+    font-size: 0.72rem;
   }
 
   .fiesta-titulo {
@@ -1436,9 +1471,24 @@
     width: 50px;
   }
 
+  .buscador-ornamento span {
+    width: 50px;
+  }
+
+  .sherma-secret {
+    margin-top: 32px;
+  }
+
   .destacada-card {
     padding: 6px 6px 0;
     border-radius: 10px;
+  }
+
+  /* Son 3: con dos columnas la tercera quedaba sola a la izquierda */
+  .destacada-card:nth-child(3):last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 6px);
   }
 
   .destacada-nombre {

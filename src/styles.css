@@ -76,6 +76,24 @@
 html {
   scroll-behavior: smooth;
   --alto-vista: 100vh;
+  /* Que el celular no agrande el texto por su cuenta al girar la pantalla */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* En el celular 100vh incluye la barra del navegador y sobra alto: dvh es
+   el alto realmente visible. Los navegadores que no lo conocen se quedan
+   con el 100vh de arriba. */
+@supports (height: 100dvh) {
+  html {
+    --alto-vista: 100dvh;
+  }
+}
+
+/* Ninguna imagen o video puede ser más ancho que su contenedor */
+img,
+video {
+  max-width: 100%;
 }
 
 /* En escritorio se ve como un 90% de zoom del navegador */
@@ -928,4 +946,23 @@ form {
 .tema-claro .admin-form .submit-button {
   background: linear-gradient(180deg, #1a8aa5, #0e6f86);
   color: #ffffff;
+}
+
+/* ── Celular: formularios sueltos y pantallas de carga más compactos ──
+   Va al final para pisar las reglas base de más arriba. */
+@media (max-width: 520px) {
+  form {
+    margin: 20px auto;
+    padding: 22px 16px;
+  }
+
+  .pantalla-loading,
+  .estado-carga {
+    min-height: 260px;
+    padding: 24px 12px;
+  }
+
+  .auth-ornamento span {
+    width: 44px;
+  }
 }

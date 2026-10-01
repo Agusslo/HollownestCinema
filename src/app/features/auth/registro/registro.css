@@ -45,12 +45,23 @@
   }
 }
 
+/* ── Celular: el personaje se achica y queda centrado arriba de la tarjeta
+   (a la izquierda se salía de la pantalla) ── */
+@media (max-width: 620px) {
+  .auth-page {
+    min-height: 0;
+    padding-top: 110px;
+    margin-bottom: 40px;
+  }
 
-
-
-
-
-
+  .hornet-decor {
+    top: -106px;
+    right: 0;
+    left: 0;
+    height: 130px;
+    margin: 0 auto;
+  }
+}
 
 form {
   width: 100%;

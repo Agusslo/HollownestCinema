@@ -514,6 +514,35 @@ h2 {
 
   .pelicula-info {
     max-width: none;
+    text-align: center;
+  }
+
+  h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .pelicula-meta {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 10px;
+  }
+
+  .pelicula-generos {
+    justify-content: center;
+  }
+
+  .seccion-ornamento span,
+  .aviso-ornamento span {
+    width: 44px;
+  }
+
+  .aviso-venta {
+    padding: 20px 16px 22px;
+  }
+
+  .funcion-fecha {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
   }
 
   .funciones-section {

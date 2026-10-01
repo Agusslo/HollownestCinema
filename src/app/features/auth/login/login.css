@@ -44,12 +44,23 @@
   }
 }
 
+/* ── Celular: Hornet se achica y queda centrada arriba de la tarjeta
+   (a la derecha se salía de la pantalla) ── */
+@media (max-width: 620px) {
+  .auth-page {
+    min-height: 0;
+    padding-top: 100px;
+    margin-bottom: 40px;
+  }
 
-
-
-
-
-
+  .hornet-decor {
+    top: -96px;
+    right: 0;
+    left: 0;
+    height: 120px;
+    margin: 0 auto;
+  }
+}
 
 form {
   width: 100%;

@@ -392,9 +392,54 @@ main > *:not(router-outlet) {
   }
 }
 
-@media (max-width: 620px) {
+/* Botón hamburguesa: en escritorio no existe */
+.nav-hamburguesa,
+.nav-hamburguesa:hover {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  background: rgba(22, 22, 38, 0.6);
+  border: 1px solid rgba(212, 212, 224, 0.18);
+  border-radius: 8px;
+  color: var(--hk-pale);
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.hamburguesa-svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+.nav-hamburguesa:focus-visible {
+  outline: 2px solid var(--hk-focus);
+  outline-offset: 2px;
+}
+
+:host-context(.tema-claro) .nav-hamburguesa {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.2);
+}
+
+/* ── Celular y tablet chica: logo + hamburguesa, y el menú se despliega
+   debajo en una columna ── */
+@media (max-width: 760px) {
   .nav-header {
-    padding: 14px 12px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0 12px;
+    min-height: 62px;
+    padding: 10px 14px;
+  }
+
+  .logo {
+    gap: 10px;
+    min-width: 0;
   }
 
   .logo-icon {
@@ -403,29 +448,41 @@ main > *:not(router-outlet) {
 
   .logo-text {
     font-size: 1.05rem;
+    letter-spacing: 2px;
   }
 
-  /* Secciones en una fila y las acciones de cuenta debajo */
+  .nav-hamburguesa,
+  .nav-hamburguesa:hover {
+    display: inline-flex;
+  }
+
   .nav-links {
+    display: none;
     flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
     width: 100%;
-    gap: 8px;
+    gap: 10px;
+    padding: 12px 0 6px;
+  }
+
+  .nav-links.abierto {
+    display: flex;
+    animation: menu-aparecer 0.18s ease-out;
   }
 
   .nav-principal {
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .nav-link {
-    padding: 0 12px;
-    font-size: 0.82rem;
-    letter-spacing: 1.5px;
+    height: 44px;
+    padding: 0 18px;
   }
 
   .nav-divisor {
-    width: 60%;
+    width: 100%;
     height: 1px;
     margin: 0;
     background: linear-gradient(90deg, transparent, rgba(212, 212, 224, 0.25), transparent);
@@ -434,6 +491,43 @@ main > *:not(router-outlet) {
   .nav-acciones {
     justify-content: center;
     flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* El menú de Panel deja de flotar: se abre en el lugar, a todo el ancho */
+  .admin-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .admin-menu-panel {
+    position: static;
+    align-self: stretch;
+    min-width: 0;
+    margin: 6px 0 8px;
+    box-shadow: none;
+  }
+
+  .admin-menu-panel::before {
+    display: none;
+  }
+
+  .admin-menu-panel a {
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+}
+
+@media (max-width: 380px) {
+  .logo-icon {
+    height: 32px;
+  }
+
+  .logo-text {
+    font-size: 0.88rem;
+    letter-spacing: 1px;
   }
 }
 

@@ -17,7 +17,7 @@ import { Toasts } from './core/services/toasts';
   styleUrl: './app.css',
   host: {
     '(document:click)': 'cerrarMenuSiClickAfuera($event)',
-    '(document:keydown.escape)': 'menuAdminAbierto.set(false)',
+    '(document:keydown.escape)': 'cerrarMenus()',
   },
 })
 export class App {
@@ -36,6 +36,8 @@ export class App {
   protected cargandoAuth = signal(true);
   protected temaClaro = signal(false);
   protected menuAdminAbierto = signal(false);
+  // Menú hamburguesa: sólo tiene efecto en el celular (ver app.css)
+  protected menuMovilAbierto = signal(false);
 
   constructor() {
     this.temaClaro.set(localStorage.getItem('tema-hk') === 'claro');
@@ -58,6 +60,17 @@ export class App {
     if (!this.menuAdminAbierto()) return;
     const dentroDelMenu = (evento.target as HTMLElement).closest('.admin-menu');
     if (!dentroDelMenu) this.menuAdminAbierto.set(false);
+  }
+
+  // En el celular, al tocar cualquier link del menú se navega y el menú se
+  // cierra solo. Los botones (Panel, tema) no lo cierran.
+  protected cerrarMenuMovilSiEsLink(evento: MouseEvent): void {
+    if ((evento.target as HTMLElement).closest('a')) this.menuMovilAbierto.set(false);
+  }
+
+  protected cerrarMenus(): void {
+    this.menuAdminAbierto.set(false);
+    this.menuMovilAbierto.set(false);
   }
 
   private async cargarUsuario() {
@@ -123,6 +136,7 @@ export class App {
   protected async cerrarSesion() {
     await this.authService.logout();
     this.usuario.set(null);
+    this.cerrarMenus();
   }
 
   protected alternarTema() {
