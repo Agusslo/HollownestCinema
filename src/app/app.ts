@@ -6,6 +6,9 @@ import { Supabase } from './core/services/supabase';
 import { BlobatarComponent } from './shared/components/blobatar/blobatar';
 import { GlowHover } from './shared/directives/glow-hover';
 import { ToastComponent } from './shared/components/toast/toast';
+import { Avisos } from './core/services/avisos';
+import { Peliculas } from './core/services/peliculas';
+import { Toasts } from './core/services/toasts';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +23,14 @@ import { ToastComponent } from './shared/components/toast/toast';
 export class App {
   private authService = inject(Auth);
   private supabaseService = inject(Supabase);
+  private avisosService = inject(Avisos);
+  private peliculasService = inject(Peliculas);
+  private toasts = inject(Toasts);
+
+  // Para qué usuario ya se revisaron los avisos en esta visita. cargarUsuario()
+  // corre dos veces al abrir la app (en el constructor y en
+  // onAuthStateChange): sin esto, los toasts saldrían repetidos.
+  private avisosRevisadosPara: string | null = null;
 
   protected usuario = signal<IPerfil | null>(null);
   protected cargandoAuth = signal(true);
@@ -51,11 +62,61 @@ export class App {
 
   private async cargarUsuario() {
     try {
-      this.usuario.set(await this.authService.usuarioActual());
+      const usuario = await this.authService.usuarioActual();
+      this.usuario.set(usuario);
+      // Sin await: los avisos se buscan "en segundo plano", así el header
+      // no espera a que terminen para mostrarse.
+      if (usuario) this.mostrarAvisosPendientes(usuario);
     } catch {
       this.usuario.set(null);
     } finally {
       this.cargandoAuth.set(false);
+    }
+  }
+
+  // ── Alerta de Próximamente ──
+  // Al entrar a la app, si el usuario había tocado "Avisame" en una película
+  // que ya abrió la venta, le mostramos un toast con un enlace para comprar,
+  // y marcamos el aviso como mostrado para no repetirlo. Funciona aunque no
+  // haya aceptado las notificaciones del navegador.
+  private async mostrarAvisosPendientes(usuario: IPerfil) {
+    if (this.avisosRevisadosPara === usuario.id) return;
+    this.avisosRevisadosPara = usuario.id;
+
+    try {
+      const pendientes = await this.avisosService.obtenerPendientes(usuario.id);
+
+      // Sólo los de películas que ya se pueden comprar: en preventa (el
+      // admin abrió la venta) o ya estrenadas. Los de películas que siguen
+      // en Próximamente quedan pendientes para otra visita.
+      const listos = pendientes.filter(
+        (aviso) => this.peliculasService.estadoVenta(aviso.peliculas) !== 'proximamente',
+      );
+
+      for (const aviso of listos) {
+        const pelicula = aviso.peliculas;
+        const enPreventa = this.peliculasService.estadoVenta(pelicula) === 'preventa';
+        this.toasts.exito(
+          '¡Ya podés comprar!',
+          enPreventa
+            ? `Abrió la preventa de ${pelicula.nombre}.`
+            : `${pelicula.nombre} ya está en cartelera.`,
+          {
+            // duracion: 0 → no se va solo: es un aviso que el usuario pidió,
+            // no queremos que se lo pierda si mira para otro lado.
+            duracion: 0,
+            enlace: {
+              texto: 'Ir a comprar',
+              ruta: `/peliculas/${this.peliculasService.generarSlug(pelicula.nombre)}`,
+            },
+          },
+        );
+      }
+
+      await this.avisosService.marcarAvisados(listos.map((aviso) => aviso.id));
+    } catch {
+      // Si algo falla, no se marcó nada: se vuelve a intentar la próxima vez.
+      this.avisosRevisadosPara = null;
     }
   }
 

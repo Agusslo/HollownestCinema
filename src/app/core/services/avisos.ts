@@ -1,5 +1,6 @@
 import { Service, inject } from '@angular/core';
 import { Supabase } from './supabase';
+import { IAvisoConPelicula } from '../interfaces/aviso';
 
 // El botón "Avisame" de Próximamente. Todas las consultas filtran por
 // usuario_id, y además las policies de RLS de la tabla `avisos` impiden
@@ -30,6 +31,31 @@ export class Avisos {
     // Resenias.crear): el aviso ya existía — por ejemplo, un doble click
     // rápido. No es un error para el usuario: el aviso quedó pedido igual.
     if (error && error.code !== '23505') throw error;
+  }
+
+  // Los avisos de este usuario que todavía no se le mostraron (avisado_en
+  // en null), con la película embebida. Después, quien llama decide cuáles
+  // ya corresponde mostrar (los de películas que ya abrieron la venta).
+  async obtenerPendientes(usuario_id: string): Promise<IAvisoConPelicula[]> {
+    const { data, error } = await this.supabase.Supabase.from('avisos')
+      .select('*, peliculas(*)')
+      .eq('usuario_id', usuario_id)
+      .is('avisado_en', null);
+
+    if (error) throw error;
+    return data as unknown as IAvisoConPelicula[];
+  }
+
+  // Marca como "ya mostrados" varios avisos de una (.in = "el id está en
+  // esta lista"), para que no se repitan la próxima vez que entre a la app.
+  async marcarAvisados(ids: number[]): Promise<void> {
+    if (ids.length === 0) return;
+
+    const { error } = await this.supabase.Supabase.from('avisos')
+      .update({ avisado_en: new Date().toISOString() })
+      .in('id', ids);
+
+    if (error) throw error;
   }
 
   // Tocar el botón de nuevo cancela el aviso.
