@@ -1,4 +1,31 @@
-    <div class="proximamente-grid">
+<section class="proximamente" aria-label="Próximos estrenos">
+    <!-- Flechas del carrusel: sólo si las películas no entran en una página -->
+    @if (totalPaginas() > 1) {
+    <div class="carrusel-flechas">
+        <button
+        type="button"
+        class="carrusel-flecha"
+        aria-label="Estrenos anteriores"
+        [disabled]="paginaActual() === 0"
+        (click)="irAPagina(paginaActual() - 1)"
+        >
+        ‹
+        </button>
+        <button
+        type="button"
+        class="carrusel-flecha"
+        aria-label="Estrenos siguientes"
+        [disabled]="paginaActual() === totalPaginas() - 1"
+        (click)="irAPagina(paginaActual() + 1)"
+        >
+        ›
+        </button>
+    </div>
+    }
+
+    <!-- La pista se desplaza con el scroll nativo del navegador (en el celular
+         se arrastra con el dedo); las flechas y los indicadores sólo la mueven. -->
+    <div #pista class="proximamente-pista" (scroll)="medir()">
     @for (pelicula of peliculas(); track pelicula.id) {
         <!-- <article> y no <a> como en la cartelera: adentro hay un <button>
             ("Avisame"), y un botón no puede ir dentro de un link. El link a la
@@ -59,3 +86,20 @@
         </article>
     }
     </div>
+
+    <!-- Indicadores: una rayita por página, la actual en dorado -->
+    @if (totalPaginas() > 1) {
+    <div class="carrusel-indicadores">
+        @for (pagina of paginas(); track pagina) {
+        <button
+            type="button"
+            class="carrusel-indicador"
+            [class.activo]="pagina === paginaActual()"
+            [attr.aria-label]="'Ir a la página ' + (pagina + 1)"
+            [attr.aria-current]="pagina === paginaActual() ? 'true' : null"
+            (click)="irAPagina(pagina)"
+        ></button>
+        }
+    </div>
+    }
+</section>

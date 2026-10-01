@@ -1,4 +1,13 @@
-import { Component, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { IPeliculaConGeneros } from '../../../core/interfaces/pelicula';
@@ -40,8 +49,59 @@ export class Proximamente {
   // no manda dos pedidos.
   protected procesando = signal<Set<number>>(new Set());
 
+  // ── Carrusel ──
+  // La pista es el contenedor que se desplaza de costado.
+  private pista = viewChild<ElementRef<HTMLElement>>('pista');
+  protected paginaActual = signal(0);
+  protected totalPaginas = signal(1);
+  // [0, 1, 2…] para dibujar un indicador por página con @for.
+  protected paginas = computed(() => Array.from({ length: this.totalPaginas() }, (_, i) => i));
+  // Cuántos píxeles hay que desplazar la pista para pasar de página.
+  private paso = 0;
+
   constructor() {
     this.cargarAvisos();
+
+    // ResizeObserver avisa cuando cambia el ancho de la pista (al girar el
+    // celular o achicar la ventana) y también apenas se la empieza a
+    // observar. Leemos peliculas() para que el effect se repita si cambia
+    // la lista, y así se vuelvan a contar las páginas.
+    effect((onCleanup) => {
+      const pista = this.pista()?.nativeElement;
+      this.peliculas();
+      if (!pista) return;
+
+      const observador = new ResizeObserver(() => this.medir());
+      observador.observe(pista);
+      onCleanup(() => observador.disconnect());
+    });
+  }
+
+  // Calcula cuántas páginas hay y en cuál estamos, mirando el tamaño real
+  // de las tarjetas: así el número de tarjetas por página lo decide el CSS
+  // (5 en escritorio, 2 en celular) y acá no hay que repetirlo.
+  protected medir(): void {
+    const pista = this.pista()?.nativeElement;
+    const tarjeta = pista?.firstElementChild as HTMLElement | null;
+    if (!pista || !tarjeta) return;
+
+    const separacion = parseFloat(getComputedStyle(pista).columnGap) || 0;
+    const anchoTarjeta = tarjeta.offsetWidth + separacion;
+    const porPagina = Math.max(1, Math.round((pista.clientWidth + separacion) / anchoTarjeta));
+    const total = Math.ceil(this.peliculas().length / porPagina);
+
+    this.paso = porPagina * anchoTarjeta;
+    this.totalPaginas.set(total);
+
+    // La última página puede no estar completa, así que el scroll no llega
+    // a un múltiplo exacto del paso: si tocó el final, es la última.
+    const llegoAlFinal = pista.scrollLeft >= pista.scrollWidth - pista.clientWidth - 2;
+    const pagina = llegoAlFinal ? total - 1 : Math.round(pista.scrollLeft / this.paso);
+    this.paginaActual.set(Math.min(total - 1, Math.max(0, pagina)));
+  }
+
+  protected irAPagina(pagina: number): void {
+    this.pista()?.nativeElement.scrollTo({ left: pagina * this.paso, behavior: 'smooth' });
   }
 
   private async cargarAvisos() {

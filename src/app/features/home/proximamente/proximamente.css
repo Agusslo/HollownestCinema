@@ -3,15 +3,123 @@
    todavía no se pueden ver, así que no compiten con la cartelera. Los
    estilos de la Home no llegan acá (cada componente tiene su CSS
    encapsulado), por eso se repiten las ideas en vez de reusar las clases. */
-.proximamente-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 28px;
+.proximamente {
+  /* Cuántas tarjetas entran por página y cuánto se separan. Los media
+     queries de abajo sólo cambian estos dos valores. */
+  --por-pagina: 5;
+  --separacion: 24px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+/* ── Carrusel: pista que se desplaza de costado ── */
+.proximamente-pista {
+  display: flex;
+  gap: var(--separacion);
+  /* "safe center": si son pocas quedan centradas; si desbordan, arrancan
+     desde la izquierda en vez de quedar cortadas. */
+  justify-content: safe center;
+  overflow-x: auto;
+  /* Aire arriba y abajo para que no se recorten la sombra ni el salto de
+     la tarjeta al pasar el mouse (overflow-x también recorta en vertical). */
+  padding: 10px 0 30px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.proximamente-pista::-webkit-scrollbar {
+  display: none;
+}
+
+.carrusel-flechas {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.carrusel-flecha {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 34px;
+  padding: 0 0 3px;
+  color: var(--hk-geo);
+  background: linear-gradient(165deg, rgba(36, 36, 58, 0.92), rgba(14, 14, 26, 0.96));
+  border: 1px solid rgba(232, 168, 50, 0.45);
+  border-radius: 8px;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    opacity 0.2s;
+}
+
+.carrusel-flecha:hover:not(:disabled) {
+  background: rgba(232, 168, 50, 0.14);
+  border-color: var(--hk-geo);
+  box-shadow: 0 0 14px rgba(232, 168, 50, 0.3);
+}
+
+.carrusel-flecha:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.carrusel-indicadores {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* El botón es más alto que la rayita que se ve (que va en ::before), así
+   es más fácil de tocar con el dedo. */
+.carrusel-indicador {
+  width: 34px;
+  height: 18px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.carrusel-indicador::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: rgba(232, 168, 50, 0.25);
+  border-radius: 999px;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
+}
+
+.carrusel-indicador:hover::before {
+  background: rgba(232, 168, 50, 0.55);
+}
+
+.carrusel-indicador.activo::before {
+  background: var(--hk-geo);
+  box-shadow: 0 0 8px rgba(232, 168, 50, 0.6);
+}
+
+.carrusel-flecha:focus-visible,
+.carrusel-indicador:focus-visible {
+  outline: 2px solid var(--hk-focus);
+  outline-offset: 2px;
+}
+
 .proxima-card {
+  /* Ancho exacto para que entren --por-pagina tarjetas, descontando los
+     espacios entre ellas. */
+  flex: 0 0
+    calc((100% - (var(--por-pagina) - 1) * var(--separacion)) / var(--por-pagina));
+  min-width: 0;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   padding: 10px;
@@ -173,11 +281,24 @@
   box-shadow: 0 0 14px rgba(232, 168, 50, 0.35);
 }
 
-/* ── Celular: dos columnas con pósters más bajos ── */
+/* ── Pantallas medianas: menos tarjetas por página ── */
+@media (max-width: 1100px) {
+  .proximamente {
+    --por-pagina: 4;
+  }
+}
+
+@media (max-width: 860px) {
+  .proximamente {
+    --por-pagina: 3;
+  }
+}
+
+/* ── Celular: dos por página con pósters más bajos ── */
 @media (max-width: 560px) {
-  .proximamente-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+  .proximamente {
+    --por-pagina: 2;
+    --separacion: 14px;
   }
 
   .proxima-card {
@@ -205,6 +326,11 @@
   background: #ffffff;
   border-color: rgba(166, 111, 28, 0.35);
   box-shadow: 0 10px 26px rgba(41, 64, 71, 0.12);
+}
+
+:host-context(.tema-claro) .carrusel-flecha {
+  background: #ffffff;
+  border-color: rgba(166, 111, 28, 0.45);
 }
 
 :host-context(.tema-claro) .proxima-estreno {
