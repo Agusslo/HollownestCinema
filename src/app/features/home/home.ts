@@ -7,11 +7,12 @@ import IGenero from '../../core/interfaces/genero';
 import { DuracionPipe } from '../../core/pipes/duracion-pipe';
 import { LoadingComponent } from '../../shared/components/loading/loading';
 import { GlowHover } from '../../shared/directives/glow-hover';
+import { PosterCard } from '../../shared/components/poster-card/poster-card';
 import { Proximamente } from './proximamente/proximamente';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, DuracionPipe, LoadingComponent, GlowHover, Proximamente],
+  imports: [RouterLink, DuracionPipe, LoadingComponent, GlowHover, Proximamente, PosterCard],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

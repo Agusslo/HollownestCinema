@@ -216,26 +216,10 @@
     @if (resultados.length > 0) {
       <div class="cartelera">
         @for (pelicula of resultados; track pelicula.id) {
-          <a
-            class="poster-card"
-            appGlowHover
-            [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]"
-          >
-            <div class="poster-frame">
-              <span class="poster-duracion">⏱ {{ pelicula.duracion_minutos | duracion }}</span>
-              <img
-                class="poster-img"
-                [src]="pelicula.imagen_url"
-                [alt]="pelicula.nombre"
-                onerror="
-                  this.src =
-                    'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
-                "
-              />
-              <div class="poster-glow"></div>
-            </div>
-            <p class="poster-nombre">{{ pelicula.nombre }}</p>
-          </a>
+          <app-poster-card
+            [pelicula]="pelicula"
+            [enlace]="['/peliculas', generarSlug(pelicula.nombre)]"
+          />
         }
       </div>
     } @else {
@@ -291,26 +275,10 @@
       </header>
       <div class="cartelera">
         @for (pelicula of peliculas(); track pelicula.id) {
-          <a
-            class="poster-card"
-            appGlowHover
-            [routerLink]="['/peliculas', generarSlug(pelicula.nombre)]"
-          >
-            <div class="poster-frame">
-              <span class="poster-duracion">⏱ {{ pelicula.duracion_minutos | duracion }}</span>
-              <img
-                class="poster-img"
-                [src]="pelicula.imagen_url"
-                [alt]="pelicula.nombre"
-                onerror="
-                  this.src =
-                    'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
-                "
-              />
-              <div class="poster-glow"></div>
-            </div>
-            <p class="poster-nombre">{{ pelicula.nombre }}</p>
-          </a>
+          <app-poster-card
+            [pelicula]="pelicula"
+            [enlace]="['/peliculas', generarSlug(pelicula.nombre)]"
+          />
         }
       </div>
     }

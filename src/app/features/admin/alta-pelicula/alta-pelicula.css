@@ -1,7 +1,104 @@
 /* La tarjeta, el encabezado, los campos y el botón comparten el estilo
    .admin-form de styles.css; acá queda sólo lo propio de esta pantalla. */
 .pelicula-form {
-  width: min(100%, 680px);
+  width: min(100%, 1000px);
+}
+
+/* ── Formulario + vista previa ──
+   Con grid-template-areas cada bloque tiene un nombre: en la compu la vista
+   previa ocupa la columna derecha entera (las dos filas) y en el celular
+   (más abajo) se apilan en el orden datos → vista previa → resto. */
+.pelicula-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 264px;
+  grid-template-areas:
+    'datos previa'
+    'resto previa';
+  column-gap: 32px;
+}
+
+.pelicula-datos {
+  grid-area: datos;
+}
+
+.pelicula-resto {
+  grid-area: resto;
+}
+
+/* sticky: al bajar por el formulario, la vista previa queda a la vista
+   (align-self: start hace que mida lo que su contenido, si no se estiraría
+   al alto de toda la columna y no tendría lugar para "acompañar"). */
+.vista-previa {
+  grid-area: previa;
+  align-self: start;
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vista-previa-titulo {
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.vista-previa-nota {
+  margin: 0;
+  color: var(--hk-soft-text);
+  font-size: 0.88rem;
+  font-style: italic;
+  text-align: center;
+}
+
+/* ── Campo del póster ──
+   El input de archivo toma el estilo de los demás campos (styles.css); acá
+   se le da forma al botón "Elegir archivo" que dibuja el navegador. */
+.admin-form .form-fields .input-poster {
+  padding: 6px;
+  cursor: pointer;
+}
+
+.input-poster::file-selector-button {
+  margin-right: 12px;
+  padding: 7px 14px;
+  color: var(--hk-soul);
+  background: rgba(79, 196, 227, 0.1);
+  border: 1px solid rgba(79, 196, 227, 0.4);
+  border-radius: 4px;
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.input-poster:hover::file-selector-button {
+  background: rgba(79, 196, 227, 0.18);
+  border-color: var(--hk-focus);
+}
+
+/* Mismo borde rojo que ponen ng-invalid/ng-touched en los otros campos
+   (este input no tiene formControlName, así que la clase va a mano). */
+.admin-form .form-fields .input-poster.invalido {
+  border-color: var(--hk-grimm);
+  box-shadow: 0 0 8px rgba(192, 57, 43, 0.2);
+}
+
+.campo-ayuda {
+  color: var(--hk-soft-text);
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 0.88rem;
+  font-style: italic;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .form-fields {
@@ -83,6 +180,27 @@
   letter-spacing: 0.2px;
 }
 
+/* ── Pantallas medianas y celular: una sola columna ── */
+@media (max-width: 860px) {
+  .pelicula-form {
+    width: min(100%, 680px);
+  }
+
+  .pelicula-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'datos'
+      'previa'
+      'resto';
+  }
+
+  .vista-previa {
+    position: static;
+    width: min(100%, 264px);
+    margin: 22px auto 4px;
+  }
+}
+
 @media (max-width: 560px) {
 
   .form-fields {
@@ -107,6 +225,11 @@
 :host-context(.tema-claro) .genre-option {
   background: #ffffff;
   border-color: rgba(41, 64, 71, 0.18);
+}
+
+:host-context(.tema-claro) .input-poster::file-selector-button {
+  background: rgba(22, 141, 168, 0.08);
+  border-color: rgba(22, 141, 168, 0.4);
 }
 
 :host-context(.tema-claro) .genre-option:hover {

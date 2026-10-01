@@ -418,6 +418,7 @@
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -810,50 +811,8 @@
   margin: 0 auto;
 }
 
-/* ── Poster card ── */
-.poster-card {
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  color: var(--hk-soul);
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.poster-card:hover {
-  transform: translateY(-6px);
-}
-
-.poster-frame {
-  position: relative;
-  overflow: hidden;
-  background: transparent;
-  border: 1px solid rgba(79, 196, 227, 0.16);
-  border-radius: 4px;
-  transition:
-    border-color 0.4s,
-    box-shadow 0.4s;
-}
-
-.poster-duracion {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 2;
-  padding: 4px 10px;
-  background: rgba(10, 10, 18, 0.85);
-  border: 1px solid rgba(79, 196, 227, 0.25);
-  border-radius: 2px;
-  color: var(--hk-soul);
-  font-family: 'Trajan', serif;
-  font-size: 0.8rem;
-  letter-spacing: 1px;
-  backdrop-filter: blur(4px);
-}
-
-:host-context(.tema-claro) .poster-duracion {
-  background: rgba(244, 246, 245, 0.9);
-  border-color: rgba(22, 141, 168, 0.35);
-}
+/* La tarjeta de póster de la cartelera ahora es un componente propio
+   (shared/components/poster-card), con sus estilos en poster-card.css. */
 
 :host-context(.tema-claro) .destacada-rango,
 :host-context(.tema-claro) .destacada-duracion {
@@ -867,69 +826,6 @@
   border-top-color: rgba(166, 111, 28, 0.5);
   color: var(--hk-geo);
   text-shadow: none;
-}
-
-.poster-card:hover .poster-frame {
-  border-color: rgba(79, 196, 227, 0.25);
-  box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(79, 196, 227, 0.06),
-    inset 0 0 30px rgba(79, 196, 227, 0.03);
-}
-
-.poster-img {
-  width: 100%;
-  height: 380px;
-  object-fit: cover;
-  display: block;
-  image-rendering: auto;
-  transition:
-    filter 0.4s,
-    transform 0.4s;
-}
-
-.poster-frame::after {
-  position: absolute;
-  inset: 0;
-  border: 1px solid rgba(232, 232, 240, 0.06);
-  border-radius: inherit;
-  content: '';
-  pointer-events: none;
-}
-
-.poster-card:hover .poster-img {
-  filter: brightness(1.08) contrast(1.02);
-  transform: scale(1.02);
-}
-
-.poster-glow {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(79, 196, 227, 0.08) 100%);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s;
-}
-
-.poster-card:hover .poster-glow {
-  opacity: 1;
-}
-
-.poster-nombre {
-  margin: 14px 0 0;
-  text-align: center;
-  font-family: 'Trajan', serif;
-  font-size: 0.88rem;
-  letter-spacing: 2px;
-  color: var(--hk-pale);
-  transition:
-    color 0.3s,
-    text-shadow 0.3s;
-}
-
-.poster-card:hover .poster-nombre {
-  color: var(--hk-soul);
-  text-shadow: 0 0 12px rgba(79, 196, 227, 0.2);
 }
 
 /* ── Sección títulos (Correo 2: destacadas / resto) ── */
@@ -1192,18 +1088,15 @@
     width: 100%;
   }
 
-  .poster-img,
   .destacada-img {
     height: auto;
     aspect-ratio: 2 / 3;
   }
 
-  .poster-card:hover,
   .destacada-card:hover {
     transform: none;
   }
 
-  .poster-nombre,
   .destacada-nombre {
     margin-top: 9px;
     overflow-wrap: anywhere;
@@ -1464,11 +1357,9 @@
   text-shadow: 0 0 22px rgba(232, 168, 50, 0.25);
 }
 
-/* ── Tarjetas de póster: un panel con marco, el póster y una placa con
-   el nombre. El brillo al pasar el mouse lo pone la directiva
-   appGlowHover sobre la tarjeta entera (celeste en la cartelera, dorado
-   en las más vistas), así que acá ya no hay box-shadow en :hover. ── */
-.poster-card,
+/* ── Tarjetas de las más vistas: un panel con marco, el póster y una placa
+   con el nombre (mismo diseño que la tarjeta de la cartelera, en dorado).
+   El brillo al pasar el mouse lo pone la directiva appGlowHover. ── */
 .destacada-card {
   padding: 10px 10px 0;
   background: linear-gradient(165deg, rgba(36, 36, 58, 0.92), rgba(14, 14, 26, 0.96));
@@ -1481,10 +1372,6 @@
     box-shadow 0.3s;
 }
 
-.poster-card:hover {
-  border-color: rgba(79, 196, 227, 0.55);
-}
-
 .destacada-card {
   border-color: rgba(232, 168, 50, 0.3);
 }
@@ -1493,19 +1380,16 @@
   border-color: rgba(232, 168, 50, 0.7);
 }
 
-.poster-frame,
 .destacada-frame {
   border: none;
   border-radius: 8px;
 }
 
-.poster-card:hover .poster-frame,
 .destacada-card:hover .destacada-frame {
   box-shadow: none;
 }
 
 /* Placa con el nombre, separada del póster por un filo ornamental */
-.poster-nombre,
 .destacada-nombre {
   position: relative;
   margin: 0;
@@ -1516,7 +1400,6 @@
   text-transform: uppercase;
 }
 
-.poster-nombre::before,
 .destacada-nombre::before {
   content: '';
   position: absolute;
@@ -1553,13 +1436,11 @@
     width: 50px;
   }
 
-  .poster-card,
   .destacada-card {
     padding: 6px 6px 0;
     border-radius: 10px;
   }
 
-  .poster-nombre,
   .destacada-nombre {
     padding: 10px 4px 12px;
     font-size: 0.91rem;
@@ -1568,14 +1449,9 @@
   }
 }
 
-:host-context(.tema-claro) .poster-card,
 :host-context(.tema-claro) .destacada-card {
   background: #ffffff;
   box-shadow: 0 10px 26px rgba(41, 64, 71, 0.12);
-}
-
-:host-context(.tema-claro) .poster-card {
-  border-color: rgba(41, 64, 71, 0.16);
 }
 
 :host-context(.tema-claro) .destacada-card {

@@ -7,125 +7,173 @@
     <p>Completá los datos para sumar una historia a la cartelera.</p>
   </header>
 
-  <div class="form-fields">
-    <label>
-      <span>Nombre</span>
-      <input type="text" formControlName="nombre" />
-      @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
-        @if (formulario.controls.nombre.hasError('maxlength')) {
-          <span class="campo-error">El nombre no puede superar los 150 caracteres.</span>
-        } @else {
-          <span class="campo-error">El nombre es obligatorio.</span>
-        }
-      }
-    </label>
-
-    <label>
-      <span>Sinopsis</span>
-      <textarea formControlName="sinopsis"></textarea>
-      @if (formulario.controls.sinopsis.touched && formulario.controls.sinopsis.invalid) {
-        @if (formulario.controls.sinopsis.hasError('minlength')) {
-          <span class="campo-error">La sinopsis tiene que tener al menos 10 caracteres.</span>
-        } @else {
-          <span class="campo-error">La sinopsis es obligatoria.</span>
-        }
-      }
-    </label>
-
-    <label>
-      <span>Imagen (URL)</span>
-      <input type="text" formControlName="imagen_url" placeholder="https://..." />
-      @if (formulario.controls.imagen_url.touched && formulario.controls.imagen_url.invalid) {
-        @if (formulario.controls.imagen_url.hasError('required')) {
-          <span class="campo-error">El link de la imagen es obligatorio.</span>
-        } @else {
-          <span class="campo-error">Tiene que ser un link que empiece con http:// o https://.</span>
-        }
-      }
-    </label>
-
-    <label>
-      <span>Duración (minutos)</span>
-      <input type="number" formControlName="duracion_minutos" min="1" max="600" />
-      @if (formulario.controls.duracion_minutos.touched && formulario.controls.duracion_minutos.invalid) {
-        @if (formulario.controls.duracion_minutos.hasError('required')) {
-          <span class="campo-error">La duración es obligatoria.</span>
-        } @else if (formulario.controls.duracion_minutos.hasError('pattern')) {
-          <span class="campo-error">La duración tiene que ser un número entero de minutos.</span>
-        } @else {
-          <span class="campo-error">La duración tiene que estar entre 1 y 600 minutos.</span>
-        }
-      }
-    </label>
-
-    <label>
-      <span>Restricción de edad</span>
-      <select formControlName="restriccion_edad">
-        <option value="">Sin restricción</option>
-        <option value="13">+13</option>
-        <option value="18">+18</option>
-      </select>
-    </label>
-
-    <!-- Mismo criterio que la fecha de AltaFuncion: input nativo, que en
-         la compu deja tipear la fecha directo sin navegar un calendario. -->
-    <label>
-      <span>Fecha de estreno (opcional)</span>
-      <input type="date" formControlName="fecha_estreno" />
-      @if (formulario.hasError('preventaSinFecha') && formulario.controls.precio_preventa.touched) {
-        <span class="campo-error">Cargaste un precio de preventa: falta la fecha de estreno.</span>
-      }
-    </label>
-
-    <label>
-      <span>Precio de preventa (opcional)</span>
-      <input type="number" formControlName="precio_preventa" min="1" placeholder="Ej: 15000" />
-      @if (formulario.controls.precio_preventa.touched && formulario.controls.precio_preventa.invalid) {
-        <span class="campo-error">El precio tiene que ser mayor a 0.</span>
-      }
-    </label>
-  </div>
-
-  <p class="fieldset-hint">
-    Con una fecha de estreno futura, la película aparece en "Próximamente" y se puede comprar desde
-    7 días antes, al precio de preventa (las butacas VIP suman su recargo). Si ya está en cartelera,
-    dejá la fecha vacía.
-  </p>
-
-  <fieldset class="genres-fieldset">
-    <legend>Géneros</legend>
-    <p class="fieldset-hint">Elegí uno o más géneros</p>
-    <div class="genre-options">
-      @for (genero of generosDisponibles(); track genero.id) {
-        <label class="genre-option">
-          <input
-            type="checkbox"
-            [checked]="generosSeleccionados().has(genero.id)"
-            (change)="toggleGenero(genero.id)"
-          />
-          <span>{{ genero.nombre }}</span>
+  <!-- Dos columnas en la compu: el formulario a la izquierda y la vista
+       previa a la derecha, que acompaña al bajar. En el celular queda todo
+       en una columna, con la vista previa entre los datos y los géneros. -->
+  <div class="pelicula-layout">
+    <div class="pelicula-datos">
+      <div class="form-fields">
+        <label>
+          <span>Nombre</span>
+          <input type="text" formControlName="nombre" />
+          @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
+            @if (formulario.controls.nombre.hasError('maxlength')) {
+              <span class="campo-error">El nombre no puede superar los 150 caracteres.</span>
+            } @else {
+              <span class="campo-error">El nombre es obligatorio.</span>
+            }
+          }
         </label>
-      }
+
+        <label>
+          <span>Sinopsis</span>
+          <textarea formControlName="sinopsis"></textarea>
+          @if (formulario.controls.sinopsis.touched && formulario.controls.sinopsis.invalid) {
+            @if (formulario.controls.sinopsis.hasError('minlength')) {
+              <span class="campo-error">La sinopsis tiene que tener al menos 10 caracteres.</span>
+            } @else {
+              <span class="campo-error">La sinopsis es obligatoria.</span>
+            }
+          }
+        </label>
+
+        <!-- Sin formControlName: el archivo lo carga cargarPoster() (ver el .ts).
+         accept filtra los archivos que ofrece el selector del sistema. -->
+        <label>
+          <span>Póster</span>
+          <input
+            #inputPoster
+            type="file"
+            class="input-poster"
+            accept="image/jpeg,image/png,image/webp"
+            [class.invalido]="
+              formulario.controls.poster.touched && formulario.controls.poster.invalid
+            "
+            (change)="cargarPoster($event)"
+          />
+          @if (formulario.controls.poster.touched && formulario.controls.poster.invalid) {
+            @if (formulario.controls.poster.hasError('required')) {
+              <span class="campo-error">Elegí la imagen del póster.</span>
+            } @else if (formulario.controls.poster.hasError('formatoPoster')) {
+              <span class="campo-error">El póster tiene que ser una imagen JPG, PNG o WEBP.</span>
+            } @else {
+              <span class="campo-error">El póster no puede pesar más de 5 MB.</span>
+            }
+          } @else {
+            <span class="campo-ayuda">JPG, PNG o WEBP de hasta 5 MB, en formato vertical.</span>
+          }
+        </label>
+
+        <label>
+          <span>Duración (minutos)</span>
+          <input type="number" formControlName="duracion_minutos" min="1" max="600" />
+          @if (
+            formulario.controls.duracion_minutos.touched &&
+            formulario.controls.duracion_minutos.invalid
+          ) {
+            @if (formulario.controls.duracion_minutos.hasError('required')) {
+              <span class="campo-error">La duración es obligatoria.</span>
+            } @else if (formulario.controls.duracion_minutos.hasError('pattern')) {
+              <span class="campo-error"
+                >La duración tiene que ser un número entero de minutos.</span
+              >
+            } @else {
+              <span class="campo-error">La duración tiene que estar entre 1 y 600 minutos.</span>
+            }
+          }
+        </label>
+
+        <label>
+          <span>Restricción de edad</span>
+          <select formControlName="restriccion_edad">
+            <option value="">Sin restricción</option>
+            <option value="13">+13</option>
+            <option value="18">+18</option>
+          </select>
+        </label>
+
+        <!-- Mismo criterio que la fecha de AltaFuncion: input nativo, que en
+         la compu deja tipear la fecha directo sin navegar un calendario. -->
+        <label>
+          <span>Fecha de estreno (opcional)</span>
+          <input type="date" formControlName="fecha_estreno" />
+          @if (
+            formulario.hasError('preventaSinFecha') && formulario.controls.precio_preventa.touched
+          ) {
+            <span class="campo-error"
+              >Cargaste un precio de preventa: falta la fecha de estreno.</span
+            >
+          }
+        </label>
+
+        <label>
+          <span>Precio de preventa (opcional)</span>
+          <input type="number" formControlName="precio_preventa" min="1" placeholder="Ej: 15000" />
+          @if (
+            formulario.controls.precio_preventa.touched &&
+            formulario.controls.precio_preventa.invalid
+          ) {
+            <span class="campo-error">El precio tiene que ser mayor a 0.</span>
+          }
+        </label>
+      </div>
+
+      <p class="fieldset-hint">
+        Con una fecha de estreno futura, la película aparece en "Próximamente" y se puede comprar
+        desde 7 días antes, al precio de preventa (las butacas VIP suman su recargo). Si ya está en
+        cartelera, dejá la fecha vacía.
+      </p>
     </div>
-    @if (intentoGuardar() && generosSeleccionados().size === 0) {
-      <span class="campo-error">Elegí al menos un género.</span>
-    }
-  </fieldset>
 
-  @if (intentoGuardar() && (formulario.invalid || generosSeleccionados().size === 0)) {
-    <p class="form-error">Faltan completar campos: revisá los que están marcados en rojo.</p>
-  }
+    <!-- Vista previa: el MISMO componente de la cartelera de la Home, con los
+       datos que se van escribiendo. Sin [enlace], así que no navega. -->
+    <aside class="vista-previa" aria-label="Vista previa en la cartelera">
+      <span class="vista-previa-titulo">Así se va a ver en la cartelera</span>
+      <app-poster-card [pelicula]="vistaPrevia()" />
+      @if (tieneEstreno()) {
+        <p class="vista-previa-nota">
+          Si la fecha de estreno es futura, hasta ese día se muestra en "Próximamente".
+        </p>
+      }
+    </aside>
 
-  @if (error()) {
-    <p class="form-error">{{ error() }}</p>
-  }
+    <div class="pelicula-resto">
+      <fieldset class="genres-fieldset">
+        <legend>Géneros</legend>
+        <p class="fieldset-hint">Elegí uno o más géneros</p>
+        <div class="genre-options">
+          @for (genero of generosDisponibles(); track genero.id) {
+            <label class="genre-option">
+              <input
+                type="checkbox"
+                [checked]="generosSeleccionados().has(genero.id)"
+                (change)="toggleGenero(genero.id)"
+              />
+              <span>{{ genero.nombre }}</span>
+            </label>
+          }
+        </div>
+        @if (intentoGuardar() && generosSeleccionados().size === 0) {
+          <span class="campo-error">Elegí al menos un género.</span>
+        }
+      </fieldset>
 
-  @if (mensaje()) {
-    <p class="form-mensaje">{{ mensaje() }}</p>
-  }
+      @if (intentoGuardar() && (formulario.invalid || generosSeleccionados().size === 0)) {
+        <p class="form-error">Faltan completar campos: revisá los que están marcados en rojo.</p>
+      }
 
-  <button class="submit-button" appGlowHover type="submit" [disabled]="guardando()">
-    <span>{{ guardando() ? 'Guardando...' : 'Guardar película' }}</span>
-    <span aria-hidden="true">→</span>
-  </button>
+      @if (error()) {
+        <p class="form-error">{{ error() }}</p>
+      }
+
+      @if (mensaje()) {
+        <p class="form-mensaje">{{ mensaje() }}</p>
+      }
+
+      <button class="submit-button" appGlowHover type="submit" [disabled]="guardando()">
+        <span>{{ guardando() ? 'Guardando...' : 'Guardar película' }}</span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
 </form>

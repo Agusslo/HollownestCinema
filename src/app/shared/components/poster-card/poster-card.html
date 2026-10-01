@@ -1,0 +1,16 @@
+    <a class="poster-card" appGlowHover [routerLink]="enlace()">
+    <div class="poster-frame">
+        <span class="poster-duracion">⏱ {{ pelicula().duracion_minutos | duracion }}</span>
+        <img
+        class="poster-img"
+        [src]="pelicula().imagen_url"
+        [alt]="pelicula().nombre"
+        onerror="
+            this.src =
+            'https://placehold.co/260x380/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
+        "
+        />
+        <div class="poster-glow"></div>
+    </div>
+    <p class="poster-nombre">{{ pelicula().nombre }}</p>
+    </a>
