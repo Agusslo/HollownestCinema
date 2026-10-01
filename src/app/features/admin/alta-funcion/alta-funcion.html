@@ -13,7 +13,7 @@
       <select formControlName="pelicula_id">
         <option [ngValue]="null">Elegí una película</option>
         @for (pelicula of peliculas(); track pelicula.id) {
-          <option [ngValue]="pelicula.id">{{ pelicula.nombre }}</option>
+          <option [ngValue]="pelicula.id">{{ etiqueta(pelicula) }}</option>
         }
       </select>
       @if (formulario.controls.pelicula_id.touched && formulario.controls.pelicula_id.invalid) {
@@ -35,6 +35,13 @@
         } @else {
           <span class="campo-error">Elegí la fecha y la hora de la función.</span>
         }
+      } @else if (
+        formulario.controls.fecha_hora.touched && formulario.hasError('antesDelEstreno')
+      ) {
+        <span class="campo-error">
+          Esta película se estrena el {{ estrenoElegido() }}: la función tiene que ser ese día o
+          después.
+        </span>
       }
     </label>
 
