@@ -4,7 +4,7 @@ import { DecimalPipe } from '@angular/common';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Supabase } from '../../../core/services/supabase';
 import { Butacas as ButacasService, IFilaSala, tipoDeButaca } from '../../../core/services/butacas';
-import { Entradas } from '../../../core/services/entradas';
+import { ButacasOcupadasError, Entradas } from '../../../core/services/entradas';
 import { Peliculas } from '../../../core/services/peliculas';
 import { Funciones } from '../../../core/services/funciones';
 import { Auth } from '../../../core/services/auth';
@@ -51,6 +51,8 @@ export class Butacas implements OnDestroy {
   // también nos avisa de nuestro propio insert, y sin este chequeo lo
   // tratábamos como si otro usuario nos hubiera ganado de mano.
   private codigosEnCompraPropia = new Set<string>();
+  // Redirección a "Mis compras" después del cartel de agradecimiento
+  private timerRedireccion?: ReturnType<typeof setTimeout>;
 
   protected funcion_id = 0;
   protected layout = signal<IFilaSala[]>([]);
@@ -80,6 +82,8 @@ export class Butacas implements OnDestroy {
   protected comprando = signal(false);
   protected error = signal<string | null>(null);
   protected compraExitosa = signal(false);
+  // La compra salió bien pero el PDF no se pudo generar/descargar
+  protected pdfFallido = signal(false);
 
   // Candy bar
   protected candyCategorias = signal<ICandyCategoria[]>([]);
@@ -222,6 +226,13 @@ export class Butacas implements OnDestroy {
 
   ngOnDestroy(): void {
     this.canal?.unsubscribe();
+    // Si se fue de la pantalla antes de la redirección automática (por el
+    // botón del cartel o por el menú), que el timer no lo lleve de nuevo.
+    clearTimeout(this.timerRedireccion);
+  }
+
+  protected irAMisCompras(): void {
+    this.router.navigateByUrl('/mis-compras');
   }
 
   protected estaOcupada(butaca: string): boolean {
@@ -635,16 +646,26 @@ export class Butacas implements OnDestroy {
         this.candyCanjeado(),
       );
 
-      const detalle = await this.funcionesService.obtenerDetalleCompra(this.funcion_id);
+      // A esta altura la compra YA está hecha. Si falla el PDF no puede
+      // quedar como si la compra hubiera fallado: antes la pantalla
+      // mostraba el error con las butacas todavía seleccionadas, y al
+      // tocar "Confirmar" otra vez se intentaba comprarlas de nuevo.
+      try {
+        const detalle = await this.funcionesService.obtenerDetalleCompra(this.funcion_id);
 
-      // Un solo QR para toda la compra (el de la orden): vale para todas
-      // las butacas y también para retirar el candy.
-      await this.pdfService.generarCompra({
-        ...detalle,
-        butacas: butacasParaPdf,
-        candy: candyParaPdf,
-        codigo_qr: orden.codigo_qr,
-      });
+        // Un solo QR para toda la compra (el de la orden): vale para todas
+        // las butacas y también para retirar el candy.
+        await this.pdfService.generarCompra({
+          ...detalle,
+          butacas: butacasParaPdf,
+          candy: candyParaPdf,
+          codigo_qr: orden.codigo_qr,
+        });
+        this.pdfFallido.set(false);
+      } catch (e) {
+        console.warn('No se pudo generar el PDF (la compra sí se realizó):', e);
+        this.pdfFallido.set(true);
+      }
 
       this.compraExitosa.set(true);
       this.seleccionadas.set(new Set());
@@ -656,18 +677,41 @@ export class Butacas implements OnDestroy {
       this.usuario.set(await this.authService.usuarioActual());
 
       // El profe pidió que después de comprar te lleve a ver lo que
-      // compraste — dejamos ver el cartel de éxito un instante y recién
-      // ahí navegamos, así no desaparece la pantalla de golpe. Sólo tiene
-      // sentido si está logueado (una compra anónima no tiene "Mis
-      // compras" a donde ir).
+      // compraste — primero se muestra el cartel de "¡Gracias por tu
+      // compra!" (ver el HTML) y recién ahí navegamos, solos a los pocos
+      // segundos o antes si toca el botón. Sólo tiene sentido si está
+      // logueado (una compra anónima no tiene "Mis compras" a donde ir).
       if (usuario) {
-        setTimeout(() => this.router.navigateByUrl('/mis-compras'), 1800);
+        this.timerRedireccion = setTimeout(() => this.irAMisCompras(), 4000);
       }
     } catch (e) {
+      if (e instanceof ButacasOcupadasError) {
+        await this.sacarButacasOcupadas(e.butacas);
+      }
       this.error.set((e as Error).message);
     } finally {
       this.comprando.set(false);
       this.codigosEnCompraPropia.clear();
     }
+  }
+
+  // Alguna butaca elegida ya estaba vendida: ponemos el mapa al día y la
+  // sacamos de la selección, así no se puede volver a intentar con ella.
+  // `conflicto` se marca como ocupada además de lo que diga el servidor,
+  // porque puede ser de una compra cancelada (que el mapa muestra libre
+  // pero la base todavía no deja volver a vender).
+  private async sacarButacasOcupadas(conflicto: string[]): Promise<void> {
+    const ocupadas = new Set(conflicto);
+    try {
+      const delServidor = await this.entradasService.obtenerButacasOcupadas(this.funcion_id);
+      delServidor.forEach((codigo) => ocupadas.add(codigo));
+    } catch {
+      this.ocupadas().forEach((codigo) => ocupadas.add(codigo));
+    }
+    this.ocupadas.set(ocupadas);
+
+    const libres = new Set(Array.from(this.seleccionadas()).filter((c) => !ocupadas.has(c)));
+    this.seleccionadas.set(libres);
+    if (libres.size === 0) this.comboSeleccionado.set(null);
   }
 }

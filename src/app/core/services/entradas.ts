@@ -21,6 +21,29 @@ const PRECIOS_POR_FORMATO: Record<Formato, number> = {
 // consigna sólo pide que sean "más caras", no da un número.
 const RECARGO_VIP = 1.3;
 
+// Código de Postgres para "duplicate key value violates unique constraint".
+// En `entradas` la única restricción así es (funcion_id, fila, columna):
+// o sea, la butaca ya tiene una entrada.
+const CODIGO_DUPLICADO = '23505';
+
+// Error propio para "esa butaca ya está vendida", así la pantalla de
+// butacas lo puede distinguir de cualquier otro error y reaccionar
+// (actualizar el mapa y sacarla de la selección) en vez de mostrar el
+// mensaje crudo de la base de datos. `butacas` son los códigos en
+// conflicto; viene vacío si no se pudo saber cuáles (dos personas
+// comprando justo al mismo tiempo).
+export class ButacasOcupadasError extends Error {
+  constructor(public readonly butacas: string[]) {
+    super(
+      butacas.length === 1
+        ? `La butaca ${butacas[0]} ya no está disponible. La sacamos de tu selección: elegí otra.`
+        : butacas.length > 1
+          ? `Las butacas ${butacas.join(', ')} ya no están disponibles. Las sacamos de tu selección: elegí otras.`
+          : 'Alguna de las butacas que elegiste se acaba de ocupar. Actualizamos el mapa: revisá tu selección.',
+    );
+  }
+}
+
 @Service()
 export class Entradas {
   private supabase = inject(Supabase);
@@ -40,6 +63,23 @@ export class Entradas {
 
     if (error) throw error;
     return data.map((e) => `${e.fila}${e.columna}`);
+  }
+
+  // De las butacas pedidas, cuáles ya tienen una entrada guardada en esta
+  // función. A diferencia de obtenerButacasOcupadas(), acá NO se descartan
+  // las de órdenes canceladas: la base no deja insertar dos entradas para
+  // la misma butaca aunque la anterior esté cancelada, así que para
+  // comprar cuentan igual.
+  private async butacasYaVendidas(funcion_id: number, butacas: string[]): Promise<string[]> {
+    const filas = [...new Set(butacas.map((butaca) => butaca[0]))];
+    const { data, error } = await this.supabase.Supabase.from('entradas')
+      .select('fila, columna')
+      .eq('funcion_id', funcion_id)
+      .in('fila', filas);
+
+    if (error) throw error;
+    const existentes = new Set(data.map((e) => `${e.fila}${e.columna}`));
+    return butacas.filter((butaca) => existentes.has(butaca));
   }
 
   // Precio de una butaca puntual: el precio base del formato, más el
@@ -90,6 +130,15 @@ export class Entradas {
   }> {
     const aplicaCupon = usuario !== null && !usuario.cupon_primera_compra_usado;
 
+    // 0. Antes de crear nada, chequeamos que ninguna de las butacas tenga
+    // ya una entrada. El mapa puede estar desactualizado (otra pestaña, un
+    // intento anterior que quedó a medias), y si recién nos enteráramos al
+    // insertar ya habría quedado una orden vacía creada.
+    const yaVendidas = await this.butacasYaVendidas(funcion_id, butacas);
+    if (yaVendidas.length > 0) {
+      throw new ButacasOcupadasError(yaVendidas);
+    }
+
     // 1. Cuánto cuesta en puntos lo que se quiere canjear. Se calcula acá
     // adentro con el valor que configuró el admin — no confiamos en un
     // total de puntos que mande el cliente (a diferencia del total en
@@ -139,7 +188,17 @@ export class Entradas {
       .insert(nuevasEntradas)
       .select('id, fila, columna, codigo_qr');
 
-    if (error) throw error;
+    if (error) {
+      // No se guardó ninguna entrada, así que la orden recién creada quedó
+      // vacía: la borramos para que no aparezca en "Mis compras". Si el
+      // borrado no se puede hacer, no tapamos el error original.
+      await this.supabase.Supabase.from('ordenes').delete().eq('id', orden.id);
+
+      // Pasó el chequeo del paso 0 pero otra persona compró la misma
+      // butaca en el medio.
+      if (error.code === CODIGO_DUPLICADO) throw new ButacasOcupadasError([]);
+      throw error;
+    }
 
     // 3. Si eligió candy (pagado con plata, canjeado con puntos, o las
     // dos cosas), lo vinculamos a la misma orden — todo junto, porque

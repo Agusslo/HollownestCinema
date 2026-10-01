@@ -1060,8 +1060,7 @@ h1 {
 }
 
 /* ── Alertas ── */
-.error-box,
-.exito-box {
+.error-box {
   display: flex;
   gap: 10px;
   padding: 12px 14px;
@@ -1078,30 +1077,93 @@ h1 {
   border: 1px solid var(--hk-grimm);
 }
 
-.exito-box {
-  align-items: flex-start;
-  color: #e0f7fc;
-  background: rgba(79, 196, 227, 0.16);
-  border: 1px solid var(--hk-focus);
-  box-shadow: 0 0 20px rgba(79, 196, 227, 0.2);
+/* ── Cartel de "¡Gracias por tu compra!" ── */
+.gracias-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(5, 5, 10, 0.78);
+  backdrop-filter: blur(4px);
+  animation: gracias-aparecer 0.25s ease-out;
 }
 
-.exito-texto {
+.gracias-cartel {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 420px;
+  padding: 30px 26px 24px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(79, 196, 227, 0.18), transparent 55%),
+    linear-gradient(160deg, rgba(36, 36, 58, 0.99), rgba(12, 12, 24, 0.99));
+  border: 1px solid var(--hk-focus);
+  border-radius: 12px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(79, 196, 227, 0.25);
 }
 
-.exito-texto strong {
-  color: #ffffff;
+.gracias-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(79, 196, 227, 0.6));
+}
+
+.gracias-cartel h2 {
+  margin: 0;
+  color: var(--hk-soul);
   font-family: 'Trajan', serif;
-  font-size: 0.98rem;
-  letter-spacing: 1px;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.gracias-cartel .ornamento {
+  margin: 0;
+}
+
+.gracias-cartel p {
+  margin: 0;
+  color: var(--hk-panel-text);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.gracias-cartel .gracias-nota {
+  color: var(--hk-soft-text);
+  font-size: 0.9rem;
+}
+
+.gracias-cartel .btn-comprar {
+  margin-top: 6px;
+}
+
+@keyframes gracias-aparecer {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .alerta-icono {
   flex-shrink: 0;
   font-size: 1.25rem;
+}
+
+/* Que un mensaje con palabras muy largas no se salga de la caja */
+.alerta-texto {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 /* ── Botón principal ── */
@@ -1933,6 +1995,15 @@ h1 {
 :host-context(.tema-claro) .ref-butaca.vip {
   background: #f0d9a8;
   border-color: rgba(166, 111, 28, 0.7);
+}
+
+:host-context(.tema-claro) .gracias-fondo {
+  background: rgba(41, 64, 71, 0.55);
+}
+
+:host-context(.tema-claro) .gracias-cartel {
+  background: #ffffff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
 }
 
 :host-context(.tema-claro) .resumen-compra {

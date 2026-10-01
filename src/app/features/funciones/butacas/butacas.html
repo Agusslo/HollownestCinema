@@ -464,15 +464,6 @@
             <span class="alerta-texto">{{ error() }}</span>
           </div>
         }
-        @if (compraExitosa()) {
-          <div class="exito-box" role="status">
-            <span class="alerta-icono" aria-hidden="true">✨</span>
-            <div class="exito-texto">
-              <strong>¡Compra realizada con éxito!</strong>
-              <span>Se descargó tu PDF con el código QR de la compra.</span>
-            </div>
-          </div>
-        }
 
         <button
           type="button"
@@ -497,5 +488,35 @@
         }
       </aside>
     </div>
+
+    <!-- Cartel de agradecimiento: tapa la pantalla al terminar la compra
+         y, si hay sesión, después lleva a "Mis compras". -->
+    @if (compraExitosa()) {
+      <div class="gracias-fondo" role="alertdialog" aria-modal="true" aria-labelledby="gracias-titulo">
+        <div class="gracias-cartel">
+          <img class="gracias-img" src="/img/The_Knight.png" alt="" aria-hidden="true" />
+          <h2 id="gracias-titulo">¡Gracias por tu compra!</h2>
+          <div class="ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+          @if (pdfFallido()) {
+            <p>
+              Tu compra quedó registrada, pero no pudimos descargar el PDF con el código QR. Acercate
+              a la boletería con tus datos.
+            </p>
+          } @else {
+            <p>Se descargó tu PDF con el código QR: sirve para entrar a la sala y para el candy bar.</p>
+          }
+          @if (usuario()) {
+            <p class="gracias-nota">En unos segundos te llevamos a tus compras…</p>
+            <button type="button" class="btn-comprar" appGlowHover (click)="irAMisCompras()">
+              Ver mis compras
+            </button>
+          } @else {
+            <button type="button" class="btn-comprar" appGlowHover (click)="compraExitosa.set(false)">
+              Cerrar
+            </button>
+          }
+        </div>
+      </div>
+    }
   </div>
 }
