@@ -1,4 +1,4 @@
-import { Component, inject, input, signal, computed, effect } from '@angular/core';
+import { Component, inject, input, output, signal, computed, effect } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Resenias as ReseniasService } from '../../../core/services/resenias';
 import { Auth } from '../../../core/services/auth';
@@ -28,6 +28,13 @@ export class Resenias {
   // Es opcional (input y no input.required) para que el componente siga
   // andando igual si en algún lugar se usa sin pasarle este dato.
   estreno = input<string | null>(null);
+
+  // output(): el camino inverso al input (clase 3). Cada vez que se cargan
+  // las reseñas (al entrar y después de publicar una), este componente le
+  // avisa al padre (Detalle) el promedio y la cantidad, para que lo muestre
+  // arriba, junto al título de la película. El padre lo escucha con
+  // (calificacionCambiada)="..." en su HTML.
+  calificacionCambiada = output<{ promedio: number; cantidad: number }>();
 
   // '2026-12-12' → '12/12', partiendo el texto (sin new Date(), para que
   // la zona horaria no corra el día).
@@ -131,6 +138,9 @@ export class Resenias {
     this.resenias.set(resenias);
     this.usuarioActual.set(usuario);
     this.cargando.set(false);
+
+    // .emit() es lo que dispara el evento hacia el padre.
+    this.calificacionCambiada.emit({ promedio: this.promedio(), cantidad: resenias.length });
   }
 
   protected async enviar() {

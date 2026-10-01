@@ -25,6 +25,15 @@ export class Detalle {
   protected funciones = signal<IFuncionConSala[]>([]);
   protected cargando = signal(true);
 
+  // Promedio y cantidad de reseñas, para mostrar junto a la duración. No los
+  // calcula este componente: se los manda el hijo <app-resenias> con su
+  // output (calificacionCambiada), así no se piden las reseñas dos veces.
+  protected calificacion = signal<{ promedio: number; cantidad: number } | null>(null);
+
+  protected actualizarCalificacion(datos: { promedio: number; cantidad: number }) {
+    this.calificacion.set(datos);
+  }
+
   // ── Próximamente y preventa ──
   // Todo se calcula a partir de la película con Peliculas.estadoVenta():
   // 'proximamente' (no se vende todavía), 'preventa' (se vende a precio de
