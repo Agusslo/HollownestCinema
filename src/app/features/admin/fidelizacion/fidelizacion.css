@@ -1,0 +1,125 @@
+/* La tarjeta, el encabezado, los campos y el botón comparten el estilo
+   .admin-form de styles.css; acá queda sólo lo propio de esta pantalla
+   (mismo armado que cupones.css). */
+
+/* El <main> de la app centra su contenido con flex, y eso achica el
+   componente al ancho de lo que tiene adentro (igual que en preventas.css). */
+:host {
+  display: block;
+  width: 100%;
+}
+
+.fidelizacion-form {
+  width: min(100%, 540px);
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+/* ── Vista previa: cuánto cuesta canjear cada butaca ── */
+.costos {
+  margin-bottom: 4px;
+}
+
+/* Título con una línea a cada lado, como el ornamento del encabezado */
+.costos-titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: var(--hk-muted-text);
+  font-family: 'Trajan', serif;
+  font-size: 0.74rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.costos-titulo::before,
+.costos-titulo::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 212, 224, 0.3));
+}
+
+.costos-titulo::after {
+  background: linear-gradient(90deg, rgba(212, 212, 224, 0.3), transparent);
+}
+
+.costos-grilla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.costo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 10px 12px;
+  text-align: center;
+  background: rgba(10, 10, 18, 0.35);
+  border: 1px solid rgba(212, 212, 224, 0.12);
+  border-radius: 10px;
+}
+
+/* Butaca VIP: borde dorado, como las preventas abiertas */
+.costo.vip {
+  border-color: rgba(232, 168, 50, 0.45);
+  background: rgba(232, 168, 50, 0.05);
+}
+
+.costo-butaca {
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.74rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.costo-valor {
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  letter-spacing: 1px;
+  text-shadow: 0 0 18px rgba(79, 196, 227, 0.25);
+}
+
+.costo.vip .costo-valor {
+  color: var(--hk-geo);
+  text-shadow: 0 0 18px rgba(232, 168, 50, 0.3);
+}
+
+.costo-unidad {
+  color: var(--hk-muted-text);
+  font-size: 0.86rem;
+}
+
+@media (max-width: 400px) {
+  .costos-grilla {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .costo {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.16);
+}
+
+:host-context(.tema-claro) .costo.vip {
+  border-color: rgba(166, 111, 28, 0.45);
+  background: rgba(166, 111, 28, 0.05);
+}
+
+:host-context(.tema-claro) .costo-valor,
+:host-context(.tema-claro) .costo.vip .costo-valor {
+  text-shadow: none;
+}
