@@ -72,17 +72,32 @@ export class Peliculas {
   }
 
   async obtenerMasVendidas(cantidad: number): Promise<IPeliculaConGeneros[]> {
-    // Traemos cada entrada junto con la película de su función, vía doble
-    // join embebido: entradas -> funciones -> peliculas
+    // Traemos cada entrada con la película de su función (entradas ->
+    // funciones) y con su orden (entradas -> ordenes), para saber si la
+    // compra se canceló.
     const { data, error } = await this.supabase.Supabase.from('entradas').select(
-      'funciones(pelicula_id)',
+      'funciones(pelicula_id), ordenes(cancelada_en)',
     );
 
     if (error) throw error;
 
-    // Contamos ocurrencias de cada pelicula_id
+    const filas = data as unknown as {
+      funciones: { pelicula_id: number };
+      ordenes: { cancelada_en: string | null } | null;
+    }[];
+
+    // Contamos ocurrencias de cada pelicula_id, salteando las entradas de
+    // órdenes CANCELADAS: una compra cancelada no es una entrada vendida
+    // (mismo criterio que los reportes de admin).
+    //
+    // Por qué el filtro va acá y no con ordenes!inner como en los reportes:
+    // las entradas viejas de prueba, de antes de que existieran las
+    // órdenes, no tienen orden (orden_id en null). Con !inner quedarían
+    // afuera y el ranking cambiaría de golpe. Así, una entrada sin orden se
+    // sigue contando, y sólo se descartan las que tienen la orden cancelada.
     const conteo = new Map<number, number>();
-    for (const fila of data as unknown as { funciones: { pelicula_id: number } }[]) {
+    for (const fila of filas) {
+      if (fila.ordenes?.cancelada_en) continue;
       const id = fila.funciones.pelicula_id;
       conteo.set(id, (conteo.get(id) ?? 0) + 1);
     }
