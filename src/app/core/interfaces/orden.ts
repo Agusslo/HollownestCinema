@@ -9,12 +9,28 @@ export default interface IOrden {
     cancelada_en: string | null;
 }
 
-// Vista para la pantalla de validación del empleado: trae los items de
-// candy de esta orden (con el nombre del producto) para poder mostrar
-// qué hay que entregar antes de confirmar.
-export interface IOrdenConCandy {
+// Vista para la pantalla de validación del empleado. El QR de la compra
+// es uno solo (el de la orden) y equivale a todo: por eso trae juntas las
+// entradas (con los datos de la función) y los items de candy, para
+// mostrar qué hay que dejar pasar y qué hay que entregar antes de
+// confirmar.
+export interface IOrdenValidacion {
     id: number;
+    cancelada_en: string | null;
     candy_entregado_en: string | null;
+    entradas: {
+        id: number;
+        fila: string;
+        columna: number;
+        validada_en: string | null;
+        funciones: {
+            fecha_hora: string;
+            formato: string;
+            idioma: string;
+            peliculas: { nombre: string };
+            salas: { nombre: string };
+        };
+    }[];
     orden_candy_items: { cantidad: number; candy_productos: { nombre: string } }[];
 }
 

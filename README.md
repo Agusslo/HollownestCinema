@@ -99,7 +99,7 @@ Las fechas de calendario (estreno, días del reporte) se manejan como texto `'YY
 La pantalla de butacas se suscribe con **Supabase Realtime** a las entradas nuevas de esa función: cuando otra persona compra una butaca, aparece ocupada al instante. La suscripción se cierra al salir de la pantalla.
 
 ### Compras, cancelaciones, crédito y puntos
-- Cada compra genera una **orden**, con su QR para retirar el candy, y una **entrada por butaca**, cada una con su propio QR.
+- Cada compra genera una **orden** con **un único QR** que equivale a todo: las entradas de todas las butacas y el candy bar. El PDF trae ese solo código.
 - **Cancelación:** disponible hasta 2 hs antes de la función mientras ninguna entrada se haya usado. El monto pagado se acredita como crédito y los puntos canjeados se devuelven.
 - **Puntos:** 1 por cada peso pagado. El costo en puntos de la entrada gratis se configura en la pantalla Fidelización, y el de cada producto de candy al darlo de alta.
 - **Cupones:** se aplica el de mayor porcentaje entre los que le correspondan al usuario.
@@ -136,13 +136,13 @@ La aplicación se puede instalar y su interfaz carga sin conexión gracias al se
 - [x] Margen obligatorio de 30 min entre funciones de una misma sala
 - [x] Asignación automática de sala al crear una función
 - [x] Selector de fecha y hora con input nativo
-- [x] Layout de butacas: sala de 20 filas en bloques 4/20/4, filas J y K de butacas accesibles (2/10/2) y filas R, S y T VIP con precio diferencial, cada una con su marca visual y aviso antes de pagar
+- [x] Layout de butacas: sala de 19 filas en bloques 4/20/4, con las filas J y K reemplazadas por una única fila J de butacas accesibles (2/10/2) y filas R, S y T VIP con precio diferencial, cada una con su marca visual y aviso antes de pagar
 - [x] Selección de butacas en tiempo real con Supabase Realtime
 - [x] Restricción de edad por película (+13 / +18): bloqueo de la compra a menores y aviso en la entrada de que debe asistir acompañado de un adulto
 
 ### Compra y entradas
 - [x] Selección de butacas + compra, con cuenta o anónima
-- [x] PDF con los datos de la entrada + código QR
+- [x] PDF con los datos de la compra + un único código QR para todas las entradas y el candy
 - [x] Cupón de descuento en la primera compra, con porcentaje configurable por el admin
 - [x] Cupón exclusivo para usuarios mayores de 50 años, también configurable
 - [x] Si un usuario califica para dos cupones, se aplica el de mayor porcentaje
@@ -151,15 +151,15 @@ La aplicación se puede instalar y su interfaz carga sin conexión gracias al se
 ### Candy bar
 - [x] ABM de productos (nombre, precio, imagen, categoría)
 - [x] Compra de candy junto con la entrada, en el mismo flujo de selección de butacas
-- [x] Retiro de todo el pedido con el QR de la orden
+- [x] Retiro de todo el pedido con el mismo QR de la compra
 - [x] Combos especiales configurables por el admin (entrada + pochoclos + bebida a precio fijo), destacados en la pantalla de compra
 
 ### Roles y validación en puerta
 - [x] Rol admin: gestión de películas, funciones, candy bar, combos, cupones, fidelización, preventas y reportes (rutas protegidas con guard)
 - [x] Rol empleado: validación de entradas y candy (rutas protegidas con guard)
-- [x] Escaneo de QR por cámara para validar entradas y candy bar
+- [x] Escaneo de QR por cámara: un solo código muestra la compra completa y permite validar las entradas y entregar el candy
 - [x] Ingreso manual del código como alternativa al escaneo
-- [x] Invalidación: cada código sirve una sola vez
+- [x] Invalidación: las entradas y el candy de cada código se usan una sola vez
 - [x] Log de actividad: quién creó cada función, quién modificó un precio, quién validó un QR, con fecha y hora
 
 ### Fidelización

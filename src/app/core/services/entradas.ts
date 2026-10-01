@@ -6,7 +6,6 @@ import { Fidelizacion } from './fidelizacion';
 import { Formato } from '../interfaces/funcion';
 import IPerfil from '../interfaces/perfil';
 import IOrden from '../interfaces/orden';
-import { IEntradaValidacion } from '../interfaces/entrada';
 import ICanje from '../interfaces/canje';
 import { tipoDeButaca } from './butacas';
 
@@ -119,10 +118,12 @@ export class Entradas {
     }
 
     // 2. Creamos la orden primero — es el contenedor que agrupa esta
-    // compra completa (entradas + candy). Su codigo_qr es el que sirve
-    // para retirar el candy bar, separado del QR de cada butaca. Guarda
-    // el total real pagado y cuánto de eso fue con crédito, para poder
-    // calcular bien cuánto devolver si el día de mañana se cancela.
+    // compra completa (entradas + candy). Su codigo_qr es el ÚNICO QR de
+    // la compra: sirve tanto para entrar a la sala como para retirar el
+    // candy bar (las entradas siguen guardando un codigo_qr propio porque
+    // la tabla lo pide, pero ya no se imprime). Guarda el total real
+    // pagado y cuánto de eso fue con crédito, para poder calcular bien
+    // cuánto devolver si el día de mañana se cancela.
     const orden = await this.ordenesService.crear(usuario?.id ?? null, total, creditoAUsar);
 
     const nuevasEntradas = butacas.map((butaca) => ({
@@ -238,35 +239,19 @@ export class Entradas {
     return { orden, entradas: data };
   }
 
-  // Busca una entrada por su código de QR (o el que se escribió a mano) y
-  // trae los datos de la función para que el empleado pueda verificar
-  // antes de confirmar. No modifica nada.
-  async buscarPorCodigo(codigo_qr: string): Promise<IEntradaValidacion | null> {
-    const { data, error } = await this.supabase.Supabase.from('entradas')
-      .select(
-        `id, fila, columna, validada_en,
-         funciones ( fecha_hora, formato, idioma,
-           peliculas ( nombre ),
-           salas ( nombre ) )`,
-      )
-      .eq('codigo_qr', codigo_qr)
-      .maybeSingle();
-
-    if (error) throw error;
-    return data as unknown as IEntradaValidacion | null;
-  }
-
-  // Marca la entrada como validada. Devuelve false si ya estaba validada
-  // (el .is('validada_en', null) hace que el update no afecte ninguna fila
-  // en ese caso, en vez de tener que consultar y actualizar por separado).
-  async validar(id: number): Promise<boolean> {
+  // Marca como validadas todas las entradas de una compra (el QR es uno
+  // solo por orden, así que entran todas juntas). Devuelve las que se
+  // validaron AHORA: si viene vacío es que ya estaban todas usadas (el
+  // .is('validada_en', null) hace que el update no toque esas filas, en
+  // vez de tener que consultar y actualizar por separado).
+  async validarDeOrden(orden_id: number): Promise<{ fila: string; columna: number }[]> {
     const { data, error } = await this.supabase.Supabase.from('entradas')
       .update({ validada_en: new Date().toISOString() })
-      .eq('id', id)
+      .eq('orden_id', orden_id)
       .is('validada_en', null)
-      .select('id');
+      .select('fila, columna');
 
     if (error) throw error;
-    return (data?.length ?? 0) > 0;
+    return data ?? [];
   }
 }

@@ -78,53 +78,11 @@
   background: linear-gradient(90deg, var(--hk-focus), transparent 75%);
 }
 
-/* ── Selector de modo (segmentado) ── */
-.selector-modo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  margin-bottom: 1.4rem;
-  padding: 4px;
-  background: rgba(10, 10, 18, 0.55);
-  border: var(--borde-hk);
-  border-radius: 999px;
-}
-
-.selector-modo button,
-.selector-modo button:hover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  padding: 0.6rem 0.8rem;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 999px;
+.panel-ayuda {
+  margin: 0 0 1.2rem;
   color: var(--hk-soft-text);
-  font-size: 0.86rem;
-  letter-spacing: 1.5px;
-  box-shadow: none;
-  cursor: pointer;
-  transition:
-    background-color 0.2s,
-    color 0.2s,
-    border-color 0.2s;
-}
-
-.selector-modo button:hover {
-  color: var(--hk-soul);
-}
-
-.selector-modo button.activo {
-  background: rgba(79, 196, 227, 0.14);
-  border-color: var(--hk-focus);
-  color: var(--hk-focus);
-  box-shadow: 0 0 14px rgba(79, 196, 227, 0.25);
-}
-
-.modo-icono {
-  font-size: 1rem;
-  letter-spacing: 0;
+  font-size: 0.95rem;
+  text-align: center;
 }
 
 /* ── Código ── */
@@ -416,10 +374,54 @@
   color: var(--hk-pale);
 }
 
+/* Cada parte de la compra (entradas / candy) con su propia confirmación */
+.bloque {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(212, 212, 224, 0.2);
+}
+
+.bloque-titulo {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.butacas-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.butaca-chip {
+  padding: 3px 10px;
+  color: var(--hk-soul);
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: rgba(79, 196, 227, 0.12);
+  border: 1px solid rgba(79, 196, 227, 0.45);
+  border-radius: 999px;
+}
+
+.butaca-chip.usada {
+  color: var(--hk-soft-text);
+  text-decoration: line-through;
+  background: transparent;
+  border-color: rgba(212, 212, 224, 0.2);
+}
+
+.bloque .btn-confirmar,
+.bloque .aviso {
+  margin-top: 0.9rem;
+}
+
 .lista-candy {
   margin: 0;
-  padding: 0.9rem 0 0;
-  border-top: 1px dashed rgba(212, 212, 224, 0.2);
+  padding: 0;
   list-style: none;
   color: var(--hk-pale);
 }
@@ -496,10 +498,6 @@
 
 :host-context(.tema-claro) .panel {
   border-color: rgba(22, 141, 168, 0.3);
-}
-
-:host-context(.tema-claro) .selector-modo {
-  background: var(--hk-deep);
 }
 
 :host-context(.tema-claro) .fila-input input {

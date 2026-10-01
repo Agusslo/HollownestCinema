@@ -395,16 +395,30 @@ h1 {
   outline-offset: 2px;
 }
 
-/* Accesible — filas J y K */
+/* Accesible — fila J, que ocupa el lugar de las antiguas J y K. Cada
+   butaca es el doble de ancha que una común (2 butacas + su gap = 67px)
+   y apenas más alta: así la fila queda pareja, sin huecos, y los bloques
+   2/10/2 caen justo debajo de los 4/20/4. */
 .butaca.accesible {
   --fondo: linear-gradient(180deg, rgba(79, 196, 227, 0.26), rgba(79, 196, 227, 0.08));
   --borde: rgba(79, 196, 227, 0.6);
+  width: 67px;
+  height: 36px;
   color: var(--hk-focus);
 }
 
 .butaca-icono {
   font-size: 0.9rem;
   line-height: 1;
+}
+
+.butaca.accesible .butaca-icono {
+  font-size: 1.05rem;
+}
+
+.butaca.accesible .butaca-icono-ocupado {
+  width: 21px;
+  height: 21px;
 }
 
 /* VIP — últimas 3 filas, ribete dorado */
@@ -1612,13 +1626,27 @@ h1 {
     border-bottom-width: 3px;
   }
 
+  .butaca.accesible {
+    width: 54px;
+    height: 30px;
+  }
+
   .butaca-icono {
     font-size: 0.75rem;
+  }
+
+  .butaca.accesible .butaca-icono {
+    font-size: 0.88rem;
   }
 
   .butaca-icono-ocupado {
     width: 15px;
     height: 15px;
+  }
+
+  .butaca.accesible .butaca-icono-ocupado {
+    width: 17px;
+    height: 17px;
   }
 
   .fila {
@@ -1750,6 +1778,20 @@ h1 {
     height: 21px;
     font-size: 0.55rem;
     border-radius: 7px 7px 2px 2px;
+  }
+
+  .butaca.accesible {
+    width: 45px;
+    height: 25px;
+  }
+
+  .butaca.accesible .butaca-icono {
+    font-size: 0.75rem;
+  }
+
+  .butaca.accesible .butaca-icono-ocupado {
+    width: 14px;
+    height: 14px;
   }
 
   .fila {

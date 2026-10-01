@@ -4,21 +4,18 @@ import QRCode from 'qrcode';
 import { tipoDeButaca } from './butacas';
 import { cargarLogo, registrarTrajan } from './pdf-recursos';
 
-export interface DatosEntradaPdf {
+// Una compra entera: todas sus butacas, su candy (puede venir vacío) y el
+// único QR que equivale a todo (el de la orden).
+export interface DatosCompraPdf {
     pelicula: string;
     sala: string;
     fecha_hora: string;
     formato: string;
     idioma: string;
-    fila: string;
-    columna: number;
-    codigo_qr: string;
     restriccion_edad: number | null;
-}
-
-export interface DatosCandyPdf {
+    butacas: string[]; // códigos, ej. ["J5", "R12"]
+    candy: { nombre: string; cantidad: number }[];
     codigo_qr: string;
-    items: { nombre: string; cantidad: number }[];
 }
 
 type RGB = [number, number, number];
@@ -43,56 +40,46 @@ const CENTRO = HOJA.ancho / 2;
 
 @Service()
 export class Pdf {
-    async generarEntradas(entradas: DatosEntradaPdf[], candy?: DatosCandyPdf): Promise<void> {
+    // Un solo PDF de una página con un único QR: equivale a todas las
+    // entradas de la compra y también al candy bar.
+    async generarCompra(compra: DatosCompraPdf): Promise<void> {
         const doc = new jsPDF({ unit: 'mm', format: 'a4' });
         const fuente = await registrarTrajan(doc);
         const logo = await cargarLogo();
 
-        for (let i = 0; i < entradas.length; i++) {
-            if (i > 0) doc.addPage();
-            await this.paginaEntrada(doc, entradas[i], i + 1, entradas.length, fuente, logo);
-        }
-
-        // Página extra sólo si la compra incluyó candy bar — el QR acá es el
-        // de la ORDEN completa (distinto al de cada entrada), y es el que
-        // hay que mostrar en el mostrador para retirar el pedido.
-        if (candy && candy.items.length > 0) {
-            doc.addPage();
-            await this.paginaCandy(doc, candy, fuente, logo);
-        }
+        await this.paginaCompra(doc, compra, fuente, logo);
 
         doc.save('entradas.pdf');
     }
 
     // ── Páginas ──────────────────────────────────────────────────────────
 
-    private async paginaEntrada(
+    private async paginaCompra(
         doc: jsPDF,
-        entrada: DatosEntradaPdf,
-        numero: number,
-        total: number,
+        compra: DatosCompraPdf,
         fuente: string,
         logo: string | null,
     ): Promise<void> {
-        const butaca = `${entrada.fila}${entrada.columna}`;
-        const esVip = tipoDeButaca(butaca) === 'vip';
-        const fecha = new Date(entrada.fecha_hora);
+        const hayVip = compra.butacas.some((codigo) => tipoDeButaca(codigo) === 'vip');
+        const hayCandy = compra.candy.length > 0;
+        const acento = hayVip ? COLOR.oro : COLOR.celeste;
+        const fecha = new Date(compra.fecha_hora);
 
-        this.fondoYTarjeta(doc, esVip ? COLOR.oro : COLOR.celeste);
-        this.encabezado(doc, fuente, logo, total > 1 ? `Entrada ${numero} de ${total}` : 'Entrada');
+        this.fondoYTarjeta(doc, acento);
+        this.encabezado(doc, fuente, logo, 'Tu compra');
 
         // Título de la película
         let y = 62;
         doc.setFont(fuente, 'normal');
         doc.setFontSize(22);
         doc.setTextColor(...COLOR.alma);
-        const lineasTitulo: string[] = doc.splitTextToSize(entrada.pelicula.toUpperCase(), 160);
+        const lineasTitulo: string[] = doc.splitTextToSize(compra.pelicula.toUpperCase(), 160);
         for (const linea of lineasTitulo.slice(0, 3)) {
             doc.text(linea, CENTRO, y, { align: 'center', charSpace: 0.6 });
             y += 10;
         }
 
-        this.ornamento(doc, y - 2, esVip ? COLOR.oro : COLOR.celeste);
+        this.ornamento(doc, y - 2, acento);
         y += 6;
 
         // Datos en cajas de 2 columnas
@@ -108,15 +95,41 @@ export class Pdf {
             hourCycle: 'h23',
         }), COLOR.oro);
         y += 26;
-        this.caja(doc, fuente, xIzq, y, anchoCaja, 'Sala', entrada.sala);
-        this.caja(doc, fuente, xDer, y, anchoCaja, esVip ? 'Butaca VIP' : 'Butaca', butaca, COLOR.oro);
+        this.caja(doc, fuente, xIzq, y, anchoCaja, 'Sala', compra.sala);
+        this.caja(
+            doc,
+            fuente,
+            xDer,
+            y,
+            anchoCaja,
+            compra.butacas.length === 1 ? 'Entrada' : 'Entradas',
+            String(compra.butacas.length),
+            COLOR.oro,
+        );
         y += 30;
+
+        // Todas las butacas de la compra, aclarando cuáles son VIP
+        const textoButacas = compra.butacas
+            .map((codigo) => (tipoDeButaca(codigo) === 'vip' ? `${codigo} (VIP)` : codigo))
+            .join('  ·  ');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(...COLOR.alma);
+        const lineasButacas: string[] = doc.splitTextToSize(
+            `${compra.butacas.length === 1 ? 'Butaca' : 'Butacas'}  ${textoButacas}`,
+            150,
+        );
+        for (const linea of lineasButacas) {
+            doc.text(linea, CENTRO, y, { align: 'center' });
+            y += 6;
+        }
+        y += 1;
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
         doc.setTextColor(...COLOR.tenue);
         doc.text(
-            `${entrada.formato.toUpperCase()}  ·  ${this.capitalizar(entrada.idioma)}`,
+            `${compra.formato.toUpperCase()}  ·  ${this.capitalizar(compra.idioma)}`,
             CENTRO,
             y,
             { align: 'center', charSpace: 0.4 },
@@ -126,7 +139,7 @@ export class Pdf {
         // Si la película tiene restricción de edad, la consigna pide que
         // TODA entrada de esa función lo aclare, sin importar la edad de
         // quien compró — puede ser un adulto comprando para un menor.
-        if (entrada.restriccion_edad) {
+        if (compra.restriccion_edad) {
             doc.setFillColor(48, 18, 22);
             doc.setDrawColor(...COLOR.rojo);
             doc.setLineWidth(0.3);
@@ -135,7 +148,7 @@ export class Pdf {
             doc.setFontSize(9);
             doc.setTextColor(255, 170, 170);
             doc.text(
-                `+${entrada.restriccion_edad}  ·  Apta para mayores de ${entrada.restriccion_edad} años. Debe asistir acompañado de un adulto.`,
+                `+${compra.restriccion_edad}  ·  Apta para mayores de ${compra.restriccion_edad} años. Debe asistir acompañado de un adulto.`,
                 CENTRO,
                 y + 7,
                 { align: 'center' },
@@ -143,61 +156,72 @@ export class Pdf {
             y += 15;
         }
 
+        if (hayCandy) {
+            y = this.cajaCandy(doc, fuente, y, compra.candy) + 4;
+        }
+
+        // Si la compra es muy larga (muchas butacas + mucho candy) y el QR
+        // quedaría demasiado chico para leerlo bien, va solo en otra hoja.
+        const espacioParaQr = TARJETA.y + TARJETA.alto - 20 - (y + 12);
+        if (espacioParaQr < 50) {
+            doc.addPage();
+            this.fondoYTarjeta(doc, acento);
+            this.encabezado(doc, fuente, logo, 'Tu código');
+            y = 46;
+        }
+
         await this.troqueladoYQr(
             doc,
             fuente,
             y + 2,
-            entrada.codigo_qr,
-            'Presentá este código en la puerta de la sala',
+            compra.codigo_qr,
+            hayCandy
+                ? 'Presentá este código en la puerta de la sala y en el candy bar'
+                : 'Presentá este código en la puerta de la sala',
         );
     }
 
-    private async paginaCandy(
+    // Lista del candy dentro de una caja, en dos columnas si son varios
+    // productos para que no le saque lugar al QR. Devuelve dónde termina.
+    private cajaCandy(
         doc: jsPDF,
-        candy: DatosCandyPdf,
         fuente: string,
-        logo: string | null,
-    ): Promise<void> {
-        this.fondoYTarjeta(doc, COLOR.oro);
-        this.encabezado(doc, fuente, logo, 'Candy bar');
+        y: number,
+        items: { nombre: string; cantidad: number }[],
+    ): number {
+        const x = TARJETA.x + 12;
+        const ancho = TARJETA.ancho - 24;
+        const columnas = items.length > 3 ? 2 : 1;
+        const anchoColumna = ancho / columnas;
+        const filas = Math.ceil(items.length / columnas);
+        const alto = 13 + filas * 7;
 
-        let y = 64;
-        doc.setFont(fuente, 'normal');
-        doc.setFontSize(22);
-        doc.setTextColor(...COLOR.alma);
-        doc.text('TU PEDIDO', CENTRO, y, { align: 'center', charSpace: 0.6 });
-        y += 8;
-        this.ornamento(doc, y, COLOR.oro);
-        y += 8;
-
-        // Lista de productos dentro de una caja
-        const altoLista = 10 + candy.items.length * 8;
         doc.setFillColor(...COLOR.caja);
         doc.setDrawColor(...COLOR.borde);
         doc.setLineWidth(0.3);
-        doc.roundedRect(TARJETA.x + 20, y, TARJETA.ancho - 40, altoLista, 3, 3, 'FD');
+        doc.roundedRect(x, y, ancho, alto, 3, 3, 'FD');
 
-        let yItem = y + 10;
-        for (const item of candy.items) {
-            this.rombo(doc, TARJETA.x + 30, yItem - 1.3, 1.3, COLOR.oro);
+        doc.setFont(fuente, 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(...COLOR.oro);
+        doc.text('CANDY BAR', x + 6, y + 7, { charSpace: 0.8 });
+
+        items.forEach((item, i) => {
+            const xItem = x + 6 + (i % columnas) * anchoColumna;
+            const yItem = y + 15 + Math.floor(i / columnas) * 7;
+
+            this.rombo(doc, xItem + 1.3, yItem - 1.2, 1.1, COLOR.oro);
             doc.setFont('helvetica', 'bold');
-            doc.setFontSize(12);
+            doc.setFontSize(11);
             doc.setTextColor(...COLOR.oro);
-            doc.text(`${item.cantidad}×`, TARJETA.x + 35, yItem);
+            doc.text(`${item.cantidad}×`, xItem + 5, yItem);
             doc.setFont('helvetica', 'normal');
             doc.setTextColor(...COLOR.alma);
-            doc.text(item.nombre, TARJETA.x + 46, yItem);
-            yItem += 8;
-        }
-        y += altoLista + 6;
+            const nombre: string[] = doc.splitTextToSize(item.nombre, anchoColumna - 24);
+            doc.text(nombre[0], xItem + 14, yItem);
+        });
 
-        await this.troqueladoYQr(
-            doc,
-            fuente,
-            y,
-            candy.codigo_qr,
-            'Presentá este código en el mostrador para retirar tu pedido',
-        );
+        return y + alto;
     }
 
     // ── Piezas de diseño ─────────────────────────────────────────────────

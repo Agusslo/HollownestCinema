@@ -1,9 +1,17 @@
 import { Service, inject } from '@angular/core';
 import { Supabase } from './supabase';
-import IOrden, { IOrdenConCandy, IOrdenConDetalle } from '../interfaces/orden';
+import IOrden, { IOrdenConDetalle, IOrdenValidacion } from '../interfaces/orden';
 
 // Hasta cuántas horas antes de la función se puede cancelar una compra.
 const HORAS_LIMITE_CANCELACION = 2;
+
+// Todo lo que necesita ver el empleado al escanear el QR de una compra.
+const SELECT_VALIDACION = `id, cancelada_en, candy_entregado_en,
+    entradas ( id, fila, columna, validada_en,
+        funciones ( fecha_hora, formato, idioma,
+            peliculas ( nombre ),
+            salas ( nombre ) ) ),
+    orden_candy_items ( cantidad, candy_productos ( nombre ) )`;
 
 @Service()
 export class Ordenes {
@@ -22,23 +30,39 @@ export class Ordenes {
         return data as IOrden;
     }
 
-    // Mismo patrón que Entradas.buscarPorCodigo: trae la orden con sus
-    // items de candy embebidos, sin modificar nada todavía.
-    async buscarPorCodigo(codigo_qr: string): Promise<IOrdenConCandy | null> {
+    // Busca la compra por su código de QR (o el que se escribió a mano) y
+    // trae sus entradas y su candy embebidos, sin modificar nada todavía.
+    async buscarPorCodigo(codigo_qr: string): Promise<IOrdenValidacion | null> {
         const { data, error } = await this.supabase.Supabase.from('ordenes')
-            .select(
-                `id, candy_entregado_en,
-                orden_candy_items ( cantidad, candy_productos ( nombre ) )`,
-            )
+            .select(SELECT_VALIDACION)
             .eq('codigo_qr', codigo_qr)
             .maybeSingle();
 
         if (error) throw error;
-        return data as unknown as IOrdenConCandy | null;
+        if (data) return data as unknown as IOrdenValidacion;
+
+        // Los PDF anteriores al QR único traían un QR por butaca (el de la
+        // entrada). Para que sigan sirviendo, si el código no es de una
+        // orden probamos si es de una entrada y devolvemos su compra.
+        const { data: entrada, error: errorEntrada } = await this.supabase.Supabase.from('entradas')
+            .select('orden_id')
+            .eq('codigo_qr', codigo_qr)
+            .maybeSingle();
+
+        if (errorEntrada) throw errorEntrada;
+        if (!entrada) return null;
+
+        const { data: orden, error: errorOrden } = await this.supabase.Supabase.from('ordenes')
+            .select(SELECT_VALIDACION)
+            .eq('id', entrada.orden_id)
+            .maybeSingle();
+
+        if (errorOrden) throw errorOrden;
+        return orden as unknown as IOrdenValidacion | null;
     }
 
-    // Igual que Entradas.validar: el .is(...) evita marcar como entregado
-    // un candy que ya se había entregado antes.
+    // Igual que Entradas.validarDeOrden: el .is(...) evita marcar como
+    // entregado un candy que ya se había entregado antes.
     async marcarCandyEntregado(id: number): Promise<boolean> {
         const { data, error } = await this.supabase.Supabase.from('ordenes')
             .update({ candy_entregado_en: new Date().toISOString() })

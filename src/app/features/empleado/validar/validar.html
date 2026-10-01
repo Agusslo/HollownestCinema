@@ -8,29 +8,12 @@
 
   <div class="panel">
 
-  <div class="selector-modo" role="tablist">
-    <button
-      type="button"
-      role="tab"
-      [attr.aria-selected]="modo() === 'entrada'"
-      [class.activo]="modo() === 'entrada'"
-      (click)="elegirModo('entrada')"
-    >
-      <span class="modo-icono" aria-hidden="true">🎟️</span> Entrada
-    </button>
-    <button
-      type="button"
-      role="tab"
-      [attr.aria-selected]="modo() === 'candy'"
-      [class.activo]="modo() === 'candy'"
-      (click)="elegirModo('candy')"
-    >
-      <span class="modo-icono" aria-hidden="true">🍿</span> Candy bar
-    </button>
-  </div>
+  <p class="panel-ayuda">
+    Un solo código por compra: sirve para las entradas y para el candy bar.
+  </p>
 
   <div class="form-codigo">
-    <label for="codigo">Código {{ modo() === 'entrada' ? 'de la entrada' : 'de la orden' }}</label>
+    <label for="codigo">Código de la compra</label>
     <div class="fila-input">
       <input
         id="codigo"
@@ -75,67 +58,95 @@
     <p class="aviso aviso-ok">{{ mensaje() }}</p>
   }
 
-  @if (modo() === 'entrada' && entradaEncontrada(); as entrada) {
-    <div class="tarjeta-resultado" [class.usada]="entrada.validada_en">
-      <span class="resultado-kicker">Entrada · Butaca {{ entrada.fila }}{{ entrada.columna }}</span>
-      <h2>{{ entrada.funciones.peliculas.nombre }}</h2>
-      <dl>
-        <dt>Sala</dt>
-        <dd>{{ entrada.funciones.salas.nombre }}</dd>
-        <dt>Función</dt>
-        <dd>
-          {{ entrada.funciones.fecha_hora | date: "EEEE d 'de' MMMM, HH:mm" : '' : 'es' }}
-        </dd>
-        <dt>Formato</dt>
-        <dd>{{ entrada.funciones.formato }} — {{ entrada.funciones.idioma }}</dd>
-        <dt>Butaca</dt>
-        <dd>{{ entrada.fila }}{{ entrada.columna }}</dd>
-      </dl>
+  @if (ordenEncontrada(); as orden) {
+    <div class="tarjeta-resultado" [class.usada]="estaAgotada(orden)">
+      <span class="resultado-kicker">Compra · Orden #{{ orden.id }}</span>
 
-      @if (entrada.validada_en) {
-        <p class="aviso aviso-error">
-          Ya fue validada el {{ entrada.validada_en | date: 'short' : '' : 'es' }}.
-        </p>
-      } @else {
-        <button
-          type="button"
-          class="btn-confirmar"
-          appGlowHover
-          color="#e8a832"
-          [disabled]="confirmando()"
-          (click)="confirmarEntrada()"
-        >
-          {{ confirmando() ? 'Validando…' : 'Validar entrada' }}
-        </button>
+      @if (funcionDe(orden); as funcion) {
+        <h2>{{ funcion.peliculas.nombre }}</h2>
+        <dl>
+          <dt>Sala</dt>
+          <dd>{{ funcion.salas.nombre }}</dd>
+          <dt>Función</dt>
+          <dd>{{ funcion.fecha_hora | date: "EEEE d 'de' MMMM, HH:mm" : '' : 'es' }}</dd>
+          <dt>Formato</dt>
+          <dd>{{ funcion.formato }} — {{ funcion.idioma }}</dd>
+        </dl>
       }
-    </div>
-  }
 
-  @if (modo() === 'candy' && ordenEncontrada(); as orden) {
-    <div class="tarjeta-resultado" [class.usada]="orden.candy_entregado_en">
-      <span class="resultado-kicker">Candy bar</span>
-      <h2>Orden #{{ orden.id }}</h2>
-      <ul class="lista-candy">
-        @for (item of orden.orden_candy_items; track item) {
-          <li>{{ item.cantidad }}x {{ item.candy_productos.nombre }}</li>
-        }
-      </ul>
-
-      @if (orden.candy_entregado_en) {
+      @if (orden.cancelada_en) {
         <p class="aviso aviso-error">
-          Ya fue entregado el {{ orden.candy_entregado_en | date: 'short' : '' : 'es' }}.
+          Esta compra fue cancelada el {{ orden.cancelada_en | date: 'short' : '' : 'es' }}. El
+          código ya no es válido.
         </p>
       } @else {
-        <button
-          type="button"
-          class="btn-confirmar"
-          appGlowHover
-          color="#e8a832"
-          [disabled]="confirmando()"
-          (click)="confirmarCandy()"
-        >
-          {{ confirmando() ? 'Entregando…' : 'Marcar como entregado' }}
-        </button>
+        @if (orden.entradas.length > 0) {
+          <div class="bloque">
+            <span class="bloque-titulo">
+              <span aria-hidden="true">🎟️</span>
+              {{ orden.entradas.length }}
+              {{ orden.entradas.length === 1 ? 'entrada' : 'entradas' }}
+            </span>
+            <div class="butacas-lista">
+              @for (entrada of orden.entradas; track entrada.id) {
+                <span class="butaca-chip" [class.usada]="entrada.validada_en">
+                  {{ entrada.fila }}{{ entrada.columna }}
+                </span>
+              }
+            </div>
+
+            @if (entradasPendientes(orden) > 0) {
+              <button
+                type="button"
+                class="btn-confirmar"
+                appGlowHover
+                color="#e8a832"
+                [disabled]="confirmando()"
+                (click)="confirmarEntradas()"
+              >
+                @if (confirmando()) {
+                  Validando…
+                } @else {
+                  Validar
+                  {{ entradasPendientes(orden) === 1 ? 'la entrada' : 'las ' + entradasPendientes(orden) + ' entradas' }}
+                }
+              </button>
+            } @else {
+              <p class="aviso aviso-error">
+                Ya {{ orden.entradas.length === 1 ? 'fue validada' : 'fueron validadas' }} el
+                {{ fechaValidacion(orden) | date: 'short' : '' : 'es' }}.
+              </p>
+            }
+          </div>
+        }
+
+        @if (orden.orden_candy_items.length > 0) {
+          <div class="bloque">
+            <span class="bloque-titulo"><span aria-hidden="true">🍿</span> Candy bar</span>
+            <ul class="lista-candy">
+              @for (item of orden.orden_candy_items; track item) {
+                <li>{{ item.cantidad }}x {{ item.candy_productos.nombre }}</li>
+              }
+            </ul>
+
+            @if (orden.candy_entregado_en) {
+              <p class="aviso aviso-error">
+                Ya fue entregado el {{ orden.candy_entregado_en | date: 'short' : '' : 'es' }}.
+              </p>
+            } @else {
+              <button
+                type="button"
+                class="btn-confirmar"
+                appGlowHover
+                color="#e8a832"
+                [disabled]="confirmando()"
+                (click)="confirmarCandy()"
+              >
+                {{ confirmando() ? 'Entregando…' : 'Marcar candy como entregado' }}
+              </button>
+            }
+          </div>
+        }
       }
     </div>
   }

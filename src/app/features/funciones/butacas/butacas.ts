@@ -620,7 +620,11 @@ export class Butacas implements OnDestroy {
         })) ?? []),
       ];
 
-      const { entradas: butacasCompradas, orden } = await this.entradasService.comprar(
+      // Igual que el candy: las butacas (ya ordenadas) se guardan antes de
+      // que se vacíe la selección.
+      const butacasParaPdf = this.butacasSeleccionadasOrdenadas();
+
+      const { orden } = await this.entradasService.comprar(
         this.funcion_id,
         Array.from(this.seleccionadas()),
         usuario,
@@ -633,15 +637,14 @@ export class Butacas implements OnDestroy {
 
       const detalle = await this.funcionesService.obtenerDetalleCompra(this.funcion_id);
 
-      await this.pdfService.generarEntradas(
-        butacasCompradas.map((b) => ({
-          ...detalle,
-          fila: b.fila,
-          columna: b.columna,
-          codigo_qr: b.codigo_qr,
-        })),
-        candyParaPdf.length > 0 ? { codigo_qr: orden.codigo_qr, items: candyParaPdf } : undefined, //si hay candy arma el QR de la orden, sino no lo pasa y no genera la página extra del PDF
-      );
+      // Un solo QR para toda la compra (el de la orden): vale para todas
+      // las butacas y también para retirar el candy.
+      await this.pdfService.generarCompra({
+        ...detalle,
+        butacas: butacasParaPdf,
+        candy: candyParaPdf,
+        codigo_qr: orden.codigo_qr,
+      });
 
       this.compraExitosa.set(true);
       this.seleccionadas.set(new Set());

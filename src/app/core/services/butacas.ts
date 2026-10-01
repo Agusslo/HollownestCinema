@@ -15,13 +15,14 @@ export interface IFilaSala {
   butacas: IButaca[];
 }
 
-const FILAS = 'ABCDEFGHIJKLMNOPQRST'.split('');
+// Las dos filas del medio (J y K) se quitaron para dar espacio a UNA sola
+// fila accesible, que conserva la letra J. Por eso la K no existe más: la
+// sala pasa de 20 filas a 19, y la J tiene menos butacas pero más grandes
+// (cada una ocupa el lugar de 2×2 butacas comunes — el espacio que
+// necesita una silla de ruedas).
+const FILAS = 'ABCDEFGHIJLMNOPQRST'.split('');
 
-// Filas J y K: antes eran butacas comunes, ahora son la fila accesible.
-// Se mantienen como filas propias (la sala sigue teniendo 20 filas en
-// total), pero con menos butacas por fila — el espacio extra es lo que
-// necesita una butaca para silla de ruedas.
-const FILAS_ACCESIBLES = ['J', 'K'];
+const FILAS_ACCESIBLES = ['J'];
 
 // Últimas 3 filas de la sala: butacas VIP, más caras y marcadas distinto.
 const FILAS_VIP = ['R', 'S', 'T'];
