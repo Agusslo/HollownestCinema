@@ -2120,3 +2120,121 @@ h1 {
 :host-context(.tema-claro) .candy-barra-carrito {
   background: rgba(255, 255, 255, 0.96);
 }
+
+/* ── Cómo comprar: con cuenta o como invitado ──
+   Sin sesión, antes del mapa se muestran las tres opciones. */
+.elegir-modo {
+  width: min(100%, 560px);
+  margin: 10px auto 30px;
+  padding: 28px 26px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(79, 196, 227, 0.12), transparent 50%),
+    linear-gradient(160deg, rgba(36, 36, 58, 0.96), rgba(12, 12, 24, 0.98));
+  border: 1px solid rgba(79, 196, 227, 0.25);
+  border-radius: 12px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
+}
+
+.elegir-modo h2 {
+  margin: 0 0 8px;
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 1.15rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.elegir-modo-texto {
+  margin: 0 0 20px;
+  color: var(--hk-muted-text);
+  font-size: 0.98rem;
+}
+
+.elegir-modo-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.elegir-modo-boton {
+  display: block;
+  padding: 13px 18px;
+  color: var(--hk-pale);
+  text-decoration: none;
+  font-family: 'Trajan', serif;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid rgba(212, 212, 224, 0.28);
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    filter 0.2s;
+}
+
+.elegir-modo-boton:hover {
+  border-color: var(--hk-focus);
+  background: rgba(79, 196, 227, 0.08);
+}
+
+/* Iniciar sesión: la opción recomendada, con el mismo estilo del botón
+   de compra */
+.elegir-modo-boton.principal {
+  color: #04141a;
+  background: linear-gradient(180deg, #6fd3ee, var(--hk-focus));
+  border: none;
+}
+
+.elegir-modo-boton.principal:hover {
+  filter: brightness(1.08);
+}
+
+/* Invitado: la opción más discreta */
+.elegir-modo-boton.invitado {
+  color: var(--hk-soft-text);
+  border-style: dashed;
+}
+
+/* Aviso arriba del mapa mientras se compra como invitado */
+.aviso-invitado {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 22px;
+  padding: 9px 14px;
+  color: var(--hk-muted-text);
+  font-size: 0.94rem;
+  text-align: center;
+  background: rgba(79, 196, 227, 0.08);
+  border-left: 2px solid var(--hk-focus);
+  box-sizing: border-box;
+}
+
+.aviso-invitado a {
+  margin-left: 6px;
+  color: var(--hk-focus);
+  font-weight: bold;
+}
+
+:host-context(.tema-claro) .elegir-modo {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(22, 141, 168, 0.1), transparent 50%),
+    linear-gradient(160deg, #ffffff, var(--hk-shell));
+  border-color: rgba(22, 141, 168, 0.28);
+  box-shadow: 0 14px 34px rgba(41, 64, 71, 0.14);
+}
+
+:host-context(.tema-claro) .elegir-modo-boton {
+  color: var(--hk-soul);
+  border-color: rgba(41, 64, 71, 0.3);
+}
+
+:host-context(.tema-claro) .elegir-modo-boton.principal {
+  color: #ffffff;
+  background: linear-gradient(180deg, #1a9fbd, var(--hk-focus));
+}

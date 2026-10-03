@@ -129,3 +129,27 @@ form {
   background: var(--hk-soul);
   box-shadow: 0 0 6px rgba(79, 196, 227, 0.55);
 }
+
+/* "Continuar como invitado": comprar sin cuenta es una opción que se
+   elige, así que se ofrece acá, debajo del registro, con forma de link. */
+.auth-invitado {
+  margin: 10px 0 0;
+  color: var(--hk-soft-text);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.link-invitado {
+  padding: 0;
+  color: var(--hk-focus);
+  background: none;
+  border: none;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.link-invitado:hover {
+  text-decoration: underline;
+  text-shadow: 0 0 8px rgba(79, 196, 227, 0.5);
+}

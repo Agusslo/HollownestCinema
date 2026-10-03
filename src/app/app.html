@@ -153,15 +153,24 @@
           </div>
           <button class="btn-salir" type="button" (click)="cerrarSesion()">Salir</button>
         } @else {
-          <div class="user-badge shade" appGlowHover color="#4a4a5e">
-            <app-blobatar
-              name="Sombra"
-              [size]="30"
-              animate="hover"
-              class="user-blobatar shade-blobatar"
-            />
-            <span class="user-nombre">Sombra</span>
-          </div>
+          <!-- La "Sombra" es el invitado: aparece sólo si eligió "Continuar
+               como invitado". Sin sesión y sin elegir, no se muestra nada. -->
+          @if (modoInvitado.activo()) {
+            <div
+              class="user-badge shade"
+              appGlowHover
+              color="#4a4a5e"
+              title="Estás comprando como invitado"
+            >
+              <app-blobatar
+                name="Sombra"
+                [size]="30"
+                animate="hover"
+                class="user-blobatar shade-blobatar"
+              />
+              <span class="user-nombre">Sombra</span>
+            </div>
+          }
           <a class="nav-link" [routerLink]="['/login']" routerLinkActive="activo">Ingresar</a>
           <a class="nav-primary" appGlowHover [routerLink]="['/registro']">Registrarme</a>
         }

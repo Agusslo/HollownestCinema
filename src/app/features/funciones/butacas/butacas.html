@@ -27,483 +27,517 @@
       }
     </header>
 
-    <div class="seleccion-layout">
-      <!-- Columna principal: mapa y candy bar uno abajo del otro. Así, en
-           escritorio, el resumen (sticky, a la derecha) queda siempre a la
-           vista mientras se elige el candy. -->
-      <div class="columna-principal">
-        <div class="sala-marco">
-          <span class="marco-esquina marco-esquina-si" aria-hidden="true"></span>
-          <span class="marco-esquina marco-esquina-sd" aria-hidden="true"></span>
-          <span class="marco-esquina marco-esquina-ii" aria-hidden="true"></span>
-          <span class="marco-esquina marco-esquina-id" aria-hidden="true"></span>
-
-          <section class="mapa-sala" aria-label="Mapa de butacas">
-            <div class="pantalla-wrap">
-              <div class="pantalla" aria-hidden="true"></div>
-              <span class="pantalla-texto"
-                >Pantalla
-                @if (funcion()?.salas?.nombre; as sala) {
-                  · {{ sala }}
-                }</span
-              >
-            </div>
-
-            <!-- Sólo en celular/tablet: la sala no entra de ancho y se desliza -->
-            <p class="sala-deslizar" aria-hidden="true">← Deslizá para ver toda la sala →</p>
-
-            <div class="sala">
-              @for (fila of layout(); track fila.letra) {
-                <div
-                  class="fila"
-                  [class.fila-accesible]="fila.tipo === 'accesible'"
-                  [class.fila-vip]="fila.tipo === 'vip'"
-                >
-                  <span class="fila-letra">{{ fila.letra }}</span>
-                  @for (butaca of fila.butacas; track butaca.codigo; let i = $index) {
-                    @if (i === fila.bloques[0] || i === fila.bloques[0] + fila.bloques[1]) {
-                      <span class="pasillo"></span>
-                    }
-                    <button
-                      type="button"
-                      class="butaca"
-                      [class.accesible]="fila.tipo === 'accesible'"
-                      [class.vip]="fila.tipo === 'vip'"
-                      [disabled]="estaOcupada(butaca.codigo)"
-                      [class.ocupada]="estaOcupada(butaca.codigo)"
-                      [class.seleccionada]="estaSeleccionada(butaca.codigo)"
-                      [attr.aria-label]="
-                        'Butaca ' + butaca.codigo + (fila.tipo !== 'normal' ? ' (' + fila.tipo + ')' : '')
-                      "
-                      [attr.aria-pressed]="estaSeleccionada(butaca.codigo)"
-                      [title]="butaca.codigo"
-                      (click)="toggleButaca(butaca.codigo)"
-                    >
-                      @if (estaOcupada(butaca.codigo)) {
-                        <img
-                          class="butaca-icono-ocupado"
-                          src="/img/knight_face.png"
-                          alt=""
-                          aria-hidden="true"
-                        />
-                      } @else if (fila.tipo === 'accesible') {
-                        <span class="butaca-icono" aria-hidden="true">♿</span>
-                      } @else {
-                        {{ butaca.codigo.slice(1) }}
-                      }
-                    </button>
-                  }
-                  <!-- La letra también a la derecha: en una sala de 28
-                       butacas de ancho ayuda a no perderse de fila. -->
-                  <span class="fila-letra" aria-hidden="true">{{ fila.letra }}</span>
-                </div>
-              }
-            </div>
-
-            <div class="referencias">
-              <span><i class="ref-butaca libre"></i> Libre</span>
-              <span><i class="ref-butaca seleccionada"></i> Tu elección</span>
-              <span><i class="ref-butaca ocupada"></i> Ocupada</span>
-              <span><i class="ref-butaca accesible"></i> Accesible</span>
-              <span><i class="ref-butaca vip"></i> VIP</span>
-            </div>
-          </section>
-        </div>
-
-        @if (candyCategorias().length > 0) {
-          <section class="candy-bar" id="candy-bar" aria-label="Candy bar">
-            <header class="candy-heading">
-              <p class="eyebrow eyebrow-oro">Provisiones para el viaje</p>
-              <h2>Candy bar</h2>
-              <div class="ornamento ornamento-oro" aria-hidden="true"><span></span>◆<span></span></div>
-              <p class="candy-bajada">Lo que sumes acá se agrega a tu compra y aparece en el resumen.</p>
-            </header>
-
-            @if (combosDisponibles().length > 0) {
-              <div class="combos-destacados">
-                <p class="combos-titulo"><span>Combos especiales</span></p>
-                <div class="combos-grid">
-                  @for (combo of combosDisponibles(); track combo.id) {
-                    <button
-                      type="button"
-                      class="combo-card"
-                      appGlowHover
-                      color="#e8a832"
-                      [class.elegido]="comboSeleccionado()?.id === combo.id"
-                      [attr.aria-pressed]="comboSeleccionado()?.id === combo.id"
-                      [disabled]="seleccionadas().size === 0"
-                      (click)="elegirCombo(combo)"
-                    >
-                      <span class="combo-nombre">{{ combo.nombre }}</span>
-                      <span class="combo-precio">${{ combo.precio | number: '1.0-0' : 'es' }}</span>
-                      <span class="combo-incluye">
-                        <span class="combo-item">◆ 1 entrada</span>
-                        @for (item of combo.combo_items; track item.producto_id) {
-                          <span class="combo-item"
-                            >◆ {{ item.cantidad }}&times; {{ item.candy_productos.nombre }}</span
-                          >
-                        }
-                      </span>
-                      <span class="combo-accion">
-                        {{
-                          comboSeleccionado()?.id === combo.id
-                            ? '✓ Aplicado · tocá para sacarlo'
-                            : 'Aplicar combo'
-                        }}
-                      </span>
-                    </button>
-                  }
-                </div>
-                @if (seleccionadas().size === 0) {
-                  <p class="combos-ayuda">Elegí una butaca en el mapa para poder aplicar un combo.</p>
-                }
-              </div>
-            }
-
-            <div class="candy-tabs" role="tablist" aria-label="Categorías del candy bar">
-              @for (categoria of candyCategorias(); track categoria.id) {
-                <button
-                  type="button"
-                  role="tab"
-                  class="candy-tab"
-                  [class.activa]="categoriaActiva() === categoria.id"
-                  [attr.aria-selected]="categoriaActiva() === categoria.id"
-                  (click)="categoriaActiva.set(categoria.id)"
-                >
-                  {{ categoria.nombre }}
-                  @if (cantidadEnCategoria(categoria.id) > 0) {
-                    <span class="candy-tab-badge">{{ cantidadEnCategoria(categoria.id) }}</span>
-                  }
-                </button>
-              }
-            </div>
-
-            <div class="candy-grid">
-              @for (producto of productosDeCategoriaActiva(); track producto.id) {
-                <article class="candy-card" [class.en-carrito]="cantidadEnCarrito(producto.id) > 0">
-                  <div class="candy-img-wrap">
-                    <img
-                      class="candy-img"
-                      [src]="producto.imagen_url"
-                      [alt]="producto.nombre"
-                      onerror="
-                        this.src =
-                          'https://placehold.co/200x200/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
-                      "
-                    />
-                    <span class="candy-precio">${{ producto.precio | number: '1.0-0' : 'es' }}</span>
-                    @if (cantidadEnCarrito(producto.id) > 0) {
-                      <span class="candy-en-carrito" aria-hidden="true"
-                        >&times;{{ cantidadEnCarrito(producto.id) }}</span
-                      >
-                    }
-                  </div>
-
-                  <div class="candy-info">
-                    <p class="candy-nombre">{{ producto.nombre }}</p>
-                    @if (producto.puntos_canje) {
-                      <p class="candy-puntos">⭐ Canjeable por {{ producto.puntos_canje }} pts</p>
-                    }
-                  </div>
-
-                  @if (cantidadEnCarrito(producto.id) === 0) {
-                    <button type="button" class="candy-agregar" (click)="agregarCandy(producto.id)">
-                      + Agregar
-                    </button>
-                  } @else {
-                    <div class="candy-stepper">
-                      <button
-                        type="button"
-                        (click)="quitarCandy(producto.id)"
-                        [attr.aria-label]="'Quitar un ' + producto.nombre"
-                      >
-                        &minus;
-                      </button>
-                      <span aria-live="polite">{{ cantidadEnCarrito(producto.id) }}</span>
-                      <button
-                        type="button"
-                        (click)="agregarCandy(producto.id)"
-                        [attr.aria-label]="'Agregar otro ' + producto.nombre"
-                      >
-                        +
-                      </button>
-                    </div>
-                  }
-                </article>
-              } @empty {
-                <p class="candy-vacio">Todavía no hay productos en esta categoría.</p>
-              }
-            </div>
-
-            <!-- Barra fija sólo en celular/tablet: ahí el resumen queda al
-                 final de todo, así que se ofrece un atajo para ir a pagar. -->
-            @if (cantidadTotalCandy() > 0) {
-              <div class="candy-barra-carrito">
-                <span class="candy-barra-texto">
-                  <strong>{{ cantidadTotalCandy() }}</strong>
-                  {{ cantidadTotalCandy() === 1 ? 'producto' : 'productos' }} ·
-                  <strong>${{ candySubtotal() | number: '1.0-0' : 'es' }}</strong>
-                </span>
-                <button type="button" class="candy-barra-boton" (click)="irAResumen()">
-                  Ir a pagar ↓
-                </button>
-              </div>
-            }
-          </section>
-        }
-      </div>
-
-      <aside class="resumen-compra" id="resumen-compra">
-        <header class="resumen-header">
-          <span class="resumen-kicker">Tu compra</span>
-          @if (peliculaActual(); as peli) {
-            <span class="resumen-pelicula">{{ peli.nombre }}</span>
-          }
-          @if (funcion()?.salas?.nombre; as sala) {
-            <span class="resumen-sala">{{ sala }} · {{ funcion()?.formato }}</span>
-          }
-        </header>
-
-        <div class="resumen-butacas-seccion">
-          <div class="resumen-butacas-header">
-            <span class="resumen-butacas-titulo">Butacas</span>
-            @if (seleccionadas().size > 0) {
-              <span class="resumen-butacas-cantidad"
-                >{{ seleccionadas().size }} / {{ cupoRestante() }}</span
-              >
-            }
-          </div>
-          <p class="limite-butacas">
-            @if (yaCompradas() === 0) {
-              Máximo {{ maxButacas }} butacas por función.
-            } @else if (cupoRestante() === 0) {
-              Ya compraste las {{ maxButacas }} butacas permitidas para esta función.
-            } @else {
-              Ya compraste {{ yaCompradas() }} para esta función: te
-              {{ cupoRestante() === 1 ? 'queda 1' : 'quedan ' + cupoRestante() }} de
-              {{ maxButacas }}.
-            }
-          </p>
-          @if (seleccionadas().size > 0) {
-            <div class="resumen-butacas-chips">
-              @for (codigo of butacasSeleccionadasOrdenadas(); track codigo) {
-                <button
-                  type="button"
-                  class="chip-butaca"
-                  [class.vip]="esVip(codigo)"
-                  [attr.aria-label]="'Sacar la butaca ' + codigo"
-                  title="Sacar esta butaca"
-                  (click)="toggleButaca(codigo)"
-                >
-                  {{ codigo }} <span aria-hidden="true">&times;</span>
-                </button>
-              }
-            </div>
-            @if (cantidadVip() > 0) {
-              <p class="aviso-vip">
-                ⭐ Incluye {{ cantidadVip() }} butaca{{ cantidadVip() > 1 ? 's' : '' }} VIP
-                (+30% sobre el precio normal)
-              </p>
-            }
-          } @else {
-            <div class="resumen-butacas-vacio">
-              <div class="vacio-icono-box" aria-hidden="true">
-                <img src="/img/The_Knight.png" alt="" class="vacio-knight-img" />
-              </div>
-              <div class="vacio-textos">
-                <span class="vacio-titulo">Elegí tus lugares</span>
-                <span class="vacio-subtexto">Tocá las butacas en el mapa para seleccionarlas</span>
-              </div>
-            </div>
-          }
-        </div>
-
-        @if (itemsCandyEnCarrito().length > 0) {
-          <div class="candy-resumen">
-            <p class="candy-resumen-titulo">Candy bar</p>
-            @for (item of itemsCandyEnCarrito(); track item.producto.id) {
-              <div class="candy-resumen-item">
-                <div class="candy-mini-stepper">
-                  <button
-                    type="button"
-                    (click)="quitarCandy(item.producto.id)"
-                    [attr.aria-label]="'Quitar un ' + item.producto.nombre"
-                  >
-                    &minus;
-                  </button>
-                  <span>{{ item.cantidad }}</span>
-                  <button
-                    type="button"
-                    (click)="agregarCandy(item.producto.id)"
-                    [attr.aria-label]="'Agregar otro ' + item.producto.nombre"
-                  >
-                    +
-                  </button>
-                </div>
-                <span class="candy-item-nombre">{{ item.producto.nombre }}</span>
-                @if (cantidadCanjeadaCandy(item.producto.id) > 0) {
-                  <span class="candy-item-precio candy-item-canjeado">
-                    @if (cantidadCanjeadaCandy(item.producto.id) < item.cantidad) {
-                      ${{
-                        item.producto.precio * (item.cantidad - cantidadCanjeadaCandy(item.producto.id))
-                      }}
-                      +
-                    }
-                    ⭐ {{ cantidadCanjeadaCandy(item.producto.id) }}
-                    {{ cantidadCanjeadaCandy(item.producto.id) === 1 ? 'canjeada' : 'canjeadas' }}
-                    ({{ cantidadCanjeadaCandy(item.producto.id) * (item.producto.puntos_canje ?? 0) }}
-                    pts)
-                  </span>
-                } @else {
-                  <span class="candy-item-precio">${{ item.producto.precio * item.cantidad }}</span>
-                }
-              </div>
-            }
-          </div>
-        }
-
-        @if (comboSeleccionado(); as combo) {
-          <div class="combo-aplicado-pill">
-            <span aria-hidden="true">🍿</span>
-            <span
-              >Combo <strong>{{ combo.nombre }}</strong> aplicado (${{ combo.precio }})</span
-            >
-          </div>
-        }
-
-        @if (descuentoAplicado() > 0) {
-          <div class="cupon-pill">
-            <span class="cupon-icono" aria-hidden="true">🎟️</span>
-            <span class="cupon-texto"
-              >Tenés <strong>{{ descuentoAplicado() }}% de descuento</strong> aplicado</span
-            >
-          </div>
-        }
-
-        @if (usuario(); as u) {
-          @if (u.credito > 0 || u.puntos > 0) {
-            <span class="resumen-subtitulo">Pagar con</span>
-          }
-          @if (u.credito > 0) {
-            <label
-              class="opcion-toggle"
-              [class.activa]="usarCredito()"
-              [class.deshabilitada]="usarPuntos()"
-            >
-              <span class="opcion-icono" aria-hidden="true">💰</span>
-              <span class="opcion-textos">
-                <span class="opcion-titulo">Usar mi crédito</span>
-                <span class="opcion-detalle">${{ u.credito }} disponibles</span>
-                @if (usarPuntos()) {
-                  <span class="opcion-detalle">No se puede combinar con puntos</span>
-                }
-              </span>
-              <input
-                type="checkbox"
-                role="switch"
-                class="switch"
-                [checked]="usarCredito()"
-                [disabled]="usarPuntos()"
-                (change)="toggleUsarCredito()"
-              />
-            </label>
-          }
-          @if (u.puntos > 0 && fidelizacionConfig(); as config) {
-            <label
-              class="opcion-toggle"
-              [class.activa]="usarPuntos()"
-              [class.deshabilitada]="usarCredito() || comboSeleccionado() !== null"
-            >
-              <span class="opcion-icono" aria-hidden="true">⭐</span>
-              <span class="opcion-textos">
-                <span class="opcion-titulo">Usar mis puntos</span>
-                <span class="opcion-detalle">{{ u.puntos }} pts disponibles</span>
-                <span class="opcion-detalle"
-                  >{{ config.puntos_por_entrada_gratis }} pts = 1 entrada gratis</span
-                >
-                @if (usarCredito()) {
-                  <span class="opcion-detalle">No se puede combinar con crédito</span>
-                } @else if (comboSeleccionado()) {
-                  <span class="opcion-detalle">No se puede combinar con un combo</span>
-                }
-              </span>
-              <input
-                type="checkbox"
-                role="switch"
-                class="switch"
-                [checked]="usarPuntos()"
-                [disabled]="usarCredito() || comboSeleccionado() !== null"
-                (change)="toggleUsarPuntos()"
-              />
-            </label>
-          }
-        }
-
-        <div class="total-bloque">
-          <span class="total-label">TOTAL</span>
-          <span class="total-monto">${{ calcularTotal() }}</span>
-        </div>
-
-        @if (puntosAUsar() > 0 || puntosCandyAUsar() > 0) {
-          <div class="credito-aplicado">
-            <span>
-              @if (butacasCanjeadas().length > 0) {
-                {{ butacasCanjeadas().length }}
-                {{ butacasCanjeadas().length === 1 ? 'entrada gratis' : 'entradas gratis' }}
-              }
-              @if (butacasCanjeadas().length > 0 && candyCanjeado().length > 0) {
-                +
-              }
-              @if (candyCanjeado().length > 0) {
-                candy canjeado
-              }
-              con puntos
-            </span>
-            <span>−{{ puntosAUsar() + puntosCandyAUsar() }} pts</span>
-          </div>
-        }
-
-        @if (creditoAUsar() > 0) {
-          <div class="credito-aplicado">
-            <span>Crédito aplicado</span>
-            <span>−${{ creditoAUsar() }}</span>
-          </div>
-          <div class="total-bloque">
-            <span class="total-label">A PAGAR</span>
-            <span class="total-monto">${{ montoAPagar() }}</span>
-          </div>
-        }
-
-        @if (error()) {
-          <div class="error-box" role="alert">
-            <span class="alerta-icono" aria-hidden="true">⚠️</span>
-            <span class="alerta-texto">{{ error() }}</span>
-          </div>
-        }
-
-        <button
-          type="button"
-          class="btn-comprar"
-          appGlowHover
-          [disabled]="seleccionadas().size === 0 || comprando()"
-          (click)="confirmarCompra()"
-        >
-          {{ comprando() ? 'Procesando...' : 'Confirmar compra' }}
-        </button>
-
-        @if (candyCategorias().length > 0) {
-          <button type="button" class="aviso-candy-bar" (click)="irACandyBar()">
-            <span aria-hidden="true">🍿</span>
-            @if (cantidadTotalCandy() > 0) {
-              <span>Llevás {{ cantidadTotalCandy() }} del candy · <strong>Sumar más</strong></span>
-            } @else {
-              <span>¿Sumás algo para picar? <strong>Ver candy bar</strong></span>
-            }
-            <span class="aviso-flecha" aria-hidden="true">↓</span>
+    @if (!eligioComoComprar()) {
+      <!-- Sin sesión y sin haber elegido todavía: se le ofrece iniciar
+           sesión, registrarse o comprar como invitado. Recién después ve
+           el mapa de butacas. -->
+      <section class="elegir-modo" aria-labelledby="elegir-modo-titulo">
+        <h2 id="elegir-modo-titulo">¿Cómo querés comprar?</h2>
+        <p class="elegir-modo-texto">
+          Con tu cuenta sumás puntos, usás tus cupones y ves la compra en "Mis compras".
+        </p>
+        <div class="elegir-modo-opciones">
+          <a
+            class="elegir-modo-boton principal"
+            appGlowHover
+            [routerLink]="['/login']"
+            [queryParams]="{ volver: urlActual() }"
+          >
+            Iniciar sesión
+          </a>
+          <a class="elegir-modo-boton" [routerLink]="['/registro']">Registrarme</a>
+          <button type="button" class="elegir-modo-boton invitado" (click)="continuarComoInvitado()">
+            Continuar como invitado
           </button>
-        }
-      </aside>
-    </div>
+        </div>
+      </section>
+    } @else {
+      @if (esInvitado()) {
+        <p class="aviso-invitado">
+          Estás comprando como <strong>invitado</strong>: no vas a sumar puntos ni ver esta compra en
+          "Mis compras".
+          <a [routerLink]="['/login']" [queryParams]="{ volver: urlActual() }">Iniciar sesión</a>
+        </p>
+      }
+
+      <div class="seleccion-layout">
+        <!-- Columna principal: mapa y candy bar uno abajo del otro. Así, en
+             escritorio, el resumen (sticky, a la derecha) queda siempre a la
+             vista mientras se elige el candy. -->
+        <div class="columna-principal">
+          <div class="sala-marco">
+            <span class="marco-esquina marco-esquina-si" aria-hidden="true"></span>
+            <span class="marco-esquina marco-esquina-sd" aria-hidden="true"></span>
+            <span class="marco-esquina marco-esquina-ii" aria-hidden="true"></span>
+            <span class="marco-esquina marco-esquina-id" aria-hidden="true"></span>
+
+            <section class="mapa-sala" aria-label="Mapa de butacas">
+              <div class="pantalla-wrap">
+                <div class="pantalla" aria-hidden="true"></div>
+                <span class="pantalla-texto"
+                  >Pantalla
+                  @if (funcion()?.salas?.nombre; as sala) {
+                    · {{ sala }}
+                  }</span
+                >
+              </div>
+
+              <!-- Sólo en celular/tablet: la sala no entra de ancho y se desliza -->
+              <p class="sala-deslizar" aria-hidden="true">← Deslizá para ver toda la sala →</p>
+
+              <div class="sala">
+                @for (fila of layout(); track fila.letra) {
+                  <div
+                    class="fila"
+                    [class.fila-accesible]="fila.tipo === 'accesible'"
+                    [class.fila-vip]="fila.tipo === 'vip'"
+                  >
+                    <span class="fila-letra">{{ fila.letra }}</span>
+                    @for (butaca of fila.butacas; track butaca.codigo; let i = $index) {
+                      @if (i === fila.bloques[0] || i === fila.bloques[0] + fila.bloques[1]) {
+                        <span class="pasillo"></span>
+                      }
+                      <button
+                        type="button"
+                        class="butaca"
+                        [class.accesible]="fila.tipo === 'accesible'"
+                        [class.vip]="fila.tipo === 'vip'"
+                        [disabled]="estaOcupada(butaca.codigo)"
+                        [class.ocupada]="estaOcupada(butaca.codigo)"
+                        [class.seleccionada]="estaSeleccionada(butaca.codigo)"
+                        [attr.aria-label]="
+                          'Butaca ' + butaca.codigo + (fila.tipo !== 'normal' ? ' (' + fila.tipo + ')' : '')
+                        "
+                        [attr.aria-pressed]="estaSeleccionada(butaca.codigo)"
+                        [title]="butaca.codigo"
+                        (click)="toggleButaca(butaca.codigo)"
+                      >
+                        @if (estaOcupada(butaca.codigo)) {
+                          <img
+                            class="butaca-icono-ocupado"
+                            src="/img/knight_face.png"
+                            alt=""
+                            aria-hidden="true"
+                          />
+                        } @else if (fila.tipo === 'accesible') {
+                          <span class="butaca-icono" aria-hidden="true">♿</span>
+                        } @else {
+                          {{ butaca.codigo.slice(1) }}
+                        }
+                      </button>
+                    }
+                    <!-- La letra también a la derecha: en una sala de 28
+                         butacas de ancho ayuda a no perderse de fila. -->
+                    <span class="fila-letra" aria-hidden="true">{{ fila.letra }}</span>
+                  </div>
+                }
+              </div>
+
+              <div class="referencias">
+                <span><i class="ref-butaca libre"></i> Libre</span>
+                <span><i class="ref-butaca seleccionada"></i> Tu elección</span>
+                <span><i class="ref-butaca ocupada"></i> Ocupada</span>
+                <span><i class="ref-butaca accesible"></i> Accesible</span>
+                <span><i class="ref-butaca vip"></i> VIP</span>
+              </div>
+            </section>
+          </div>
+
+          @if (candyCategorias().length > 0) {
+            <section class="candy-bar" id="candy-bar" aria-label="Candy bar">
+              <header class="candy-heading">
+                <p class="eyebrow eyebrow-oro">Provisiones para el viaje</p>
+                <h2>Candy bar</h2>
+                <div class="ornamento ornamento-oro" aria-hidden="true"><span></span>◆<span></span></div>
+                <p class="candy-bajada">Lo que sumes acá se agrega a tu compra y aparece en el resumen.</p>
+              </header>
+
+              @if (combosDisponibles().length > 0) {
+                <div class="combos-destacados">
+                  <p class="combos-titulo"><span>Combos especiales</span></p>
+                  <div class="combos-grid">
+                    @for (combo of combosDisponibles(); track combo.id) {
+                      <button
+                        type="button"
+                        class="combo-card"
+                        appGlowHover
+                        color="#e8a832"
+                        [class.elegido]="comboSeleccionado()?.id === combo.id"
+                        [attr.aria-pressed]="comboSeleccionado()?.id === combo.id"
+                        [disabled]="seleccionadas().size === 0"
+                        (click)="elegirCombo(combo)"
+                      >
+                        <span class="combo-nombre">{{ combo.nombre }}</span>
+                        <span class="combo-precio">${{ combo.precio | number: '1.0-0' : 'es' }}</span>
+                        <span class="combo-incluye">
+                          <span class="combo-item">◆ 1 entrada</span>
+                          @for (item of combo.combo_items; track item.producto_id) {
+                            <span class="combo-item"
+                              >◆ {{ item.cantidad }}&times; {{ item.candy_productos.nombre }}</span
+                            >
+                          }
+                        </span>
+                        <span class="combo-accion">
+                          {{
+                            comboSeleccionado()?.id === combo.id
+                              ? '✓ Aplicado · tocá para sacarlo'
+                              : 'Aplicar combo'
+                          }}
+                        </span>
+                      </button>
+                    }
+                  </div>
+                  @if (seleccionadas().size === 0) {
+                    <p class="combos-ayuda">Elegí una butaca en el mapa para poder aplicar un combo.</p>
+                  }
+                </div>
+              }
+
+              <div class="candy-tabs" role="tablist" aria-label="Categorías del candy bar">
+                @for (categoria of candyCategorias(); track categoria.id) {
+                  <button
+                    type="button"
+                    role="tab"
+                    class="candy-tab"
+                    [class.activa]="categoriaActiva() === categoria.id"
+                    [attr.aria-selected]="categoriaActiva() === categoria.id"
+                    (click)="categoriaActiva.set(categoria.id)"
+                  >
+                    {{ categoria.nombre }}
+                    @if (cantidadEnCategoria(categoria.id) > 0) {
+                      <span class="candy-tab-badge">{{ cantidadEnCategoria(categoria.id) }}</span>
+                    }
+                  </button>
+                }
+              </div>
+
+              <div class="candy-grid">
+                @for (producto of productosDeCategoriaActiva(); track producto.id) {
+                  <article class="candy-card" [class.en-carrito]="cantidadEnCarrito(producto.id) > 0">
+                    <div class="candy-img-wrap">
+                      <img
+                        class="candy-img"
+                        [src]="producto.imagen_url"
+                        [alt]="producto.nombre"
+                        onerror="
+                          this.src =
+                            'https://placehold.co/200x200/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
+                        "
+                      />
+                      <span class="candy-precio">${{ producto.precio | number: '1.0-0' : 'es' }}</span>
+                      @if (cantidadEnCarrito(producto.id) > 0) {
+                        <span class="candy-en-carrito" aria-hidden="true"
+                          >&times;{{ cantidadEnCarrito(producto.id) }}</span
+                        >
+                      }
+                    </div>
+
+                    <div class="candy-info">
+                      <p class="candy-nombre">{{ producto.nombre }}</p>
+                      @if (producto.puntos_canje) {
+                        <p class="candy-puntos">⭐ Canjeable por {{ producto.puntos_canje }} pts</p>
+                      }
+                    </div>
+
+                    @if (cantidadEnCarrito(producto.id) === 0) {
+                      <button type="button" class="candy-agregar" (click)="agregarCandy(producto.id)">
+                        + Agregar
+                      </button>
+                    } @else {
+                      <div class="candy-stepper">
+                        <button
+                          type="button"
+                          (click)="quitarCandy(producto.id)"
+                          [attr.aria-label]="'Quitar un ' + producto.nombre"
+                        >
+                          &minus;
+                        </button>
+                        <span aria-live="polite">{{ cantidadEnCarrito(producto.id) }}</span>
+                        <button
+                          type="button"
+                          (click)="agregarCandy(producto.id)"
+                          [attr.aria-label]="'Agregar otro ' + producto.nombre"
+                        >
+                          +
+                        </button>
+                      </div>
+                    }
+                  </article>
+                } @empty {
+                  <p class="candy-vacio">Todavía no hay productos en esta categoría.</p>
+                }
+              </div>
+
+              <!-- Barra fija sólo en celular/tablet: ahí el resumen queda al
+                   final de todo, así que se ofrece un atajo para ir a pagar. -->
+              @if (cantidadTotalCandy() > 0) {
+                <div class="candy-barra-carrito">
+                  <span class="candy-barra-texto">
+                    <strong>{{ cantidadTotalCandy() }}</strong>
+                    {{ cantidadTotalCandy() === 1 ? 'producto' : 'productos' }} ·
+                    <strong>${{ candySubtotal() | number: '1.0-0' : 'es' }}</strong>
+                  </span>
+                  <button type="button" class="candy-barra-boton" (click)="irAResumen()">
+                    Ir a pagar ↓
+                  </button>
+                </div>
+              }
+            </section>
+          }
+        </div>
+
+        <aside class="resumen-compra" id="resumen-compra">
+          <header class="resumen-header">
+            <span class="resumen-kicker">Tu compra</span>
+            @if (peliculaActual(); as peli) {
+              <span class="resumen-pelicula">{{ peli.nombre }}</span>
+            }
+            @if (funcion()?.salas?.nombre; as sala) {
+              <span class="resumen-sala">{{ sala }} · {{ funcion()?.formato }}</span>
+            }
+          </header>
+
+          <div class="resumen-butacas-seccion">
+            <div class="resumen-butacas-header">
+              <span class="resumen-butacas-titulo">Butacas</span>
+              @if (seleccionadas().size > 0) {
+                <span class="resumen-butacas-cantidad"
+                  >{{ seleccionadas().size }} / {{ cupoRestante() }}</span
+                >
+              }
+            </div>
+            <p class="limite-butacas">
+              @if (yaCompradas() === 0) {
+                Máximo {{ maxButacas }} butacas por función.
+              } @else if (cupoRestante() === 0) {
+                Ya compraste las {{ maxButacas }} butacas permitidas para esta función.
+              } @else {
+                Ya compraste {{ yaCompradas() }} para esta función: te
+                {{ cupoRestante() === 1 ? 'queda 1' : 'quedan ' + cupoRestante() }} de
+                {{ maxButacas }}.
+              }
+            </p>
+            @if (seleccionadas().size > 0) {
+              <div class="resumen-butacas-chips">
+                @for (codigo of butacasSeleccionadasOrdenadas(); track codigo) {
+                  <button
+                    type="button"
+                    class="chip-butaca"
+                    [class.vip]="esVip(codigo)"
+                    [attr.aria-label]="'Sacar la butaca ' + codigo"
+                    title="Sacar esta butaca"
+                    (click)="toggleButaca(codigo)"
+                  >
+                    {{ codigo }} <span aria-hidden="true">&times;</span>
+                  </button>
+                }
+              </div>
+              @if (cantidadVip() > 0) {
+                <p class="aviso-vip">
+                  ⭐ Incluye {{ cantidadVip() }} butaca{{ cantidadVip() > 1 ? 's' : '' }} VIP
+                  (+30% sobre el precio normal)
+                </p>
+              }
+            } @else {
+              <div class="resumen-butacas-vacio">
+                <div class="vacio-icono-box" aria-hidden="true">
+                  <img src="/img/The_Knight.png" alt="" class="vacio-knight-img" />
+                </div>
+                <div class="vacio-textos">
+                  <span class="vacio-titulo">Elegí tus lugares</span>
+                  <span class="vacio-subtexto">Tocá las butacas en el mapa para seleccionarlas</span>
+                </div>
+              </div>
+            }
+          </div>
+
+          @if (itemsCandyEnCarrito().length > 0) {
+            <div class="candy-resumen">
+              <p class="candy-resumen-titulo">Candy bar</p>
+              @for (item of itemsCandyEnCarrito(); track item.producto.id) {
+                <div class="candy-resumen-item">
+                  <div class="candy-mini-stepper">
+                    <button
+                      type="button"
+                      (click)="quitarCandy(item.producto.id)"
+                      [attr.aria-label]="'Quitar un ' + item.producto.nombre"
+                    >
+                      &minus;
+                    </button>
+                    <span>{{ item.cantidad }}</span>
+                    <button
+                      type="button"
+                      (click)="agregarCandy(item.producto.id)"
+                      [attr.aria-label]="'Agregar otro ' + item.producto.nombre"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <span class="candy-item-nombre">{{ item.producto.nombre }}</span>
+                  @if (cantidadCanjeadaCandy(item.producto.id) > 0) {
+                    <span class="candy-item-precio candy-item-canjeado">
+                      @if (cantidadCanjeadaCandy(item.producto.id) < item.cantidad) {
+                        ${{
+                          item.producto.precio * (item.cantidad - cantidadCanjeadaCandy(item.producto.id))
+                        }}
+                        +
+                      }
+                      ⭐ {{ cantidadCanjeadaCandy(item.producto.id) }}
+                      {{ cantidadCanjeadaCandy(item.producto.id) === 1 ? 'canjeada' : 'canjeadas' }}
+                      ({{ cantidadCanjeadaCandy(item.producto.id) * (item.producto.puntos_canje ?? 0) }}
+                      pts)
+                    </span>
+                  } @else {
+                    <span class="candy-item-precio">${{ item.producto.precio * item.cantidad }}</span>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          @if (comboSeleccionado(); as combo) {
+            <div class="combo-aplicado-pill">
+              <span aria-hidden="true">🍿</span>
+              <span
+                >Combo <strong>{{ combo.nombre }}</strong> aplicado (${{ combo.precio }})</span
+              >
+            </div>
+          }
+
+          @if (descuentoAplicado() > 0) {
+            <div class="cupon-pill">
+              <span class="cupon-icono" aria-hidden="true">🎟️</span>
+              <span class="cupon-texto"
+                >Tenés <strong>{{ descuentoAplicado() }}% de descuento</strong> aplicado</span
+              >
+            </div>
+          }
+
+          @if (usuario(); as u) {
+            @if (u.credito > 0 || u.puntos > 0) {
+              <span class="resumen-subtitulo">Pagar con</span>
+            }
+            @if (u.credito > 0) {
+              <label
+                class="opcion-toggle"
+                [class.activa]="usarCredito()"
+                [class.deshabilitada]="usarPuntos()"
+              >
+                <span class="opcion-icono" aria-hidden="true">💰</span>
+                <span class="opcion-textos">
+                  <span class="opcion-titulo">Usar mi crédito</span>
+                  <span class="opcion-detalle">${{ u.credito }} disponibles</span>
+                  @if (usarPuntos()) {
+                    <span class="opcion-detalle">No se puede combinar con puntos</span>
+                  }
+                </span>
+                <input
+                  type="checkbox"
+                  role="switch"
+                  class="switch"
+                  [checked]="usarCredito()"
+                  [disabled]="usarPuntos()"
+                  (change)="toggleUsarCredito()"
+                />
+              </label>
+            }
+            @if (u.puntos > 0 && fidelizacionConfig(); as config) {
+              <label
+                class="opcion-toggle"
+                [class.activa]="usarPuntos()"
+                [class.deshabilitada]="usarCredito() || comboSeleccionado() !== null"
+              >
+                <span class="opcion-icono" aria-hidden="true">⭐</span>
+                <span class="opcion-textos">
+                  <span class="opcion-titulo">Usar mis puntos</span>
+                  <span class="opcion-detalle">{{ u.puntos }} pts disponibles</span>
+                  <span class="opcion-detalle"
+                    >{{ config.puntos_por_entrada_gratis }} pts = 1 entrada gratis</span
+                  >
+                  @if (usarCredito()) {
+                    <span class="opcion-detalle">No se puede combinar con crédito</span>
+                  } @else if (comboSeleccionado()) {
+                    <span class="opcion-detalle">No se puede combinar con un combo</span>
+                  }
+                </span>
+                <input
+                  type="checkbox"
+                  role="switch"
+                  class="switch"
+                  [checked]="usarPuntos()"
+                  [disabled]="usarCredito() || comboSeleccionado() !== null"
+                  (change)="toggleUsarPuntos()"
+                />
+              </label>
+            }
+          }
+
+          <div class="total-bloque">
+            <span class="total-label">TOTAL</span>
+            <span class="total-monto">${{ calcularTotal() }}</span>
+          </div>
+
+          @if (puntosAUsar() > 0 || puntosCandyAUsar() > 0) {
+            <div class="credito-aplicado">
+              <span>
+                @if (butacasCanjeadas().length > 0) {
+                  {{ butacasCanjeadas().length }}
+                  {{ butacasCanjeadas().length === 1 ? 'entrada gratis' : 'entradas gratis' }}
+                }
+                @if (butacasCanjeadas().length > 0 && candyCanjeado().length > 0) {
+                  +
+                }
+                @if (candyCanjeado().length > 0) {
+                  candy canjeado
+                }
+                con puntos
+              </span>
+              <span>−{{ puntosAUsar() + puntosCandyAUsar() }} pts</span>
+            </div>
+          }
+
+          @if (creditoAUsar() > 0) {
+            <div class="credito-aplicado">
+              <span>Crédito aplicado</span>
+              <span>−${{ creditoAUsar() }}</span>
+            </div>
+            <div class="total-bloque">
+              <span class="total-label">A PAGAR</span>
+              <span class="total-monto">${{ montoAPagar() }}</span>
+            </div>
+          }
+
+          @if (error()) {
+            <div class="error-box" role="alert">
+              <span class="alerta-icono" aria-hidden="true">⚠️</span>
+              <span class="alerta-texto">{{ error() }}</span>
+            </div>
+          }
+
+          <button
+            type="button"
+            class="btn-comprar"
+            appGlowHover
+            [disabled]="seleccionadas().size === 0 || comprando()"
+            (click)="confirmarCompra()"
+          >
+            {{ comprando() ? 'Procesando...' : 'Confirmar compra' }}
+          </button>
+
+          @if (candyCategorias().length > 0) {
+            <button type="button" class="aviso-candy-bar" (click)="irACandyBar()">
+              <span aria-hidden="true">🍿</span>
+              @if (cantidadTotalCandy() > 0) {
+                <span>Llevás {{ cantidadTotalCandy() }} del candy · <strong>Sumar más</strong></span>
+              } @else {
+                <span>¿Sumás algo para picar? <strong>Ver candy bar</strong></span>
+              }
+              <span class="aviso-flecha" aria-hidden="true">↓</span>
+            </button>
+          }
+        </aside>
+      </div>
+    }
 
     <!-- Cartel de agradecimiento: tapa la pantalla al terminar la compra
          y, si hay sesión, después lleva a "Mis compras". -->

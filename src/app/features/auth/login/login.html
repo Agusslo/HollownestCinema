@@ -86,5 +86,11 @@
     </form>
 
     <p class="auth-footer">¿No tenés cuenta? <a [routerLink]="['/registro']">Registrate</a></p>
+    <p class="auth-invitado">
+      ¿Sólo querés sacar una entrada?
+      <button type="button" class="link-invitado" (click)="continuarComoInvitado()">
+        Continuar como invitado
+      </button>
+    </p>
   </div>
 </div>

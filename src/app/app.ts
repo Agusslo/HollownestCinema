@@ -9,6 +9,7 @@ import { ToastComponent } from './shared/components/toast/toast';
 import { Avisos } from './core/services/avisos';
 import { Peliculas } from './core/services/peliculas';
 import { Toasts } from './core/services/toasts';
+import { ModoInvitado } from './core/services/modo-invitado';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,9 @@ export class App {
   private avisosService = inject(Avisos);
   private peliculasService = inject(Peliculas);
   private toasts = inject(Toasts);
+  // protected: el header lo usa para mostrar la "Sombra" sólo a quien
+  // eligió comprar como invitado (sin sesión y sin elegir, no se muestra nada).
+  protected modoInvitado = inject(ModoInvitado);
 
   // Para qué usuario ya se revisaron los avisos en esta visita. cargarUsuario()
   // corre dos veces al abrir la app (en el constructor y en

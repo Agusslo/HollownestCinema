@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
+import { ModoInvitado } from '../../../core/services/modo-invitado';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,18 @@ import { Auth } from '../../../core/services/auth';
 export class Login {
   private authService = inject(Auth);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private modoInvitado = inject(ModoInvitado);
+
+  // A dónde volver después de ingresar: la pantalla de butacas manda al
+  // login con ?volver=/pelicula/... para que el usuario no pierda la
+  // función que estaba eligiendo. Sólo se aceptan rutas internas de la app
+  // ('/algo', nunca '//otro-sitio.com' ni 'https://...'), así nadie puede
+  // armar un link de login que redirija a una página externa.
+  private destino(): string {
+    const volver = this.route.snapshot.queryParamMap.get('volver');
+    return volver && volver.startsWith('/') && !volver.startsWith('//') ? volver : '/';
+  }
 
   protected error = signal<string | null>(null);
   protected mostrarPassword = signal(false);
@@ -40,10 +53,17 @@ export class Login {
 
     try {
       await this.authService.login(email, password);
-      this.router.navigateByUrl('/');
+      this.router.navigateByUrl(this.destino());
     } catch (e) {
       this.error.set((e as Error).message);
     }
+  }
+
+  // Comprar sin cuenta (la consigna lo permite) es una opción que se
+  // elige acá o en la pantalla de butacas.
+  protected continuarComoInvitado() {
+    this.modoInvitado.activar();
+    this.router.navigateByUrl(this.destino());
   }
 
   protected async loginConGoogle() {

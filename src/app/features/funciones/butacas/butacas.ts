@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Supabase } from '../../../core/services/supabase';
@@ -25,12 +25,13 @@ import { IFidelizacionConfig } from '../../../core/interfaces/canje';
 import ICandyCategoria from '../../../core/interfaces/candy-categoria';
 import { ICandyProductoConCategoria } from '../../../core/interfaces/candy-producto';
 import { Pdf } from '../../../core/services/pdf';
+import { ModoInvitado } from '../../../core/services/modo-invitado';
 import { LoadingComponent } from '../../../shared/components/loading/loading';
 import { GlowHover } from '../../../shared/directives/glow-hover';
 
 @Component({
   selector: 'app-butacas',
-  imports: [LoadingComponent, GlowHover, DecimalPipe],
+  imports: [LoadingComponent, GlowHover, DecimalPipe, RouterLink],
   templateUrl: './butacas.html',
   styleUrl: './butacas.css',
 })
@@ -47,6 +48,7 @@ export class Butacas implements OnDestroy {
   private candyService = inject(Candy);
   private combosService = inject(Combos);
   private fidelizacionService = inject(Fidelizacion);
+  private modoInvitado = inject(ModoInvitado);
 
   // Canal de Supabase Realtime — se abre en cargarDatos() y se cierra en
   // ngOnDestroy() para no dejar la conexión abierta al salir de la pantalla.
@@ -250,6 +252,22 @@ export class Butacas implements OnDestroy {
     // Si se fue de la pantalla antes de la redirección automática (por el
     // botón del cartel o por el menú), que el timer no lo lleve de nuevo.
     clearTimeout(this.timerRedireccion);
+  }
+
+  // ── Compra con cuenta o como invitado ──
+  // Comprar sin cuenta es una opción que se elige, no lo que pasa por no
+  // haber iniciado sesión: hasta que no inicie sesión o toque "Continuar
+  // como invitado", en vez del mapa de butacas ve las opciones.
+  protected esInvitado = computed(() => !this.usuario() && this.modoInvitado.activo());
+  protected eligioComoComprar = computed(() => !!this.usuario() || this.modoInvitado.activo());
+
+  // Para que después de iniciar sesión el login lo traiga de vuelta acá.
+  protected urlActual(): string {
+    return this.router.url;
+  }
+
+  protected continuarComoInvitado(): void {
+    this.modoInvitado.activar();
   }
 
   protected irAMisCompras(): void {
@@ -599,7 +617,7 @@ export class Butacas implements OnDestroy {
   }
 
   protected async confirmarCompra() {
-    if (this.seleccionadas().size === 0) return;
+    if (this.seleccionadas().size === 0 || !this.eligioComoComprar()) return;
 
     this.error.set(null);
 
