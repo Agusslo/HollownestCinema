@@ -27,9 +27,10 @@ src/app/
 ├── core/
 │   ├── services/     → acceso a datos, un service por entidad (peliculas, funciones, entradas,
 │   │                   ordenes, candy, combos, cupones, fidelizacion, reportes, avisos…),
-│   │                   archivos (Storage) y notificaciones (push)
+│   │                   archivos (Storage), notificaciones (push) y modo invitado
 │   ├── interfaces/   → tipos de cada tabla (IPelicula, IOrden, IAviso…)
-│   ├── guards/       → rolGuard (admin / empleado) y perfilCompletoGuard
+│   ├── guards/       → rolGuard, sesionGuard, invitadoGuard, perfilCompletoGuard
+│   │                   y perfilPendienteGuard
 │   └── pipes/        → duracion (125 → "2h 5m")
 ├── features/         → una carpeta por área, cada pantalla con lazy loading
 │   ├── home/           cartelera, Top 3 y sección Próximamente
@@ -38,7 +39,8 @@ src/app/
 │   ├── perfil/         mis compras, mis películas, mis puntos
 │   ├── auth/           login, registro, completar perfil
 │   ├── empleado/       validación de QR en puerta
-│   └── admin/          altas, cupones, fidelización, preventas, log de actividad, reportes
+│   └── admin/          películas (mostrar / ocultar), altas, cupones, fidelización,
+│                       preventas, log de actividad, reportes
 └── shared/
     ├── components/   → poster-card (tarjeta de la cartelera), loading, toast, blobatar
     └── directives/   → appGlowHover (brillo al pasar el mouse)
@@ -52,6 +54,18 @@ scripts/generar-claves-vapid.mjs     → genera las claves VAPID de las notifica
 - **Componentes reutilizables:** la tarjeta de póster (`PosterCard`) recibe la película con `input()` y se usa en la cartelera y en la vista previa del alta de películas. Las reseñas avisan al detalle de la película el nuevo promedio con `output()`.
 - **Roles:** `cliente`, `empleado` y `admin`, guardados en la tabla `perfiles`. Los guards controlan el acceso a cada pantalla y las políticas RLS validan cada operación directamente en la base de datos.
 
+**Guards en todas las rutas:**
+
+| Guard | Dónde | Qué hace |
+|---|---|---|
+| `rolGuard([...])` | Pantallas de admin y de empleado | Sin sesión manda al login; con otro rol, a la cartelera |
+| `sesionGuard` | Mis compras, Mis puntos, Mis películas | Sin sesión manda al login |
+| `invitadoGuard` | Login y registro | Con sesión iniciada manda a la cartelera |
+| `perfilCompletoGuard` | Todas las pantallas, menos login, registro y completar perfil | Con el perfil incompleto (ingreso con Google) manda a completarlo |
+| `perfilPendienteGuard` | Completar perfil | Sin sesión, o con el perfil ya completo, sale de esa pantalla |
+
+Una URL inexistente vuelve a la cartelera.
+
 ---
 
 ## 🧠 Decisiones técnicas
@@ -60,9 +74,22 @@ scripts/generar-claves-vapid.mjs     → genera las claves VAPID de las notifica
 Todas las tablas tienen RLS activado:
 - **Catálogo** (películas, funciones, géneros, candy, combos, cupones): lectura pública; alta, modificación y baja exclusivas del admin.
 - **Datos personales** (avisos, canjes, reseñas): cada usuario accede a sus propios registros (`usuario_id = auth.uid()`).
-- **Compras:** se pueden realizar con cuenta o de forma anónima, como pide la consigna.
+- **Compras:** se pueden realizar con cuenta o como invitado, como pide la consigna.
 - **Validación en puerta:** empleados y admin marcan entradas como usadas y candy como entregado.
 - **Perfiles:** cada usuario edita sus propios datos; los roles de empleado y admin se asignan desde Supabase.
+
+### Qué películas aparecen en la página
+Cada película tiene la columna `visible`. Desde la pantalla de admin **Películas**, el admin la muestra u oculta con un botón: una película oculta no aparece en la cartelera, el Top 3, Próximamente ni el buscador. Es una baja lógica: sus funciones, entradas y reseñas se mantienen, su página de detalle sigue funcionando para quien llega desde "Mis compras" o "Mis películas", y se puede volver a mostrar en cualquier momento. Cada cambio queda en el log de actividad.
+
+### Funciones y salas
+- **Asignación automática:** al crear una función, el sistema prueba las salas en orden y la asigna a la primera libre en ese horario, contando la duración de la película y 30 minutos de margen.
+- **Funciones repetidas:** en Nueva función se elige entre **una sola vez** o **varios días de la semana** (por ejemplo, lunes, martes y viernes a las 18 hs, entre dos fechas). Una vista previa muestra todas las funciones que se van a crear. Se crean de a una, para que cada sala se elija teniendo en cuenta las funciones recién creadas; si algún día no hay sala libre, se informa y el resto se crea igual.
+- **Sala:** 19 filas en bloques de 4, 20 y 4 butacas. Las filas J y K del medio se reemplazaron por una única fila J de butacas accesibles (bloques de 2, 10 y 2, más grandes y marcadas con su ícono), y las filas R, S y T son VIP.
+
+### Compra con cuenta o como invitado
+Comprar sin cuenta es una opción que el usuario elige. Sin sesión se puede recorrer la cartelera, ver el detalle y las reseñas; al llegar a la selección de butacas, la página ofrece **iniciar sesión**, **registrarse** o **continuar como invitado**. El modo invitado lo maneja el service `ModoInvitado` con un signal guardado en `sessionStorage`: dura mientras la pestaña está abierta y se desactiva al iniciar sesión. Iniciando sesión desde la pantalla de butacas, el login devuelve al usuario a la misma función.
+
+El invitado compra entradas y candy y se lleva el PDF con el QR. Los puntos, los cupones, el crédito y "Mis compras" son beneficios de la cuenta; las películas con restricción de edad piden iniciar sesión para verificarla.
 
 ### Próximamente y preventa
 El estado de venta de cada película se calcula en el momento a partir de su fecha de estreno y de la fecha actual (`Peliculas.estadoVenta()`):
@@ -100,7 +127,8 @@ La pantalla de butacas se suscribe con **Supabase Realtime** a las entradas nuev
 
 ### Compras, cancelaciones, crédito y puntos
 - Cada compra genera una **orden** con **un único QR** que equivale a todo: las entradas de todas las butacas y el candy bar. El PDF trae ese solo código.
-- **Cancelación:** disponible hasta 2 hs antes de la función mientras ninguna entrada se haya usado. El monto pagado se acredita como crédito y los puntos canjeados se devuelven.
+- **Cancelación:** disponible hasta 2 hs antes de la función mientras ninguna entrada se haya usado. El monto pagado se acredita como crédito y los puntos canjeados se devuelven. Las butacas vuelven a quedar libres: un trigger de la base marca las entradas de la compra como canceladas (`entradas.cancelada`), y la regla de una entrada por butaca es un índice único parcial que solo cuenta las vigentes. Las entradas canceladas se conservan para el historial de "Mis compras".
+- **Límite:** hasta 6 butacas por persona y por función, sumando todas sus compras de esa función. Se controla en la pantalla y se vuelve a verificar al comprar.
 - **Puntos:** 1 por cada peso pagado. El costo en puntos de la entrada gratis se configura en la pantalla Fidelización, y el de cada producto de candy al darlo de alta.
 - **Cupones:** se aplica el de mayor porcentaje entre los que le correspondan al usuario.
 
@@ -108,7 +136,7 @@ La pantalla de butacas se suscribe con **Supabase Realtime** a las entradas nuev
 Se calculan a partir de las órdenes vigentes (no canceladas), agrupando los datos con `Map`. Las películas más vistas se muestran en ventanas móviles de los últimos 7 y 30 días. La exportación a **PDF** (jsPDF) y **Excel** (SheetJS) toma los mismos datos que se ven en pantalla.
 
 ### Log de actividad
-Cada acción del admin y del empleado queda registrada con usuario, fecha y hora: alta de películas, funciones, productos y combos; cambios de precios, cupones y puntos; apertura de preventas y validación de QR.
+Cada acción del admin y del empleado queda registrada con usuario, fecha y hora: alta de películas, funciones (una entrada por función), productos y combos; películas mostradas u ocultadas; cambios de precios, cupones y puntos; apertura de preventas y validación de QR.
 
 ### PWA
 La aplicación se puede instalar y su interfaz carga sin conexión gracias al service worker de Angular, que se activa en el build de producción. El mismo service worker recibe y muestra las notificaciones push.
@@ -125,43 +153,47 @@ La aplicación se puede instalar y su interfaz carga sin conexión gracias al se
 
 ### Catálogo de películas
 - [x] Cartelera (home) con listado de películas
+- [x] El admin elige qué películas aparecen en la página (mostrar / ocultar)
+- [x] Alta de películas con póster subido a Supabase Storage y vista previa de cómo se verá en la cartelera
 - [x] Detalle de película (sinopsis, navegación por slug en la URL)
 - [x] Buscador de texto + filtro por género (una película puede tener varios géneros)
 - [x] Top 3 películas más vendidas destacadas primero en la home
 - [x] Reseñas: calificación con estrellas + comentario corto, visibles antes de sacar entradas, con promedio
 
 ### Funciones y salas
-- [x] Alta de películas con póster subido a Supabase Storage y vista previa de cómo se verá en la cartelera
-- [x] ABM de funciones: película, horario, formato (2D/3D/4D/5D), idioma
+- [x] Alta de funciones: película, horario, formato (2D/3D/4D/5D) e idioma (castellano o subtitulada)
+- [x] Funciones repetidas: varios días de la semana a la misma hora, entre dos fechas, de una sola vez
 - [x] Margen obligatorio de 30 min entre funciones de una misma sala
-- [x] Asignación automática de sala al crear una función
+- [x] Asignación automática de sala al crear cada función, sin superposiciones
 - [x] Selector de fecha y hora con input nativo
 - [x] Layout de butacas: sala de 19 filas en bloques 4/20/4, con las filas J y K reemplazadas por una única fila J de butacas accesibles (2/10/2) y filas R, S y T VIP con precio diferencial, cada una con su marca visual y aviso antes de pagar
 - [x] Selección de butacas en tiempo real con Supabase Realtime
 - [x] Restricción de edad por película (+13 / +18): bloqueo de la compra a menores y aviso en la entrada de que debe asistir acompañado de un adulto
 
 ### Compra y entradas
-- [x] Selección de butacas + compra, con cuenta o anónima
+- [x] Selección de butacas + compra, con cuenta o como invitado (opción que el usuario elige)
 - [x] Límite de 6 butacas por usuario y por función (sumando todas sus compras de esa función)
 - [x] PDF con los datos de la compra + un único código QR para todas las entradas y el candy
 - [x] Cupón de descuento en la primera compra, con porcentaje configurable por el admin
 - [x] Cupón exclusivo para usuarios mayores de 50 años, también configurable
 - [x] Si un usuario califica para dos cupones, se aplica el de mayor porcentaje
-- [x] Cancelación de una compra hasta 2 hs antes de la función, con el monto acreditado como crédito para compras futuras
+- [x] Cancelación de una compra hasta 2 hs antes de la función, con el monto acreditado como crédito para compras futuras y las butacas liberadas
+- [x] Mensaje de agradecimiento al terminar la compra y acceso directo a "Mis compras"
 
 ### Candy bar
-- [x] ABM de productos (nombre, precio, imagen, categoría)
+- [x] Alta de productos (nombre, precio, imagen, categoría y costo en puntos)
 - [x] Compra de candy junto con la entrada, en el mismo flujo de selección de butacas
 - [x] Retiro de todo el pedido con el mismo QR de la compra
 - [x] Combos especiales configurables por el admin (entrada + pochoclos + bebida a precio fijo), destacados en la pantalla de compra
 
 ### Roles y validación en puerta
-- [x] Rol admin: gestión de películas, funciones, candy bar, combos, cupones, fidelización, preventas y reportes (rutas protegidas con guard)
+- [x] Rol admin: gestión de películas (alta y visibilidad), funciones, candy bar, combos, cupones, fidelización, preventas y reportes (rutas protegidas con guard)
 - [x] Rol empleado: validación de entradas y candy (rutas protegidas con guard)
 - [x] Escaneo de QR por cámara: un solo código muestra la compra completa y permite validar las entradas y entregar el candy
 - [x] Ingreso manual del código como alternativa al escaneo
 - [x] Invalidación: las entradas y el candy de cada código se usan una sola vez
 - [x] Log de actividad: quién creó cada función, quién modificó un precio, quién validó un QR, con fecha y hora
+- [x] Guards en todas las rutas: pantallas personales solo con sesión, login y registro solo sin sesión, perfil completo obligatorio
 
 ### Fidelización
 - [x] Acumulación de puntos por compra (1 punto por cada peso gastado)
