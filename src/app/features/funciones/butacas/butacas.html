@@ -1,5 +1,11 @@
 @if (cargando()) {
   <app-loading mensaje="Preparando la sala" />
+} @else if (!funcion()) {
+  <!-- No se pudo cargar la función (no existe o no hay conexión) -->
+  <div class="sala-error">
+    <p>{{ error() }}</p>
+    <a [routerLink]="['/']">Volver a la cartelera</a>
+  </div>
 } @else {
   <div class="butacas-container">
     <header class="sala-heading">

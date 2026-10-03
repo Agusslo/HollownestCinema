@@ -139,7 +139,13 @@ Se calculan a partir de las órdenes vigentes (no canceladas), agrupando los dat
 Cada acción del admin y del empleado queda registrada con usuario, fecha y hora: alta de películas, funciones (una entrada por función), productos y combos; películas mostradas u ocultadas; cambios de precios, cupones y puntos; apertura de preventas y validación de QR.
 
 ### PWA
-La aplicación se puede instalar y su interfaz carga sin conexión gracias al service worker de Angular, que se activa en el build de producción. El mismo service worker recibe y muestra las notificaciones push.
+La aplicación se puede instalar y funciona sin conexión gracias al service worker de Angular, que se activa en el build de producción (configurado en `ngsw-config.json`):
+
+- **Interfaz:** el código, los estilos, las fuentes y las imágenes de la app se guardan al instalarla.
+- **Cartelera sin conexión:** las consultas de películas, funciones, géneros, reseñas y ventas (para el Top 3) se guardan con la estrategia `freshness`: con conexión siempre se piden datos nuevos, y sin conexión se muestra lo último guardado. Los pósters se guardan la primera vez que se ven.
+- **Aviso:** sin conexión aparece una franja que avisa que se está viendo información guardada y que para comprar hace falta internet. Las compras, el login y los datos personales siempre van a la red.
+
+El mismo service worker recibe y muestra las notificaciones push.
 
 ---
 
@@ -148,7 +154,7 @@ La aplicación se puede instalar y su interfaz carga sin conexión gracias al se
 ### Base
 - [x] Inicialización del proyecto con Angular 22
 - [x] Conexión y configuración inicial con Supabase
-- [x] Configuración como Progressive Web App (PWA)
+- [x] Configuración como Progressive Web App (PWA): instalable, con la cartelera disponible sin conexión
 - [x] Identidad visual propia y producida ("Hollownest Cinema"), con modo claro/oscuro
 
 ### Catálogo de películas
@@ -178,7 +184,7 @@ La aplicación se puede instalar y su interfaz carga sin conexión gracias al se
 - [x] Cupón exclusivo para usuarios mayores de 50 años, también configurable
 - [x] Si un usuario califica para dos cupones, se aplica el de mayor porcentaje
 - [x] Cancelación de una compra hasta 2 hs antes de la función, con el monto acreditado como crédito para compras futuras y las butacas liberadas
-- [x] Mensaje de agradecimiento al terminar la compra y acceso directo a "Mis compras"
+- [x] Mensaje de agradecimiento al terminar la compra; después lleva a "Mis compras" (con cuenta) o a la cartelera (invitado)
 
 ### Candy bar
 - [x] Alta de productos (nombre, precio, imagen, categoría y costo en puntos)

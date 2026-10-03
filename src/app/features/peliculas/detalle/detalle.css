@@ -567,3 +567,24 @@ h2 {
     font-size: 1.1rem;
   }
 }
+
+/* ── No se pudo cargar la película ── */
+.detalle-error {
+  width: min(100% - 32px, 520px);
+  margin: 60px auto;
+  padding: 24px;
+  color: var(--hk-muted-text);
+  text-align: center;
+  background: var(--hk-shell);
+  border: 1px dashed rgba(212, 212, 224, 0.2);
+  border-radius: 10px;
+}
+
+.detalle-error p {
+  margin: 0 0 14px;
+}
+
+.detalle-error a {
+  color: var(--hk-focus);
+  font-weight: bold;
+}

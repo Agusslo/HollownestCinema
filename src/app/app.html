@@ -179,6 +179,12 @@
   </nav>
 </header>
 
+@if (sinConexion()) {
+  <p class="aviso-sin-conexion" role="status">
+    Sin conexión: estás viendo la última información guardada. Para comprar necesitás internet.
+  </p>
+}
+
 <main>
   <router-outlet />
 </main>

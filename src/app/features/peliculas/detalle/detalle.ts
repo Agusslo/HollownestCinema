@@ -24,6 +24,9 @@ export class Detalle {
   protected pelicula = signal<IPeliculaConGeneros | null>(null);
   protected funciones = signal<IFuncionConSala[]>([]);
   protected cargando = signal(true);
+  // Mensaje si no se pudo cargar (película inexistente o sin conexión y
+  // sin datos guardados). Sin esto, ante un error quedaba "cargando" para siempre.
+  protected error = signal<string | null>(null);
 
   // Promedio y cantidad de reseñas, para mostrar junto a la duración. No los
   // calcula este componente: se los manda el hijo <app-resenias> con su
@@ -79,10 +82,21 @@ export class Detalle {
   }
 
   private async cargarDatos() {
-    const slug = this.route.snapshot.paramMap.get('nombre') ?? ''; // Obtiene el slug de la película desde la URL
-    const pelicula = await this.peliculasService.obtenerPorSlug(slug); // Obtiene la película correspondiente al slug
-    this.pelicula.set(pelicula);
-    this.funciones.set(await this.funcionesService.obtenerPorPelicula(pelicula.id));
-    this.cargando.set(false);
+    try {
+      const slug = this.route.snapshot.paramMap.get('nombre') ?? ''; // Obtiene el slug de la película desde la URL
+      const pelicula = await this.peliculasService.obtenerPorSlug(slug); // Obtiene la película correspondiente al slug
+      this.pelicula.set(pelicula);
+      this.funciones.set(await this.funcionesService.obtenerPorPelicula(pelicula.id));
+    } catch {
+      // Si la película se pudo cargar (estaba guardada) y fallaron sólo sus
+      // funciones, el mensaje aparece en lugar de la lista de horarios.
+      this.error.set(
+        navigator.onLine && !this.pelicula()
+          ? 'No encontramos esta película. Puede que ya no esté en cartelera.'
+          : 'Sin conexión: no pudimos cargar los datos. Probá de nuevo cuando vuelva internet.',
+      );
+    } finally {
+      this.cargando.set(false);
+    }
   }
 }

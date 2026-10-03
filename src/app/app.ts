@@ -19,6 +19,9 @@ import { ModoInvitado } from './core/services/modo-invitado';
   host: {
     '(document:click)': 'cerrarMenuSiClickAfuera($event)',
     '(document:keydown.escape)': 'cerrarMenus()',
+    // El navegador avisa cuando se pierde o vuelve la conexión.
+    '(window:offline)': 'sinConexion.set(true)',
+    '(window:online)': 'sinConexion.set(false)',
   },
 })
 export class App {
@@ -42,6 +45,10 @@ export class App {
   protected menuAdminAbierto = signal(false);
   // Menú hamburguesa: sólo tiene efecto en el celular (ver app.css)
   protected menuMovilAbierto = signal(false);
+  // PWA: sin internet, el service worker muestra la última cartelera
+  // guardada. Este aviso deja claro que es información guardada y que para
+  // comprar hace falta conexión.
+  protected sinConexion = signal(!navigator.onLine);
 
   constructor() {
     this.temaClaro.set(localStorage.getItem('tema-hk') === 'claro');

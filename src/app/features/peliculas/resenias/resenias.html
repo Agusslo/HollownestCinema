@@ -7,6 +7,8 @@
 
   @if (cargando()) {
     <app-loading mensaje="Consultando los registros del reino" />
+  } @else if (errorCarga()) {
+    <p class="sin-resenias">No pudimos cargar las reseñas. Probá de nuevo cuando vuelva internet.</p>
   } @else {
     @if (promedio() > 0) {
       <div class="promedio-resenias">

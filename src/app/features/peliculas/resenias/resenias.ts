@@ -47,6 +47,9 @@ export class Resenias {
 
   protected resenias = signal<IReseniaConAutor[]>([]);
   protected cargando = signal(true);
+  // true si no se pudieron traer (por ejemplo, sin conexión y sin datos
+  // guardados): se avisa en vez de mostrar "Sé el primero en dejar...".
+  protected errorCarga = signal(false);
   protected usuarioActual = signal<IPerfil | null>(null);
   protected error = signal<string | null>(null);
   protected enviando = signal(false);
@@ -131,16 +134,22 @@ export class Resenias {
 
   private async cargar(peliculaId: number) {
     this.cargando.set(true);
-    const [resenias, usuario] = await Promise.all([
-      this.reseniasService.obtenerPorPelicula(peliculaId),
-      this.authService.usuarioActual(),
-    ]);
-    this.resenias.set(resenias);
-    this.usuarioActual.set(usuario);
-    this.cargando.set(false);
+    this.errorCarga.set(false);
+    try {
+      const [resenias, usuario] = await Promise.all([
+        this.reseniasService.obtenerPorPelicula(peliculaId),
+        this.authService.usuarioActual(),
+      ]);
+      this.resenias.set(resenias);
+      this.usuarioActual.set(usuario);
 
-    // .emit() es lo que dispara el evento hacia el padre.
-    this.calificacionCambiada.emit({ promedio: this.promedio(), cantidad: resenias.length });
+      // .emit() es lo que dispara el evento hacia el padre.
+      this.calificacionCambiada.emit({ promedio: this.promedio(), cantidad: resenias.length });
+    } catch {
+      this.errorCarga.set(true);
+    } finally {
+      this.cargando.set(false);
+    }
   }
 
   protected async enviar() {

@@ -96,7 +96,10 @@
         </div>
       }
 
-      @if (funciones().length === 0) {
+      @if (error()) {
+        <!-- La película se cargó (guardada) pero sus funciones no -->
+        <p class="empty-state">{{ error() }}</p>
+      } @else if (funciones().length === 0) {
         <p class="empty-state">No hay funciones cargadas para esta película.</p>
       } @else {
         <div class="funciones-lista">
@@ -150,4 +153,10 @@
       (calificacionCambiada)="actualizarCalificacion($event)"
     />
   </article>
+} @else {
+  <!-- No se pudo cargar: película inexistente o sin conexión -->
+  <div class="detalle-error">
+    <p>{{ error() }}</p>
+    <a [routerLink]="['/']">Volver a la cartelera</a>
+  </div>
 }

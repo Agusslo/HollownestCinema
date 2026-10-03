@@ -116,7 +116,16 @@ export class Butacas implements OnDestroy {
 
   private pdfService = inject(Pdf);
   constructor() {
-    this.cargarDatos();
+    // Si algo falla al preparar la sala (por ejemplo, sin conexión), se
+    // muestra un mensaje en vez de quedar "Preparando la sala" para siempre.
+    this.cargarDatos().catch(() => {
+      this.error.set(
+        navigator.onLine
+          ? 'No pudimos preparar la sala. Probá recargar la página.'
+          : 'Sin conexión: para elegir butacas y comprar necesitás internet.',
+      );
+      this.cargando.set(false);
+    });
   }
 
   private async cargarDatos() {
@@ -624,6 +633,13 @@ export class Butacas implements OnDestroy {
     if (this.seleccionadas().size === 0 || !this.eligioComoComprar()) return;
 
     this.error.set(null);
+
+    // Sin conexión el mapa puede verse (la PWA guarda los datos), pero la
+    // compra necesita internet: se avisa antes de intentar nada.
+    if (!navigator.onLine) {
+      this.error.set('Sin conexión: para comprar necesitás internet.');
+      return;
+    }
 
     // Restricción de edad de la película: se chequea ACÁ, antes de mandar
     // nada al servidor, porque hace falta saber la fecha de nacimiento del

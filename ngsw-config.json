@@ -21,9 +21,33 @@
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
-        "files": [
-          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
-        ]
+        "files": ["/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
+      }
+    },
+    {
+      "name": "posters",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "urls": ["https://**/*.(jpg|jpeg|png|webp|avif|gif)"]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "cartelera",
+      "urls": [
+        "https://xvcdspcpectanwpknqsm.supabase.co/rest/v1/peliculas*",
+        "https://xvcdspcpectanwpknqsm.supabase.co/rest/v1/funciones*",
+        "https://xvcdspcpectanwpknqsm.supabase.co/rest/v1/generos*",
+        "https://xvcdspcpectanwpknqsm.supabase.co/rest/v1/resenias*",
+        "https://xvcdspcpectanwpknqsm.supabase.co/rest/v1/entradas*"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100,
+        "maxAge": "7d",
+        "timeout": "10s"
       }
     }
   ]

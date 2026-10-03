@@ -2238,3 +2238,19 @@ h1 {
   color: #ffffff;
   background: linear-gradient(180deg, #1a9fbd, var(--hk-focus));
 }
+
+/* No se pudo cargar la función (no existe o no hay conexión) */
+.sala-error {
+  width: min(100% - 32px, 520px);
+  margin: 60px auto;
+  padding: 24px;
+  color: var(--hk-muted-text);
+  text-align: center;
+  border: 1px dashed rgba(212, 212, 224, 0.2);
+  border-radius: 10px;
+}
+
+.sala-error a {
+  color: var(--hk-focus);
+  font-weight: bold;
+}

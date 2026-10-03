@@ -90,14 +90,26 @@ export class Funciones {
   // la base (van a hacer falta para reportes más adelante), simplemente
   // no se muestran como opción para comprar.
   async obtenerPorPelicula(pelicula_id: number): Promise<IFuncionConSala[]> {
+    // Se piden las funciones desde el comienzo del día (y no desde este
+    // segundo): así la URL del pedido es la misma durante todo el día y el
+    // service worker puede guardar la respuesta para mostrarla sin conexión
+    // (con la hora exacta, cada pedido sería distinto y nunca se reusaría).
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
     const { data, error } = await this.supabase.Supabase.from('funciones')
       .select('*, salas(nombre)')
       .eq('pelicula_id', pelicula_id)
-      .gte('fecha_hora', new Date().toISOString())
+      .gte('fecha_hora', hoy.toISOString())
       .order('fecha_hora', { ascending: true });
 
     if (error) throw error;
-    return data as unknown as IFuncionConSala[];
+
+    // Las de hoy que ya empezaron se descartan acá.
+    const ahora = Date.now();
+    return (data as unknown as IFuncionConSala[]).filter(
+      (funcion) => new Date(funcion.fecha_hora).getTime() > ahora,
+    );
   }
 
   async obtenerDetalleCompra(
