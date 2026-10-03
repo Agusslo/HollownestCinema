@@ -30,8 +30,11 @@ export class Peliculas {
 
   // venta_abierta_en también se omite: al crear una película la venta
   // nunca está abierta (la base la deja en null). Se abre después, desde
-  // el botón "Abrir venta" del admin.
-  async crear(pelicula: Omit<IPelicula, 'id' | 'venta_abierta_en'>): Promise<IPelicula> {
+  // el botón "Abrir venta" del admin. visible tampoco se manda: la base la
+  // crea visible (default true).
+  async crear(
+    pelicula: Omit<IPelicula, 'id' | 'venta_abierta_en' | 'visible'>,
+  ): Promise<IPelicula> {
     //omit es una utilidad de typescript que permite omitir una propiedad de un tipo, en este caso omitimos la propiedad id de la interfaz IPelicula
     const { data, error } = await this.supabase.Supabase.from('peliculas')
       .insert(pelicula)
@@ -40,6 +43,17 @@ export class Peliculas {
 
     if (error) throw error;
     return data as IPelicula;
+  }
+
+  // Muestra u oculta la película en la Home. No borra nada: sus
+  // funciones, entradas y reseñas siguen intactas, y se puede volver a
+  // mostrar cuando se quiera.
+  async cambiarVisibilidad(id: number, visible: boolean): Promise<void> {
+    const { error } = await this.supabase.Supabase.from('peliculas')
+      .update({ visible })
+      .eq('id', id);
+
+    if (error) throw error;
   }
 
   async obtenerPorId(id: number): Promise<IPelicula> {

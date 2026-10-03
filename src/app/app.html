@@ -68,6 +68,9 @@
               <div class="admin-menu-panel">
                 @if (u.rol === 'admin') {
                   <span class="menu-seccion"><span>Administración</span></span>
+                  <a [routerLink]="['/admin/peliculas']" (click)="menuAdminAbierto.set(false)"
+                    >Películas</a
+                  >
                   <a [routerLink]="['/admin/peliculas/nueva']" (click)="menuAdminAbierto.set(false)"
                     >Nueva película</a
                   >

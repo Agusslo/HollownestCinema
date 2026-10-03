@@ -1,0 +1,208 @@
+/* La tarjeta, el encabezado y los colores base vienen de .admin-form en
+   styles.css; acá va sólo lo propio de esta pantalla: la lista. */
+
+/* El <main> de la app centra su contenido con flex: con width: 100% el
+   componente ocupa todo el ancho y la tarjeta puede llegar a sus 720px. */
+:host {
+  display: block;
+  width: 100%;
+}
+
+.peliculas-admin {
+  width: min(100%, 720px);
+}
+
+.peliculas-vacio {
+  margin: 0;
+  padding: 18px;
+  color: var(--hk-soft-text);
+  font-style: italic;
+  text-align: center;
+  border: 1px dashed rgba(212, 212, 224, 0.16);
+  border-radius: 10px;
+}
+
+/* Resumen "X de Y visibles" y el link a Nueva película */
+.peliculas-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.peliculas-resumen {
+  color: var(--hk-soft-text);
+  font-size: 0.94rem;
+  font-style: italic;
+}
+
+.peliculas-nueva {
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.peliculas-nueva:hover {
+  text-decoration: underline;
+}
+
+.peliculas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cada película: póster chico | nombre y datos | estado y botón */
+.pelicula-item {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 14px 10px 10px;
+  background: rgba(10, 10, 18, 0.35);
+  border: 1px solid rgba(212, 212, 224, 0.12);
+  border-radius: 10px;
+}
+
+/* Oculta: el póster y el nombre se ven apagados, para distinguirla de un
+   vistazo (el botón "Mostrar" queda con su color normal). */
+.pelicula-item.oculta {
+  border-style: dashed;
+}
+
+.pelicula-item.oculta .pelicula-poster,
+.pelicula-item.oculta .pelicula-info {
+  opacity: 0.5;
+}
+
+.pelicula-poster {
+  width: 52px;
+  height: 76px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.pelicula-info {
+  min-width: 0;
+}
+
+.pelicula-nombre {
+  margin: 0 0 4px;
+  overflow: hidden;
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 0.91rem;
+  letter-spacing: 1.5px;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pelicula-datos {
+  margin: 0;
+  color: var(--hk-muted-text);
+  font-size: 0.94rem;
+}
+
+.pelicula-accion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.pelicula-estado {
+  color: var(--hk-soft-text);
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pelicula-estado.visible {
+  color: var(--hk-focus);
+}
+
+/* Ocultar: botón con borde (acción "de salida"). Mostrar: relleno. */
+.pelicula-boton {
+  min-width: 110px;
+  padding: 8px 16px;
+  color: var(--hk-pale);
+  background: transparent;
+  border: 1px solid rgba(212, 212, 224, 0.3);
+  border-radius: 8px;
+  font-family: 'Trajan', serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.pelicula-boton:hover:not(:disabled) {
+  border-color: var(--hk-focus);
+  background: rgba(79, 196, 227, 0.08);
+}
+
+.pelicula-boton.mostrar {
+  color: #0a0a12;
+  background: var(--hk-focus);
+  border-color: var(--hk-focus);
+}
+
+.pelicula-boton.mostrar:hover:not(:disabled) {
+  filter: brightness(1.08);
+  background: var(--hk-focus);
+}
+
+.pelicula-boton:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+/* ── Celular: el estado y el botón pasan abajo del nombre ── */
+@media (max-width: 560px) {
+  .pelicula-item {
+    grid-template-columns: 44px 1fr;
+  }
+
+  .pelicula-poster {
+    width: 44px;
+    height: 64px;
+  }
+
+  .pelicula-accion {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .pelicula-item {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.16);
+}
+
+:host-context(.tema-claro) .pelicula-boton {
+  color: var(--hk-soul);
+  border-color: rgba(41, 64, 71, 0.3);
+}
+
+:host-context(.tema-claro) .pelicula-boton.mostrar {
+  color: #ffffff;
+}

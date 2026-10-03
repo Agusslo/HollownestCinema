@@ -17,6 +17,10 @@ export default interface IPelicula {
   // en un cine real: aunque la película tenga funciones cargadas, no se
   // pueden comprar hasta que se abra la venta (o hasta el día del estreno).
   venta_abierta_en: string | null;
+  // Si aparece en la Home. El admin la prende y la apaga desde la
+  // pantalla "Películas" ("poder elegir qué películas aparecen cuando
+  // se entra a la página"). Las nuevas arrancan en true (default de la base).
+  visible: boolean;
 }
 // Extiende IPelicula con los géneros asignados, vía el join embebido de la
 // tabla intermedia peliculas_generos -> generos (mismo patrón que

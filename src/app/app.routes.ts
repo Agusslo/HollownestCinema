@@ -12,6 +12,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/home/home').then((m) => m.Home),
   },
   {
+    path: 'admin/peliculas',
+    canActivate: [perfilCompletoGuard, rolGuard(['admin'])],
+    loadComponent: () =>
+      import('./features/admin/peliculas/peliculas').then((m) => m.PeliculasAdmin),
+  },
+  {
     path: 'admin/peliculas/nueva',
     canActivate: [perfilCompletoGuard, rolGuard(['admin'])],
     loadComponent: () =>

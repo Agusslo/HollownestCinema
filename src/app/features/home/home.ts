@@ -152,10 +152,17 @@ export class Home implements OnInit, OnDestroy {
       // Pedimos 10 más vendidas (no 3) porque después filtramos: una
       // película en preventa puede tener entradas vendidas, pero todavía
       // nadie la vio, así que no puede estar en "Las más vistas".
-      const [masVendidas, todas] = await Promise.all([
+      const [masVendidasTodas, todasLasPeliculas] = await Promise.all([
         this.peliculasService.obtenerMasVendidas(10),
         this.peliculasService.obtenerTodas(),
       ]);
+
+      // Sólo las que el admin dejó visibles (pantalla admin "Películas"):
+      // las ocultas no aparecen en ninguna sección de la Home ni en el
+      // buscador, que trabaja sobre todas().
+      const esVisible = (p: IPeliculaConGeneros) => p.visible;
+      const masVendidas = masVendidasTodas.filter(esVisible);
+      const todas = todasLasPeliculas.filter(esVisible);
 
       // Separamos según el estado de venta (Peliculas.estadoVenta): las
       // estrenadas van a la cartelera; las demás, a "Próximamente".

@@ -1,0 +1,71 @@
+    <!-- Misma tarjeta .admin-form (styles.css) que el resto de las pantallas
+        de admin, así el encabezado queda igual que en Preventas o Cupones. -->
+    <section class="admin-form peliculas-admin">
+    <div class="form-header">
+        <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
+        <span class="form-kicker">Panel de administración</span>
+        <h1>Películas</h1>
+        <div class="admin-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+        <p>
+        Elegí qué películas aparecen en la página. Una película oculta no se borra: sus funciones,
+        entradas y reseñas se mantienen, y podés volver a mostrarla cuando quieras.
+        </p>
+    </div>
+
+    @if (cargando()) {
+        <app-loading mensaje="Consultando las películas" />
+    } @else if (peliculas().length === 0) {
+        <p class="peliculas-vacio">Todavía no hay películas cargadas.</p>
+    } @else {
+        <div class="peliculas-barra">
+        <span class="peliculas-resumen">
+            {{ cantidadVisibles() }} de {{ peliculas().length }} visibles en la página
+        </span>
+        <a class="peliculas-nueva" [routerLink]="['/admin/peliculas/nueva']">+ Nueva película</a>
+        </div>
+
+        <ul class="peliculas-lista">
+        @for (pelicula of peliculas(); track pelicula.id) {
+            <li class="pelicula-item" [class.oculta]="!pelicula.visible">
+            <img
+                class="pelicula-poster"
+                [src]="pelicula.imagen_url"
+                [alt]="pelicula.nombre"
+                onerror="this.style.visibility = 'hidden'"
+            />
+
+            <div class="pelicula-info">
+                <p class="pelicula-nombre">{{ pelicula.nombre }}</p>
+                <p class="pelicula-datos">
+                {{ seccion(pelicula) }} · {{ pelicula.duracion_minutos | duracion }}
+                </p>
+            </div>
+
+            <div class="pelicula-accion">
+                <span class="pelicula-estado" [class.visible]="pelicula.visible">
+                {{ pelicula.visible ? '◆ Visible' : 'Oculta' }}
+                </span>
+                <!-- aria-pressed: le dice a los lectores de pantalla que es un
+                    botón que se prende y se apaga, y en qué estado está. -->
+                <button
+                type="button"
+                class="pelicula-boton"
+                [class.mostrar]="!pelicula.visible"
+                [disabled]="procesando() === pelicula.id"
+                [attr.aria-pressed]="pelicula.visible"
+                (click)="alternarVisibilidad(pelicula)"
+                >
+                @if (procesando() === pelicula.id) {
+                    Guardando...
+                } @else if (pelicula.visible) {
+                    Ocultar
+                } @else {
+                    Mostrar
+                }
+                </button>
+            </div>
+            </li>
+        }
+        </ul>
+    }
+    </section>
