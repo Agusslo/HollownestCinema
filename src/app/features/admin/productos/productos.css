@@ -172,6 +172,27 @@
   background: var(--hk-focus);
 }
 
+/* Sacar de la venta: rojo; volver a la venta: verde */
+.producto-boton.sacar {
+  color: #ff9e9e;
+  border-color: rgba(255, 120, 120, 0.45);
+}
+
+.producto-boton.sacar:hover:not(:disabled) {
+  border-color: #ff7878;
+  background: rgba(255, 120, 120, 0.1);
+}
+
+.producto-boton.volver {
+  color: #8fe3a8;
+  border-color: rgba(110, 220, 145, 0.45);
+}
+
+.producto-boton.volver:hover:not(:disabled) {
+  border-color: #6edc91;
+  background: rgba(110, 220, 145, 0.1);
+}
+
 .producto-boton:disabled {
   opacity: 0.5;
   cursor: wait;
@@ -218,6 +239,16 @@
 :host-context(.tema-claro) .producto-boton {
   color: var(--hk-soul);
   border-color: rgba(41, 64, 71, 0.3);
+}
+
+:host-context(.tema-claro) .producto-boton.sacar {
+  color: #a3281c;
+  border-color: rgba(163, 40, 28, 0.4);
+}
+
+:host-context(.tema-claro) .producto-boton.volver {
+  color: #1e7a3c;
+  border-color: rgba(30, 122, 60, 0.4);
 }
 
 :host-context(.tema-claro) .producto-boton.principal {

@@ -77,6 +77,8 @@
                 <button
                     type="button"
                     class="producto-boton"
+                    [class.sacar]="producto.activo"
+                    [class.volver]="!producto.activo"
                     [disabled]="procesando() === producto.id"
                     (click)="alternarVenta(producto)"
                 >
