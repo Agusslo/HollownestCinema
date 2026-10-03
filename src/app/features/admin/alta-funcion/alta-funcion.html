@@ -8,7 +8,7 @@
   </header>
 
   <div class="form-fields">
-    <label>
+    <label class="campo-ancho">
       <span>Película</span>
       <select formControlName="pelicula_id">
         <option [ngValue]="null">Elegí una película</option>
@@ -21,29 +21,134 @@
       }
     </label>
 
-    <label class="date-field">
-      <span>Fecha y hora</span>
-      <input
-        type="datetime-local"
-        formControlName="fecha_hora"
-        min="2024-01-01T00:00"
-        max="2099-12-31T23:59"
-      />
-      @if (formulario.controls.fecha_hora.touched && formulario.controls.fecha_hora.invalid) {
-        @if (formulario.controls.fecha_hora.hasError('fechaPasada')) {
-          <span class="campo-error">La función tiene que ser en una fecha y hora futura.</span>
-        } @else {
-          <span class="campo-error">Elegí la fecha y la hora de la función.</span>
+    <!-- Una sola vez o varios días de la semana. Son dos radios conectados
+         al mismo control "modo", dibujados como un selector de dos botones. -->
+    <fieldset class="modo-selector campo-ancho">
+      <legend>¿Cuándo se proyecta?</legend>
+      <label class="modo-opcion">
+        <input type="radio" formControlName="modo" value="unica" />
+        <span>Una sola vez</span>
+      </label>
+      <label class="modo-opcion">
+        <input type="radio" formControlName="modo" value="semanal" />
+        <span>Varios días de la semana</span>
+      </label>
+    </fieldset>
+
+    @if (modo() === 'unica') {
+      <label class="campo-ancho">
+        <span>Fecha y hora</span>
+        <input
+          type="datetime-local"
+          formControlName="fecha_hora"
+          min="2024-01-01T00:00"
+          max="2099-12-31T23:59"
+        />
+        @if (formulario.controls.fecha_hora.touched && formulario.controls.fecha_hora.invalid) {
+          @if (formulario.controls.fecha_hora.hasError('fechaPasada')) {
+            <span class="campo-error">La función tiene que ser en una fecha y hora futura.</span>
+          } @else {
+            <span class="campo-error">Elegí la fecha y la hora de la función.</span>
+          }
+        } @else if (
+          formulario.controls.fecha_hora.touched && formulario.hasError('antesDelEstreno')
+        ) {
+          <span class="campo-error">
+            Esta película se estrena el {{ estrenoElegido() }}: la función tiene que ser ese día o
+            después.
+          </span>
         }
-      } @else if (
-        formulario.controls.fecha_hora.touched && formulario.hasError('antesDelEstreno')
-      ) {
-        <span class="campo-error">
-          Esta película se estrena el {{ estrenoElegido() }}: la función tiene que ser ese día o
-          después.
-        </span>
-      }
-    </label>
+      </label>
+    } @else {
+      <!-- formGroupName conecta este bloque con el grupo "semanal" -->
+      <div class="semanal campo-ancho" formGroupName="semanal">
+        <fieldset class="dias-fieldset">
+          <legend>Días</legend>
+          <div class="dias-opciones">
+            @for (dia of diasSemana; track dia.numero) {
+              <label class="dia-opcion" [title]="dia.nombre">
+                <input
+                  type="checkbox"
+                  [checked]="diaElegido(dia.numero)"
+                  (change)="alternarDia(dia.numero)"
+                />
+                <span>{{ dia.corto }}</span>
+              </label>
+            }
+          </div>
+          @if (
+            formulario.controls.semanal.controls.dias.touched &&
+            formulario.controls.semanal.controls.dias.invalid
+          ) {
+            <span class="campo-error">Elegí al menos un día.</span>
+          }
+        </fieldset>
+
+        <div class="semanal-campos">
+          <label>
+            <span>Hora</span>
+            <input type="time" formControlName="hora" />
+            @if (
+              formulario.controls.semanal.controls.hora.touched &&
+              formulario.controls.semanal.controls.hora.invalid
+            ) {
+              <span class="campo-error">Elegí la hora.</span>
+            }
+          </label>
+
+          <label>
+            <span>Desde</span>
+            <input type="date" formControlName="desde" />
+            @if (
+              formulario.controls.semanal.controls.desde.touched &&
+              formulario.controls.semanal.controls.desde.invalid
+            ) {
+              <span class="campo-error">Elegí desde qué día.</span>
+            } @else if (
+              formulario.controls.semanal.controls.desde.touched &&
+              formulario.hasError('antesDelEstreno')
+            ) {
+              <span class="campo-error">Se estrena el {{ estrenoElegido() }}: empezá ese día.</span>
+            }
+          </label>
+
+          <label>
+            <span>Hasta</span>
+            <input type="date" formControlName="hasta" />
+            @if (
+              formulario.controls.semanal.controls.hasta.touched &&
+              formulario.controls.semanal.controls.hasta.invalid
+            ) {
+              <span class="campo-error">Elegí hasta qué día.</span>
+            } @else if (
+              formulario.controls.semanal.controls.hasta.touched &&
+              formulario.controls.semanal.hasError('rangoInvertido')
+            ) {
+              <span class="campo-error">Tiene que ser igual o posterior a "Desde".</span>
+            }
+          </label>
+        </div>
+
+        <!-- Vista previa: se actualiza sola (computed) mientras se eligen
+             días, hora y rango, así el admin ve qué se va a crear. -->
+        @if (vistaPrevia().length > 0) {
+          <div class="vista-funciones" [class.excedido]="vistaPrevia().length > maxFunciones">
+            <p class="vista-titulo">
+              Se van a crear {{ vistaPrevia().length }}
+              {{ vistaPrevia().length === 1 ? 'función' : 'funciones' }}
+              @if (vistaPrevia().length > maxFunciones) {
+                · el máximo por carga es {{ maxFunciones }}
+              }
+            </p>
+            <ul class="vista-lista">
+              @for (fecha of vistaPrevia(); track fecha) {
+                <li>{{ fecha }}</li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+    }
 
     <label>
       <span>Formato</span>
@@ -64,6 +169,11 @@
     </label>
   </div>
 
+  <p class="fieldset-hint">
+    La sala se asigna sola en cada función: la primera libre en ese horario, contando la duración de
+    la película y 30 minutos de margen.
+  </p>
+
   @if (formulario.invalid && formulario.touched) {
     <p class="form-error">Faltan completar campos: revisá los que están marcados en rojo.</p>
   }
@@ -76,8 +186,32 @@
     <p class="form-mensaje">{{ mensaje() }}</p>
   }
 
-  <button class="submit-button" appGlowHover type="submit">
-    <span>Guardar función</span>
+  <!-- Detalle de una carga de varios días: qué se creó y qué no -->
+  @if (creadas().length > 0) {
+    <ul class="resultado-lista">
+      @for (item of creadas(); track item) {
+        <li class="resultado-ok">✓ {{ item }}</li>
+      }
+    </ul>
+  }
+  @if (fallidas().length > 0) {
+    <ul class="resultado-lista">
+      @for (item of fallidas(); track item) {
+        <li class="resultado-error">✕ {{ item }}</li>
+      }
+    </ul>
+  }
+
+  <button class="submit-button" appGlowHover type="submit" [disabled]="guardando()">
+    <span>
+      @if (guardando()) {
+        Creando funciones...
+      } @else if (modo() === 'semanal') {
+        Guardar funciones
+      } @else {
+        Guardar función
+      }
+    </span>
     <span aria-hidden="true">→</span>
   </button>
 </form>

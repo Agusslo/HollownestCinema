@@ -10,19 +10,277 @@
   gap: 13px 16px;
 }
 
-.form-fields label:first-child,
-.form-fields .date-field {
+.form-fields .campo-ancho {
   grid-column: span 2;
 }
 
-@media (max-width: 560px) {
+/* ── Selector "Una sola vez / Varios días": dos radios dibujados como un
+   par de botones pegados ── */
+.modo-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
 
+.modo-selector legend {
+  margin-bottom: 7px;
+  padding: 0;
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.modo-opcion {
+  position: relative;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* El radio queda invisible pero sigue funcionando (y se puede usar con
+   el teclado); lo que se ve es el <span> de al lado. */
+.modo-opcion input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modo-opcion span {
+  display: block;
+  padding: 10px 12px;
+  color: var(--hk-soft-text);
+  text-align: center;
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: 1px solid rgba(212, 212, 224, 0.18);
+  background: rgba(8, 8, 16, 0.4);
+  transition:
+    color 0.2s,
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.modo-opcion:first-of-type span {
+  border-radius: 6px 0 0 6px;
+}
+
+.modo-opcion:last-of-type span {
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+}
+
+.modo-opcion input:checked + span {
+  color: var(--hk-soul);
+  border-color: var(--hk-focus);
+  background: rgba(79, 196, 227, 0.14);
+}
+
+.modo-opcion input:focus-visible + span {
+  outline: 2px solid var(--hk-focus);
+  outline-offset: 2px;
+}
+
+/* ── Carga semanal ── */
+.semanal {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 12px 14px;
+  border: 1px solid rgba(212, 212, 224, 0.16);
+  border-radius: 8px;
+  background: rgba(10, 10, 18, 0.24);
+}
+
+.dias-fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.dias-fieldset legend,
+.semanal-campos label > span:first-child {
+  margin-bottom: 7px;
+  padding: 0;
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.dias-opciones {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+/* Mismo estilo que los géneros de Nueva película */
+.dia-opcion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 6px 4px;
+  color: var(--hk-pale);
+  border: 1px solid rgba(212, 212, 224, 0.13);
+  border-radius: 4px;
+  background: rgba(28, 28, 46, 0.62);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.dia-opcion:hover,
+.dia-opcion:has(input:checked) {
+  border-color: rgba(79, 196, 227, 0.65);
+  background: rgba(79, 196, 227, 0.1);
+}
+
+.dia-opcion input {
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  accent-color: var(--hk-focus);
+}
+
+.dia-opcion span {
+  font-size: 0.86rem;
+}
+
+.semanal-campos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.semanal-campos label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+}
+
+/* Los inputs de este bloque no son hijos directos de .form-fields, así
+   que se les da el mismo aspecto que al resto de los campos. */
+.semanal-campos input {
+  width: 100%;
+  box-sizing: border-box;
+  color: var(--hk-soul);
+  background-color: rgba(8, 8, 16, 0.55);
+  border: 1px solid rgba(212, 212, 224, 0.18);
+  border-radius: 6px;
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 1rem;
+}
+
+.semanal-campos input:focus {
+  border-color: var(--hk-focus);
+  box-shadow: 0 0 14px rgba(79, 196, 227, 0.22);
+}
+
+.semanal-campos input.ng-invalid.ng-touched {
+  border-color: var(--hk-grimm);
+}
+
+/* Vista previa de las fechas que se van a crear */
+.vista-funciones {
+  padding: 10px 12px;
+  border-left: 2px solid var(--hk-focus);
+  background: rgba(79, 196, 227, 0.08);
+}
+
+.vista-funciones.excedido {
+  border-left-color: var(--hk-grimm);
+  background: rgba(192, 57, 43, 0.1);
+}
+
+.vista-titulo {
+  margin: 0 0 6px;
+  color: var(--hk-soul);
+  font-size: 0.94rem;
+}
+
+.vista-lista,
+.resultado-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--hk-muted-text);
+  font-size: 0.9rem;
+}
+
+/* Si son muchas, la lista se puede scrollear en vez de estirar la tarjeta */
+.vista-lista {
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.resultado-lista {
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.resultado-ok {
+  color: var(--hk-focus);
+}
+
+.resultado-error {
+  color: #ff9e9e;
+}
+
+.fieldset-hint {
+  margin: 14px 0 0;
+  color: var(--hk-soft-text);
+  font-size: 0.91rem;
+  font-style: italic;
+}
+
+@media (max-width: 560px) {
   .form-fields {
     grid-template-columns: 1fr;
   }
 
-  .form-fields label:first-child,
-  .form-fields .date-field {
+  .form-fields .campo-ancho {
     grid-column: auto;
   }
+
+  .dias-opciones {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .semanal-campos {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .modo-opcion span,
+:host-context(.tema-claro) .dia-opcion,
+:host-context(.tema-claro) .semanal-campos input {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.22);
+}
+
+:host-context(.tema-claro) .modo-opcion input:checked + span {
+  background: rgba(22, 141, 168, 0.1);
+  border-color: var(--hk-focus);
+}
+
+:host-context(.tema-claro) .semanal {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(41, 64, 71, 0.2);
+}
+
+:host-context(.tema-claro) .resultado-error {
+  color: #a3281c;
 }
