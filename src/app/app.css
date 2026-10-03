@@ -696,3 +696,14 @@ main > *:not(router-outlet) {
 :host-context(.tema-claro) .admin-menu-panel a:hover {
   text-shadow: none;
 }
+
+/* ── Aviso de PWA sin conexión (debajo del header) ── */
+.aviso-sin-conexion {
+  margin: 0;
+  padding: 9px 16px;
+  color: #2b1c02;
+  font-size: 0.94rem;
+  font-weight: 600;
+  text-align: center;
+  background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+}
