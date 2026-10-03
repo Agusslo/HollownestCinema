@@ -540,7 +540,7 @@
     }
 
     <!-- Cartel de agradecimiento: tapa la pantalla al terminar la compra
-         y, si hay sesión, después lleva a "Mis compras". -->
+         y después lleva a "Mis compras" (con sesión) o a la cartelera. -->
     @if (compraExitosa()) {
       <div class="gracias-fondo" role="alertdialog" aria-modal="true" aria-labelledby="gracias-titulo">
         <div class="gracias-cartel">
@@ -561,8 +561,9 @@
               Ver mis compras
             </button>
           } @else {
-            <button type="button" class="btn-comprar" appGlowHover (click)="compraExitosa.set(false)">
-              Cerrar
+            <p class="gracias-nota">En unos segundos te llevamos a la cartelera…</p>
+            <button type="button" class="btn-comprar" appGlowHover (click)="irACartelera()">
+              Volver a la cartelera
             </button>
           }
         </div>

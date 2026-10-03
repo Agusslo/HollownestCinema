@@ -274,6 +274,10 @@ export class Butacas implements OnDestroy {
     this.router.navigateByUrl('/mis-compras');
   }
 
+  protected irACartelera(): void {
+    this.router.navigateByUrl('/');
+  }
+
   protected estaOcupada(butaca: string): boolean {
     return this.ocupadas().has(butaca);
   }
@@ -736,11 +740,12 @@ export class Butacas implements OnDestroy {
       // El profe pidió que después de comprar te lleve a ver lo que
       // compraste — primero se muestra el cartel de "¡Gracias por tu
       // compra!" (ver el HTML) y recién ahí navegamos, solos a los pocos
-      // segundos o antes si toca el botón. Sólo tiene sentido si está
-      // logueado (una compra anónima no tiene "Mis compras" a donde ir).
-      if (usuario) {
-        this.timerRedireccion = setTimeout(() => this.irAMisCompras(), 4000);
-      }
+      // segundos o antes si toca el botón. Una compra anónima no tiene
+      // "Mis compras" a donde ir, así que la mandamos a la cartelera.
+      this.timerRedireccion = setTimeout(
+        () => (usuario ? this.irAMisCompras() : this.irACartelera()),
+        4000,
+      );
     } catch (e) {
       if (e instanceof ButacasOcupadasError) {
         await this.sacarButacasOcupadas(e.butacas);
