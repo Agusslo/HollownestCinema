@@ -748,20 +748,29 @@ export class Butacas implements OnDestroy {
       this.carritoCandy.set(new Map());
       this.comboSeleccionado.set(null);
 
-      const ocupadasArray = await this.entradasService.obtenerButacasOcupadas(this.funcion_id);
-      this.ocupadas.set(new Set(ocupadasArray));
-      this.usuario.set(await this.authService.usuarioActual());
-      await this.cargarYaCompradas();
-
       // El profe pidió que después de comprar te lleve a ver lo que
       // compraste — primero se muestra el cartel de "¡Gracias por tu
       // compra!" (ver el HTML) y recién ahí navegamos, solos a los pocos
       // segundos o antes si toca el botón. Una compra anónima no tiene
       // "Mis compras" a donde ir, así que la mandamos a la cartelera.
+      // El timer se arma ANTES de actualizar los datos de abajo: la compra
+      // ya está hecha, y si se corta internet justo ahora, la redirección
+      // tiene que pasar igual (antes, un error acá dejaba el cartel trabado).
       this.timerRedireccion = setTimeout(
         () => (usuario ? this.irAMisCompras() : this.irACartelera()),
         4000,
       );
+
+      // Refresca el mapa, el crédito/puntos y el cupo. Si falla, no es un
+      // error de la compra: se ignora (al volver a la pantalla se recarga).
+      try {
+        const ocupadasArray = await this.entradasService.obtenerButacasOcupadas(this.funcion_id);
+        this.ocupadas.set(new Set(ocupadasArray));
+        this.usuario.set(await this.authService.usuarioActual());
+        await this.cargarYaCompradas();
+      } catch {
+        // Sin conexión o error de red después de comprar: no pasa nada.
+      }
     } catch (e) {
       if (e instanceof ButacasOcupadasError) {
         await this.sacarButacasOcupadas(e.butacas);
