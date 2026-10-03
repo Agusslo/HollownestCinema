@@ -39,8 +39,8 @@ src/app/
 │   ├── perfil/         mis compras, mis películas, mis puntos
 │   ├── auth/           login, registro, completar perfil
 │   ├── empleado/       validación de QR en puerta
-│   └── admin/          películas (mostrar / ocultar), altas, cupones, fidelización,
-│                       preventas, log de actividad, reportes
+│   └── admin/          películas (mostrar / ocultar), funciones, productos, altas,
+│                       cupones, fidelización, preventas, log de actividad, reportes
 └── shared/
     ├── components/   → poster-card (tarjeta de la cartelera), loading, toast, blobatar
     └── directives/   → appGlowHover (brillo al pasar el mouse)
@@ -84,7 +84,11 @@ Cada película tiene la columna `visible`. Desde la pantalla de admin **Películ
 ### Funciones y salas
 - **Asignación automática:** al crear una función, el sistema prueba las salas en orden y la asigna a la primera libre en ese horario, contando la duración de la película y 30 minutos de margen.
 - **Funciones repetidas:** en Nueva función se elige entre **una sola vez** o **varios días de la semana** (por ejemplo, lunes, martes y viernes a las 18 hs, entre dos fechas). Una vista previa muestra todas las funciones que se van a crear. Se crean de a una, para que cada sala se elija teniendo en cuenta las funciones recién creadas; si algún día no hay sala libre, se informa y el resto se crea igual.
+- **Baja de funciones:** la pantalla de admin **Funciones** lista las funciones programadas con la cantidad de entradas de cada una. Las que no tienen entradas se pueden borrar (con confirmación), por ejemplo si se cargaron con un horario equivocado. Las que tienen entradas no: la pantalla no lo ofrece y además la base lo impide por la clave foránea entre entradas y funciones.
 - **Sala:** 19 filas en bloques de 4, 20 y 4 butacas. Las filas J y K del medio se reemplazaron por una única fila J de butacas accesibles (bloques de 2, 10 y 2, más grandes y marcadas con su ícono), y las filas R, S y T son VIP.
+
+### Productos del candy bar
+La pantalla de admin **Productos** permite modificar el precio y los puntos de canje de cada producto, y sacarlo de la venta o volver a ponerlo (columna `activo`). Es una baja lógica: el producto deja de aparecer para comprar y para armar combos, pero sigue en las compras, los canjes y los reportes donde ya figura. Cada cambio de precio queda en el log de actividad.
 
 ### Compra con cuenta o como invitado
 Comprar sin cuenta es una opción que el usuario elige. Sin sesión se puede recorrer la cartelera, ver el detalle y las reseñas; al llegar a la selección de butacas, la página ofrece **iniciar sesión**, **registrarse** o **continuar como invitado**. El modo invitado lo maneja el service `ModoInvitado` con un signal guardado en `sessionStorage`: dura mientras la pestaña está abierta y se desactiva al iniciar sesión. Iniciando sesión desde la pantalla de butacas, el login devuelve al usuario a la misma función.
@@ -136,7 +140,7 @@ La pantalla de butacas se suscribe con **Supabase Realtime** a las entradas nuev
 Se calculan a partir de las órdenes vigentes (no canceladas), agrupando los datos con `Map`. Las películas más vistas se muestran en ventanas móviles de los últimos 7 y 30 días. La exportación a **PDF** (jsPDF) y **Excel** (SheetJS) toma los mismos datos que se ven en pantalla.
 
 ### Log de actividad
-Cada acción del admin y del empleado queda registrada con usuario, fecha y hora: alta de películas, funciones (una entrada por función), productos y combos; películas mostradas u ocultadas; cambios de precios, cupones y puntos; apertura de preventas y validación de QR.
+Cada acción del admin y del empleado queda registrada con usuario, fecha y hora: alta de películas, funciones (una entrada por función), productos y combos; películas mostradas u ocultadas; funciones borradas; productos sacados de la venta; cambios de precios, cupones y puntos; apertura de preventas y validación de QR.
 
 ### PWA
 La aplicación se puede instalar y funciona sin conexión gracias al service worker de Angular, que se activa en el build de producción (configurado en `ngsw-config.json`):
@@ -168,6 +172,7 @@ El mismo service worker recibe y muestra las notificaciones push.
 
 ### Funciones y salas
 - [x] Alta de funciones: película, horario, formato (2D/3D/4D/5D) e idioma (castellano o subtitulada)
+- [x] Baja de funciones que todavía no tienen entradas vendidas
 - [x] Funciones repetidas: varios días de la semana a la misma hora, entre dos fechas, de una sola vez
 - [x] Margen obligatorio de 30 min entre funciones de una misma sala
 - [x] Asignación automática de sala al crear cada función, sin superposiciones
@@ -188,12 +193,13 @@ El mismo service worker recibe y muestra las notificaciones push.
 
 ### Candy bar
 - [x] Alta de productos (nombre, precio, imagen, categoría y costo en puntos)
+- [x] Modificación del precio y de los puntos de canje, y baja lógica (sacar de la venta) de cada producto
 - [x] Compra de candy junto con la entrada, en el mismo flujo de selección de butacas
 - [x] Retiro de todo el pedido con el mismo QR de la compra
 - [x] Combos especiales configurables por el admin (entrada + pochoclos + bebida a precio fijo), destacados en la pantalla de compra
 
 ### Roles y validación en puerta
-- [x] Rol admin: gestión de películas (alta y visibilidad), funciones, candy bar, combos, cupones, fidelización, preventas y reportes (rutas protegidas con guard)
+- [x] Rol admin: gestión de películas (alta y visibilidad), funciones (alta y baja), productos (alta, modificación y baja lógica), candy bar, combos, cupones, fidelización, preventas y reportes (rutas protegidas con guard)
 - [x] Rol empleado: validación de entradas y candy (rutas protegidas con guard)
 - [x] Escaneo de QR por cámara: un solo código muestra la compra completa y permite validar las entradas y entregar el candy
 - [x] Ingreso manual del código como alternativa al escaneo

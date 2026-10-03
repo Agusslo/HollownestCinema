@@ -13,3 +13,10 @@ export default interface IFuncion {
 export interface IFuncionConSala extends IFuncion {
     salas: { nombre: string };
 }
+
+// Para la pantalla de admin "Funciones": con la película y cuántas
+// entradas tiene (las funciones con entradas no se pueden borrar).
+export interface IFuncionAdmin extends IFuncionConSala {
+    peliculas: { nombre: string };
+    entradas: { count: number }[];
+}

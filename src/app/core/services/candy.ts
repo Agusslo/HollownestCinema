@@ -18,16 +18,24 @@ export class Candy {
         return data as ICandyCategoria[];
     }
 
-    async obtenerProductos(): Promise<ICandyProductoConCategoria[]> {
-        const { data, error } = await this.supabase.Supabase.from('candy_productos')
-        .select('*, candy_categorias(nombre)')
-        .order('nombre');
+    // Por defecto sólo los que están a la venta (pantalla de compra y armado
+    // de combos). La pantalla de admin "Productos" pide todos.
+    async obtenerProductos(incluirInactivos = false): Promise<ICandyProductoConCategoria[]> {
+        let consulta = this.supabase.Supabase.from('candy_productos')
+            .select('*, candy_categorias(nombre)')
+            .order('nombre');
 
+        if (!incluirInactivos) {
+            consulta = consulta.eq('activo', true);
+        }
+
+        const { data, error } = await consulta;
         if (error) throw error;
         return data as unknown as ICandyProductoConCategoria[];
     }
 
-    async crearProducto(producto: Omit<ICandyProducto, 'id'>): Promise<ICandyProducto> { //abm
+    // activo no se manda: la base lo crea a la venta (default true).
+    async crearProducto(producto: Omit<ICandyProducto, 'id' | 'activo'>): Promise<ICandyProducto> {
         const { data, error } = await this.supabase.Supabase.from('candy_productos')
             .insert(producto)
             .select()
@@ -35,6 +43,18 @@ export class Candy {
 
         if (error) throw error;
         return data as ICandyProducto;
+    }
+
+    // Modificación: el admin cambia el precio y/o los puntos de canje.
+    async actualizarProducto(
+        id: number,
+        cambios: Partial<Pick<ICandyProducto, 'precio' | 'puntos_canje' | 'activo'>>,
+    ): Promise<void> {
+        const { error } = await this.supabase.Supabase.from('candy_productos')
+            .update(cambios)
+            .eq('id', id);
+
+        if (error) throw error;
     }
 
     async agregarItems(

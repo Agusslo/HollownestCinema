@@ -1,0 +1,98 @@
+    <!-- Misma tarjeta .admin-form (styles.css) que el resto de las pantallas
+        de admin. -->
+    <section class="admin-form productos-admin">
+    <div class="form-header">
+        <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
+        <span class="form-kicker">Panel de administración</span>
+        <h1>Productos</h1>
+        <div class="admin-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+        <p>
+        Modificá el precio y los puntos de canje del candy bar. Un producto fuera de la venta no se
+        borra: sigue en las compras y los reportes, y lo podés volver a poner cuando quieras.
+        </p>
+    </div>
+
+    @if (cargando()) {
+        <app-loading mensaje="Revisando el candy bar" />
+    } @else if (productos().length === 0) {
+        <p class="productos-vacio">Todavía no hay productos cargados.</p>
+    } @else {
+        <div class="productos-barra">
+        <span class="productos-resumen">
+            {{ cantidadActivos() }} de {{ productos().length }} a la venta
+        </span>
+        <a class="productos-nuevo" [routerLink]="['/admin/candy/nuevo']">+ Nuevo producto</a>
+        </div>
+
+        <ul class="productos-lista">
+        @for (producto of productos(); track producto.id) {
+            <li class="producto-item" [class.inactivo]="!producto.activo">
+            <div class="producto-info">
+                <p class="producto-nombre">{{ producto.nombre }}</p>
+                <p class="producto-datos">
+                {{ producto.candy_categorias.nombre }} ·
+                {{ producto.activo ? 'A la venta' : 'Fuera de la venta' }}
+                </p>
+            </div>
+
+            <label class="producto-campo">
+                <span>Precio $</span>
+                <input
+                type="number"
+                min="1"
+                step="1"
+                [value]="precioEnPantalla(producto)"
+                (input)="editar(producto, 'precio', $event)"
+                />
+            </label>
+
+            <label class="producto-campo">
+                <span>Puntos</span>
+                <input
+                type="number"
+                min="1"
+                step="1"
+                placeholder="Sin canje"
+                [value]="puntosEnPantalla(producto)"
+                (input)="editar(producto, 'puntos', $event)"
+                />
+            </label>
+
+            <div class="producto-accion">
+                @if (hayCambios(producto)) {
+                <div class="producto-guardar">
+                    <button
+                    type="button"
+                    class="producto-boton principal"
+                    [disabled]="procesando() === producto.id"
+                    (click)="guardar(producto)"
+                    >
+                    {{ procesando() === producto.id ? 'Guardando...' : 'Guardar' }}
+                    </button>
+                    <button type="button" class="producto-boton" (click)="descartar(producto)">
+                    ✕
+                    </button>
+                </div>
+                } @else {
+                <button
+                    type="button"
+                    class="producto-boton"
+                    [disabled]="procesando() === producto.id"
+                    (click)="alternarVenta(producto)"
+                >
+                    {{ producto.activo ? 'Sacar de la venta' : 'Volver a la venta' }}
+                </button>
+                }
+            </div>
+
+            @if (borradorInvalido(producto)) {
+                <p class="producto-error">
+                El precio tiene que ser un número entero mayor a 0, y los puntos un entero mayor a 0
+                (o vacío si no se canjea).
+                </p>
+            }
+            </li>
+        }
+        </ul>
+    }
+    </section>

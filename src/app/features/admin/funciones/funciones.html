@@ -1,0 +1,83 @@
+    <!-- Misma tarjeta .admin-form (styles.css) que el resto de las pantallas
+        de admin. -->
+    <section class="admin-form funciones-admin">
+    <div class="form-header">
+        <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
+        <span class="form-kicker">Panel de administración</span>
+        <h1>Funciones</h1>
+        <div class="admin-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+        <p>
+        Las funciones programadas de todas las películas. Las que todavía no tienen entradas vendidas
+        se pueden dar de baja.
+        </p>
+    </div>
+
+    @if (cargando()) {
+        <app-loading mensaje="Consultando la programación" />
+    } @else if (funciones().length === 0) {
+        <p class="funciones-vacio">No hay funciones programadas.</p>
+    } @else {
+        <div class="funciones-barra">
+        <label class="funciones-filtro">
+            <span>Película</span>
+            <select (change)="filtrar($event)">
+            <option value="">Todas</option>
+            @for (nombre of peliculas(); track nombre) {
+                <option [value]="nombre">{{ nombre }}</option>
+            }
+            </select>
+        </label>
+        <a class="funciones-nueva" [routerLink]="['/admin/funciones/nueva']">+ Nueva función</a>
+        </div>
+
+        <ul class="funciones-lista">
+        @for (funcion of funcionesFiltradas(); track funcion.id) {
+            <li class="funcion-item">
+            <div class="funcion-fecha">
+                <span class="funcion-dia">{{
+                funcion.fecha_hora | date: 'EEE dd/MM' : '' : 'es'
+                }}</span>
+                <span class="funcion-hora">{{ funcion.fecha_hora | date: 'HH:mm' }}</span>
+            </div>
+
+            <div class="funcion-info">
+                <p class="funcion-pelicula">{{ funcion.peliculas.nombre }}</p>
+                <p class="funcion-datos">
+                {{ funcion.salas.nombre }} · {{ funcion.formato.toUpperCase() }} ·
+                {{ funcion.idioma === 'castellano' ? 'Castellano' : 'Subtitulada' }}
+                </p>
+            </div>
+
+            <div class="funcion-accion">
+                @if (vendidas(funcion) > 0) {
+                <!-- Con entradas vendidas no se ofrece borrar -->
+                <span class="funcion-vendidas">
+                    {{ vendidas(funcion) }} {{ vendidas(funcion) === 1 ? 'entrada' : 'entradas' }}
+                </span>
+                } @else if (confirmando() === funcion.id) {
+                <span class="funcion-pregunta">¿Borrar?</span>
+                <div class="funcion-confirmar">
+                    <button
+                    type="button"
+                    class="funcion-boton peligro"
+                    [disabled]="procesando() === funcion.id"
+                    (click)="borrar(funcion)"
+                    >
+                    {{ procesando() === funcion.id ? 'Borrando...' : 'Sí' }}
+                    </button>
+                    <button type="button" class="funcion-boton" (click)="confirmando.set(null)">
+                    No
+                    </button>
+                </div>
+                } @else {
+                <span class="funcion-libre">Sin ventas</span>
+                <button type="button" class="funcion-boton" (click)="confirmando.set(funcion.id)">
+                    Borrar
+                </button>
+                }
+            </div>
+            </li>
+        }
+        </ul>
+    }
+    </section>

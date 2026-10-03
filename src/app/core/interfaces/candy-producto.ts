@@ -8,6 +8,9 @@ export default interface ICandyProducto {
     // producto. null = este producto no se puede canjear con puntos,
     // sólo se compra con plata/crédito.
     puntos_canje: number | null;
+    // false = el admin lo sacó de la venta (no aparece para comprar ni para
+    // armar combos). No se borra: sigue en compras, canjes y reportes.
+    activo: boolean;
 }
 
 // Con la categoría embebida (join), para mostrar en la grilla del candy bar

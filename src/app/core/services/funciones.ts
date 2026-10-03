@@ -1,6 +1,6 @@
 import { Service, inject } from '@angular/core';
 import { Supabase } from './supabase';
-import IFuncion, { IFuncionConSala, Formato, Idioma } from '../interfaces/funcion';
+import IFuncion, { IFuncionAdmin, IFuncionConSala, Formato, Idioma } from '../interfaces/funcion';
 import ISala from '../interfaces/sala';
 
 const MARGEN_MINUTOS = 30;
@@ -74,6 +74,35 @@ export class Funciones {
 
   private sumarMinutos(fecha: Date, minutos: number): Date {
     return new Date(fecha.getTime() + minutos * 60000);
+  }
+
+  // Pantalla de admin "Funciones": las que todavía no empezaron, de todas
+  // las películas, con la cantidad de entradas de cada una. entradas(count)
+  // le pide a Supabase sólo el número, sin traer todas las filas.
+  async obtenerProximasAdmin(): Promise<IFuncionAdmin[]> {
+    const { data, error } = await this.supabase.Supabase.from('funciones')
+      .select('*, salas(nombre), peliculas(nombre), entradas(count)')
+      .gte('fecha_hora', new Date().toISOString())
+      .order('fecha_hora', { ascending: true });
+
+    if (error) throw error;
+    return data as unknown as IFuncionAdmin[];
+  }
+
+  // Baja de una función. Sólo si no tiene entradas: la pantalla no lo
+  // ofrece, y además la base lo impide (clave foránea entradas → funciones,
+  // código 23503), así que nunca se borra una función que alguien compró.
+  async borrar(id: number): Promise<void> {
+    const { error, count } = await this.supabase.Supabase.from('funciones')
+      .delete({ count: 'exact' })
+      .eq('id', id);
+
+    if (error?.code === '23503') {
+      throw new Error('Esta función ya tiene entradas vendidas: no se puede borrar.');
+    }
+    if (error) throw error;
+    // RLS no da error si no deja borrar: simplemente borra 0 filas.
+    if (count === 0) throw new Error('No se pudo borrar la función.');
   }
 
   async obtenerPorId(id: number): Promise<IFuncionConSala> {

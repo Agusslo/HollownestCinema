@@ -1,0 +1,229 @@
+/* La tarjeta, el encabezado y los colores base vienen de .admin-form en
+   styles.css; acá va sólo lo propio de esta pantalla: la lista. */
+:host {
+  display: block;
+  width: 100%;
+}
+
+.productos-admin {
+  width: min(100%, 820px);
+}
+
+.productos-vacio {
+  margin: 0;
+  padding: 18px;
+  color: var(--hk-soft-text);
+  font-style: italic;
+  text-align: center;
+  border: 1px dashed rgba(212, 212, 224, 0.16);
+  border-radius: 10px;
+}
+
+.productos-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.productos-resumen {
+  color: var(--hk-soft-text);
+  font-size: 0.94rem;
+  font-style: italic;
+}
+
+.productos-nuevo {
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.productos-nuevo:hover {
+  text-decoration: underline;
+}
+
+.productos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cada producto: nombre | precio | puntos | botón */
+.producto-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px 110px auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  background: rgba(10, 10, 18, 0.35);
+  border: 1px solid rgba(212, 212, 224, 0.12);
+  border-radius: 10px;
+}
+
+/* Fuera de la venta: el nombre y los datos se ven apagados */
+.producto-item.inactivo {
+  border-style: dashed;
+}
+
+.producto-item.inactivo .producto-info {
+  opacity: 0.5;
+}
+
+.producto-info {
+  min-width: 0;
+}
+
+.producto-nombre {
+  margin: 0 0 4px;
+  overflow: hidden;
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 0.85rem;
+  letter-spacing: 1.2px;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.producto-datos {
+  margin: 0;
+  color: var(--hk-muted-text);
+  font-size: 0.92rem;
+}
+
+.producto-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  color: var(--hk-soft-text);
+  font-family: 'Trajan', serif;
+  font-size: 0.65rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.producto-campo input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 9px;
+  color: var(--hk-soul);
+  background-color: rgba(8, 8, 16, 0.55);
+  border: 1px solid rgba(212, 212, 224, 0.18);
+  border-radius: 6px;
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 1rem;
+}
+
+.producto-campo input:focus {
+  border-color: var(--hk-focus);
+  box-shadow: 0 0 10px rgba(79, 196, 227, 0.2);
+}
+
+.producto-accion {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.producto-guardar {
+  display: flex;
+  gap: 6px;
+}
+
+.producto-boton {
+  padding: 8px 12px;
+  color: var(--hk-pale);
+  background: transparent;
+  border: 1px solid rgba(212, 212, 224, 0.3);
+  border-radius: 8px;
+  font-family: 'Trajan', serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.producto-boton:hover:not(:disabled) {
+  border-color: var(--hk-focus);
+  background: rgba(79, 196, 227, 0.08);
+}
+
+.producto-boton.principal {
+  color: #04141a;
+  background: var(--hk-focus);
+  border-color: var(--hk-focus);
+}
+
+.producto-boton.principal:hover:not(:disabled) {
+  filter: brightness(1.08);
+  background: var(--hk-focus);
+}
+
+.producto-boton:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.producto-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #ff9e9e;
+  font-size: 0.9rem;
+}
+
+/* ── Celular: nombre arriba, precio y puntos lado a lado, botón abajo ── */
+@media (max-width: 620px) {
+  .producto-item {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .producto-info,
+  .producto-accion {
+    grid-column: 1 / -1;
+  }
+
+  .producto-accion > * {
+    width: 100%;
+  }
+
+  .producto-guardar .producto-boton.principal {
+    flex: 1;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .producto-item {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.16);
+}
+
+:host-context(.tema-claro) .producto-campo input {
+  background-color: #ffffff;
+  border-color: rgba(41, 64, 71, 0.25);
+}
+
+:host-context(.tema-claro) .producto-boton {
+  color: var(--hk-soul);
+  border-color: rgba(41, 64, 71, 0.3);
+}
+
+:host-context(.tema-claro) .producto-boton.principal {
+  color: #ffffff;
+}
+
+:host-context(.tema-claro) .producto-error {
+  color: #a3281c;
+}

@@ -1,0 +1,251 @@
+/* La tarjeta, el encabezado y los colores base vienen de .admin-form en
+   styles.css; acá va sólo lo propio de esta pantalla: la lista. */
+
+/* El <main> centra su contenido con flex: con width: 100% el componente
+   ocupa todo el ancho y la tarjeta puede llegar a sus 760px. */
+:host {
+  display: block;
+  width: 100%;
+}
+
+.funciones-admin {
+  width: min(100%, 760px);
+}
+
+.funciones-vacio {
+  margin: 0;
+  padding: 18px;
+  color: var(--hk-soft-text);
+  font-style: italic;
+  text-align: center;
+  border: 1px dashed rgba(212, 212, 224, 0.16);
+  border-radius: 10px;
+}
+
+/* Filtro por película y link a Nueva función */
+.funciones-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.funciones-filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.funciones-filtro select {
+  min-width: 220px;
+  padding: 8px 10px;
+  color: var(--hk-soul);
+  background-color: rgba(8, 8, 16, 0.55);
+  border: 1px solid rgba(212, 212, 224, 0.18);
+  border-radius: 6px;
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 0.98rem;
+  text-transform: none;
+}
+
+.funciones-nueva {
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.funciones-nueva:hover {
+  text-decoration: underline;
+}
+
+.funciones-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cada función: fecha | película y datos | estado y botón */
+.funcion-item {
+  display: grid;
+  grid-template-columns: 92px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 14px;
+  background: rgba(10, 10, 18, 0.35);
+  border: 1px solid rgba(212, 212, 224, 0.12);
+  border-radius: 10px;
+}
+
+.funcion-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-right: 12px;
+  border-right: 1px dashed rgba(212, 212, 224, 0.16);
+}
+
+.funcion-dia {
+  color: var(--hk-focus);
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.funcion-hora {
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 1.15rem;
+}
+
+.funcion-info {
+  min-width: 0;
+}
+
+.funcion-pelicula {
+  margin: 0 0 4px;
+  overflow: hidden;
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 0.88rem;
+  letter-spacing: 1.2px;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.funcion-datos {
+  margin: 0;
+  color: var(--hk-muted-text);
+  font-size: 0.94rem;
+}
+
+.funcion-accion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.funcion-vendidas,
+.funcion-libre,
+.funcion-pregunta {
+  font-family: 'Trajan', serif;
+  font-size: 0.7rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.funcion-vendidas {
+  padding: 6px 10px;
+  color: var(--hk-geo);
+  border: 1px solid rgba(232, 168, 50, 0.4);
+  border-radius: 999px;
+}
+
+.funcion-libre {
+  color: var(--hk-soft-text);
+}
+
+.funcion-pregunta {
+  color: #ff9e9e;
+}
+
+.funcion-confirmar {
+  display: flex;
+  gap: 6px;
+}
+
+.funcion-boton {
+  min-width: 70px;
+  padding: 7px 14px;
+  color: var(--hk-pale);
+  background: transparent;
+  border: 1px solid rgba(212, 212, 224, 0.3);
+  border-radius: 8px;
+  font-family: 'Trajan', serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+
+.funcion-boton:hover:not(:disabled) {
+  border-color: var(--hk-focus);
+  background: rgba(79, 196, 227, 0.08);
+}
+
+.funcion-boton.peligro {
+  color: #ffffff;
+  background: var(--hk-grimm);
+  border-color: var(--hk-grimm);
+}
+
+.funcion-boton.peligro:hover:not(:disabled) {
+  filter: brightness(1.1);
+  background: var(--hk-grimm);
+}
+
+.funcion-boton:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+/* ── Celular: la acción pasa abajo ── */
+@media (max-width: 560px) {
+  .funcion-item {
+    grid-template-columns: 76px 1fr;
+  }
+
+  .funcion-accion {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .funciones-filtro,
+  .funciones-filtro select {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .funcion-item {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.16);
+}
+
+:host-context(.tema-claro) .funciones-filtro select {
+  background-color: #ffffff;
+  border-color: rgba(41, 64, 71, 0.25);
+}
+
+:host-context(.tema-claro) .funcion-boton {
+  color: var(--hk-soul);
+  border-color: rgba(41, 64, 71, 0.3);
+}
+
+:host-context(.tema-claro) .funcion-pregunta {
+  color: #a3281c;
+}

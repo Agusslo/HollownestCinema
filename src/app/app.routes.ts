@@ -24,6 +24,18 @@ export const routes: Routes = [
       import('./features/admin/alta-pelicula/alta-pelicula').then((m) => m.AltaPelicula),
   },
   {
+    path: 'admin/funciones',
+    canActivate: [perfilCompletoGuard, rolGuard(['admin'])],
+    loadComponent: () =>
+      import('./features/admin/funciones/funciones').then((m) => m.FuncionesAdmin),
+  },
+  {
+    path: 'admin/productos',
+    canActivate: [perfilCompletoGuard, rolGuard(['admin'])],
+    loadComponent: () =>
+      import('./features/admin/productos/productos').then((m) => m.ProductosAdmin),
+  },
+  {
     path: 'admin/funciones/nueva',
     canActivate: [perfilCompletoGuard, rolGuard(['admin'])],
     loadComponent: () =>
