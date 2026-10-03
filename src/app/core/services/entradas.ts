@@ -71,16 +71,17 @@ export class Entradas {
     return data.map((e) => `${e.fila}${e.columna}`);
   }
 
-  // De las butacas pedidas, cuáles ya tienen una entrada guardada en esta
-  // función. A diferencia de obtenerButacasOcupadas(), acá NO se descartan
-  // las de órdenes canceladas: la base no deja insertar dos entradas para
-  // la misma butaca aunque la anterior esté cancelada, así que para
-  // comprar cuentan igual.
+  // De las butacas pedidas, cuáles ya tienen una entrada vigente en esta
+  // función. Las de compras canceladas no cuentan: al cancelar, un trigger
+  // de la base marca sus entradas con cancelada = true, y la regla de "una
+  // entrada por butaca" (índice único entradas_butaca_activa) sólo mira
+  // las no canceladas. Así la butaca se puede volver a vender.
   private async butacasYaVendidas(funcion_id: number, butacas: string[]): Promise<string[]> {
     const filas = [...new Set(butacas.map((butaca) => butaca[0]))];
     const { data, error } = await this.supabase.Supabase.from('entradas')
       .select('fila, columna')
       .eq('funcion_id', funcion_id)
+      .eq('cancelada', false)
       .in('fila', filas);
 
     if (error) throw error;

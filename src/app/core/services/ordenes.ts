@@ -50,7 +50,9 @@ export class Ordenes {
             .maybeSingle();
 
         if (errorEntrada) throw errorEntrada;
-        if (!entrada) return null;
+        // Las entradas compradas antes de que existieran las órdenes no
+        // tienen orden_id: no hay compra que mostrar, es "no encontrado".
+        if (!entrada?.orden_id) return null;
 
         const { data: orden, error: errorOrden } = await this.supabase.Supabase.from('ordenes')
             .select(SELECT_VALIDACION)
