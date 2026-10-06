@@ -16,6 +16,8 @@ import { Cupones } from '../../../core/services/cupones';
 import { Candy } from '../../../core/services/candy';
 import { Combos } from '../../../core/services/combos';
 import { Fidelizacion } from '../../../core/services/fidelizacion';
+import { Precios } from '../../../core/services/precios';
+import IPreciosEntradas from '../../../core/interfaces/precios';
 import { IComboConItems } from '../../../core/interfaces/combo';
 import { IFuncionConSala } from '../../../core/interfaces/funcion';
 import IPelicula from '../../../core/interfaces/pelicula';
@@ -48,6 +50,7 @@ export class Butacas implements OnDestroy {
   private candyService = inject(Candy);
   private combosService = inject(Combos);
   private fidelizacionService = inject(Fidelizacion);
+  private preciosService = inject(Precios);
   private modoInvitado = inject(ModoInvitado);
 
   // Canal de Supabase Realtime — se abre en cargarDatos() y se cierra en
@@ -109,6 +112,9 @@ export class Butacas implements OnDestroy {
   // compra (la consigna no pide poder combinar varios).
   protected combosDisponibles = signal<IComboConItems[]>([]);
   protected comboSeleccionado = signal<IComboConItems | null>(null);
+
+  // Precios por formato y recargo VIP, los que configuró el admin.
+  protected precios = signal<IPreciosEntradas | null>(null);
 
   // Fidelización — canje de entradas con puntos
   protected fidelizacionConfig = signal<IFidelizacionConfig | null>(null);
@@ -193,6 +199,7 @@ export class Butacas implements OnDestroy {
     await this.cargarYaCompradas();
     this.cupones.set(await this.cuponesService.obtenerTodos());
     this.fidelizacionConfig.set(await this.fidelizacionService.obtenerConfig());
+    this.precios.set(await this.preciosService.obtener());
 
     const [categorias, productos] = await Promise.all([
       this.candyService.obtenerCategorias(),
@@ -218,9 +225,11 @@ export class Butacas implements OnDestroy {
     );
   }
 
-  // Escucha en vivo cuando se inserta una entrada nueva para ESTA función
-  // (de cualquier usuario, no sólo el propio) y agrega esa butaca a
-  // "ocupadas" al toque, sin que haga falta recargar la pantalla.
+  // Escucha en vivo los cambios de las entradas de ESTA función (de
+  // cualquier usuario, no sólo el propio), sin que haga falta recargar:
+  //   - INSERT: alguien compró → esa butaca pasa a "ocupadas".
+  //   - UPDATE con cancelada = true: alguien canceló su compra (el trigger
+  //     de la base marca sus entradas) → la butaca vuelve a estar libre.
   private suscribirCambiosButacas(): void {
     this.canal = this.supabaseService.Supabase.channel(`butacas-funcion-${this.funcion_id}`)
       .on(
@@ -251,6 +260,25 @@ export class Butacas implements OnDestroy {
             this.seleccionadas.set(propias);
             this.error.set(`La butaca ${codigo} se acaba de ocupar. La sacamos de tu selección.`);
           }
+        },
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'entradas',
+          filter: `funcion_id=eq.${this.funcion_id}`,
+        },
+        (payload) => {
+          // Una entrada también se actualiza cuando la validan en la
+          // puerta: ese cambio no libera nada, así que se ignora.
+          const cambiada = payload.new as { fila: string; columna: number; cancelada: boolean };
+          if (!cambiada.cancelada) return;
+
+          const actualizadas = new Set(this.ocupadas());
+          actualizadas.delete(`${cambiada.fila}${cambiada.columna}`);
+          this.ocupadas.set(actualizadas);
         },
       )
       .subscribe();
@@ -466,7 +494,8 @@ export class Butacas implements OnDestroy {
 
   protected calcularTotal(): number {
     const funcionActual = this.funcion();
-    if (!funcionActual) return 0;
+    const precios = this.precios();
+    if (!funcionActual || !precios) return 0;
 
     // Antes era "precio del formato × cantidad de butacas"; ahora cada
     // butaca puede tener un precio distinto si es VIP, así que sumamos
@@ -477,7 +506,12 @@ export class Butacas implements OnDestroy {
     const preciosButacas = Array.from(this.seleccionadas())
       .filter((codigo) => !canjeadas.has(codigo))
       .map((codigo) =>
-        this.entradasService.precioPorButaca(funcionActual.formato, codigo, this.precioPreventa()),
+        this.entradasService.precioPorButaca(
+          precios,
+          funcionActual.formato,
+          codigo,
+          this.precioPreventa(),
+        ),
       );
     let subtotalEntradas = preciosButacas.reduce((acumulado, precio) => acumulado + precio, 0);
 
@@ -536,21 +570,18 @@ export class Butacas implements OnDestroy {
   // VIP) para que el saldo alcance para la mayor cantidad de entradas
   // posible, y paramos apenas los puntos no alcanzan para la siguiente.
   protected butacasCanjeadas(): string[] {
-    const config = this.fidelizacionConfig();
     const usuario = this.usuario();
-    if (!this.usarPuntos() || !config || !usuario) return [];
+    if (!this.usarPuntos() || !usuario) return [];
 
     const ordenadas = Array.from(this.seleccionadas()).sort(
-      (a, b) =>
-        this.entradasService.costoEntradaEnPuntos(config.puntos_por_entrada_gratis, a) -
-        this.entradasService.costoEntradaEnPuntos(config.puntos_por_entrada_gratis, b),
+      (a, b) => this.costoEnPuntos(a) - this.costoEnPuntos(b),
     );
 
     const canjeadas: string[] = [];
     let puntosRestantes = usuario.puntos;
 
     for (const codigo of ordenadas) {
-      const costo = this.entradasService.costoEntradaEnPuntos(config.puntos_por_entrada_gratis, codigo);
+      const costo = this.costoEnPuntos(codigo);
       if (costo > puntosRestantes) break; // ya no alcanza ni para la más barata que queda
       canjeadas.push(codigo);
       puntosRestantes -= costo;
@@ -560,12 +591,23 @@ export class Butacas implements OnDestroy {
   }
 
   protected puntosAUsar(): number {
-    const config = this.fidelizacionConfig();
-    if (!config) return 0;
     return this.butacasCanjeadas().reduce(
-      (acumulado, codigo) =>
-        acumulado + this.entradasService.costoEntradaEnPuntos(config.puntos_por_entrada_gratis, codigo),
+      (acumulado, codigo) => acumulado + this.costoEnPuntos(codigo),
       0,
+    );
+  }
+
+  // Cuántos puntos cuesta canjear esta butaca (las VIP llevan el mismo
+  // recargo que en pesos). Infinity si todavía no cargó la configuración:
+  // así ninguna butaca "alcanza" y no se canjea nada por error.
+  private costoEnPuntos(codigo: string): number {
+    const config = this.fidelizacionConfig();
+    const precios = this.precios();
+    if (!config || !precios) return Infinity;
+    return this.entradasService.costoEntradaEnPuntos(
+      config.puntos_por_entrada_gratis,
+      codigo,
+      precios.recargo_vip,
     );
   }
 
@@ -620,7 +662,10 @@ export class Butacas implements OnDestroy {
   // y no vale la pena acoplar dos pantallas por esto.
   private calcularEdad(fechaNacimiento: string): number {
     const hoy = new Date();
-    const nacimiento = new Date(fechaNacimiento);
+    // "T00:00:00" para que la fecha se lea en hora LOCAL: new Date('1975-10-06')
+    // la toma como medianoche UTC, que en Argentina es el día anterior a las
+    // 21 h, y el cumpleaños se contaría un día antes.
+    const nacimiento = new Date(`${fechaNacimiento.slice(0, 10)}T00:00:00`);
     let edad = hoy.getFullYear() - nacimiento.getFullYear();
     const noLlegoElCumple =
       hoy.getMonth() < nacimiento.getMonth() ||

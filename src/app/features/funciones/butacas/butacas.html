@@ -341,7 +341,7 @@
               @if (cantidadVip() > 0) {
                 <p class="aviso-vip">
                   ⭐ Incluye {{ cantidadVip() }} butaca{{ cantidadVip() > 1 ? 's' : '' }} VIP
-                  (+30% sobre el precio normal)
+                  (+{{ precios()?.recargo_vip }}% sobre el precio normal)
                 </p>
               }
             } @else {

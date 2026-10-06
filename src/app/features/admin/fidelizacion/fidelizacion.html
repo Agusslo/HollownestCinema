@@ -1,4 +1,4 @@
-    @if (cargando()) {
+@if (cargando()) {
     <app-loading mensaje="Cargando la configuración" />
     } @else {
     <!-- Misma tarjeta .admin-form (styles.css) que Cupones y el resto del panel -->
@@ -24,7 +24,7 @@
         </label>
         </div>
 
-        <!-- Vista previa del efecto: la butaca VIP cuesta +30% -->
+        <!-- Vista previa del efecto: la butaca VIP lleva el recargo configurado en Precios -->
         @if (puntos.valid) {
         <div class="costos">
             <span class="costos-titulo">Costo del canje</span>
@@ -37,7 +37,7 @@
             <div class="costo vip">
                 <span class="costo-butaca">Butaca VIP</span>
                 <span class="costo-valor">{{ costoVip() }}</span>
-                <span class="costo-unidad">puntos · +&nbsp;30%</span>
+                <span class="costo-unidad">puntos · +&nbsp;{{ recargoVip() }}%</span>
             </div>
             </div>
         </div>

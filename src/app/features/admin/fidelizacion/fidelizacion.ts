@@ -1,6 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Fidelizacion as FidelizacionService } from '../../../core/services/fidelizacion';
+import { Precios } from '../../../core/services/precios';
+import { conRecargoVip } from '../../../core/services/entradas';
 import { Auth } from '../../../core/services/auth';
 import { Logs } from '../../../core/services/logs';
 import IPerfil from '../../../core/interfaces/perfil';
@@ -20,6 +22,7 @@ import { GlowHover } from '../../../shared/directives/glow-hover';
 })
 export class Fidelizacion {
   private fidelizacionService = inject(FidelizacionService);
+  private preciosService = inject(Precios);
   private authService = inject(Auth);
   private logsService = inject(Logs);
 
@@ -27,6 +30,10 @@ export class Fidelizacion {
   // El valor con el que arrancó la pantalla, para loguear el cambio sólo si
   // realmente lo modificó (igual que en Cupones) y mostrar "500 → 600".
   private valorOriginal = 0;
+
+  // Recargo VIP (porcentaje) que configuró el admin en "Precios". Se usa
+  // sólo para la vista previa de cuánto cuesta canjear una butaca VIP.
+  protected recargoVip = signal(0);
 
   protected cargando = signal(true);
   protected guardando = signal(false);
@@ -48,7 +55,11 @@ export class Fidelizacion {
 
   private async cargar() {
     try {
-      const config = await this.fidelizacionService.obtenerConfig();
+      const [config, precios] = await Promise.all([
+        this.fidelizacionService.obtenerConfig(),
+        this.preciosService.obtener(),
+      ]);
+      this.recargoVip.set(precios.recargo_vip);
       this.valorOriginal = config.puntos_por_entrada_gratis;
       this.puntos.setValue(this.valorOriginal);
       this.usuario = await this.authService.usuarioActual();
@@ -60,10 +71,10 @@ export class Fidelizacion {
   }
 
   // Lo que cuesta en puntos la butaca VIP con el valor que está escrito
-  // ahora, para que el admin vea el efecto antes de guardar. Mismo recargo
-  // (+30%) que Entradas.costoEntradaEnPuntos(), que es la cuenta real.
+  // ahora, para que el admin vea el efecto antes de guardar. Misma cuenta
+  // (conRecargoVip) que usa Entradas.costoEntradaEnPuntos() al comprar.
   protected costoVip(): number {
-    return Math.round(this.puntos.value * 1.3);
+    return conRecargoVip(this.puntos.value, this.recargoVip());
   }
 
   protected async guardar() {

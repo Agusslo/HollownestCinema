@@ -79,6 +79,11 @@ export const routes: Routes = [
       import('./features/admin/fidelizacion/fidelizacion').then((m) => m.Fidelizacion),
   },
   {
+    path: 'admin/precios',
+    canActivate: [perfilCompletoGuard, rolGuard(['admin'])],
+    loadComponent: () => import('./features/admin/precios/precios').then((m) => m.PreciosAdmin),
+  },
+  {
     path: 'empleado/validar',
     canActivate: [perfilCompletoGuard, rolGuard(['empleado', 'admin'])],
     loadComponent: () => import('./features/empleado/validar/validar').then((m) => m.Validar),

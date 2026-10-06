@@ -1,0 +1,77 @@
+    @if (cargando()) {
+    <app-loading mensaje="Cargando los precios" />
+    } @else {
+    <!-- Misma tarjeta .admin-form (styles.css) que Cupones y Fidelización -->
+    <form class="precios-form admin-form" [formGroup]="formulario" (ngSubmit)="guardar()">
+        <div class="form-header">
+        <img class="admin-flea" src="/img/flea.gif" alt="" aria-hidden="true" />
+        <span class="form-kicker">Panel de administración</span>
+        <h1>Precios de las entradas</h1>
+        <div class="admin-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+        <p>
+            El precio de la entrada depende del formato de la función. Las butacas VIP (últimas tres
+            filas) llevan un recargo encima. Los cambios valen para las compras que se hagan desde
+            ahora; las anteriores no cambian.
+        </p>
+        </div>
+
+        <div class="form-fields precios-grilla">
+        @for (formato of formatos; track formato) {
+            <label>
+            Entrada {{ formato.toUpperCase() }} ($)
+            <input type="number" [formControlName]="columna[formato]" min="1" step="1" />
+            @if (
+                formulario.controls[columna[formato]].touched &&
+                formulario.controls[columna[formato]].invalid
+            ) {
+                <span class="campo-error">Tiene que ser un número entero mayor a 0.</span>
+            }
+            </label>
+        }
+        </div>
+
+        <div class="form-fields">
+        <label>
+            Recargo de las butacas VIP (%)
+            <input type="number" formControlName="recargo_vip" min="0" max="200" step="1" />
+            @if (formulario.controls.recargo_vip.touched && formulario.controls.recargo_vip.invalid) {
+            <span class="campo-error">Tiene que ser un número entero entre 0 y 200.</span>
+            }
+        </label>
+        </div>
+
+        <!-- Vista previa de cómo quedan los precios con lo que está escrito -->
+        @if (formulario.valid) {
+        <div class="vista-previa">
+            <span class="vista-previa-titulo">Así quedan</span>
+            <table class="tabla-precios">
+            <thead>
+                <tr>
+                <th scope="col">Formato</th>
+                <th scope="col">Común</th>
+                <th scope="col" class="vip">VIP</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (formato of formatos; track formato) {
+                <tr>
+                    <th scope="row">{{ formato.toUpperCase() }}</th>
+                    <td>${{ formulario.controls[columna[formato]].value | number: '1.0-0' : 'es' }}</td>
+                    <td class="vip">${{ precioVip(formato) | number: '1.0-0' : 'es' }}</td>
+                </tr>
+                }
+            </tbody>
+            </table>
+        </div>
+        }
+
+        @if (error()) {
+        <p class="form-error">{{ error() }}</p>
+        }
+
+        <button type="submit" class="submit-button" appGlowHover [disabled]="guardando()">
+        <span>{{ guardando() ? 'Guardando...' : 'Guardar cambios' }}</span>
+        <span aria-hidden="true">&rarr;</span>
+        </button>
+    </form>
+    }
