@@ -74,6 +74,9 @@
                   <a [routerLink]="['/admin/peliculas/nueva']" (click)="menuAdminAbierto.set(false)"
                     >Nueva película</a
                   >
+                  <a [routerLink]="['/admin/preventas']" (click)="menuAdminAbierto.set(false)"
+                    >Preventas</a
+                  >
                   <a [routerLink]="['/admin/funciones']" (click)="menuAdminAbierto.set(false)"
                     >Funciones</a
                   >
@@ -82,12 +85,6 @@
                   >
                   <a [routerLink]="['/admin/precios']" (click)="menuAdminAbierto.set(false)"
                     >Precios</a
-                  >
-                  <a [routerLink]="['/admin/cupones']" (click)="menuAdminAbierto.set(false)"
-                    >Cupones</a
-                  >
-                  <a [routerLink]="['/admin/fidelizacion']" (click)="menuAdminAbierto.set(false)"
-                    >Fidelización</a
                   >
                   <a [routerLink]="['/admin/productos']" (click)="menuAdminAbierto.set(false)"
                     >Productos</a
@@ -98,14 +95,17 @@
                   <a [routerLink]="['/admin/combos/nuevo']" (click)="menuAdminAbierto.set(false)"
                     >Combos</a
                   >
-                  <a [routerLink]="['/admin/log-actividad']" (click)="menuAdminAbierto.set(false)"
-                    >Log de actividad</a
+                  <a [routerLink]="['/admin/cupones']" (click)="menuAdminAbierto.set(false)"
+                    >Cupones</a
+                  >
+                  <a [routerLink]="['/admin/fidelizacion']" (click)="menuAdminAbierto.set(false)"
+                    >Fidelización</a
                   >
                   <a [routerLink]="['/admin/reportes']" (click)="menuAdminAbierto.set(false)"
                     >Reportes</a
                   >
-                  <a [routerLink]="['/admin/preventas']" (click)="menuAdminAbierto.set(false)"
-                    >Preventas</a
+                  <a [routerLink]="['/admin/log-actividad']" (click)="menuAdminAbierto.set(false)"
+                    >Log de actividad</a
                   >
                   <hr />
                 }
