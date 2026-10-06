@@ -32,8 +32,9 @@ export class Cupones {
             aplicables.push(cuponPrimeraCompra.porcentaje);
         }
 
+        // "Mayores de 50": con 50 años justos todavía no aplica (> 50, no >= 50).
         const cuponMayor50 = cupones.find((c) => c.tipo === 'mayor_50');
-        if (cuponMayor50 && this.calcularEdad(usuario.fecha_nacimiento) >= 50) {
+        if (cuponMayor50 && this.calcularEdad(usuario.fecha_nacimiento) > 50) {
             aplicables.push(cuponMayor50.porcentaje);
         }
 
@@ -42,7 +43,10 @@ export class Cupones {
 
     private calcularEdad(fechaNacimiento: string): number {
         const hoy = new Date();
-        const nacimiento = new Date(fechaNacimiento);
+        // "T00:00:00" para que la fecha se lea en hora LOCAL: new Date('1975-10-06')
+        // la toma como medianoche UTC, que en Argentina es el día anterior a las
+        // 21 h, y el cumpleaños se contaría un día antes.
+        const nacimiento = new Date(`${fechaNacimiento.slice(0, 10)}T00:00:00`);
         let edad = hoy.getFullYear() - nacimiento.getFullYear();
 
         // Si todavía no pasó el cumpleaños este año, restamos 1 —

@@ -36,13 +36,15 @@ import { Service, inject } from '@angular/core';
         entradas: { count: number }[];
         }[];
 
-        // Agrupamos por día. Los primeros 10 caracteres de un timestamp ISO
-        // (ej: "2026-09-26T14:30:00+00:00") son "2026-09-26" — nos alcanza
-        // con eso para agrupar por día, sin importarnos la hora exacta.
+        // Agrupamos por día, en hora LOCAL (Argentina). Antes usábamos los
+        // primeros 10 caracteres del timestamp ("2026-09-26T01:30:00+00:00"
+        // → "2026-09-26"), pero Supabase lo guarda en UTC: una compra del
+        // 25/09 a las 22:30 en Argentina es el 26/09 01:30 en UTC, y caía
+        // en el día siguiente. new Date() lo pasa a la hora de la compu.
         const porDia = new Map<string, IFacturacionDiaria>();
 
         for (const fila of filas) {
-        const dia = fila.creado_en.slice(0, 10);
+        const dia = this.diaLocal(fila.creado_en);
         const cantidadEntradas = fila.entradas[0]?.count ?? 0;
 
         const existente = porDia.get(dia);
@@ -60,6 +62,15 @@ import { Service, inject } from '@angular/core';
 
         // Más reciente primero, como en el resto de los historiales de la app.
         return [...porDia.values()].sort((a, b) => b.fecha.localeCompare(a.fecha));
+    }
+
+    // "2026-09-26T01:30:00+00:00" → "2026-09-25" (el día en hora local).
+    // Se arma a mano porque toISOString() devolvería otra vez el día en UTC.
+    private diaLocal(timestamp: string): string {
+        const fecha = new Date(timestamp);
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        return `${fecha.getFullYear()}-${mes}-${dia}`;
     }
 
     // Reporte de "películas más vistas": top 5 de la última semana (últimos

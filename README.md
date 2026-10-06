@@ -39,7 +39,7 @@ src/app/
 │   ├── perfil/         mis compras, mis películas, mis puntos
 │   ├── auth/           login, registro, completar perfil
 │   ├── empleado/       validación de QR en puerta
-│   └── admin/          películas (mostrar / ocultar), funciones, productos, altas,
+│   └── admin/          películas (mostrar / ocultar), funciones, precios, productos, altas,
 │                       cupones, fidelización, preventas, log de actividad, reportes
 └── shared/
     ├── components/   → poster-card (tarjeta de la cartelera), loading, toast, blobatar
@@ -87,6 +87,9 @@ Cada película tiene la columna `visible`. Desde la pantalla de admin **Películ
 - **Baja de funciones:** la pantalla de admin **Funciones** lista las funciones programadas con la cantidad de entradas de cada una. Las que no tienen entradas se pueden borrar (con confirmación), por ejemplo si se cargaron con un horario equivocado. Las que tienen entradas no: la pantalla no lo ofrece y además la base lo impide por la clave foránea entre entradas y funciones.
 - **Sala:** 19 filas en bloques de 4, 20 y 4 butacas. Las filas J y K del medio se reemplazaron por una única fila J de butacas accesibles (bloques de 2, 10 y 2, más grandes y marcadas con su ícono), y las filas R, S y T son VIP.
 
+### Precios de las entradas
+El precio depende del formato de la función (2D, 3D, 4D, 5D) y las butacas VIP llevan un recargo en porcentaje. Los cinco valores se guardan en la tabla `precios_entradas` (una sola fila, mismo patrón que `fidelizacion_config`) y el admin los cambia desde la pantalla **Precios**, con una vista previa de cómo queda cada formato. Todos pueden leerlos (también el invitado) y solo el admin puede modificarlos (RLS). Cada valor que cambia queda en el log de actividad con el antes y el después. El mismo recargo se aplica en puntos cuando se canjea una butaca VIP.
+
 ### Productos del candy bar
 La pantalla de admin **Productos** permite modificar el precio y los puntos de canje de cada producto, y sacarlo de la venta o volver a ponerlo (columna `activo`). Es una baja lógica: el producto deja de aparecer para comprar y para armar combos, pero sigue en las compras, los canjes y los reportes donde ya figura. Cada cambio de precio queda en el log de actividad.
 
@@ -127,17 +130,17 @@ Mientras completa el formulario, el admin ve una **vista previa en vivo** con el
 Las fechas de calendario (estreno, días del reporte) se manejan como texto `'YYYY-MM-DD'`: se comparan directamente como texto, porque en ese formato el orden alfabético coincide con el cronológico, y se formatean separando el texto. De esta forma cada fecha se muestra igual en cualquier zona horaria.
 
 ### Butacas en tiempo real
-La pantalla de butacas se suscribe con **Supabase Realtime** a las entradas nuevas de esa función: cuando otra persona compra una butaca, aparece ocupada al instante. La suscripción se cierra al salir de la pantalla.
+La pantalla de butacas se suscribe con **Supabase Realtime** a los cambios en las entradas de esa función: cuando otra persona compra una butaca (`INSERT`), aparece ocupada al instante, y cuando alguien cancela su compra (`UPDATE` con `cancelada = true`), la butaca vuelve a quedar libre sin recargar. La suscripción se cierra al salir de la pantalla.
 
 ### Compras, cancelaciones, crédito y puntos
 - Cada compra genera una **orden** con **un único QR** que equivale a todo: las entradas de todas las butacas y el candy bar. El PDF trae ese solo código.
 - **Cancelación:** disponible hasta 2 hs antes de la función mientras ninguna entrada se haya usado. El monto pagado se acredita como crédito y los puntos canjeados se devuelven. Las butacas vuelven a quedar libres: un trigger de la base marca las entradas de la compra como canceladas (`entradas.cancelada`), y la regla de una entrada por butaca es un índice único parcial que solo cuenta las vigentes. Las entradas canceladas se conservan para el historial de "Mis compras".
 - **Límite:** hasta 6 butacas por persona y por función, sumando todas sus compras de esa función. Se controla en la pantalla y se vuelve a verificar al comprar.
 - **Puntos:** 1 por cada peso pagado. El costo en puntos de la entrada gratis se configura en la pantalla Fidelización, y el de cada producto de candy al darlo de alta.
-- **Cupones:** se aplica el de mayor porcentaje entre los que le correspondan al usuario.
+- **Cupones:** se aplica el de mayor porcentaje entre los que le correspondan al usuario. El de mayores de 50 aplica desde los 51 años (50 justos todavía no es "mayor de 50").
 
 ### Reportes
-Se calculan a partir de las órdenes vigentes (no canceladas), agrupando los datos con `Map`. Las películas más vistas se muestran en ventanas móviles de los últimos 7 y 30 días. La exportación a **PDF** (jsPDF) y **Excel** (SheetJS) toma los mismos datos que se ven en pantalla.
+Se calculan a partir de las órdenes vigentes (no canceladas), agrupando los datos con `Map`. La facturación diaria agrupa por el día en hora local: Supabase guarda los horarios en UTC, así que una compra a las 22:30 en Argentina se cuenta en ese día y no en el siguiente. Las películas más vistas se muestran en ventanas móviles de los últimos 7 y 30 días. La exportación a **PDF** (jsPDF) y **Excel** (SheetJS) toma los mismos datos que se ven en pantalla.
 
 ### Log de actividad
 Cada acción del admin y del empleado queda registrada con usuario, fecha y hora: alta de películas, funciones (una entrada por función), productos y combos; películas mostradas u ocultadas; funciones borradas; productos sacados de la venta; cambios de precios, cupones y puntos; apertura de preventas y validación de QR.
@@ -178,7 +181,7 @@ El mismo service worker recibe y muestra las notificaciones push.
 - [x] Asignación automática de sala al crear cada función, sin superposiciones
 - [x] Selector de fecha y hora con input nativo
 - [x] Layout de butacas: sala de 19 filas en bloques 4/20/4, con las filas J y K reemplazadas por una única fila J de butacas accesibles (2/10/2) y filas R, S y T VIP con precio diferencial, cada una con su marca visual y aviso antes de pagar
-- [x] Selección de butacas en tiempo real con Supabase Realtime
+- [x] Selección de butacas en tiempo real con Supabase Realtime (compras y cancelaciones)
 - [x] Restricción de edad por película (+13 / +18): bloqueo de la compra a menores y aviso en la entrada de que debe asistir acompañado de un adulto
 
 ### Compra y entradas
@@ -199,7 +202,7 @@ El mismo service worker recibe y muestra las notificaciones push.
 - [x] Combos especiales configurables por el admin (entrada + pochoclos + bebida a precio fijo), destacados en la pantalla de compra
 
 ### Roles y validación en puerta
-- [x] Rol admin: gestión de películas (alta y visibilidad), funciones (alta y baja), productos (alta, modificación y baja lógica), candy bar, combos, cupones, fidelización, preventas y reportes (rutas protegidas con guard)
+- [x] Rol admin: gestión de películas (alta y visibilidad), funciones (alta y baja), precios de las entradas, productos (alta, modificación y baja lógica), candy bar, combos, cupones, fidelización, preventas y reportes (rutas protegidas con guard)
 - [x] Rol empleado: validación de entradas y candy (rutas protegidas con guard)
 - [x] Escaneo de QR por cámara: un solo código muestra la compra completa y permite validar las entradas y entregar el candy
 - [x] Ingreso manual del código como alternativa al escaneo
