@@ -10,62 +10,97 @@
   @if (mostrarHero()) {
     <section class="hero-carousel" aria-label="Promociones de Hollownest Cinema">
       <div class="carousel-container">
-        <!-- SLIDE 1: FIESTA DEL CINE DE HALLOWNEST -->
-        <div class="carousel-slide slide-fiesta" [class.slide-activo]="slideActual() === 0">
-          <div class="slide-contenido fiesta-layout">
-            <div class="fiesta-info">
-              <span class="pill-badge">LLEGÓ LA</span>
-              <h1 class="fiesta-titulo">
-                FIESTA<span class="sparkle">✦</span><br />
-                DEL CINE
+        <!-- SLIDE 1: BIENVENIDA A HOLLOWNEST. Sin fechas ni precios
+             escritos a mano: los pósters son las más vistas y los boletos
+             muestran los precios que configuró el admin, así el slide
+             nunca queda viejo. -->
+        <div class="carousel-slide slide-reino" [class.slide-activo]="slideActual() === 0">
+          <!-- Almas que suben flotando, como las partículas del juego -->
+          <div class="reino-almas" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          <div class="slide-contenido reino-layout">
+            <div class="reino-info">
+              <span class="reino-kicker">
+                <span class="reino-kicker-rombo" aria-hidden="true">◆</span>
+                Hollownest Cinema
+                <span class="reino-kicker-rombo" aria-hidden="true">◆</span>
+              </span>
+              <h1 class="reino-titulo">
+                La función<br />
+                te espera<span class="reino-destello" aria-hidden="true">✦</span>
               </h1>
-              <div class="fiesta-fecha-badge">
-                <span>DEL 15 AL 22 DE SEPTIEMBRE</span>
-              </div>
-              <button type="button" class="btn-hero-blanco" (click)="scrollHaciaCartelera()">
-                QUIERO MIS ENTRADAS
+              <p class="reino-bajada">
+                Bajo la Ciudad de las Lágrimas se apagan las luces. Elegí tu butaca, sumá algo del
+                candy y dejá que empiece la función.
+              </p>
+              <ul class="reino-chips" aria-label="Lo que vas a encontrar">
+                <li>2D · 3D · 4D · 5D</li>
+                <li>Castellano y subtitulada</li>
+                <li>Butacas VIP y accesibles</li>
+              </ul>
+              <button
+                type="button"
+                class="btn-reino"
+                appGlowHover
+                color="#e8a832"
+                (click)="scrollHaciaCartelera()"
+              >
+                Elegí tu función
+                <span class="btn-reino-flecha" aria-hidden="true">→</span>
               </button>
             </div>
 
-            <div class="fiesta-visual">
-              <p class="fiesta-subtitulo">¡LA CELEBRACIÓN SE VIVE EN SALA!</p>
+            <div class="reino-visual">
+              <!-- Haz del proyector que cae sobre los pósters -->
+              <div class="reino-haz" aria-hidden="true"></div>
+              <p class="reino-cartel">En cartel</p>
 
               <div class="posters-abanico">
                 <div class="poster-abanico item-1">
                   @if (destacadas()[0]; as p) {
                     <img [src]="p.imagen_url" [alt]="p.nombre" class="img-abanico" />
                   } @else {
-                    <img src="/img/void.png" alt="Película" class="img-abanico" />
+                    <img src="/img/void.png" alt="" class="img-abanico" />
                   }
                 </div>
                 <div class="poster-abanico item-2">
                   @if (destacadas()[1]; as p) {
                     <img [src]="p.imagen_url" [alt]="p.nombre" class="img-abanico" />
                   } @else {
-                    <img src="/img/void.png" alt="Película" class="img-abanico" />
+                    <img src="/img/void.png" alt="" class="img-abanico" />
                   }
                 </div>
                 <div class="poster-abanico item-3">
                   @if (destacadas()[2]; as p) {
                     <img [src]="p.imagen_url" [alt]="p.nombre" class="img-abanico" />
                   } @else {
-                    <img src="/img/void.png" alt="Película" class="img-abanico" />
+                    <img src="/img/void.png" alt="" class="img-abanico" />
                   }
                 </div>
               </div>
+              <div class="reino-escenario" aria-hidden="true"></div>
 
-              <div class="tickets-promo">
-                <div class="ticket-stub ticket-2d">
-                  <span class="ticket-precio">$5.000</span>
-                  <span class="ticket-formatos">FORMATOS 2D - 3D</span>
-                  <span class="ticket-sala">SALA CRISTAL · COMFORT</span>
+              <!-- Si los precios no cargan (por ejemplo, sin conexión), el
+                   slide se ve igual pero sin los boletos. -->
+              @if (desdeClasica() !== null && desdeInmersiva() !== null) {
+                <div class="boletos">
+                  <div class="boleto">
+                    <span class="boleto-formato">2D · 3D</span>
+                    <span class="boleto-desde">desde</span>
+                    <span class="boleto-precio">${{ desdeClasica() | number: '1.0-0' : 'es' }}</span>
+                    <span class="boleto-pie">Sala clásica</span>
+                  </div>
+                  <div class="boleto boleto-oro">
+                    <span class="boleto-formato">4D · 5D</span>
+                    <span class="boleto-desde">desde</span>
+                    <span class="boleto-precio">${{ desdeInmersiva() | number: '1.0-0' : 'es' }}</span>
+                    <span class="boleto-pie">Inmersiva</span>
+                  </div>
                 </div>
-                <div class="ticket-stub ticket-4d">
-                  <span class="ticket-precio">$10.000</span>
-                  <span class="ticket-formatos">FORMATOS 4D</span>
-                  <span class="ticket-sala">GRIMM XD · PREMIUM</span>
-                </div>
-              </div>
+              }
             </div>
           </div>
         </div>
@@ -129,7 +164,7 @@
                 BANQUETE<br />
                 DEL REINO
               </h2>
-              <div class="fiesta-fecha-badge candy-tag">
+              <div class="hero-cinta candy-tag">
                 <span>¡LLEVATE TU VASO COLECCIONABLE!</span>
               </div>
               <p class="candy-hero-desc">

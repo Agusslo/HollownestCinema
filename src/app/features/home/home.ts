@@ -1,9 +1,12 @@
 import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Peliculas } from '../../core/services/peliculas';
 import { Generos } from '../../core/services/generos';
+import { Precios } from '../../core/services/precios';
 import { IPeliculaConGeneros } from '../../core/interfaces/pelicula';
 import IGenero from '../../core/interfaces/genero';
+import IPreciosEntradas from '../../core/interfaces/precios';
 import { DuracionPipe } from '../../core/pipes/duracion-pipe';
 import { LoadingComponent } from '../../shared/components/loading/loading';
 import { GlowHover } from '../../shared/directives/glow-hover';
@@ -12,13 +15,22 @@ import { Proximamente } from './proximamente/proximamente';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, DuracionPipe, LoadingComponent, GlowHover, Proximamente, PosterCard],
+  imports: [
+    RouterLink,
+    DecimalPipe,
+    DuracionPipe,
+    LoadingComponent,
+    GlowHover,
+    Proximamente,
+    PosterCard,
+  ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home implements OnInit, OnDestroy {
   private peliculasService = inject(Peliculas);
   private generosService = inject(Generos);
+  private preciosService = inject(Precios);
 
   protected destacadas = signal<IPeliculaConGeneros[]>([]);
   protected peliculas = signal<IPeliculaConGeneros[]>([]);
@@ -45,6 +57,19 @@ export class Home implements OnInit, OnDestroy {
     return this.destacadas()[0] ?? this.peliculas()[0] ?? null;
   });
 
+  // Boletos del primer slide: el precio más barato de cada par de formatos,
+  // tomado de lo que configuró el admin en "Precios". null mientras no
+  // cargaron (o si fallaron), y el HTML no muestra los boletos.
+  private precios = signal<IPreciosEntradas | null>(null);
+  protected desdeClasica = computed(() => {
+    const p = this.precios();
+    return p ? Math.min(p.precio_2d, p.precio_3d) : null;
+  });
+  protected desdeInmersiva = computed(() => {
+    const p = this.precios();
+    return p ? Math.min(p.precio_4d, p.precio_5d) : null;
+  });
+
   // computed() recalcula esto solo cada vez que cambian busqueda(),
   // generoSeleccionado() o todas() — no hay que llamarlo a mano. Devuelve
   // null si no hay ningún filtro activo (para distinguir "no está
@@ -66,6 +91,11 @@ export class Home implements OnInit, OnDestroy {
   constructor() {
     this.cargarPeliculas();
     this.generosService.obtenerTodos().then((generos) => this.generosDisponibles.set(generos));
+    // Aparte de la cartelera: si los precios fallan, la Home carga igual.
+    this.preciosService
+      .obtener()
+      .then((precios) => this.precios.set(precios))
+      .catch(() => this.precios.set(null));
   }
 
   ngOnInit() {

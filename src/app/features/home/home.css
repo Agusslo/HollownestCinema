@@ -127,15 +127,29 @@
   box-sizing: border-box;
 }
 
-/* ── SLIDE 1: Fiesta del Cine ── */
-.slide-fiesta {
+/* ── SLIDE 1: Bienvenida a Hollownest ── */
+.slide-reino {
+  overflow: hidden;
   background:
-    radial-gradient(ellipse at 85% 50%, rgba(225, 29, 72, 0.45) 0%, transparent 65%),
-    radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.15) 0%, transparent 40%),
-    linear-gradient(135deg, #22070e 0%, #170714 50%, #0a0a14 100%);
+    /* luz del proyector del lado de los pósters */
+    radial-gradient(ellipse 55% 75% at 76% 38%, rgba(79, 196, 227, 0.2) 0%, transparent 70%),
+    /* resplandor dorado bajo el título */
+    radial-gradient(ellipse 45% 55% at 8% 92%, rgba(232, 168, 50, 0.14) 0%, transparent 70%),
+    linear-gradient(150deg, #121226 0%, #0b0b17 50%, #060609 100%);
 }
 
-.fiesta-layout {
+/* Viñeta: oscurece los bordes como una sala con las luces bajas */
+.slide-reino::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+}
+
+.reino-layout {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -144,12 +158,356 @@
   gap: 32px;
 }
 
-.fiesta-info {
+.reino-info {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 14px;
+  max-width: min(100%, 540px);
+}
+
+.reino-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--hk-geo);
+  font-family: 'Trajan', serif;
+  font-size: 0.8rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.reino-kicker-rombo {
+  font-size: 0.5rem;
+  opacity: 0.8;
+}
+
+.reino-titulo {
+  margin: 0;
+  font-family: 'Trajan', serif;
+  font-size: clamp(2.2rem, 4.2vw, 3.5rem);
+  line-height: 1;
+  color: var(--hk-soul);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 28px rgba(79, 196, 227, 0.45),
+    0 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+.reino-destello {
+  display: inline-block;
+  margin-left: 0.12em;
+  font-size: 0.55em;
+  vertical-align: 0.9em;
+  color: var(--hk-focus);
+  filter: drop-shadow(0 0 10px var(--hk-focus));
+  animation: reino-destello 3.2s ease-in-out infinite;
+}
+
+@keyframes reino-destello {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.8) rotate(45deg);
+  }
+}
+
+.reino-bajada {
+  margin: 0;
+  color: var(--hk-pale);
+  font-family: 'Perpetua', serif;
+  font-size: 1.08rem;
+  font-style: italic;
+  line-height: 1.5;
+  max-width: 420px;
+}
+
+.reino-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 2px 0 6px;
+  padding: 0;
+  list-style: none;
+}
+
+.reino-chips li {
+  padding: 5px 12px;
+  border: 1px solid rgba(79, 196, 227, 0.3);
+  border-radius: 999px;
+  background: rgba(10, 10, 18, 0.55);
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.btn-reino {
+  display: inline-flex;
+  align-items: center;
   gap: 12px;
-  max-width: min(100%, 440px);
+  padding: 13px 26px;
+  border: 1px solid rgba(232, 168, 50, 0.7);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #f0c25a 0%, var(--hk-geo) 55%, #b97f1e 100%);
+  color: #120c02;
+  font-family: 'Trajan', serif;
+  font-weight: bold;
+  font-size: 0.88rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.btn-reino:hover {
+  transform: translateY(-2px);
+}
+
+.btn-reino-flecha {
+  transition: transform 0.3s ease;
+}
+
+.btn-reino:hover .btn-reino-flecha {
+  transform: translateX(4px);
+}
+
+/* Partículas de alma: puntitos celestes que suben y se desvanecen. Cada
+   uno arranca en otra posición y con otro ritmo (nth-child). */
+.reino-almas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.reino-almas span {
+  position: absolute;
+  bottom: -10px;
+  left: var(--x);
+  width: var(--t, 4px);
+  height: var(--t, 4px);
+  border-radius: 50%;
+  background: #bfefff;
+  box-shadow:
+    0 0 6px 1px rgba(79, 196, 227, 0.9),
+    0 0 14px 3px rgba(79, 196, 227, 0.35);
+  opacity: 0;
+  animation: reino-alma var(--d, 9s) linear infinite;
+  animation-delay: var(--r, 0s);
+}
+
+.reino-almas span:nth-child(1) { --x: 6%; --d: 10s; --r: -2s; }
+.reino-almas span:nth-child(2) { --x: 14%; --d: 13s; --r: -7s; --t: 3px; }
+.reino-almas span:nth-child(3) { --x: 23%; --d: 9s; --r: -4s; }
+.reino-almas span:nth-child(4) { --x: 34%; --d: 12s; --r: -9s; --t: 3px; }
+.reino-almas span:nth-child(5) { --x: 45%; --d: 11s; --r: -1s; --t: 5px; }
+.reino-almas span:nth-child(6) { --x: 54%; --d: 14s; --r: -6s; --t: 3px; }
+.reino-almas span:nth-child(7) { --x: 62%; --d: 10s; --r: -11s; }
+.reino-almas span:nth-child(8) { --x: 70%; --d: 12s; --r: -3s; --t: 5px; }
+.reino-almas span:nth-child(9) { --x: 78%; --d: 9s; --r: -8s; --t: 3px; }
+.reino-almas span:nth-child(10) { --x: 86%; --d: 13s; --r: -5s; }
+.reino-almas span:nth-child(11) { --x: 92%; --d: 11s; --r: -10s; --t: 3px; }
+.reino-almas span:nth-child(12) { --x: 97%; --d: 15s; --r: -12s; }
+
+@keyframes reino-alma {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  12% {
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(14px, -240px);
+  }
+  85% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-8px, -470px);
+  }
+}
+
+.reino-visual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-width: 340px;
+}
+
+/* Haz de luz del proyector: un trapecio celeste que baja sobre los pósters
+   y titila apenas, como una proyección de verdad. */
+.reino-haz {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  width: 380px;
+  height: 330px;
+  transform: translateX(-50%);
+  clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
+  background: linear-gradient(180deg, rgba(191, 239, 255, 0.32) 0%, rgba(79, 196, 227, 0.08) 60%, transparent 100%);
+  filter: blur(4px);
+  pointer-events: none;
+  animation: reino-haz 5s ease-in-out infinite;
+}
+
+@keyframes reino-haz {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  45% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.reino-cartel {
+  position: relative;
+  margin: 0;
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 0.78rem;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px rgba(79, 196, 227, 0.6);
+}
+
+/* Los pósters flotan suave, cada uno a su ritmo */
+.slide-reino .poster-abanico {
+  animation: reino-flotar 6s ease-in-out infinite;
+}
+
+.slide-reino .poster-abanico.item-1 {
+  --giro: rotate(-10deg) translateX(15px);
+  animation-delay: -1s;
+}
+
+.slide-reino .poster-abanico.item-2 {
+  --giro: scale(1.05);
+  border-color: rgba(232, 168, 50, 0.7);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.9),
+    0 0 22px rgba(79, 196, 227, 0.35);
+}
+
+.slide-reino .poster-abanico.item-3 {
+  --giro: rotate(10deg) translateX(-15px);
+  animation-delay: -3s;
+}
+
+@keyframes reino-flotar {
+  0%,
+  100% {
+    transform: var(--giro) translateY(0);
+  }
+  50% {
+    transform: var(--giro) translateY(-6px);
+  }
+}
+
+/* Reflejo de la luz en el piso, debajo de los pósters */
+.reino-escenario {
+  width: 300px;
+  height: 18px;
+  margin-top: -14px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(79, 196, 227, 0.35) 0%, transparent 70%);
+  filter: blur(3px);
+}
+
+/* Boletos con muescas a los costados (la máscara las "recorta") y una
+   línea punteada de troquel. La sombra va en el contenedor con
+   drop-shadow, porque la máscara recortaría un box-shadow. */
+.boletos {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.6));
+}
+
+.boleto {
+  --muesca: 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 128px;
+  padding: 8px 18px 7px;
+  background: linear-gradient(180deg, #f4f2ec 0%, #dcd9d0 100%);
+  color: #12121c;
+  -webkit-mask:
+    radial-gradient(circle var(--muesca) at 0 50%, transparent 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--muesca) at 100% 50%, transparent 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle var(--muesca) at 0 50%, transparent 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--muesca) at 100% 50%, transparent 97%, #000) right / 51% 100% no-repeat;
+}
+
+.boleto-oro {
+  background: linear-gradient(180deg, #f7dc9a 0%, #e0b155 100%);
+}
+
+.boleto-formato {
+  font-family: 'Trajan', serif;
+  font-weight: bold;
+  font-size: 0.74rem;
+  letter-spacing: 2px;
+}
+
+.boleto-desde {
+  margin-top: 2px;
+  font-family: 'Perpetua', serif;
+  font-style: italic;
+  font-size: 0.78rem;
+  color: #4a4a5e;
+}
+
+.boleto-precio {
+  font-family: 'Trajan', serif;
+  font-weight: bold;
+  font-size: 1.25rem;
+  line-height: 1.1;
+}
+
+.boleto-pie {
+  width: 100%;
+  margin-top: 5px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(18, 18, 28, 0.35);
+  text-align: center;
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #4a4a5e;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reino-almas,
+  .reino-destello,
+  .reino-haz,
+  .slide-reino .poster-abanico {
+    animation: none;
+  }
+
+  .reino-almas {
+    display: none;
+  }
+
+  .slide-reino .poster-abanico {
+    transform: var(--giro);
+  }
 }
 
 .pill-badge {
@@ -165,30 +523,8 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.fiesta-titulo {
-  margin: 0;
-  font-family: 'Trajan', 'Arial Black', sans-serif;
-  font-size: clamp(2.4rem, 5vw, 5rem);
-  line-height: 0.82;
-  color: #ffffff;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-shadow:
-    0 0 24px rgba(244, 63, 94, 0.6),
-    0 4px 10px rgba(0, 0, 0, 0.8);
-  white-space: normal;
-  max-width: 100%;
-}
-
-.sparkle {
-  display: inline-block;
-  color: #facc15;
-  margin-left: 0.1em;
-  transform: translateY(-0.08em);
-  filter: drop-shadow(0 0 8px #facc15);
-}
-
-.fiesta-fecha-badge {
+/* Cinta inclinada de los slides (la usa el del candy bar) */
+.hero-cinta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -229,22 +565,6 @@
 .btn-hero-blanco:hover {
   transform: translateY(-2px) scale(1.03);
   box-shadow: 0 8px 24px rgba(255, 255, 255, 0.4);
-}
-
-.fiesta-visual {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-
-.fiesta-subtitulo {
-  margin: 0;
-  color: #ffffff;
-  font-family: 'Trajan', serif;
-  font-size: clamp(0.85rem, 1.6vw, 1.15rem);
-  letter-spacing: 2px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .posters-abanico {
@@ -294,18 +614,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.knight-glow {
-  object-fit: contain;
-  filter: drop-shadow(0 0 12px rgba(79, 196, 227, 0.6));
-}
-
-.tickets-promo {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  z-index: 4;
 }
 
 .ticket-stub {
@@ -602,7 +910,7 @@
     min-width: 0;
   }
 
-  .fiesta-layout,
+  .reino-layout,
   .pelicula-layout,
   .candy-layout {
     flex-direction: column;
@@ -612,8 +920,8 @@
     padding: 28px 16px 56px;
   }
 
-  .fiesta-info {
-    gap: 16px;
+  .reino-chips {
+    justify-content: center;
   }
 
   .pelicula-hero-meta {
@@ -625,7 +933,7 @@
     display: none;
   }
 
-  .fiesta-info,
+  .reino-info,
   .pelicula-hero-info,
   .candy-hero-info {
     align-items: center;
@@ -636,11 +944,11 @@
     display: none;
   }
 
-  .fiesta-visual {
+  .reino-visual {
     display: none;
   }
 
-  .fiesta-titulo {
+  .reino-titulo {
     font-size: clamp(2rem, 6vw, 3rem);
   }
 
@@ -664,7 +972,7 @@
     min-height: 300px;
   }
 
-  .fiesta-layout,
+  .reino-layout,
   .pelicula-layout,
   .candy-layout {
     padding: 22px 14px 54px;
@@ -680,8 +988,27 @@
     font-size: 0.72rem;
   }
 
-  .fiesta-titulo {
-    font-size: 1.6rem;
+  .reino-titulo {
+    font-size: 1.75rem;
+  }
+
+  .reino-bajada {
+    font-size: 0.95rem;
+  }
+
+  .reino-kicker {
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+  }
+
+  .reino-chips li {
+    font-size: 0.62rem;
+    padding: 4px 10px;
+  }
+
+  .btn-reino {
+    font-size: 0.8rem;
+    padding: 11px 20px;
   }
 
   .pelicula-hero-titulo {
