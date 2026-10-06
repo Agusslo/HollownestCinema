@@ -5,6 +5,14 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - **Repositorio:** [https://github.com/Agusslo/Agustin-Lopez-tp1-prog4-2026-c2](https://github.com/Agusslo/Agustin-Lopez-tp1-prog4-2026-c2)
 - **Deploy:** [*Hollownest Cinema*](https://hollownestcinema.vercel.app/)
 
+### 🔑 Acceso de administrador (para la corrección)
+
+| Email | Contraseña |
+| --- | --- |
+| `admin@gmail.com` | `123456` |
+
+En la pantalla de login también está el botón **"Entrar como administrador"**, que ingresa directamente con esta cuenta.
+
 ---
 
 ## 🛠️ Stack Tecnológico

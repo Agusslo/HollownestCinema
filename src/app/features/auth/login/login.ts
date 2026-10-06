@@ -66,6 +66,13 @@ export class Login {
     this.router.navigateByUrl(this.destino());
   }
 
+  // Acceso rápido para la corrección del TP: completa el formulario con la
+  // cuenta de administrador de prueba e ingresa directamente.
+  protected entrarComoAdmin() {
+    this.formulario.setValue({ email: 'admin@gmail.com', password: '123456' });
+    this.login();
+  }
+
   protected async loginConGoogle() {
     this.error.set(null);
     try {

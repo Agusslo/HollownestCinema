@@ -153,3 +153,39 @@ form {
   text-decoration: underline;
   text-shadow: 0 0 8px rgba(79, 196, 227, 0.5);
 }
+/* Acceso rápido de administrador para quien corrige el TP: muestra las
+   credenciales de prueba y un botón que ingresa con ellas. */
+.acceso-admin {
+  margin-top: 22px;
+  padding: 14px 16px;
+  border: 1px dashed var(--hk-ash);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.acceso-admin-titulo {
+  margin: 0 0 6px;
+  color: var(--hk-charm);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.acceso-admin-datos {
+  margin: 0 0 12px;
+  color: var(--hk-soft-text);
+  font-size: 0.95rem;
+}
+
+.acceso-admin-datos code {
+  color: var(--hk-focus);
+}
+
+.btn-admin {
+  width: 100%;
+  border-radius: 6px;
+}
+
+:host-context(.tema-claro) .acceso-admin {
+  border-color: rgba(41, 64, 71, 0.3);
+}
