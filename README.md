@@ -5,14 +5,6 @@ Sistema integral de gestión, venta de entradas y Candy Bar para complejo de cin
 - **Repositorio:** [https://github.com/Agusslo/Agustin-Lopez-tp1-prog4-2026-c2](https://github.com/Agusslo/Agustin-Lopez-tp1-prog4-2026-c2)
 - **Deploy:** [*Hollownest Cinema*](https://hollownestcinema.vercel.app/)
 
-### 🔑 Acceso de administrador (para la corrección)
-
-| Email | Contraseña |
-| --- | --- |
-| `admin@gmail.com` | `123456` |
-
-En la pantalla de login también está el botón **"Entrar como administrador"**, que ingresa directamente con esta cuenta.
-
 ---
 
 ## 🛠️ Stack Tecnológico
@@ -142,7 +134,7 @@ La pantalla de butacas se suscribe con **Supabase Realtime** a los cambios en la
 
 ### Compras, cancelaciones, crédito y puntos
 - Cada compra genera una **orden** con **un único QR** que equivale a todo: las entradas de todas las butacas y el candy bar. El PDF trae ese solo código.
-- **Cancelación:** disponible hasta 2 hs antes de la función mientras ninguna entrada se haya usado. El monto pagado se acredita como crédito y los puntos canjeados se devuelven. Las butacas vuelven a quedar libres: un trigger de la base marca las entradas de la compra como canceladas (`entradas.cancelada`), y la regla de una entrada por butaca es un índice único parcial que solo cuenta las vigentes. Las entradas canceladas se conservan para el historial de "Mis compras".
+- **Cancelación:** disponible hasta 2 hs antes de la función mientras ninguna entrada se haya usado. El monto pagado se acredita como crédito, los puntos canjeados se devuelven y se restan los puntos que esa compra había sumado (así no se pueden juntar puntos comprando y cancelando). Las butacas vuelven a quedar libres: un trigger de la base marca las entradas de la compra como canceladas (`entradas.cancelada`), y la regla de una entrada por butaca es un índice único parcial que solo cuenta las vigentes. Las entradas canceladas se conservan para el historial de "Mis compras".
 - **Límite:** hasta 6 butacas por persona y por función, sumando todas sus compras de esa función. Se controla en la pantalla y se vuelve a verificar al comprar.
 - **Puntos:** 1 por cada peso pagado. El costo en puntos de la entrada gratis se configura en la pantalla Fidelización, y el de cada producto de candy al darlo de alta.
 - **Cupones:** se aplica el de mayor porcentaje entre los que le correspondan al usuario. El de mayores de 50 aplica desde los 51 años (50 justos todavía no es "mayor de 50").

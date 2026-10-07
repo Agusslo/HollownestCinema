@@ -100,7 +100,15 @@ export class MisPuntos {
       ]);
       this.config.set(config);
 
+      // Las compras canceladas no figuran: al cancelar se restan los puntos
+      // que había sumado y se devuelven los que se habían canjeado, así que
+      // para el saldo es como si no hubiera existido.
+      const canceladas = new Set(
+        compras.filter((orden) => orden.cancelada_en).map((orden) => orden.id),
+      );
+
       const ganancias: IMovimientoPuntos[] = compras
+        .filter((orden) => !orden.cancelada_en)
         .map((orden) => ({
           fecha: orden.creado_en,
           // Misma cuenta que usa Entradas.comprar(): 1 punto por cada peso
@@ -112,12 +120,14 @@ export class MisPuntos {
         }))
         .filter((mov) => mov.puntos > 0);
 
-      const gastos: IMovimientoPuntos[] = canjes.map((canje) => ({
-        fecha: canje.creado_en,
-        puntos: -canje.puntos_gastados,
-        tipo: canje.tipo === 'entrada' ? ('entrada' as const) : ('candy' as const),
-        titulo: this.tituloCanje(canje),
-      }));
+      const gastos: IMovimientoPuntos[] = canjes
+        .filter((canje) => !canceladas.has(canje.orden_id))
+        .map((canje) => ({
+          fecha: canje.creado_en,
+          puntos: -canje.puntos_gastados,
+          tipo: canje.tipo === 'entrada' ? ('entrada' as const) : ('candy' as const),
+          titulo: this.tituloCanje(canje),
+        }));
 
       // Mezclamos las dos listas y ordenamos por fecha, más nuevo primero
       // — así se ve como una sola línea de tiempo de "gané esto, gasté

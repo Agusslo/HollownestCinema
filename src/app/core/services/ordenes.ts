@@ -154,6 +154,11 @@ export class Ordenes {
             (acumulado, canje) => acumulado + canje.puntos_gastados,
             0,
         );
+        // Y al revés: los puntos que GANÓ con esta compra (1 por peso
+        // pagado, misma cuenta que Entradas.comprar()) se le restan. Si no,
+        // alguien podría comprar, cancelar y quedarse con los puntos sin
+        // haber gastado nada (el monto vuelve como crédito).
+        const puntosAQuitar = Math.floor(Math.max(montoACreditar, 0));
 
         const { error: errorCancelar } = await this.supabase.Supabase.from('ordenes')
             .update({ cancelada_en: new Date().toISOString() })
@@ -170,7 +175,7 @@ export class Ordenes {
             .eq('orden_id', ordenId);
         if (errorEntradas) throw errorEntradas;
 
-        if (montoACreditar > 0 || puntosADevolver > 0) {
+        if (montoACreditar > 0 || puntosADevolver > 0 || puntosAQuitar > 0) {
             const { data: perfil, error: errorGet } = await this.supabase.Supabase.from('perfiles')
                 .select('credito, puntos')
                 .eq('id', usuarioId)
@@ -183,8 +188,10 @@ export class Ordenes {
             if (montoACreditar > 0) {
                 cambios.credito = perfilData.credito + montoACreditar;
             }
-            if (puntosADevolver > 0) {
-                cambios.puntos = perfilData.puntos + puntosADevolver;
+            if (puntosADevolver > 0 || puntosAQuitar > 0) {
+                // Nunca queda en negativo: si ya gastó esos puntos en otra
+                // compra, el saldo queda en 0.
+                cambios.puntos = Math.max(perfilData.puntos + puntosADevolver - puntosAQuitar, 0);
             }
 
             const { error: errorUpdate } = await this.supabase.Supabase.from('perfiles')
