@@ -260,14 +260,30 @@
   border-radius: 20px;
   box-shadow: 0 0 14px rgba(79, 196, 227, 0.12);
   box-sizing: border-box;
+  text-decoration: none;
   cursor: default;
   transition:
     border-color 0.25s,
     box-shadow 0.25s;
 }
 
-.user-badge:hover {
+/* Con sesión el badge es un link a Mi perfil (la Sombra del invitado no) */
+a.user-badge {
+  cursor: pointer;
+}
+
+.user-badge:hover,
+.user-badge.activo {
   border-color: var(--hk-focus);
+}
+
+.user-badge.activo .user-nombre {
+  color: var(--hk-focus);
+}
+
+.user-badge:focus-visible {
+  outline: 2px solid var(--hk-focus);
+  outline-offset: 2px;
 }
 
 .user-blobatar {

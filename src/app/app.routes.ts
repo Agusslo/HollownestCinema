@@ -125,6 +125,11 @@ export const routes: Routes = [
       import('./features/auth/completar-perfil/completar-perfil').then((m) => m.CompletarPerfil),
   },
   {
+    path: 'mi-perfil',
+    canActivate: [sesionGuard, perfilCompletoGuard],
+    loadComponent: () => import('./features/perfil/mi-perfil/mi-perfil').then((m) => m.MiPerfil),
+  },
+  {
     path: 'mis-compras',
     canActivate: [sesionGuard, perfilCompletoGuard],
     loadComponent: () =>

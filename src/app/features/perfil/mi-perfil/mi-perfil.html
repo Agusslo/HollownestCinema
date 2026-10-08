@@ -1,0 +1,197 @@
+@if (cargando()) {
+  <app-loading mensaje="Buscando tu caparazón" />
+} @else if (usuario(); as u) {
+  <section class="mi-perfil">
+    <div class="auth-card perfil-card">
+      <!-- Encabezado: el avatar dentro de un vaso de alma, como el HUD del juego -->
+      <header class="perfil-hero">
+        <div class="vaso-alma">
+          <span class="vaso-anillo" aria-hidden="true"></span>
+          <app-blobatar [name]="nombreAvatar()" [size]="96" animate="always" />
+        </div>
+
+        <span class="auth-kicker">{{ etiquetaRol() }}</span>
+        <h1>{{ nombreAvatar() }}</h1>
+        <div class="auth-ornamento" aria-hidden="true"><span></span>◆<span></span></div>
+        <p class="auth-subtitle">Tu avatar nace de tu nombre: cambialo y vas a ver otro.</p>
+
+        <dl class="reliquias">
+          <div class="reliquia">
+            <dt><img src="/img/GEO.png" alt="" aria-hidden="true" /> Geo</dt>
+            <dd>{{ u.puntos | number: '1.0-0' : 'es' }} <small>pts</small></dd>
+          </div>
+          <div class="reliquia">
+            <dt><span class="reliquia-icono" aria-hidden="true">◈</span> Crédito</dt>
+            <dd>${{ u.credito | number: '1.0-0' : 'es' }}</dd>
+          </div>
+        </dl>
+      </header>
+
+      <form [formGroup]="formulario" (ngSubmit)="guardar()">
+        <h2 class="seccion-titulo"><span>Datos del viajero</span></h2>
+
+        <div class="campos">
+          <div class="campo">
+            <label
+              [class.campo-invalido]="
+                formulario.controls.nombre.touched && formulario.controls.nombre.invalid
+              "
+            >
+              Nombre
+              <input type="text" formControlName="nombre" autocomplete="given-name" />
+            </label>
+            @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
+              @if (formulario.controls.nombre.hasError('required')) {
+                <p class="error-campo">El nombre es requerido.</p>
+              } @else if (formulario.controls.nombre.hasError('pattern')) {
+                <p class="error-campo">El nombre solo puede contener letras.</p>
+              } @else if (formulario.controls.nombre.hasError('minlength')) {
+                <p class="error-campo">El nombre debe tener al menos 2 caracteres.</p>
+              } @else if (formulario.controls.nombre.hasError('maxlength')) {
+                <p class="error-campo">El nombre no puede superar los 50 caracteres.</p>
+              }
+            }
+          </div>
+
+          <div class="campo">
+            <label
+              [class.campo-invalido]="
+                formulario.controls.apellido.touched && formulario.controls.apellido.invalid
+              "
+            >
+              Apellido
+              <input type="text" formControlName="apellido" autocomplete="family-name" />
+            </label>
+            @if (formulario.controls.apellido.touched && formulario.controls.apellido.invalid) {
+              @if (formulario.controls.apellido.hasError('required')) {
+                <p class="error-campo">El apellido es requerido.</p>
+              } @else if (formulario.controls.apellido.hasError('pattern')) {
+                <p class="error-campo">El apellido solo puede contener letras.</p>
+              } @else if (formulario.controls.apellido.hasError('minlength')) {
+                <p class="error-campo">El apellido debe tener al menos 2 caracteres.</p>
+              } @else if (formulario.controls.apellido.hasError('maxlength')) {
+                <p class="error-campo">El apellido no puede superar los 50 caracteres.</p>
+              }
+            }
+          </div>
+
+          <div class="campo">
+            <label>
+              Tipo de sangre
+              <select formControlName="tipo_sangre">
+                <option value="O+">O positivo (O+)</option>
+                <option value="A+">A positivo (A+)</option>
+                <option value="B+">B positivo (B+)</option>
+                <option value="O-">O negativo (O−)</option>
+                <option value="A-">A negativo (A−)</option>
+                <option value="AB+">AB positivo (AB+)</option>
+                <option value="B-">B negativo (B−)</option>
+                <option value="AB-">AB negativo (AB−)</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="campo">
+            <label>
+              Color de ojos
+              <select formControlName="color_ojos">
+                <option value="marrón">Marrón</option>
+                <option value="negro">Negro</option>
+                <option value="azul">Azul</option>
+                <option value="verde">Verde</option>
+                <option value="gris">Gris</option>
+                <option value="miel">Miel</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="campo">
+            <label
+              [class.campo-invalido]="
+                formulario.controls.dias_vacaciones.touched &&
+                formulario.controls.dias_vacaciones.invalid
+              "
+            >
+              Días de vacaciones
+              <input type="number" formControlName="dias_vacaciones" min="0" max="365" />
+            </label>
+            @if (
+              formulario.controls.dias_vacaciones.touched &&
+              formulario.controls.dias_vacaciones.invalid
+            ) {
+              @if (formulario.controls.dias_vacaciones.hasError('required')) {
+                <p class="error-campo">Los días de vacaciones son requeridos.</p>
+              } @else if (formulario.controls.dias_vacaciones.hasError('min')) {
+                <p class="error-campo">Los días de vacaciones no pueden ser negativos.</p>
+              } @else if (formulario.controls.dias_vacaciones.hasError('max')) {
+                <p class="error-campo">Los días de vacaciones no pueden superar los 365.</p>
+              } @else if (formulario.controls.dias_vacaciones.hasError('pattern')) {
+                <p class="error-campo">Debe ser un número entero.</p>
+              }
+            }
+          </div>
+        </div>
+
+        <!-- Datos sellados: se muestran, pero no se pueden editar -->
+        <h2 class="seccion-titulo"><span>Sellado</span></h2>
+
+        <div class="campos">
+          <div class="campo sellado">
+            <span class="sellado-label">Correo</span>
+            <span class="sellado-valor">
+              <span class="sellado-texto">{{ email() ?? '—' }}</span>
+              <svg class="candado" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="5" y="11" width="14" height="10" rx="2" fill="currentColor" />
+                <path
+                  d="M8 11V8a4 4 0 0 1 8 0v3"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+              </svg>
+            </span>
+          </div>
+
+          <div class="campo sellado">
+            <span class="sellado-label">Nacimiento</span>
+            <span class="sellado-valor">
+              <span class="sellado-texto">{{
+                u.fecha_nacimiento | date: "d 'de' MMMM 'de' y" : 'UTC' : 'es'
+              }}</span>
+              <svg class="candado" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="5" y="11" width="14" height="10" rx="2" fill="currentColor" />
+                <path
+                  d="M8 11V8a4 4 0 0 1 8 0v3"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+        <p class="sellado-nota">
+          El correo es tu llave de entrada y la fecha de nacimiento valida la edad de las
+          películas: ninguno de los dos se puede cambiar.
+        </p>
+
+        @if (error()) {
+          <p class="error-msg">{{ error() }}</p>
+        }
+
+        <div class="acciones">
+          @if (formulario.dirty && !guardando()) {
+            <button type="button" class="btn-descartar" (click)="descartarCambios()">
+              Descartar
+            </button>
+          }
+          <button type="submit" [disabled]="guardando() || formulario.pristine">
+            {{ guardando() ? 'Guardando...' : 'Guardar cambios' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+} @else {
+  <p class="error-msg">{{ error() ?? 'No se pudo cargar tu perfil.' }}</p>
+}

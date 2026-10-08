@@ -1,0 +1,340 @@
+:host {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* La tarjeta usa el estilo compartido .auth-card (styles.css): acá sólo
+   va su ancho y lo propio de esta pantalla. */
+.mi-perfil {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 8px 0 80px;
+}
+
+.perfil-card {
+  width: 600px;
+  max-width: 100%;
+}
+
+form {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* ── Encabezado ── */
+.perfil-hero {
+  margin-bottom: 26px;
+  text-align: center;
+}
+
+.perfil-hero h1 {
+  margin: 0;
+  color: var(--hk-soul);
+  font-size: clamp(1.5rem, 5vw, 1.9rem);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 0 22px rgba(79, 196, 227, 0.25);
+  overflow-wrap: anywhere;
+}
+
+/* Vaso de alma: el círculo del HUD del juego, con el avatar adentro */
+.vaso-alma {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 128px;
+  height: 128px;
+  margin: 6px auto 20px;
+  border: 2px solid rgba(232, 232, 240, 0.75);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 196, 227, 0.2), rgba(8, 8, 16, 0.9) 70%);
+  box-shadow:
+    0 0 0 4px rgba(10, 10, 18, 0.9),
+    0 0 0 5px rgba(212, 212, 224, 0.25),
+    0 0 30px rgba(79, 196, 227, 0.35),
+    inset 0 0 22px rgba(79, 196, 227, 0.25);
+}
+
+/* Rombos a los costados, como los adornos del menú */
+.vaso-alma::before,
+.vaso-alma::after {
+  content: '◆';
+  position: absolute;
+  top: 50%;
+  color: var(--hk-focus);
+  font-size: 0.6rem;
+  text-shadow: 0 0 8px rgba(79, 196, 227, 0.7);
+  transform: translateY(-50%);
+}
+
+.vaso-alma::before {
+  left: -30px;
+}
+
+.vaso-alma::after {
+  right: -30px;
+}
+
+/* Anillo punteado que gira despacio alrededor del vaso */
+.vaso-anillo {
+  position: absolute;
+  inset: -13px;
+  border: 1px dashed rgba(79, 196, 227, 0.45);
+  border-radius: 50%;
+  animation: anillo-girar 30s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes anillo-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vaso-anillo {
+    animation: none;
+  }
+}
+
+/* ── Geo y crédito ── */
+.reliquias {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 22px 0 0;
+}
+
+.reliquia {
+  padding: 12px 14px;
+  background: rgba(8, 8, 16, 0.45);
+  border: 1px solid rgba(212, 212, 224, 0.14);
+  border-radius: 8px;
+}
+
+.reliquia dt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.74rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.reliquia dt img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 1px rgba(212, 212, 224, 0.6));
+}
+
+.reliquia-icono {
+  color: var(--hk-geo);
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.reliquia dd {
+  margin: 4px 0 0;
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.reliquia dd small {
+  color: var(--hk-soft-text);
+  font-size: 0.55em;
+  letter-spacing: 1px;
+}
+
+/* ── Títulos de sección: ──── DATOS DEL VIAJERO ──── ── */
+.seccion-titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0 16px;
+  color: var(--hk-focus);
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.seccion-titulo::before,
+.seccion-titulo::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79, 196, 227, 0.45));
+}
+
+.seccion-titulo::after {
+  background: linear-gradient(90deg, rgba(79, 196, 227, 0.45), transparent);
+}
+
+/* ── Campos en dos columnas ── */
+.campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.campo {
+  min-width: 0;
+}
+
+/* ── Datos sellados: parecen un campo, pero apagado y con candado ── */
+.sellado {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.sellado-label {
+  color: var(--hk-soft-text);
+  font-family: 'Trajan', serif;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.sellado-valor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 48px;
+  padding: 0 14px;
+  color: var(--hk-soft-text);
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(8, 8, 16, 0.35) 0 8px,
+    rgba(8, 8, 16, 0.55) 8px 16px
+  );
+  border: 1px dashed rgba(212, 212, 224, 0.2);
+  border-radius: 6px;
+  font-size: 1.02rem;
+}
+
+.sellado-texto {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.candado {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  color: var(--hk-ash);
+}
+
+.sellado-nota {
+  margin: -2px 0 18px;
+  color: var(--hk-soft-text);
+  font-size: 0.92rem;
+  font-style: italic;
+}
+
+/* ── Botones ── */
+.acciones {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.perfil-card .acciones button[type='submit'] {
+  flex: 1;
+  margin-top: 0;
+}
+
+.btn-descartar,
+.btn-descartar:hover {
+  height: 48px;
+  padding: 0 20px;
+  background: transparent;
+  border: 1px solid rgba(212, 212, 224, 0.2);
+  border-radius: 6px;
+  color: var(--hk-soft-text);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  box-shadow: none;
+}
+
+.btn-descartar:hover {
+  color: #ff9e9e;
+  border-color: var(--hk-grimm);
+  background: rgba(192, 57, 43, 0.1);
+}
+
+/* ── Celular: una sola columna ── */
+@media (max-width: 560px) {
+  .mi-perfil {
+    padding-bottom: 40px;
+  }
+
+  .campos {
+    grid-template-columns: 1fr;
+  }
+
+  .acciones {
+    flex-direction: column-reverse;
+  }
+
+  /* En columna, flex: 1 le dejaba alto 0 al botón de guardar */
+  .perfil-card .acciones button[type='submit'] {
+    flex: none;
+  }
+}
+
+/* ── Modo claro ── */
+:host-context(.tema-claro) .perfil-hero h1 {
+  text-shadow: none;
+}
+
+:host-context(.tema-claro) .vaso-alma {
+  border-color: rgba(41, 64, 71, 0.55);
+  background: radial-gradient(circle, rgba(22, 141, 168, 0.16), #ffffff 70%);
+  box-shadow:
+    0 0 0 4px #ffffff,
+    0 0 0 5px rgba(41, 64, 71, 0.2),
+    0 0 24px rgba(22, 141, 168, 0.25);
+}
+
+:host-context(.tema-claro) .vaso-anillo {
+  border-color: rgba(22, 141, 168, 0.45);
+}
+
+:host-context(.tema-claro) .reliquia {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.18);
+}
+
+:host-context(.tema-claro) .sellado-valor {
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(41, 64, 71, 0.04) 0 8px,
+    rgba(41, 64, 71, 0.08) 8px 16px
+  );
+  border-color: rgba(41, 64, 71, 0.25);
+}
+
+:host-context(.tema-claro) .btn-descartar {
+  border-color: rgba(41, 64, 71, 0.25);
+}
+
+:host-context(.tema-claro) .btn-descartar:hover {
+  color: #a8281b;
+}

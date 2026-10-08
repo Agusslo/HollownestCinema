@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth } from './core/services/auth';
 import IPerfil from './core/interfaces/perfil';
@@ -62,6 +62,12 @@ export class App {
       } else {
         this.usuario.set(null);
       }
+    });
+
+    // Al guardar Mi perfil, el header muestra el nombre nuevo sin recargar
+    effect(() => {
+      const perfil = this.authService.perfilEditado();
+      if (perfil) this.usuario.set(perfil);
     });
   }
 

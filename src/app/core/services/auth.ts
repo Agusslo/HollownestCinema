@@ -1,4 +1,4 @@
-import { Service, inject } from '@angular/core';
+import { Service, inject, signal } from '@angular/core';
 import { Supabase } from './supabase';
 import IPerfil from '../interfaces/perfil';
 
@@ -13,9 +13,25 @@ export interface DatosRegistro {
   dias_vacaciones: number;
 }
 
+// Lo que se puede cambiar desde Mi perfil. El email no (es el usuario de
+// Supabase Auth) y la fecha de nacimiento tampoco: de ella dependen la
+// edad mínima de las películas y el cupón de mayores de 50.
+export interface DatosEditablesPerfil {
+  nombre: string;
+  apellido: string;
+  tipo_sangre: string;
+  color_ojos: string;
+  dias_vacaciones: number;
+}
+
 @Service()
 export class Auth {
   private supabase = inject(Supabase);
+
+  // El header (App) muestra el nombre del usuario. Cuando se edita el
+  // perfil se avisa por acá, así el nombre nuevo aparece sin recargar.
+  private perfilEditadoSignal = signal<IPerfil | null>(null);
+  readonly perfilEditado = this.perfilEditadoSignal.asReadonly();
 
   async registrar(datos: DatosRegistro): Promise<void> {
     // Registra un nuevo usuario y crea su perfil en la base de datos
@@ -132,5 +148,30 @@ export class Auth {
       .eq('id', user.id);
 
     if (error) throw error;
+  }
+
+  async emailActual(): Promise<string | null> {
+    const {
+      data: { user },
+    } = await this.supabase.Supabase.auth.getUser();
+    return user?.email ?? null;
+  }
+
+  async actualizarPerfil(datos: DatosEditablesPerfil): Promise<IPerfil> {
+    const {
+      data: { user },
+    } = await this.supabase.Supabase.auth.getUser();
+    if (!user) throw new Error('No hay sesión iniciada.');
+
+    const { data, error } = await this.supabase.Supabase.from('perfiles')
+      .update(datos)
+      .eq('id', user.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    this.perfilEditadoSignal.set(data as IPerfil);
+    return data as IPerfil;
   }
 }

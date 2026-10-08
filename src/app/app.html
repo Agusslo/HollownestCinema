@@ -156,10 +156,16 @@
 
       @if (!cargandoAuth()) {
         @if (usuario(); as u) {
-          <div class="user-badge" appGlowHover>
+          <a
+            class="user-badge"
+            appGlowHover
+            [routerLink]="['/mi-perfil']"
+            routerLinkActive="activo"
+            title="Mi perfil"
+          >
             <app-blobatar [name]="u.nombre" [size]="30" animate="hover" class="user-blobatar" />
             <span class="user-nombre">{{ u.nombre }}</span>
-          </div>
+          </a>
           <button class="btn-salir" type="button" (click)="cerrarSesion()">Salir</button>
         } @else {
           <!-- La "Sombra" es el invitado: aparece sólo si eligió "Continuar

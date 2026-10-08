@@ -36,7 +36,7 @@ src/app/
 │   ├── home/           cartelera, Top 3 y sección Próximamente
 │   ├── peliculas/      detalle de película y reseñas
 │   ├── funciones/      selección de butacas, candy y compra
-│   ├── perfil/         mis compras, mis películas, mis puntos
+│   ├── perfil/         mi perfil, mis compras, mis películas, mis puntos
 │   ├── auth/           login, registro, completar perfil
 │   ├── empleado/       validación de QR en puerta
 │   └── admin/          películas (mostrar / ocultar), funciones, precios, productos, altas,
@@ -59,7 +59,7 @@ scripts/generar-claves-vapid.mjs     → genera las claves VAPID de las notifica
 | Guard | Dónde | Qué hace |
 |---|---|---|
 | `rolGuard([...])` | Pantallas de admin y de empleado | Sin sesión manda al login; con otro rol, a la cartelera |
-| `sesionGuard` | Mis compras, Mis puntos, Mis películas | Sin sesión manda al login |
+| `sesionGuard` | Mi perfil, Mis compras, Mis puntos, Mis películas | Sin sesión manda al login |
 | `invitadoGuard` | Login y registro | Con sesión iniciada manda a la cartelera |
 | `perfilCompletoGuard` | Todas las pantallas, menos login, registro y completar perfil | Con el perfil incompleto (ingreso con Google) manda a completarlo |
 | `perfilPendienteGuard` | Completar perfil | Sin sesión, o con el perfil ya completo, sale de esa pantalla |
