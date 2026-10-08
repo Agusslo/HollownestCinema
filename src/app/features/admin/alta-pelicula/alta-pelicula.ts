@@ -144,6 +144,9 @@ export class AltaPelicula {
 
   protected tieneEstreno = computed(() => !!this.valores().fecha_estreno);
 
+  // Nombre del archivo elegido, para mostrarlo al lado del botón.
+  protected nombrePoster = computed(() => this.valores().poster?.name ?? null);
+
   constructor() {
     this.cargarGeneros();
     this.authService.usuarioActual().then((usuario) => (this.usuario = usuario));

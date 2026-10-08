@@ -460,23 +460,52 @@
     width: 100%;
   }
 
+  /* Para que las tres columnas entren en el ancho del celular (antes la de
+     Entradas quedaba cortada a la derecha): menos relleno, títulos más
+     chicos y sin los anchos mínimos de la compu. */
   .tabla-facturacion th,
   .tabla-facturacion td {
-    padding: 0.6rem 0.7rem;
-    font-size: 0.91rem;
+    padding: 0.6rem 0.5rem;
+    font-size: 0.88rem;
   }
 
-  /* En celular la barra pasa abajo del número */
+  .tabla-facturacion th {
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+  }
+
+  .col-monto {
+    width: auto;
+  }
+
+  .monto-valor {
+    min-width: 0;
+  }
+
+  /* El día de la semana arriba de la fecha */
+  .dia-semana {
+    display: block;
+  }
+
+  /* En celular la barra pasa abajo del número. flex: none porque, en
+     columna, flex: 1 le daba 0px de alto y la barra no se veía. */
   .monto {
     flex-direction: column;
     align-items: stretch;
     gap: 0.3rem;
   }
 
+  .barra {
+    flex: none;
+  }
+
   .etiqueta-mejor {
     display: block;
     width: fit-content;
     margin: 0.25rem 0 0;
+    padding: 1px 6px;
+    font-size: 0.62rem;
+    letter-spacing: 0.5px;
   }
 
   /* En celular, semana y mes se apilan en vez de ir lado a lado */
@@ -484,6 +513,25 @@
     grid-template-columns: 1fr;
   }
 
+}
+
+/* Celulares angostos (320px): un poco menos de relleno y de letra para que
+   la tabla siga entrando sin deslizarse */
+@media (max-width: 380px) {
+  .reportes {
+    padding: 1rem 0.5rem;
+  }
+
+  .tabla-facturacion th,
+  .tabla-facturacion td {
+    padding: 0.55rem 0.35rem;
+    font-size: 0.82rem;
+  }
+
+  .tabla-facturacion th {
+    font-size: 0.64rem;
+    letter-spacing: 0.5px;
+  }
 }
 
 /* ── Modo claro ── */

@@ -53,19 +53,30 @@
 
         <!-- Sin formControlName: el archivo lo carga cargarImagen() (ver el .ts).
              accept filtra los archivos que ofrece el selector del sistema; en
-             el celular abre la galería o la cámara. -->
+             el celular abre la galería o la cámara. El input queda invisible
+             encima del botón propio (ver .selector-archivo en styles.css). -->
         <label>
           Imagen
-          <input
-            #inputImagen
-            type="file"
-            class="input-imagen"
-            accept="image/jpeg,image/png,image/webp"
+          <span
+            class="selector-archivo"
             [class.invalido]="
               formulario.controls.imagen.touched && formulario.controls.imagen.invalid
             "
-            (change)="cargarImagen($event)"
-          />
+          >
+            <input
+              #inputImagen
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              (change)="cargarImagen($event)"
+            />
+            <span class="selector-archivo-boton" aria-hidden="true">Elegir imagen</span>
+            <span
+              class="selector-archivo-nombre"
+              [class.vacio]="!nombreImagen()"
+              aria-hidden="true"
+              >{{ nombreImagen() ?? 'Sin imagen' }}</span
+            >
+          </span>
           @if (formulario.controls.imagen.touched && formulario.controls.imagen.invalid) {
             @if (formulario.controls.imagen.hasError('required')) {
               <span class="campo-error">Elegí la imagen del producto.</span>
@@ -85,7 +96,7 @@
             type="number"
             formControlName="puntos_canje"
             min="1"
-            placeholder="Vacío = no se puede canjear con puntos"
+            placeholder="Vacío = no se canjea"
           />
           @if (
             formulario.controls.puntos_canje.touched && formulario.controls.puntos_canje.invalid

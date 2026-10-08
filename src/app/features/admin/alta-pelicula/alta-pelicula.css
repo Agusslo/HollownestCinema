@@ -55,43 +55,8 @@
   text-align: center;
 }
 
-/* ── Campo del póster ──
-   El input de archivo toma el estilo de los demás campos (styles.css); acá
-   se le da forma al botón "Elegir archivo" que dibuja el navegador. */
-.admin-form .form-fields .input-poster {
-  padding: 6px;
-  cursor: pointer;
-}
-
-.input-poster::file-selector-button {
-  margin-right: 12px;
-  padding: 7px 14px;
-  color: var(--hk-soul);
-  background: rgba(79, 196, 227, 0.1);
-  border: 1px solid rgba(79, 196, 227, 0.4);
-  border-radius: 4px;
-  font-family: 'Trajan', serif;
-  font-size: 0.72rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition:
-    background 0.2s,
-    border-color 0.2s;
-}
-
-.input-poster:hover::file-selector-button {
-  background: rgba(79, 196, 227, 0.18);
-  border-color: var(--hk-focus);
-}
-
-/* Mismo borde rojo que ponen ng-invalid/ng-touched en los otros campos
-   (este input no tiene formControlName, así que la clase va a mano). */
-.admin-form .form-fields .input-poster.invalido {
-  border-color: var(--hk-grimm);
-  box-shadow: 0 0 8px rgba(192, 57, 43, 0.2);
-}
-
+/* El campo del póster usa el selector de imagen compartido
+   (.selector-archivo en styles.css). */
 .campo-ayuda {
   color: var(--hk-soft-text);
   font-family: 'Perpetua', 'Georgia', serif;
@@ -225,11 +190,6 @@
 :host-context(.tema-claro) .genre-option {
   background: #ffffff;
   border-color: rgba(41, 64, 71, 0.18);
-}
-
-:host-context(.tema-claro) .input-poster::file-selector-button {
-  background: rgba(22, 141, 168, 0.08);
-  border-color: rgba(22, 141, 168, 0.4);
 }
 
 :host-context(.tema-claro) .genre-option:hover {

@@ -38,19 +38,31 @@
         </label>
 
         <!-- Sin formControlName: el archivo lo carga cargarPoster() (ver el .ts).
-         accept filtra los archivos que ofrece el selector del sistema. -->
+         accept filtra los archivos que ofrece el selector del sistema; en el
+         celular abre la galería o la cámara. El input queda invisible encima
+         del botón propio (ver .selector-archivo en styles.css). -->
         <label>
           <span>Póster</span>
-          <input
-            #inputPoster
-            type="file"
-            class="input-poster"
-            accept="image/jpeg,image/png,image/webp"
+          <span
+            class="selector-archivo"
             [class.invalido]="
               formulario.controls.poster.touched && formulario.controls.poster.invalid
             "
-            (change)="cargarPoster($event)"
-          />
+          >
+            <input
+              #inputPoster
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              (change)="cargarPoster($event)"
+            />
+            <span class="selector-archivo-boton" aria-hidden="true">Elegir imagen</span>
+            <span
+              class="selector-archivo-nombre"
+              [class.vacio]="!nombrePoster()"
+              aria-hidden="true"
+              >{{ nombrePoster() ?? 'Sin imagen' }}</span
+            >
+          </span>
           @if (formulario.controls.poster.touched && formulario.controls.poster.invalid) {
             @if (formulario.controls.poster.hasError('required')) {
               <span class="campo-error">Elegí la imagen del póster.</span>

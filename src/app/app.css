@@ -509,31 +509,6 @@ main > *:not(router-outlet) {
     flex-wrap: wrap;
     gap: 8px;
   }
-
-  /* El menú de Panel deja de flotar: se abre en el lugar, a todo el ancho */
-  .admin-menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-
-  .admin-menu-panel {
-    position: static;
-    align-self: stretch;
-    min-width: 0;
-    margin: 6px 0 8px;
-    box-shadow: none;
-  }
-
-  .admin-menu-panel::before {
-    display: none;
-  }
-
-  .admin-menu-panel a {
-    padding-top: 11px;
-    padding-bottom: 11px;
-  }
 }
 
 @media (max-width: 380px) {
@@ -715,6 +690,37 @@ main > *:not(router-outlet) {
     width: 540px;
     columns: 2;
     column-gap: 12px;
+  }
+}
+
+/* Celular: el menú de Panel deja de flotar y se abre en el lugar, a todo
+   el ancho. Va DESPUÉS de los estilos de arriba a propósito: con la misma
+   especificidad gana la última regla, y si estuviera antes (como estaba,
+   en el bloque del header) el position: absolute de arriba la pisaba y el
+   panel quedaba flotando encima de la página. */
+@media (max-width: 760px) {
+  .admin-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .admin-menu-panel {
+    position: static;
+    align-self: stretch;
+    min-width: 0;
+    margin: 6px 0 8px;
+    box-shadow: none;
+  }
+
+  .admin-menu-panel::before {
+    display: none;
+  }
+
+  .admin-menu-panel a {
+    padding-top: 11px;
+    padding-bottom: 11px;
   }
 }
 

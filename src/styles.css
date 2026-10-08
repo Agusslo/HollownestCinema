@@ -818,6 +818,87 @@ form {
   color: var(--hk-pale);
 }
 
+/* ── Selector de imagen (Nueva película y Nuevo producto) ──
+   El <input type="file"> del navegador no deja cambiar el texto de su botón
+   y en el celular el nombre del archivo quedaba cortado ("Nin…ado"). Por
+   eso el input queda invisible encima de todo el campo (sigue siendo el que
+   se toca y el que recibe el foco) y lo que se ve es un botón propio con el
+   nombre del archivo al lado, que se corta con "…" si no entra. */
+.admin-form .selector-archivo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  padding: 0 8px;
+  background-color: rgba(8, 8, 16, 0.55);
+  border: 1px solid rgba(212, 212, 224, 0.18);
+  border-radius: 6px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.admin-form .form-fields .selector-archivo input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.admin-form .selector-archivo:focus-within {
+  border-color: var(--hk-focus);
+  box-shadow: 0 0 14px rgba(79, 196, 227, 0.22);
+}
+
+/* Mismo borde rojo que ponen ng-invalid/ng-touched en los otros campos
+   (este input no tiene formControlName, así que la clase va a mano). */
+.admin-form .selector-archivo.invalido {
+  border-color: var(--hk-grimm);
+  box-shadow: 0 0 8px rgba(192, 57, 43, 0.2);
+}
+
+.admin-form .selector-archivo-boton {
+  flex-shrink: 0;
+  padding: 7px 14px;
+  color: var(--hk-soul);
+  background: rgba(79, 196, 227, 0.1);
+  border: 1px solid rgba(79, 196, 227, 0.4);
+  border-radius: 4px;
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.admin-form .selector-archivo:hover .selector-archivo-boton {
+  background: rgba(79, 196, 227, 0.18);
+  border-color: var(--hk-focus);
+}
+
+.admin-form .selector-archivo-nombre {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--hk-soul);
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.admin-form .selector-archivo-nombre.vacio {
+  color: var(--hk-ash);
+}
+
 /* ── Validación ──
    Angular ya les pone ng-invalid/ng-touched a los controles, así que el
    borde rojo sale solo en cualquier formulario de admin, sin tocar el HTML. */
@@ -952,6 +1033,20 @@ form {
 .tema-claro .admin-form .form-fields select option {
   background: #ffffff;
   color: var(--hk-soul);
+}
+
+.tema-claro .admin-form .selector-archivo {
+  background-color: #ffffff;
+}
+
+/* Sin pisar el borde rojo del error ni el celeste del foco */
+.tema-claro .admin-form .selector-archivo:not(.invalido):not(:focus-within) {
+  border-color: rgba(41, 64, 71, 0.25);
+}
+
+.tema-claro .admin-form .selector-archivo-boton {
+  background: rgba(22, 141, 168, 0.08);
+  border-color: rgba(22, 141, 168, 0.4);
 }
 
 .tema-claro .admin-form .submit-button {

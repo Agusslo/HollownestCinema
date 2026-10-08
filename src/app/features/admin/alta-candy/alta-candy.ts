@@ -107,6 +107,9 @@ export class AltaCandy {
     };
   });
 
+  // Nombre del archivo elegido, para mostrarlo al lado del botón.
+  protected nombreImagen = computed(() => this.valores().imagen?.name ?? null);
+
   // En qué pestaña del candy bar va a aparecer, para mostrarlo debajo de la
   // vista previa.
   protected categoriaElegida = computed(() => {
