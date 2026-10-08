@@ -1,3 +1,12 @@
+/* El <main> centra su contenido con flex: sin width: 100% el componente
+   tomaba el ancho de su contenido (un título o una sinopsis largos lo
+   ensanchaban), y la grilla de funciones cambiaba de 1 a 2 columnas según
+   la película. */
+:host {
+  display: block;
+  width: 100%;
+}
+
 .detalle-pelicula {
   min-width: 0;
   width: min(100%, 980px);
@@ -151,16 +160,22 @@ h2 {
   font-size: clamp(1.35rem, 3vw, 2rem);
 }
 
-/* ── Funciones como tickets ── */
+/* ── Funciones como tickets ──
+   Siempre dos por fila y del mismo ancho, haya 1, 3 o 12 funciones. Con
+   flex centrado (y no grid) la que queda sola en la última fila va al
+   medio, debajo del encabezado, en vez de quedar colgada a la izquierda. */
 .funciones-lista {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 14px;
 }
 
 .funcion-card {
   position: relative;
   display: grid;
+  flex: 0 0 calc(50% - 7px);
+  box-sizing: border-box;
   grid-template-columns: 70px 1fr auto;
   align-items: center;
   gap: 16px;
@@ -270,6 +285,13 @@ h2 {
 
 .funcion-card:hover .funcion-arrow {
   transform: translate(4px, -54%);
+}
+
+/* Tablet chica y celular: no entran dos por fila, va una debajo de otra */
+@media (max-width: 720px) {
+  .funcion-card {
+    flex-basis: 100%;
+  }
 }
 
 /* ── Próximamente y preventa ── */
@@ -396,11 +418,12 @@ h2 {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
-/* Función de una película que todavía no abrió la venta: se ve, pero
-   apagada y sin efecto al pasar el mouse. El !important le gana al brillo
-   que agrega appGlowHover (que lo pone como estilo en línea). */
+/* Función de una película que todavía no abrió la venta: la misma tarjeta,
+   un poco opaca, con el horario apagado, sin flecha y sin efecto al pasar
+   el mouse. El !important le gana al brillo que agrega appGlowHover (que
+   lo pone como estilo en línea). */
 .funcion-card.bloqueada {
-  opacity: 0.55;
+  opacity: 0.75;
   cursor: not-allowed;
   box-shadow: none !important;
 }
@@ -408,6 +431,15 @@ h2 {
 .funcion-card.bloqueada:hover {
   border-color: rgba(79, 196, 227, 0.22);
   transform: none;
+}
+
+.funcion-card.bloqueada .funcion-hora {
+  color: var(--hk-soft-text);
+  text-shadow: none;
+}
+
+.funcion-card.bloqueada .funcion-arrow {
+  visibility: hidden;
 }
 
 .empty-state {
