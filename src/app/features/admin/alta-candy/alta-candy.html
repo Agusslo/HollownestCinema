@@ -7,64 +7,116 @@
     <p>Cargá un producto nuevo para que aparezca en la compra de candy junto a la entrada.</p>
   </div>
 
-  <div class="form-fields">
-    <label>
-      Nombre
-      <input type="text" formControlName="nombre" placeholder="Ej: Pochoclo grande" />
-      @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
-        <span class="campo-error">El nombre es obligatorio.</span>
-      }
-    </label>
+  <!-- Dos columnas en la compu (el formulario y, a la derecha, la vista
+       previa); en el celular la vista previa queda debajo de los datos. -->
+  <div class="candy-layout">
+    <div class="candy-datos">
+      <div class="form-fields">
+        <label>
+          Nombre
+          <input type="text" formControlName="nombre" placeholder="Ej: Pochoclo grande" />
+          @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
+            @if (formulario.controls.nombre.hasError('maxlength')) {
+              <span class="campo-error">El nombre no puede superar los 60 caracteres.</span>
+            } @else {
+              <span class="campo-error">El nombre es obligatorio.</span>
+            }
+          }
+        </label>
 
-    <label>
-      Precio
-      <input type="number" formControlName="precio" min="0" />
-      @if (formulario.controls.precio.touched && formulario.controls.precio.invalid) {
-        <span class="campo-error">Tiene que ser un número mayor o igual a 0.</span>
-      }
-    </label>
+        <label>
+          Precio
+          <input type="number" formControlName="precio" min="1" placeholder="Ej: 4500" />
+          @if (formulario.controls.precio.touched && formulario.controls.precio.invalid) {
+            @if (formulario.controls.precio.hasError('required')) {
+              <span class="campo-error">El precio es obligatorio.</span>
+            } @else {
+              <span class="campo-error">Tiene que ser un número entero mayor a 0.</span>
+            }
+          }
+        </label>
 
-    <label>
-      Categoría
-      <select formControlName="categoria_id">
-        <option [value]="null" disabled>Elegí una categoría</option>
-        @for (categoria of categorias(); track categoria.id) {
-          <option [value]="categoria.id">{{ categoria.nombre }}</option>
-        }
-      </select>
-      @if (formulario.controls.categoria_id.touched && formulario.controls.categoria_id.invalid) {
-        <span class="campo-error">Elegí una categoría.</span>
-      }
-    </label>
+        <label>
+          Categoría
+          <select formControlName="categoria_id">
+            <option [ngValue]="null" disabled>Elegí una categoría</option>
+            @for (categoria of categorias(); track categoria.id) {
+              <option [ngValue]="categoria.id">{{ categoria.nombre }}</option>
+            }
+          </select>
+          @if (
+            formulario.controls.categoria_id.touched && formulario.controls.categoria_id.invalid
+          ) {
+            <span class="campo-error">Elegí una categoría.</span>
+          }
+        </label>
 
-    <label>
-      Imagen (URL, opcional)
-      <input type="text" formControlName="imagen_url" placeholder="https://..." />
-      @if (formulario.controls.imagen_url.touched && formulario.controls.imagen_url.invalid) {
-        <span class="campo-error">Tiene que ser un link que empiece con http:// o https://.</span>
-      }
-    </label>
+        <!-- Sin formControlName: el archivo lo carga cargarImagen() (ver el .ts).
+             accept filtra los archivos que ofrece el selector del sistema; en
+             el celular abre la galería o la cámara. -->
+        <label>
+          Imagen
+          <input
+            #inputImagen
+            type="file"
+            class="input-imagen"
+            accept="image/jpeg,image/png,image/webp"
+            [class.invalido]="
+              formulario.controls.imagen.touched && formulario.controls.imagen.invalid
+            "
+            (change)="cargarImagen($event)"
+          />
+          @if (formulario.controls.imagen.touched && formulario.controls.imagen.invalid) {
+            @if (formulario.controls.imagen.hasError('required')) {
+              <span class="campo-error">Elegí la imagen del producto.</span>
+            } @else if (formulario.controls.imagen.hasError('formatoImagen')) {
+              <span class="campo-error">La imagen tiene que ser JPG, PNG o WEBP.</span>
+            } @else {
+              <span class="campo-error">La imagen no puede pesar más de 5 MB.</span>
+            }
+          } @else {
+            <span class="campo-ayuda">JPG, PNG o WEBP de hasta 5 MB, mejor apaisada.</span>
+          }
+        </label>
 
-    <label>
-      Puntos para canjear (opcional)
-      <input
-        type="number"
-        formControlName="puntos_canje"
-        min="0"
-        placeholder="Vacío = no se puede canjear con puntos"
-      />
-      @if (formulario.controls.puntos_canje.touched && formulario.controls.puntos_canje.invalid) {
-        <span class="campo-error">Tiene que ser un número mayor o igual a 0.</span>
+        <label>
+          Puntos para canjear (opcional)
+          <input
+            type="number"
+            formControlName="puntos_canje"
+            min="1"
+            placeholder="Vacío = no se puede canjear con puntos"
+          />
+          @if (
+            formulario.controls.puntos_canje.touched && formulario.controls.puntos_canje.invalid
+          ) {
+            <span class="campo-error">Tiene que ser un número entero mayor a 0.</span>
+          }
+        </label>
+      </div>
+    </div>
+
+    <!-- Vista previa: la MISMA tarjeta del candy bar de la compra, con los
+         datos que se van escribiendo. -->
+    <aside class="vista-previa" aria-label="Vista previa en el candy bar">
+      <span class="vista-previa-titulo">Así se va a ver en la compra</span>
+      <app-candy-card [producto]="vistaPrevia()" />
+      @if (categoriaElegida(); as categoria) {
+        <p class="vista-previa-nota">En la pestaña «{{ categoria }}» del candy bar.</p>
       }
-    </label>
+    </aside>
   </div>
 
   @if (formulario.invalid && formulario.touched) {
     <p class="form-error">Faltan completar campos: revisá los que están marcados en rojo.</p>
   }
 
+  @if (error()) {
+    <p class="form-error">{{ error() }}</p>
+  }
+
   @if (mensaje()) {
-    <p class="mensaje">{{ mensaje() }}</p>
+    <p class="form-mensaje">{{ mensaje() }}</p>
   }
 
   <button type="submit" class="submit-button" appGlowHover [disabled]="guardando()">

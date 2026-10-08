@@ -219,56 +219,12 @@
 
               <div class="candy-grid">
                 @for (producto of productosDeCategoriaActiva(); track producto.id) {
-                  <article class="candy-card" [class.en-carrito]="cantidadEnCarrito(producto.id) > 0">
-                    <div class="candy-img-wrap">
-                      <img
-                        class="candy-img"
-                        [src]="producto.imagen_url"
-                        [alt]="producto.nombre"
-                        onerror="
-                          this.src =
-                            'https://placehold.co/200x200/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
-                        "
-                      />
-                      <span class="candy-precio">${{ producto.precio | number: '1.0-0' : 'es' }}</span>
-                      @if (cantidadEnCarrito(producto.id) > 0) {
-                        <span class="candy-en-carrito" aria-hidden="true"
-                          >&times;{{ cantidadEnCarrito(producto.id) }}</span
-                        >
-                      }
-                    </div>
-
-                    <div class="candy-info">
-                      <p class="candy-nombre">{{ producto.nombre }}</p>
-                      @if (producto.puntos_canje) {
-                        <p class="candy-puntos">⭐ Canjeable por {{ producto.puntos_canje }} pts</p>
-                      }
-                    </div>
-
-                    @if (cantidadEnCarrito(producto.id) === 0) {
-                      <button type="button" class="candy-agregar" (click)="agregarCandy(producto.id)">
-                        + Agregar
-                      </button>
-                    } @else {
-                      <div class="candy-stepper">
-                        <button
-                          type="button"
-                          (click)="quitarCandy(producto.id)"
-                          [attr.aria-label]="'Quitar un ' + producto.nombre"
-                        >
-                          &minus;
-                        </button>
-                        <span aria-live="polite">{{ cantidadEnCarrito(producto.id) }}</span>
-                        <button
-                          type="button"
-                          (click)="agregarCandy(producto.id)"
-                          [attr.aria-label]="'Agregar otro ' + producto.nombre"
-                        >
-                          +
-                        </button>
-                      </div>
-                    }
-                  </article>
+                  <app-candy-card
+                    [producto]="producto"
+                    [cantidad]="cantidadEnCarrito(producto.id)"
+                    (agregar)="agregarCandy(producto.id)"
+                    (quitar)="quitarCandy(producto.id)"
+                  />
                 } @empty {
                   <p class="candy-vacio">Todavía no hay productos en esta categoría.</p>
                 }

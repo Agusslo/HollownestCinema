@@ -1,0 +1,203 @@
+/* Los estilos de la tarjeta de producto, que antes estaban en butacas.css.
+   Como cada componente tiene sus estilos encapsulados, al pasar la tarjeta
+   a su propio componente sus estilos se mudan con ella. */
+
+/* El elemento <app-candy-card> es el que queda dentro de la grilla. Con
+   display: flex la tarjeta lo ocupa entero, así todas las de una fila
+   quedan de la misma altura aunque un nombre ocupe dos renglones. */
+:host {
+  display: flex;
+}
+
+.candy-card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px 10px 12px;
+  text-align: center;
+  background: linear-gradient(165deg, rgba(36, 36, 58, 0.92), rgba(14, 14, 26, 0.96));
+  border: 1px solid rgba(212, 212, 224, 0.12);
+  border-radius: 8px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+
+.candy-card:hover {
+  border-color: rgba(232, 168, 50, 0.45);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Ya está en el carrito: ribete dorado fijo */
+.candy-card.en-carrito {
+  border-color: var(--hk-geo);
+  box-shadow: 0 0 14px rgba(232, 168, 50, 0.18);
+}
+
+.candy-img-wrap {
+  position: relative;
+}
+
+.candy-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Precio como placa sobre la foto */
+.candy-precio {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  padding: 3px 9px;
+  color: var(--hk-geo);
+  background: rgba(10, 10, 18, 0.88);
+  border: 1px solid rgba(232, 168, 50, 0.5);
+  border-radius: 4px;
+  font-family: 'Trajan', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.candy-en-carrito {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 30px;
+  padding: 3px 8px;
+  color: #2b1c02;
+  background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+  border-radius: 999px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.candy-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.candy-nombre {
+  margin: 0;
+  color: var(--hk-soul);
+  font-size: 1.05rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.candy-puntos {
+  margin: 0;
+  color: var(--hk-focus);
+  font-size: 0.85rem;
+}
+
+.candy-agregar,
+.candy-agregar:hover {
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  color: var(--hk-geo);
+  background: transparent;
+  border: 1px solid rgba(232, 168, 50, 0.55);
+  border-radius: 6px;
+  font-family: 'Trajan', serif;
+  font-size: 0.82rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.candy-agregar:hover {
+  color: #2b1c02;
+  background: linear-gradient(180deg, #f3c561, var(--hk-geo));
+  border-color: transparent;
+}
+
+.candy-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  padding: 0 6px;
+  background: rgba(232, 168, 50, 0.1);
+  border: 1px solid var(--hk-geo);
+  border-radius: 6px;
+}
+
+.candy-stepper button,
+.candy-stepper button:hover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: var(--hk-geo);
+  background: rgba(10, 10, 18, 0.5);
+  border: 1px solid rgba(232, 168, 50, 0.35);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1.15rem;
+  letter-spacing: 0;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.candy-stepper button:hover {
+  background: rgba(232, 168, 50, 0.22);
+}
+
+.candy-stepper span {
+  color: var(--hk-soul);
+  font-family: 'Trajan', serif;
+  font-size: 1.05rem;
+  font-weight: bold;
+}
+
+@media (max-width: 620px) {
+  .candy-nombre {
+    font-size: 0.98rem;
+  }
+
+  .candy-agregar,
+  .candy-agregar:hover {
+    letter-spacing: 1px;
+  }
+}
+
+/* ══════════════ Modo claro ══════════════ */
+:host-context(.tema-claro) .candy-card {
+  background: #ffffff;
+  border-color: rgba(41, 64, 71, 0.16);
+  box-shadow: 0 6px 18px rgba(41, 64, 71, 0.08);
+}
+
+:host-context(.tema-claro) .candy-card.en-carrito {
+  border-color: var(--hk-geo);
+}
+
+:host-context(.tema-claro) .candy-precio {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+:host-context(.tema-claro) .candy-en-carrito,
+:host-context(.tema-claro) .candy-agregar:hover {
+  color: #ffffff;
+  background: linear-gradient(180deg, #c98a1f, #a66f1c);
+}
+
+:host-context(.tema-claro) .candy-stepper button {
+  background: #f1f5f9;
+}

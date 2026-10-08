@@ -54,7 +54,7 @@
           @if (formulario.controls.poster.touched && formulario.controls.poster.invalid) {
             @if (formulario.controls.poster.hasError('required')) {
               <span class="campo-error">Elegí la imagen del póster.</span>
-            } @else if (formulario.controls.poster.hasError('formatoPoster')) {
+            } @else if (formulario.controls.poster.hasError('formatoImagen')) {
               <span class="campo-error">El póster tiene que ser una imagen JPG, PNG o WEBP.</span>
             } @else {
               <span class="campo-error">El póster no puede pesar más de 5 MB.</span>

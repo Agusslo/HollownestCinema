@@ -65,54 +65,76 @@
               Panel <span class="flecha" aria-hidden="true">▾</span>
             </button>
             @if (menuAdminAbierto()) {
-              <div class="admin-menu-panel">
+              <!-- El admin ve todas las secciones (en escritorio, en dos columnas);
+                   el empleado sólo ve Puerta. -->
+              <div class="admin-menu-panel" [class.completo]="u.rol === 'admin'">
                 @if (u.rol === 'admin') {
-                  <span class="menu-seccion"><span>Administración</span></span>
-                  <a [routerLink]="['/admin/peliculas']" (click)="menuAdminAbierto.set(false)"
-                    >Películas</a
-                  >
-                  <a [routerLink]="['/admin/peliculas/nueva']" (click)="menuAdminAbierto.set(false)"
-                    >Nueva película</a
-                  >
-                  <a [routerLink]="['/admin/preventas']" (click)="menuAdminAbierto.set(false)"
-                    >Preventas</a
-                  >
-                  <a [routerLink]="['/admin/funciones']" (click)="menuAdminAbierto.set(false)"
-                    >Funciones</a
-                  >
-                  <a [routerLink]="['/admin/funciones/nueva']" (click)="menuAdminAbierto.set(false)"
-                    >Nueva función</a
-                  >
-                  <a [routerLink]="['/admin/precios']" (click)="menuAdminAbierto.set(false)"
-                    >Precios</a
-                  >
-                  <a [routerLink]="['/admin/productos']" (click)="menuAdminAbierto.set(false)"
-                    >Productos</a
-                  >
-                  <a [routerLink]="['/admin/candy/nuevo']" (click)="menuAdminAbierto.set(false)"
-                    >Nuevo producto</a
-                  >
-                  <a [routerLink]="['/admin/combos/nuevo']" (click)="menuAdminAbierto.set(false)"
-                    >Combos</a
-                  >
-                  <a [routerLink]="['/admin/cupones']" (click)="menuAdminAbierto.set(false)"
-                    >Cupones</a
-                  >
-                  <a [routerLink]="['/admin/fidelizacion']" (click)="menuAdminAbierto.set(false)"
-                    >Fidelización</a
-                  >
-                  <a [routerLink]="['/admin/reportes']" (click)="menuAdminAbierto.set(false)"
-                    >Reportes</a
-                  >
-                  <a [routerLink]="['/admin/log-actividad']" (click)="menuAdminAbierto.set(false)"
-                    >Log de actividad</a
-                  >
-                  <hr />
+                  <div class="menu-grupo">
+                    <span class="menu-seccion"><span>Cartelera</span></span>
+                    <a [routerLink]="['/admin/peliculas']" (click)="menuAdminAbierto.set(false)"
+                      >Películas</a
+                    >
+                    <a
+                      [routerLink]="['/admin/peliculas/nueva']"
+                      (click)="menuAdminAbierto.set(false)"
+                      >Nueva película</a
+                    >
+                    <a [routerLink]="['/admin/funciones']" (click)="menuAdminAbierto.set(false)"
+                      >Funciones</a
+                    >
+                    <a
+                      [routerLink]="['/admin/funciones/nueva']"
+                      (click)="menuAdminAbierto.set(false)"
+                      >Nueva función</a
+                    >
+                    <a [routerLink]="['/admin/preventas']" (click)="menuAdminAbierto.set(false)"
+                      >Preventas</a
+                    >
+                  </div>
+
+                  <div class="menu-grupo">
+                    <span class="menu-seccion"><span>Candy</span></span>
+                    <a [routerLink]="['/admin/productos']" (click)="menuAdminAbierto.set(false)"
+                      >Productos</a
+                    >
+                    <a [routerLink]="['/admin/candy/nuevo']" (click)="menuAdminAbierto.set(false)"
+                      >Nuevo producto</a
+                    >
+                    <a [routerLink]="['/admin/combos/nuevo']" (click)="menuAdminAbierto.set(false)"
+                      >Nuevo combo</a
+                    >
+                  </div>
+
+                  <div class="menu-grupo">
+                    <span class="menu-seccion"><span>Ventas</span></span>
+                    <a [routerLink]="['/admin/precios']" (click)="menuAdminAbierto.set(false)"
+                      >Precios</a
+                    >
+                    <a [routerLink]="['/admin/cupones']" (click)="menuAdminAbierto.set(false)"
+                      >Cupones</a
+                    >
+                    <a [routerLink]="['/admin/fidelizacion']" (click)="menuAdminAbierto.set(false)"
+                      >Fidelización</a
+                    >
+                  </div>
+
+                  <div class="menu-grupo">
+                    <span class="menu-seccion"><span>Control</span></span>
+                    <a [routerLink]="['/admin/reportes']" (click)="menuAdminAbierto.set(false)"
+                      >Reportes</a
+                    >
+                    <a [routerLink]="['/admin/log-actividad']" (click)="menuAdminAbierto.set(false)"
+                      >Log de actividad</a
+                    >
+                  </div>
                 }
-                <span class="menu-seccion"><span>Puerta</span></span>
-                <a [routerLink]="['/empleado/validar']" (click)="menuAdminAbierto.set(false)"
-                  >Validar QR</a
-                >
+
+                <div class="menu-grupo">
+                  <span class="menu-seccion"><span>Puerta</span></span>
+                  <a [routerLink]="['/empleado/validar']" (click)="menuAdminAbierto.set(false)"
+                    >Validar QR</a
+                  >
+                </div>
               </div>
             }
           </div>

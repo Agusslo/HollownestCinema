@@ -26,6 +26,7 @@ export class AltaCombo {
 
   protected productos = signal<ICandyProductoConCategoria[]>([]);
   protected guardando = signal(false);
+  protected error = signal<string | null>(null);
   protected mensaje = signal<string | null>(null);
 
   // producto_id -> cantidad elegida para el combo. Si un producto no está
@@ -36,11 +37,12 @@ export class AltaCombo {
     // /\S/: que no sea un nombre de puros espacios (required solo lo deja pasar).
     nombre: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.pattern(/\S/)],
+      validators: [Validators.required, Validators.pattern(/\S/), Validators.maxLength(60)],
     }),
-    precio: new FormControl(0, {
-      nonNullable: true,
-      validators: [Validators.required, Validators.min(1)],
+    // Arranca vacío (null) y no en 0, así el admin tiene que escribirlo.
+    // Entero mayor a 0, igual que los precios de los productos.
+    precio: new FormControl<number | null>(null, {
+      validators: [Validators.required, Validators.pattern(/^[1-9]\d*$/)],
     }),
   });
 
@@ -66,6 +68,7 @@ export class AltaCombo {
   }
 
   protected async guardar() {
+    this.error.set(null);
     this.mensaje.set(null);
 
     if (this.formulario.invalid) {
@@ -73,13 +76,15 @@ export class AltaCombo {
       return;
     }
     if (this.cantidades().size === 0) {
-      this.mensaje.set('Elegí al menos un producto de candy para incluir en el combo.');
+      this.error.set('Elegí al menos un producto de candy para incluir en el combo.');
       return;
     }
 
     this.guardando.set(true);
     try {
-      const datos = this.formulario.getRawValue();
+      const valores = this.formulario.getRawValue();
+      // El form es inválido si el precio es null, así que acá ya tiene valor.
+      const datos = { nombre: valores.nombre.trim(), precio: Number(valores.precio) };
       const items = Array.from(this.cantidades().entries()).map(([producto_id, cantidad]) => ({
         producto_id,
         cantidad,
@@ -97,10 +102,10 @@ export class AltaCombo {
       }
 
       this.mensaje.set(`Combo "${datos.nombre}" creado.`);
-      this.formulario.reset({ nombre: '', precio: 0 });
+      this.formulario.reset();
       this.cantidades.set(new Map());
     } catch (e) {
-      this.mensaje.set((e as Error).message);
+      this.error.set((e as Error).message);
     } finally {
       this.guardando.set(false);
     }

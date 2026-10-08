@@ -20,34 +20,20 @@ import { Peliculas } from '../../../core/services/peliculas';
 import { Generos } from '../../../core/services/generos';
 import { Auth } from '../../../core/services/auth';
 import { Logs } from '../../../core/services/logs';
-import { Archivos, IArchivoSubido } from '../../../core/services/archivos';
+import {
+  Archivos,
+  BUCKET_IMAGENES,
+  IArchivoSubido,
+  validarImagen,
+} from '../../../core/services/archivos';
 import IGenero from '../../../core/interfaces/genero';
 import IPerfil from '../../../core/interfaces/perfil';
 import { GlowHover } from '../../../shared/directives/glow-hover';
 import { IPosterPelicula, PosterCard } from '../../../shared/components/poster-card/poster-card';
 
-// Bucket de Supabase Storage donde se guardan los pósters.
-const BUCKET_POSTERS = 'posters';
-
-// Los mismos formatos y tamaño máximo que tiene configurados el bucket: si
-// el archivo no cumple, se avisa antes de subirlo (si no, Supabase lo
-// rechazaría igual, pero con un error menos claro).
-const FORMATOS_POSTER = ['image/jpeg', 'image/png', 'image/webp'];
-const TAMANIO_MAXIMO_MB = 5;
-
 // Imagen de la vista previa mientras todavía no se eligió ningún archivo.
 const POSTER_VACIO =
   'https://placehold.co/260x380/0a0a12/4fc4e3?text=Eleg%C3%AD+un+p%C3%B3ster&font=playfair-display';
-
-// Validador propio para el archivo del póster. Si no hay archivo devuelve
-// null y de ese caso se encarga Validators.required.
-function validarPoster(control: AbstractControl<File | null>): ValidationErrors | null {
-  const archivo = control.value;
-  if (!archivo) return null;
-  if (!FORMATOS_POSTER.includes(archivo.type)) return { formatoPoster: true };
-  if (archivo.size > TAMANIO_MAXIMO_MB * 1024 * 1024) return { tamanioPoster: true };
-  return null;
-}
 
 // Validador del grupo entero porque cruza dos campos: un precio de
 // preventa sin fecha de estreno antes se descartaba en silencio al
@@ -103,7 +89,9 @@ export class AltaPelicula {
       // texto "C:\fakepath\..."), así que el archivo se carga a mano en
       // cargarPoster(), igual que en la clase de Storage.
       poster: new FormControl<File | null>(null, {
-        validators: [Validators.required, validarPoster],
+        // validarImagen (en el service Archivos) revisa formato y tamaño; es
+        // el mismo validador que usa la foto de Nuevo producto.
+        validators: [Validators.required, validarImagen],
       }),
       duracion_minutos: new FormControl(0, {
         nonNullable: true,
@@ -225,7 +213,7 @@ export class AltaPelicula {
       // El póster se separa del resto: no es una columna de la tabla. Lo
       // que se guarda en la película es la URL pública que devuelve Storage.
       const { poster, ...valores } = this.formulario.getRawValue();
-      posterSubido = await this.archivosService.subirImagen(BUCKET_POSTERS, poster!);
+      posterSubido = await this.archivosService.subirImagen(BUCKET_IMAGENES, poster!);
 
       // '' (input de fecha vacío) → null, que para la app significa
       // "ya está en cartelera normal".
@@ -275,7 +263,7 @@ export class AltaPelicula {
     } catch (e) {
       if (posterSubido) {
         // Si esto también falla, no tapamos el error original.
-        this.archivosService.borrar(BUCKET_POSTERS, posterSubido.ruta).catch(() => {});
+        this.archivosService.borrar(BUCKET_IMAGENES, posterSubido.ruta).catch(() => {});
       }
       this.error.set((e as Error).message);
     } finally {

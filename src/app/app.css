@@ -595,7 +595,7 @@ main > *:not(router-outlet) {
   z-index: 20;
   display: flex;
   flex-direction: column;
-  min-width: 230px;
+  min-width: 250px;
   padding: 14px 10px 12px;
   background:
     radial-gradient(circle at 50% 0%, rgba(79, 196, 227, 0.12), transparent 55%),
@@ -697,11 +697,25 @@ main > *:not(router-outlet) {
   background: linear-gradient(90deg, rgba(79, 196, 227, 0.45), transparent);
 }
 
-.admin-menu-panel hr {
-  margin: 8px 12px 10px;
-  border: none;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(212, 212, 224, 0.25), transparent);
+/* Cada sección: su título y sus opciones, sin partirse entre columnas */
+.menu-grupo {
+  padding-bottom: 12px;
+  break-inside: avoid;
+}
+
+.menu-grupo:last-child {
+  padding-bottom: 0;
+}
+
+/* En escritorio el menú completo del admin se reparte en dos columnas,
+   así no queda una lista larguísima */
+@media (min-width: 1101px) {
+  .admin-menu-panel.completo {
+    display: block;
+    width: 540px;
+    columns: 2;
+    column-gap: 12px;
+  }
 }
 
 :host-context(.tema-claro) .admin-menu-panel::before {

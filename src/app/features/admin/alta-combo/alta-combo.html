@@ -12,15 +12,23 @@
         Nombre
         <input type="text" formControlName="nombre" placeholder="Ej: Combo Pareja" />
         @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
+            @if (formulario.controls.nombre.hasError('maxlength')) {
+            <span class="campo-error">El nombre no puede superar los 60 caracteres.</span>
+            } @else {
             <span class="campo-error">El nombre es obligatorio.</span>
+            }
         }
         </label>
 
         <label>
         Precio fijo del combo
-        <input type="number" formControlName="precio" min="1" />
+        <input type="number" formControlName="precio" min="1" placeholder="Ej: 12000" />
         @if (formulario.controls.precio.touched && formulario.controls.precio.invalid) {
-            <span class="campo-error">Tiene que ser un número mayor a 0.</span>
+            @if (formulario.controls.precio.hasError('required')) {
+            <span class="campo-error">El precio es obligatorio.</span>
+            } @else {
+            <span class="campo-error">Tiene que ser un número entero mayor a 0.</span>
+            }
         }
         </label>
     </div>
@@ -44,8 +52,12 @@
       <p class="form-error">Faltan completar campos: revisá los que están marcados en rojo.</p>
     }
 
+    @if (error()) {
+        <p class="form-error">{{ error() }}</p>
+    }
+
     @if (mensaje()) {
-        <p class="mensaje">{{ mensaje() }}</p>
+        <p class="form-mensaje">{{ mensaje() }}</p>
     }
 
     <button type="submit" class="submit-button" appGlowHover [disabled]="guardando()">

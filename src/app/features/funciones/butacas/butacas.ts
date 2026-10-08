@@ -30,10 +30,11 @@ import { Pdf } from '../../../core/services/pdf';
 import { ModoInvitado } from '../../../core/services/modo-invitado';
 import { LoadingComponent } from '../../../shared/components/loading/loading';
 import { GlowHover } from '../../../shared/directives/glow-hover';
+import { CandyCard } from '../../../shared/components/candy-card/candy-card';
 
 @Component({
   selector: 'app-butacas',
-  imports: [LoadingComponent, GlowHover, DecimalPipe, RouterLink],
+  imports: [LoadingComponent, GlowHover, DecimalPipe, RouterLink, CandyCard],
   templateUrl: './butacas.html',
   styleUrl: './butacas.css',
 })

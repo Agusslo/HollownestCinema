@@ -29,7 +29,10 @@
       "installMode": "lazy",
       "updateMode": "lazy",
       "resources": {
-        "urls": ["https://**/*.(jpg|jpeg|png|webp|avif|gif)"]
+        "urls": [
+          "https://xvcdspcpectanwpknqsm.supabase.co/storage/v1/object/public/**",
+          "https://image.tmdb.org/**"
+        ]
       }
     }
   ],

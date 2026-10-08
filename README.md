@@ -42,7 +42,7 @@ src/app/
 │   └── admin/          películas (mostrar / ocultar), funciones, precios, productos, altas,
 │                       cupones, fidelización, preventas, log de actividad, reportes
 └── shared/
-    ├── components/   → poster-card (tarjeta de la cartelera), loading, toast, blobatar
+    ├── components/   → poster-card (tarjeta de la cartelera), candy-card (tarjeta del candy bar), loading, toast, blobatar
     └── directives/   → appGlowHover (brillo al pasar el mouse)
 
 supabase/functions/avisar-preventa/  → Edge Function que envía las notificaciones push
@@ -51,7 +51,7 @@ scripts/generar-claves-vapid.mjs     → genera las claves VAPID de las notifica
 
 - **Servicios como única puerta a los datos:** los componentes acceden a Supabase siempre a través de un service de `core/services`. Cada consulta vive en un solo lugar y los componentes se ocupan de mostrar datos y responder al usuario.
 - **Estado con signals:** cada componente maneja su estado con `signal()`, y todo lo que se deriva de otros datos (totales, estado de venta de una película, permisos para reseñar) se calcula con `computed()`, que se actualiza solo.
-- **Componentes reutilizables:** la tarjeta de póster (`PosterCard`) recibe la película con `input()` y se usa en la cartelera y en la vista previa del alta de películas. Las reseñas avisan al detalle de la película el nuevo promedio con `output()`.
+- **Componentes reutilizables:** la tarjeta de póster (`PosterCard`) recibe la película con `input()` y se usa en la cartelera y en la vista previa del alta de películas. La tarjeta del candy bar (`CandyCard`) recibe el producto y la cantidad con `input()` y avisa con `output()` cuando se toca agregar o quitar; se usa en la compra y en la vista previa del alta de productos. Las reseñas avisan al detalle de la película el nuevo promedio con `output()`.
 - **Roles:** `cliente`, `empleado` y `admin`, guardados en la tabla `perfiles`. Los guards controlan el acceso a cada pantalla y las políticas RLS validan cada operación directamente en la base de datos.
 
 **Guards en todas las rutas:**
@@ -91,6 +91,8 @@ Cada película tiene la columna `visible`. Desde la pantalla de admin **Películ
 El precio depende del formato de la función (2D, 3D, 4D, 5D) y las butacas VIP llevan un recargo en porcentaje. Los cinco valores se guardan en la tabla `precios_entradas` (una sola fila, mismo patrón que `fidelizacion_config`) y el admin los cambia desde la pantalla **Precios**, con una vista previa de cómo queda cada formato. Todos pueden leerlos (también el invitado) y solo el admin puede modificarlos (RLS). Cada valor que cambia queda en el log de actividad con el antes y el después. El mismo recargo se aplica en puntos cuando se canjea una butaca VIP.
 
 ### Productos del candy bar
+En **Nuevo producto** todos los datos son obligatorios: nombre, precio (entero mayor a 0), categoría e imagen. Los puntos de canje son lo único opcional, porque vacío significa que el producto no se puede canjear con puntos. Lo mismo vale para **Nuevo combo**: nombre, precio entero mayor a 0 y al menos un producto.
+
 La pantalla de admin **Productos** permite modificar el precio y los puntos de canje de cada producto, y sacarlo de la venta o volver a ponerlo (columna `activo`). Es una baja lógica: el producto deja de aparecer para comprar y para armar combos, pero sigue en las compras, los canjes y los reportes donde ya figura. Cada cambio de precio queda en el log de actividad.
 
 ### Compra con cuenta o como invitado
@@ -121,10 +123,10 @@ El botón "Avisame" registra el pedido en la tabla `avisos` y el usuario recibe 
 
 La clave pública VAPID está en el environment de Angular y la privada se guarda como secreto de Supabase, disponible solo para la Edge Function.
 
-### Pósters con Supabase Storage
-En el alta de películas el admin sube el póster como archivo. La imagen se guarda en el bucket público `posters` de **Supabase Storage** y en la tabla se registra su URL pública. El bucket acepta imágenes JPG, PNG y WEBP de hasta 5 MB, y sus políticas RLS permiten subir y borrar solo al admin.
+### Imágenes con Supabase Storage
+En el alta de películas y de productos el admin sube la imagen como archivo, desde la compu o desde la galería del celular. Se guarda en el bucket público `posters` de **Supabase Storage** (los pósters en la raíz y las fotos de los productos en la carpeta `productos/`) y en la tabla se registra su URL pública. El bucket acepta imágenes JPG, PNG y WEBP de hasta 5 MB, y sus políticas RLS permiten subir y borrar solo al admin. Las dos pantallas usan el mismo validador de formato y tamaño (`validarImagen`, en el service `Archivos`).
 
-Mientras completa el formulario, el admin ve una **vista previa en vivo** con el mismo componente de la cartelera: el formulario se convierte en signal con `toSignal` y la imagen se muestra antes de subirla con `URL.createObjectURL`.
+Mientras completa el formulario, el admin ve una **vista previa en vivo** con el mismo componente donde se va a mostrar: la tarjeta de la cartelera (`PosterCard`) para las películas y la del candy bar (`CandyCard`) para los productos. El formulario se convierte en signal con `toSignal` y la imagen se muestra antes de subirla con `URL.createObjectURL`.
 
 ### Manejo de fechas
 Las fechas de calendario (estreno, días del reporte) se manejan como texto `'YYYY-MM-DD'`: se comparan directamente como texto, porque en ese formato el orden alfabético coincide con el cronológico, y se formatean separando el texto. De esta forma cada fecha se muestra igual en cualquier zona horaria.

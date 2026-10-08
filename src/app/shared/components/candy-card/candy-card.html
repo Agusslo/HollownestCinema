@@ -1,0 +1,50 @@
+<article class="candy-card" [class.en-carrito]="cantidad() > 0">
+  <div class="candy-img-wrap">
+    <!-- Sin imagen cargada (o con un link roto) se ve el cartel "Sin imagen" -->
+    <img
+      class="candy-img"
+      [src]="
+        producto().imagen_url ||
+        'https://placehold.co/200x200/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
+      "
+      [alt]="producto().nombre"
+      onerror="
+        this.src =
+          'https://placehold.co/200x200/0a0a12/4fc4e3?text=Sin+imagen&font=playfair-display'
+      "
+    />
+    <span class="candy-precio">${{ producto().precio | number: '1.0-0' : 'es' }}</span>
+    @if (cantidad() > 0) {
+      <span class="candy-en-carrito" aria-hidden="true">&times;{{ cantidad() }}</span>
+    }
+  </div>
+
+  <div class="candy-info">
+    <p class="candy-nombre">{{ producto().nombre }}</p>
+    @if (producto().puntos_canje) {
+      <p class="candy-puntos">⭐ Canjeable por {{ producto().puntos_canje }} pts</p>
+    }
+  </div>
+
+  @if (cantidad() === 0) {
+    <button type="button" class="candy-agregar" (click)="agregar.emit()">+ Agregar</button>
+  } @else {
+    <div class="candy-stepper">
+      <button
+        type="button"
+        (click)="quitar.emit()"
+        [attr.aria-label]="'Quitar un ' + producto().nombre"
+      >
+        &minus;
+      </button>
+      <span aria-live="polite">{{ cantidad() }}</span>
+      <button
+        type="button"
+        (click)="agregar.emit()"
+        [attr.aria-label]="'Agregar otro ' + producto().nombre"
+      >
+        +
+      </button>
+    </div>
+  }
+</article>

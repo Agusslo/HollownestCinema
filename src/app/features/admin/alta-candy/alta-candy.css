@@ -1,14 +1,23 @@
 /* La tarjeta, el encabezado, los campos y el botón comparten el estilo
    .admin-form de styles.css; acá queda sólo lo propio de esta pantalla. */
 .candy-form {
-  width: min(100%, 540px);
+  width: min(100%, 820px);
+}
+
+/* ── Formulario + vista previa ──
+   Mismo armado que Nueva película: en la compu la vista previa va a la
+   derecha y acompaña al bajar; en el celular (más abajo) queda debajo. */
+.candy-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  column-gap: 32px;
+  margin-bottom: 18px;
 }
 
 .form-fields {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin-bottom: 18px;
 }
 
 .form-fields select option {
@@ -16,8 +25,96 @@
   color: var(--hk-soul);
 }
 
-.mensaje {
-  margin: 0 0 14px;
-  color: var(--hk-focus);
+.vista-previa {
+  align-self: start;
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vista-previa-titulo {
+  color: var(--hk-pale);
+  font-family: 'Trajan', serif;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.vista-previa-nota {
+  margin: 0;
+  color: var(--hk-soft-text);
   font-size: 0.88rem;
+  font-style: italic;
+  text-align: center;
+}
+
+/* ── Campo de la imagen ──
+   El input de archivo toma el estilo de los demás campos (styles.css); acá
+   se le da forma al botón "Elegir archivo" que dibuja el navegador. */
+.admin-form .form-fields .input-imagen {
+  padding: 6px;
+  cursor: pointer;
+}
+
+.input-imagen::file-selector-button {
+  margin-right: 12px;
+  padding: 7px 14px;
+  color: var(--hk-soul);
+  background: rgba(79, 196, 227, 0.1);
+  border: 1px solid rgba(79, 196, 227, 0.4);
+  border-radius: 4px;
+  font-family: 'Trajan', serif;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.input-imagen:hover::file-selector-button {
+  background: rgba(79, 196, 227, 0.18);
+  border-color: var(--hk-focus);
+}
+
+/* Mismo borde rojo que ponen ng-invalid/ng-touched en los otros campos
+   (este input no tiene formControlName, así que la clase va a mano). */
+.admin-form .form-fields .input-imagen.invalido {
+  border-color: var(--hk-grimm);
+  box-shadow: 0 0 8px rgba(192, 57, 43, 0.2);
+}
+
+.campo-ayuda {
+  color: var(--hk-soft-text);
+  font-family: 'Perpetua', 'Georgia', serif;
+  font-size: 0.88rem;
+  font-style: italic;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ── Celular y tablet chica: una sola columna ── */
+@media (max-width: 760px) {
+  .candy-form {
+    width: min(100%, 560px);
+  }
+
+  .candy-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vista-previa {
+    position: static;
+    width: min(100%, 220px);
+    margin: 22px auto 0;
+  }
+}
+
+:host-context(.tema-claro) .input-imagen::file-selector-button {
+  background: rgba(22, 141, 168, 0.08);
+  border-color: rgba(22, 141, 168, 0.4);
 }
